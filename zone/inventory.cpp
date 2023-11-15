@@ -474,6 +474,9 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	//Clear player's money.
 	ClearMoney();
 
+	//Revert player's bind location to default starting
+	SetBindPoint(m_pp.binds[4].zoneId, m_pp.binds[4].x, m_pp.binds[4].y, m_pp.binds[4].z, m_pp.binds[4].heading)
+
 	//Remove spells.
 	UnscribeSpellAll(false);
 	UnmemSpellAll(false);
