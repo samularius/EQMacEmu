@@ -28,7 +28,7 @@
 #include <algorithm>
 
 
-int32 Client::GetMaxStat() const {
+int32 Client::GetMaxStat(int32 aabonusAmount) const {
 
 	if((RuleI(Character, StatCap)) > 0)
 		return (RuleI(Character, StatCap));
@@ -36,7 +36,7 @@ int32 Client::GetMaxStat() const {
 	if (GetLevel() <= 60)
 		return 255;
 	else
-		return 255 + (GetLevel() - 60) * 5;
+		return 255 + (GetLevel() - 60) * 5 + aabonusAmount;
 }
 
 int32 Client::GetMaxResist() const
@@ -45,25 +45,25 @@ int32 Client::GetMaxResist() const
 }
 
 int32 Client::GetMaxSTR() const {
-	return GetMaxStat() + aabonuses.STRCapMod;
+	return GetMaxStat(aabonuses.STRCapMod);
 }
 int32 Client::GetMaxSTA() const {
-	return GetMaxStat() + aabonuses.STACapMod;
+	return GetMaxStat(aabonuses.STACapMod);
 }
 int32 Client::GetMaxDEX() const {
-	return GetMaxStat() + aabonuses.DEXCapMod;
+	return GetMaxStat(aabonuses.DEXCapMod);
 }
 int32 Client::GetMaxAGI() const {
-	return GetMaxStat() + aabonuses.AGICapMod;
+	return GetMaxStat(aabonuses.AGICapMod);
 }
 int32 Client::GetMaxINT() const {
-	return GetMaxStat() + aabonuses.INTCapMod;
+	return GetMaxStat(aabonuses.INTCapMod);
 }
 int32 Client::GetMaxWIS() const {
-	return GetMaxStat() + aabonuses.WISCapMod;
+	return GetMaxStat(aabonuses.WISCapMod);
 }
 int32 Client::GetMaxCHA() const {
-	return GetMaxStat() + aabonuses.CHACapMod;
+	return GetMaxStat(aabonuses.CHACapMod);
 }
 int32 Client::GetMaxMR() const {
 	return GetMaxResist() + aabonuses.MRCapMod;
@@ -90,6 +90,15 @@ int32 Client::LevelRegen(int level, bool is_sitting, bool is_resting, bool is_fe
 	if (is_sitting)
 	{
 		hp_regen_amount += 1;
+
+		if (level >= 20)
+		{
+			hp_regen_amount += 1;
+		}
+		if (level >= 50)
+		{
+			hp_regen_amount += 1;
+		}
 	}
 
 	// feigning at 51+ adds 1 as if sitting
@@ -128,20 +137,6 @@ int32 Client::LevelRegen(int level, bool is_sitting, bool is_resting, bool is_fe
 	if (level >= 65)
 	{
 		hp_regen_amount += 1;
-	}
-
-	// resting begins after sitting for 1 minute.
-	// 1 additional point of regen is gained at levels 20 and 50
-	if (is_sitting && is_resting)
-	{
-		if (level >= 20)
-		{
-			hp_regen_amount += 1;
-		}
-		if (level >= 50)
-		{
-			hp_regen_amount += 1;
-		}
 	}
 
 	// racial trait adds to then doubles regen bonuses

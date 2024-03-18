@@ -53,6 +53,8 @@
 #include "../common/packet_dump_file.h"
 #include "queryserv.h"
 
+#include "../common/repositories/character_spells_repository.h"
+
 extern QueryServ* QServ;
 extern EntityList entity_list;
 extern Zone* zone;
@@ -148,6 +150,7 @@ Client::Client(EQStreamInterface* ieqs)
 	mend_reset_timer(60000),
 	underwater_timer(1000),
 	zoning_timer(5000),
+	instance_boot_grace_timer(RuleI(Quarm, ClientInstanceBootGraceMS)),
 	m_Proximity(FLT_MAX, FLT_MAX, FLT_MAX), //arbitrary large number
 	m_ZoneSummonLocation(-2.0f,-2.0f,-2.0f,-2.0f),
 	m_AutoAttackPosition(0.0f, 0.0f, 0.0f, 0.0f),
@@ -155,9 +158,9 @@ Client::Client(EQStreamInterface* ieqs)
 {
 	for(int cf=0; cf < _FilterCount; cf++)
 		ClientFilters[cf] = FilterShow;
-
+	
 	for (int aa_ix = 0; aa_ix < MAX_PP_AA_ARRAY; aa_ix++) { aa[aa_ix] = nullptr; }
-
+	
 	character_id = 0;
 	zoneentry = nullptr;
 	conn_state = NoPacketsReceived;
@@ -202,6 +205,7 @@ Client::Client(EQStreamInterface* ieqs)
 	runmode = true;
 	linkdead_timer.Disable();
 	zonesummon_id = 0;
+	zonesummon_guildid = GUILD_NONE;
 	zonesummon_ignorerestrictions = 0;
 	zoning = false;
 	m_lock_save_position = false;
@@ -219,11 +223,14 @@ Client::Client(EQStreamInterface* ieqs)
 	door_check_timer.Disable();
 	mend_reset_timer.Disable();
 	zoning_timer.Disable();
+	instance_boot_grace_timer.Disable();
 	instalog = false;
 	m_pp.autosplit = false;
 	// initialise haste variable
 	m_tradeskill_object = nullptr;
 	PendingRezzXP = -1;
+	PendingRezzZoneID = 0;
+	PendingRezzZoneGuildID = 0;
 	PendingRezzDBID = 0;
 	PendingRezzSpellID = 0;
 	numclients++;
@@ -234,6 +241,7 @@ Client::Client(EQStreamInterface* ieqs)
 	keyring.clear();
 	bind_sight_target = nullptr;
 	clickyspellrecovery_burst = 0;
+	pending_marriage_character_id = 0;
 
 	//for good measure:
 	memset(&m_pp, 0, sizeof(m_pp));
@@ -352,6 +360,7 @@ Client::Client(EQStreamInterface* ieqs)
 	wake_corpse_id = 0;
 	ranged_attack_leeway_timer.Disable();
 	last_fatigue = 0;
+	mule_initiated = false;
 }
 
 Client::~Client() {
@@ -776,7 +785,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 				{
 					if(AttemptedMessages > RuleI(Chat, MaxMessagesBeforeKick))
 					{
-						Kick();
+						RevokeSelf();
 						return;
 					}
 					if(GlobalChatLimiterTimer)
@@ -805,14 +814,76 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 		else
 			sem->guilddbid = 0;
 
+		auto group = GetGroup();
+		if (group && chan_num == ChatChannel_Group) {
+			sem->groupid = group->GetID();
+			std::string groupMembers = group->GetMemberNamesAsCsv({ GetName() });
+			strncpy(sem->to, groupMembers.c_str(), 325);
+			sem->to[324] = 0;
+		}
+		else {
+			sem->groupid = 0;
+		}
+
+		sem->characterid = CharacterID();
+
 		strcpy(sem->message, message);
 		sem->minstatus = this->Admin();
 		sem->type = chan_num;
-		if (targetname != 0)
+
+		// => to: preserve the targetname if it's not empty
+		//     => tells for example will have a targetname already
+		// => to: use the guild name if the channel is guild
+		// => to: use the zone short name if the channel is auction, ooc, or shout
+		// => to: use the target name if the channel is not guild, auction, ooc, shout, broadcast, raid, or petition
+		bool targetNameIsEmpty = targetname == nullptr || strlen(targetname) == 0;
+		char logTargetName[64] = { 0 };
+		if (targetNameIsEmpty) {
+			switch (chan_num) {
+				case ChatChannel_Guild: {
+					std::string guildName = GetGuildName();
+					const char* temp = guildName.c_str();
+					strncpy(logTargetName, temp, 64);
+					logTargetName[63] = 0;
+				}
+				break;
+
+				case ChatChannel_Auction:
+				case ChatChannel_OOC:
+				case ChatChannel_Shout: {
+					if (zone) {
+						const char* temp = zone->GetShortName();
+						strncpy(logTargetName, temp, 64);
+						logTargetName[63] = 0;
+					}
+				}
+				break;
+
+				case ChatChannel_Broadcast:
+				case ChatChannel_Raid:
+				case ChatChannel_Petition:
+					break;
+
+				default: {
+					const char* temp = (!GetTarget()) ? "" : GetTarget()->GetName();
+					strncpy(logTargetName, temp, 64);
+					logTargetName[63] = 0;
+				}
+				break;
+			}
+		}
+		else {
+			strncpy(logTargetName, targetname, 64);
+			logTargetName[63] = 0;
+		}
+
+		// => if groupid is not 0, sem->to has already been filled with the group members
+		if (sem->groupid == 0 && strlen(logTargetName) != 0)
 		{
-			strncpy(sem->to, targetname, 64);
+			strncpy(sem->to, logTargetName, 64);
 			sem->to[63] = 0;
 		}
+		// ----------------------------------------------
 
 		if (GetName() != 0)
 		{
@@ -918,7 +989,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 
 			if(TotalKarma < RuleI(Chat, KarmaGlobalChatLimit))
 			{
-				if(GetLevel() < RuleI(Chat, GlobalChatLevelLimit))
+				if(GetLevel() < RuleI(Chat, KarmaGlobalChatLevelLimit) && !this->IsMule())
 				{
 					Message(CC_Default, "You do not have permission to talk in Auction at this time.");
 					return;
@@ -965,7 +1036,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 
 			if(TotalKarma < RuleI(Chat, KarmaGlobalChatLimit))
 			{
-				if(GetLevel() < RuleI(Chat, GlobalChatLevelLimit))
+				if(GetLevel() < RuleI(Chat, KarmaGlobalChatLevelLimit) && !this->IsMule())
 				{
 					Message(CC_Default, "You do not have permission to talk in OOC at this time.");
 					return;
@@ -998,11 +1069,17 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 	}
 	case ChatChannel_Tell: { /* Tell */
 
+			if (GetLevel() < RuleI(Chat, GlobalChatLevelLimit) && !this->IsMule())
+			{
+				Message(CC_Default, "You do not have permission to send tells until level %i.", RuleI(Chat, GlobalChatLevelLimit));
+				return;
+			}
+
 			if(TotalKarma < RuleI(Chat, KarmaGlobalChatLimit))
 			{
-				if(GetLevel() < RuleI(Chat, GlobalChatLevelLimit))
+				if(GetLevel() < RuleI(Chat, KarmaGlobalChatLevelLimit) && !this->IsMule())
 				{
-					Message(CC_Default, "You do not have permission to send tells at this time.");
+					Message(CC_Default, "You do not have permission to send tells.");
 					return;
 				}
 			}
@@ -1021,7 +1098,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 				}
 			}
 
-			char target_name[64];
+			char target_name[64] = {};
 
 			if(targetname)
 			{
@@ -1312,6 +1389,7 @@ void Client::UpdateWho(uint8 remove) {
 	scl->LSAccountID = this->LSAccountID();
 	strn0cpy(scl->lskey, lskey, sizeof(scl->lskey));
 	scl->zone = zone->GetZoneID();
+	scl->zoneguildid = zone->GetGuildID();
 	scl->race = this->GetRace();
 	scl->class_ = GetClass();
 	scl->level = GetLevel();
@@ -1553,6 +1631,61 @@ void Client::ChangeLastName(const char* in_lastname) {
 	gmn->unknown[1]=1;
 	gmn->unknown[2]=1;
 	gmn->unknown[3]=1;
+	entity_list.QueueClients(this, outapp, false);
+	// Send name update packet here... once know what it is
+	safe_delete(outapp);
+}
+
+void Client::SetTemporaryLastName(char* in_lastname) {
+	if (!in_lastname)
+	{
+		return;
+	}
+
+	char *c = nullptr;
+	bool first = true;
+	for (c = in_lastname; *c; c++) {
+		if (first) {
+			*c = toupper(*c);
+			first = false;
+		}
+		else if (*c == '`' || *c == '\'') { // if we find a backtick, don't modify the next character's capitalization
+			// If this is the last character, we can break out of the loop
+			if (*(c + 1) == '\0')
+				break;
+
+			c++; // Move to the next character
+		}
+		else {
+			*c = tolower(*c);
+		}
+	}
+
+	if (strlen(in_lastname) >= 20) {
+		Message_StringID(CC_Yellow, SURNAME_TOO_LONG);
+		return;
+	}
+
+
+	if (in_lastname[0] != 0 && !database.CheckNameFilter(in_lastname, true))
+	{
+		Message_StringID(CC_Red, SURNAME_REJECTED);
+		return;
+	}
+
+	memset(m_epp.temp_last_name, 0, sizeof(m_epp.temp_last_name));
+	strn0cpy(m_epp.temp_last_name, in_lastname, sizeof(m_epp.temp_last_name));
+	memset(lastname, 0, sizeof(lastname));
+	strcpy(lastname, m_epp.temp_last_name);
+	auto outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
+	GMLastName_Struct* gmn = (GMLastName_Struct*)outapp->pBuffer;
+	strcpy(gmn->name, name);
+	strcpy(gmn->gmname, name);
+	strcpy(gmn->lastname, in_lastname);
+	gmn->unknown[0] = 1;
+	gmn->unknown[1] = 1;
+	gmn->unknown[2] = 1;
+	gmn->unknown[3] = 1;
 	entity_list.QueueClients(this, outapp, false);
 	// Send name update packet here... once know what it is
 	safe_delete(outapp);
@@ -2164,6 +2297,8 @@ uint16 Client::GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skillid
 			}
 			else
 			{
+				Result = m_pp.skills[skillid]; // don't allow further increase, this is believed to be AKurate behavior https://www.takproject.net/forums/index.php?threads/10-11-2023.26773/#post-123497
+				/*
 				Message(CC_Red, "Your spell casting specializations skills have been reset. "
 						"Only %i primary specialization skill is allowed.", MaxSpecializations);
 
@@ -2174,6 +2309,7 @@ uint16 Client::GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skillid
 
 				Log(Logs::General, Logs::Normal, "Reset %s's caster specialization skills to 1. "
 								"Too many specializations skills were above 50.", GetCleanName());
+				*/
 			}
 
 		}
@@ -2219,15 +2355,15 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id) const
 	return tmp_skill;
 }
 
-void Client::SetPVP(bool toggle) {
-	m_pp.pvp = toggle ? 1 : 0;
+void Client::SetPVP(uint8 toggle) {
+	m_pp.pvp = toggle;
 
 	if(GetPVP())
 		this->Message_StringID(CC_Red,PVP_ON);
 	else
 		Message(CC_Red, "You no longer follow the ways of discord.");
 
-	SendAppearancePacket(AT_PVP, GetPVP());
+	SendAppearancePacket(AT_PVP, (bool)GetPVP());
 	Save();
 }
 
@@ -2919,6 +3055,10 @@ void Client::LinkDead()
 	SendAppearancePacket(AT_Linkdead, 1);
 	client_distance_timer.Disable();
 	client_state = CLIENT_LINKDEAD;
+	if (IsSitting())
+	{
+		Stand();
+	}
 	AI_Start();
 	UpdateWho();
 	if(Trader)
@@ -3053,7 +3193,7 @@ void Client::SacrificeConfirm(Client *caster) {
 
 	if (GetLevel() > RuleI(Spells, SacrificeMaxLevel)) 
 	{
-		caster->Message_StringID(CC_Red, SAC_TOO_HIGH);
+		caster->Message_StringID(CC_Red, SAC_TOO_HIGH); //This being is too powerful to be a sacrifice.
 		safe_delete(outapp);
 		return;
 	}
@@ -3353,6 +3493,8 @@ int Client::GetAggroCount() {
 void Client::SummonAndRezzAllCorpses()
 {
 	PendingRezzXP = -1;
+	PendingRezzZoneID = 0;
+	PendingRezzZoneGuildID = 0;
 
 	auto Pack = new ServerPacket(ServerOP_DepopAllPlayersCorpses, sizeof(ServerDepopAllPlayersCorpses_Struct));
 
@@ -3360,6 +3502,7 @@ void Client::SummonAndRezzAllCorpses()
 
 	sdapcs->CharacterID = CharacterID();
 	sdapcs->ZoneID = zone->GetZoneID();
+	sdapcs->GuildID = zone->GetGuildID();
 
 	worldserver.SendPacket(Pack);
 
@@ -3367,7 +3510,7 @@ void Client::SummonAndRezzAllCorpses()
 
 	entity_list.RemoveAllCorpsesByCharID(CharacterID());
 
-	int CorpseCount = database.SummonAllCharacterCorpses(CharacterID(), zone->GetZoneID(), GetPosition());
+	int CorpseCount = database.SummonAllCharacterCorpses(CharacterID(), zone->GetZoneID(), zone->GetGuildID(), GetPosition());
 	if(CorpseCount <= 0)
 	{
 		Message(clientMessageYellow, "You have no corpses to summnon.");
@@ -3394,6 +3537,7 @@ void Client::SummonAllCorpses(const glm::vec4& position)
 
 	sdapcs->CharacterID = CharacterID();
 	sdapcs->ZoneID = zone->GetZoneID();
+	sdapcs->GuildID = zone->GetGuildID();
 
 	worldserver.SendPacket(Pack);
 
@@ -3401,7 +3545,7 @@ void Client::SummonAllCorpses(const glm::vec4& position)
 
 	entity_list.RemoveAllCorpsesByCharID(CharacterID());
 
-	database.SummonAllCharacterCorpses(CharacterID(), zone->GetZoneID(), summonLocation);
+	database.SummonAllCharacterCorpses(CharacterID(), zone->GetZoneID(), zone->GetGuildID(), summonLocation);
 }
 
 void Client::DepopAllCorpses()
@@ -3412,7 +3556,7 @@ void Client::DepopAllCorpses()
 
 	sdapcs->CharacterID = CharacterID();
 	sdapcs->ZoneID = zone->GetZoneID();
-
+	sdapcs->GuildID = zone->GetGuildID();
 	worldserver.SendPacket(Pack);
 
 	safe_delete(Pack);
@@ -3428,7 +3572,7 @@ void Client::DepopPlayerCorpse(uint32 dbid)
 
 	sdpcs->DBID = dbid;
 	sdpcs->ZoneID = zone->GetZoneID();
-
+	sdpcs->GuildID = zone->GetGuildID();
 	worldserver.SendPacket(Pack);
 
 	safe_delete(Pack);
@@ -4173,7 +4317,7 @@ void Client::Doppelganger(uint16 spell_id, Mob *target, const char *name_overrid
 		return;
 	}
 
-	SwarmPet_Struct pet;
+	SwarmPet_Struct pet = {};
 	pet.count = pet_count;
 	pet.duration = pet_duration;
 	pet.npc_id = record.npc_type;
@@ -4994,7 +5138,7 @@ void Client::RewindCommand()
 		Message(CC_Default, "You must wait before using #rewind again.");
 	}
 	else {
-		MovePC(zone->GetZoneID(), m_RewindLocation.x, m_RewindLocation.y, m_RewindLocation.z, 0, 2, Rewind);
+		MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), m_RewindLocation.x, m_RewindLocation.y, m_RewindLocation.z, 0, 2, Rewind);
 		rewind_timer.Start(30000, true);
 	}
 }
@@ -5066,7 +5210,7 @@ void Client::SendSoulMarks(SoulMarkList_Struct* SMS)
 		return;
 
 	auto outapp = new EQApplicationPacket(OP_SoulMarkUpdate, sizeof(SoulMarkList_Struct));
-	memset(outapp->pBuffer, 0, sizeof(outapp->pBuffer));
+	memset(outapp->pBuffer, 0, sizeof(SoulMarkList_Struct));
 	SoulMarkList_Struct* soulmarks = (SoulMarkList_Struct*)outapp->pBuffer;
 	memcpy(&soulmarks->entries, SMS->entries, 12 * sizeof(SoulMarkEntry_Struct));
 	strncpy(soulmarks->interrogatename, SMS->interrogatename, 64);
@@ -6313,7 +6457,7 @@ uint8 Client::GetRaceArmorSize()
 
 void Client::LoadLootedLegacyItems()
 {
-	std::string query = StringFormat("SELECT item_id FROM character_legacy_items "
+	std::string query = StringFormat("SELECT item_id, expire_time FROM character_legacy_items "
 		"WHERE character_id = '%i' ORDER BY item_id", character_id);
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
@@ -6321,7 +6465,12 @@ void Client::LoadLootedLegacyItems()
 	}
 
 	for (auto row = results.begin(); row != results.end(); ++row)
-		looted_legacy_items.insert(atoi(row[0]));
+	{
+		LootItemLockout lockout = LootItemLockout();
+		lockout.item_id = atoi(row[0]);
+		lockout.expirydate = atoll(row[1]);
+		looted_legacy_items.emplace(atoi(row[0]), lockout);
+	}
 
 }
 
@@ -6330,23 +6479,69 @@ bool Client::CheckLegacyItemLooted(uint16 item_id)
 	auto it = looted_legacy_items.find(item_id);
 	if (it != looted_legacy_items.end())
 	{
-		return true;
+		if(it->second.HasLockout(Timer::GetTimeSeconds()))
+			return true;
 	}
 	return false;
 }
 
-void Client::AddLootedLegacyItem(uint16 item_id)
+std::string Client::GetLegacyItemLockoutFailureMessage(uint16 item_id)
+{
+	std::string return_string = "Invalid loot lockout timer. Contact a GM.";
+
+
+	auto it = looted_legacy_items.find(item_id);
+	if (it != looted_legacy_items.end())
+	{
+		const EQ::ItemData* item = database.GetItem(it->first);
+
+		if (!item)
+			return return_string;
+
+		if (!item->Name[0])
+			return return_string;
+
+		int64_t time_remaining = 0xFFFFFFFFFFFFFFFF;
+		if (it->second.expirydate != 0)
+		{
+			time_remaining = it->second.expirydate - Timer::GetTimeSeconds();
+		}
+
+		//Magic number
+		if (time_remaining == 0xFFFFFFFFFFFFFFFF) // Never unlocks
+		{
+			return_string = "This is a legacy item. You have already looted a legacy item of this type already on this character.";
+		}
+		else if (time_remaining >= 1) // Lockout present
+		{
+			return_string = "This is a legacy item, and this legacy item has a personal loot lockout that expires in: ";
+			return_string += Strings::SecondsToTime(time_remaining).c_str();
+		}
+	}
+	return return_string;
+}
+
+void Client::AddLootedLegacyItem(uint16 item_id, uint32 expiry_end_timestamp)
 {
 	if (CheckLegacyItemLooted(item_id))
 		return;
 
-	std::string query = StringFormat("REPLACE INTO character_legacy_items (character_id, item_id) VALUES (%i, %i)", character_id, item_id);
+	auto it = looted_legacy_items.find(item_id);
+	if (it != looted_legacy_items.end())
+		looted_legacy_items.erase(it);
+
+	std::string query = StringFormat("REPLACE INTO character_legacy_items (character_id, item_id, expire_time) VALUES (%i, %i, %u)", character_id, item_id, expiry_end_timestamp);
 
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
 		return;
 	}
-	looted_legacy_items.insert(item_id);
+
+	LootItemLockout lockout = LootItemLockout();
+	lockout.item_id = item_id;
+	lockout.expirydate = expiry_end_timestamp;
+
+	looted_legacy_items.emplace(item_id, lockout);
 	
 }
 
@@ -6370,6 +6565,24 @@ bool Client::RemoveLootedLegacyItem(uint16 item_id)
 	return true;
 }
 
+void Client::RevokeSelf()
+{
+	if (GetRevoked())
+		return;
+
+	Message(CC_Red, "You have been server muted for %i seconds for violating the anti-spam filter.", RuleI(Quarm, AntiSpamMuteInSeconds));
+
+	std::string warped = "GM Alert: [" + std::string(GetCleanName()) + "] has violated the anti-spam filter.";
+	worldserver.SendEmoteMessage(0, 0, 100, CC_Default, "%s", warped.c_str());
+
+	std::string query = StringFormat("UPDATE account SET revoked = 1 WHERE id = %i", AccountID());
+	SetRevoked(1);
+	database.QueryDatabase(query);
+
+	std::string query2 = StringFormat("UPDATE `account` SET `revokeduntil` = DATE_ADD(NOW(), INTERVAL %i SECOND) WHERE `id` = %i", RuleI(Quarm, AntiSpamMuteInSeconds), AccountID());
+	auto results2 = database.QueryDatabase(query2);
+}
+
 
 void Client::ShowLegacyItemsLooted(Client* to)
 {
@@ -6381,10 +6594,10 @@ void Client::ShowLegacyItemsLooted(Client* to)
 	to->Message(CC_Yellow, "Legacy Item Flags On Character:");
 	for(auto looted_legacy_item : looted_legacy_items)
 	{
-		const EQ::ItemData* itemdata = database.GetItem(looted_legacy_item);
+		const EQ::ItemData* itemdata = database.GetItem(looted_legacy_item.first);
 		if (itemdata)
 		{
-			to->Message(CC_Yellow, "ID %d : Name %s", itemdata->ID, itemdata->Name);
+			to->Message(CC_Yellow, "ID %d : Name %s, Expiry: %s", itemdata->ID, itemdata->Name, Strings::SecondsToTime(looted_legacy_item.second.expirydate).c_str());
 		}
 	}
 	to->Message(CC_Yellow, "======");
@@ -6464,4 +6677,216 @@ void Client::ShowLegacyItemsLooted(Client* to)
 	}	
 	to->Message(CC_Yellow, "======");
 
+}
+
+bool Client::IsLootLockedOutOfNPC(uint32 npctype_id)
+{
+	if (npctype_id == 0)
+		return false;
+
+	auto lootItr = loot_lockouts.find(npctype_id);
+
+	if (lootItr != loot_lockouts.end())
+		return lootItr->second.HasLockout(Timer::GetTimeSeconds());
+
+	return false;
+};
+
+std::vector<int> Client::GetMemmedSpells() {
+	std::vector<int> memmed_spells;
+	for (int index = 0; index < EQ::spells::SPELL_GEM_COUNT; index++) {
+		if (IsValidSpell(m_pp.mem_spells[index])) {
+			memmed_spells.push_back(m_pp.mem_spells[index]);
+		}
+	}
+	return memmed_spells;
+}
+
+std::vector<int> Client::GetScribeableSpells(uint8 min_level, uint8 max_level) {
+	bool SpellGlobalRule = RuleB(Spells, EnableSpellGlobals);
+	bool SpellGlobalCheckResult = false;
+	std::vector<int> scribeable_spells;
+	for (int spell_id = 0; spell_id < SPDAT_RECORDS; ++spell_id) {
+		bool scribeable = false;
+		if (!IsValidSpell(spell_id))
+			continue;
+		if (spells[spell_id].classes[WARRIOR] == 0)
+			continue;
+		if (max_level > 0 && spells[spell_id].classes[m_pp.class_ - 1] > max_level)
+			continue;
+		if (min_level > 1 && spells[spell_id].classes[m_pp.class_ - 1] < min_level)
+			continue;
+		if (spells[spell_id].skill == 52)
+			continue;
+		if (spells[spell_id].not_player_spell)
+			continue;
+		if (HasSpellScribed(spell_id))
+			continue;
+
+		if (SpellGlobalRule) {
+			SpellGlobalCheckResult = SpellGlobalCheck(spell_id, CharacterID());
+			if (SpellGlobalCheckResult) {
+				scribeable = true;
+			}
+		}
+		else {
+			scribeable = true;
+		}
+
+		if (scribeable) {
+			scribeable_spells.push_back(spell_id);
+		}
+	}
+	return scribeable_spells;
+}
+
+std::vector<int> Client::GetScribedSpells() {
+	std::vector<int> scribed_spells;
+	for (int index = 0; index < EQ::spells::SPELLBOOK_SIZE; index++) {
+		if (IsValidSpell(m_pp.spell_book[index])) {
+			scribed_spells.push_back(m_pp.spell_book[index]);
+		}
+	}
+	return scribed_spells;
+}
+
+void Client::SaveSpells()
+{
+	std::vector<CharacterSpellsRepository::CharacterSpells> character_spells = {};
+
+	for (int index = 0; index < EQ::spells::SPELLBOOK_SIZE; index++) {
+		if (IsValidSpell(m_pp.spell_book[index])) {
+			auto spell = CharacterSpellsRepository::NewEntity();
+			spell.id = CharacterID();
+			spell.slot_id = index;
+			spell.spell_id = m_pp.spell_book[index];
+			character_spells.emplace_back(spell);
+		}
+	}
+
+	CharacterSpellsRepository::DeleteWhere(database, fmt::format("id = {}", CharacterID()));
+
+	if (!character_spells.empty()) {
+		CharacterSpellsRepository::InsertMany(database, character_spells);
+	}
+}
+
+uint16 Client::ScribeSpells(uint8 min_level, uint8 max_level)
+{
+	int available_book_slot = GetNextAvailableSpellBookSlot();
+	std::vector<int> spell_ids = GetScribeableSpells(min_level, max_level);
+	uint16 spell_count = spell_ids.size();
+	uint16 scribed_spells = 0;
+	if (spell_count > 0) {
+		for (auto spell_id : spell_ids) {
+			if (available_book_slot == -1) {
+				Message(
+					CC_Red,
+					fmt::format(
+						"Unable to scribe {} ({}) to Spell Book because your Spell Book is full.",
+						spells[spell_id].name,
+						spell_id
+					).c_str()
+				);
+				break;
+			}
+
+			if (HasSpellScribed(spell_id)) {
+				continue;
+			}
+
+			// defer saving per spell and bulk save at the end
+			ScribeSpell(spell_id, available_book_slot, true, true);
+			available_book_slot = GetNextAvailableSpellBookSlot(available_book_slot);
+			scribed_spells++;
+		}
+	}
+
+	if (scribed_spells > 0) {
+		std::string spell_message = (
+			scribed_spells == 1 ?
+			"a new spell" :
+			fmt::format("{} new spells", scribed_spells)
+			);
+		Message(CC_Default, fmt::format("You have learned {}!", spell_message).c_str());
+
+		// bulk insert spells
+		SaveSpells();
+	}
+	return scribed_spells;
+}
+
+void Client::SetMarried(const char* playerName)
+{
+	if (!playerName || !playerName[0])
+		return;
+
+	if (strlen(playerName) > 20)
+		return;
+
+	Client* c = entity_list.GetClientByName(playerName);
+	if (c)
+	{
+		if (c->CharacterID() == CharacterID())
+		{
+			Message(13, "Bristlebane notices your antics and is on to you. Marriage failed.");
+			return;
+		}
+		SetTemporaryMarriageCharacterID(c->CharacterID());
+
+		if (c->m_epp.married_character_id == 0 && m_epp.married_character_id == 0)
+		{
+			if (c->m_epp.temp_last_name[0] && m_epp.temp_last_name[0])
+			{
+				if (strcmp(GetTemporaryLastName(), c->GetTemporaryLastName()) == 0)
+				{
+					if (c->GetTemporaryMarriageCharacterID() == CharacterID() && GetTemporaryMarriageCharacterID() == c->CharacterID())
+					{
+						m_epp.married_character_id = GetTemporaryMarriageCharacterID();
+						c->m_epp.married_character_id = c->GetTemporaryMarriageCharacterID();
+						c->Save(1);
+						Save(1);
+						c->Message(15, "Your marriage was a success! Erollsi has blessed and ordained the %s family. You will now receive a 20 percent experience bonus while traveling with your partner, %s, for the duration of the event.", GetTemporaryLastName(), GetCleanName());
+						Message(15, "Your marriage was a success! Erollsi has blessed and ordained the %s family. You will now receive a 20 percent experience bonus while traveling with your partner, %s, for the duration of the event.", c->GetTemporaryLastName(), c->GetCleanName());
+						return;
+					}
+					else
+					{
+						Message(13, "Your marriage requires the vows of your other partner. Please have them state your name. They must also have the same surname in order to confirm your vows.");
+						return;
+					}
+				}
+				else
+				{
+					Message(13, "Erollsi Marr whispers in your ear, 'You and your partner must share the same surname before you can truly tie the knot together.'");
+					return;
+				}
+			}
+			else
+			{
+				Message(13, "Erollsi Marr whispers in your ear, 'You and your partner must have a surname name before you can truly tie the knot together.'");
+				return;
+			}
+		}
+		else
+		{
+			Message(13, "Erollsi Marr whispers in your ear, 'You or your desired partner is already married. Try again next year when their marriage crumbles.'");
+			return;
+		}
+	}
+	else
+	{
+		Message(13, "Erollsi Marr whispers in your ear, 'Your marriage attempt failed. Your partner isn't here. Try again.'");
+		return;
+	}
+}
+
+bool Client::IsMarried()
+{
+	return m_epp.married_character_id != 0;
+}
+
+bool Client::HasTemporaryLastName()
+{
+	return m_epp.temp_last_name[0] != 0;
 }

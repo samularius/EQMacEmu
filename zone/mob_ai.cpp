@@ -616,12 +616,9 @@ void NPC::AI_Start() {
 	} else {
 		AIautocastspell_timer = std::unique_ptr<Timer>(new Timer(750));
 	}
-
-	if (NPCTypedata) {
-		AI_AddNPCSpells(NPCTypedata->npc_spells_id);
-		ProcessSpecialAbilities(NPCTypedata->special_abilities);
-		AI_AddNPCSpellsEffects(NPCTypedata->npc_spells_effects_id);
-	}
+	AI_AddNPCSpells(NPCTypedata.npc_spells_id);
+	ProcessSpecialAbilities(NPCTypedata.special_abilities);
+	AI_AddNPCSpellsEffects(NPCTypedata.npc_spells_effects_id);
 	SendTo(GetX(), GetY(), GetZ());
 	SaveGuardSpot();
 	AI_SetLoiterTimer();
@@ -1668,8 +1665,9 @@ void Mob::AI_Process() {
 				else if (!IsBlind())
 				{
 					//could not summon them, check ranged...
-					if(GetSpecialAbility(SPECATK_RANGED_ATK))
+					if (GetSpecialAbility(SPECATK_RANGED_ATK) || HasBowAndArrowEquipped()) {
 						doranged = true;
+					}
 
 					// Now pursue
 					if (AI_EngagedCastCheck()) {
@@ -2283,8 +2281,8 @@ void NPC::AI_DoMovement() {
 						}
 					}
 					//kick off event_waypoint arrive
-					char temp[16];
-					sprintf(temp, "%d", cur_wp);
+					char temp[32] = { 0 };
+					snprintf(temp, 31, "%d %d", cur_wp, gridno);
 					parse->EventNPC(EVENT_WAYPOINT_ARRIVE, CastToNPC(), nullptr, temp, 0);
 					if (!AIwalking_timer->Enabled()) {
 						AI_SetupNextWaypoint();
@@ -2392,8 +2390,8 @@ void NPC::AI_SetupNextWaypoint() {
 		entity_list.OpenDoorsNear(CastToNPC());
 
 		//kick off event_waypoint depart
-		char temp[16];
-		sprintf(temp, "%d", cur_wp);
+		char temp[32] = { 0 };
+		snprintf(temp, 31, "%d %d", cur_wp, GetGrid());
 		parse->EventNPC(EVENT_WAYPOINT_DEPART, CastToNPC(), nullptr, temp, 0);
 
 		//setup our next waypoint, if we are still on our normal grid
@@ -2438,6 +2436,8 @@ void Mob::AI_Event_Engaged(Mob* attacker)
 				}
 			}
 		}
+
+		CastToNPC()->TriggerAutoCastTimer();
 
 		if(attacker && !attacker->IsCorpse())
 		{
@@ -2544,46 +2544,65 @@ void Mob::AI_Event_NoLongerEngaged() {
 				CastToNPC()->SetCombatEvent(false);
 			}
 		}
+
+		if (zone && zone->GetGuildID() != GUILD_NONE)
+		{
+			if (GetSpecialAbility(TETHER)) {
+
+				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
+				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
+			}
+
+			else if (GetSpecialAbility(LEASH)) {
+				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
+				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
+				SetHP(GetMaxHP());
+				BuffFadeAll();
+				WipeHateList(true);
+				AIloiter_timer->Trigger();
+				return;
+			}
+		}
 	}
 }
 
 //this gets called from InterruptSpell() for failure or SpellFinished() for success
 void NPC::AI_Event_SpellCastFinished(bool iCastSucceeded, uint16 slot)
 {
-	if (slot == 1)
-	{
+	if (slot == 1) {
 		uint32 recovery_time = 0;
-		if (iCastSucceeded)
-		{
-			if (casting_spell_AIindex < AIspells.size())
-			{
+		if (iCastSucceeded) {
+			if (casting_spell_AIindex < AIspells.size()) {
 				int32 recast_delay = AIspells[casting_spell_AIindex].recast_delay;
 				int32 cast_variance = zone->random.Int(0, 4) * 1000;
+				if (AIspells[casting_spell_AIindex].spellid == SPELL_CAZIC_TOUCH) {
+					cast_variance = 0;
+				}
 
 				recovery_time += spells[AIspells[casting_spell_AIindex].spellid].recovery_time;
 
-				if (recast_delay > 0)
-				{
-					if (recast_delay < 10000)
+				if (recast_delay > 0) {
+					if (recast_delay < 10000) {
 						AIspells[casting_spell_AIindex].time_cancast = Timer::GetCurrentTime() + (recast_delay * 1000) + cast_variance;
+					}
 				}
-				else if (recast_delay == -1)
+				else if (recast_delay == -1) {
 					// editor default; add variance
 					AIspells[casting_spell_AIindex].time_cancast = Timer::GetCurrentTime() + spells[AIspells[casting_spell_AIindex].spellid].recast_time + cast_variance;
-
-				else if (recast_delay == -2)
+				}
+				else if (recast_delay == -2) {
 					AIspells[casting_spell_AIindex].time_cancast = Timer::GetCurrentTime();
-
-				else
+				}
+				else {
 					// 0; no variance
 					AIspells[casting_spell_AIindex].time_cancast = Timer::GetCurrentTime() + spells[AIspells[casting_spell_AIindex].spellid].recast_time;
+				}
 			}
-			if (recovery_time < AIautocastspell_timer->GetDuration())
+			if (recovery_time < AIautocastspell_timer->GetDuration()) {
 				recovery_time = AIautocastspell_timer->GetDuration();
+			}
 			AIautocastspell_timer->Start(recovery_time, false);
-		}
-		else
-		{
+		} else {
 			AIautocastspell_timer->Start(AISpellVar.fail_recast, false);
 		}
 		casting_spell_AIindex = AIspells.size();
@@ -2646,12 +2665,15 @@ bool NPC::AI_IdleCastCheck() {
 
 void Mob::CheckEnrage()
 {
-	if (!bEnraged && GetSpecialAbility(SPECATK_ENRAGE))
-	{
+	if (!bEnraged && GetSpecialAbility(SPECATK_ENRAGE)) {
+		// this is so we don't have to make duplicate NPC types
+		if (IsNPC() && GetLevel() < 56 && GetLevel() > 52) {
+			return;
+		}
+
 		int hp_ratio = GetSpecialAbilityParam(SPECATK_ENRAGE, 0);
 		hp_ratio = hp_ratio > 0 ? hp_ratio : RuleI(NPC, StartEnrageValue);
-		if (GetHPRatio() <= static_cast<float>(hp_ratio))
-		{
+		if (GetHPRatio() <= static_cast<float>(hp_ratio)) {
 			StartEnrage();
 		}
 	}
@@ -3097,7 +3119,7 @@ void NPC::CheckSignal()
 		buf[31] = '\0';
 		if (!signal_data.empty())
 		{
-			std::vector<EQ::Any> info_ptrs;
+			std::vector<std::any> info_ptrs;
 			info_ptrs.push_back(&signal_data);
 			parse->EventNPC(EVENT_SIGNAL, this, nullptr, buf, 0, &info_ptrs);
 		}

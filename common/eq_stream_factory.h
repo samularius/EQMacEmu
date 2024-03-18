@@ -16,6 +16,9 @@
 class EQStream;
 class Timer;
 
+using EQStreamIterator = std::map<std::pair<uint32, uint16>, std::shared_ptr<EQStream>>::iterator;
+using EQOldStreamIterator = std::map<std::pair<uint32, uint16>, std::shared_ptr<EQOldStream>>::iterator;
+
 class RecvBuffer {
 	private:
 		bool isnew;
@@ -67,14 +70,8 @@ class EQStreamFactory : private Timeoutable {
 		std::map<std::pair<uint32, uint16>, std::shared_ptr<EQOldStream>> OldStreams;
 
 		std::thread ReaderThread;
-		std::thread ProcessNewThread;
 		std::thread WriterNewThread;
-		std::thread ProcessOldThread;
 		std::thread WriterOldThread;
-		std::mutex MNewRecvBuffers;
-		std::mutex MOldRecvBuffers;
-		std::queue<std::unique_ptr<RecvBuffer>> NewRecvBuffers;
-		std::queue<std::unique_ptr<RecvBuffer>> OldRecvBuffers;
 
 		virtual void CheckTimeout();
 
@@ -97,16 +94,16 @@ class EQStreamFactory : private Timeoutable {
 		bool IsOpen() { return sock!=-1; }
 		void Close();
 		void ReaderLoop();
-		void ProcessLoopNew();
-		void ProcessLoopOld();
+		void ProcessLoopNew(const RecvBuffer& recvBuffer, EQStreamIterator iterator);
+		void ProcessLoopOld(const RecvBuffer& recvBuffer, EQOldStreamIterator iterator);
 		void WriterLoopNew();
 		void WriterLoopOld();
-		void Stop() { StopReader(); StopWriterNew(); StopWriterOld(); }
-		void StopReader() { std::lock_guard<std::mutex> lock(MReaderRunning); ReaderRunning = false; }
-		void StopWriterNew() { std::unique_lock<std::mutex>(MWriterRunningNew); WriterRunningNew=false; MWriterRunningNew.unlock(); WriterWorkNew.notify_one(); }
-		void StopWriterOld() { std::unique_lock<std::mutex>(MWriterRunningOld); WriterRunningOld=false; MWriterRunningOld.unlock(); WriterWorkOld.notify_one(); }
-		void SignalWriterNew() { WriterWorkNew.notify_one(); }
-		void SignalWriterOld() { WriterWorkOld.notify_one(); }
+		void Stop();
+		void StopReader();
+		void StopWriterNew();
+		void StopWriterOld();
+		void SignalWriterNew();
+		void SignalWriterOld();
 };
 
 #endif

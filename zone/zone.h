@@ -49,6 +49,16 @@ struct ZonePoint
 	uint16 target_zone_id;
 	uint32 client_version_mask;
 };
+
+struct ZoneBanishPoint
+{
+	float x;
+	float y;
+	float z;
+	float heading;
+	uint16 target_zone_id;
+};
+
 struct ZoneClientAuth_Struct {
 	uint32	ip;			// client's IP address
 	uint32	wid;		// client's WorldID#
@@ -94,10 +104,10 @@ class MobMovementManager;
 class Zone
 {
 public:
-	static bool Bootup(uint32 iZoneID, bool iStaticZone = false);
+	static bool Bootup(uint32 iZoneID, bool iStaticZone = false, uint32 iGuildID = 0xFFFFFFFF);
 	static void Shutdown(bool quite = false);
 
-	Zone(uint32 in_zoneid, const char* in_short_name);
+	Zone(uint32 in_zoneid, const char* in_short_name, uint32 guild_id = 0xFFFFFFFF);
 	~Zone();
 	bool	Init(bool iStaticZone);
 	bool	LoadZoneCFG(const char* filename, bool DontLoadDefault = false);
@@ -108,6 +118,7 @@ public:
 	inline const char*	GetFileName()	{ return file_name; }
 	inline const char*	GetShortName()	{ return short_name; }
 	inline const uint32	GetZoneID() const { return zoneid; }
+	inline const uint32	GetGuildID() const { return guildid; }
 	inline const uint8	GetZoneType() const { return zone_type; }
 
     inline glm::vec4 GetSafePoint() { return m_SafePoint; }
@@ -144,9 +155,11 @@ public:
 	bool RemoveSpawnEntry(uint32 spawnid);
 	bool RemoveSpawnGroup(uint32 in_id);
 
+	ZoneBanishPoint& GetZoneBanishPoint() { return zone_banish_point; }
+
 	bool	Process();
 	void	Despawn(uint32 spawngroupID);
-	bool	ResetEngageNotificationTargets(uint32 in_respawn_timer);
+	bool	ResetEngageNotificationTargets(uint32 in_respawn_timer, bool update_respawn_in_db = false);
 	bool	Depop(bool StartSpawnTimer = false);
 	void	Repop();
 	void	RepopClose(const glm::vec4& client_position, uint32 repop_distance);
@@ -251,6 +264,7 @@ public:
 	bool	HasGraveyard();
 	void	SetGraveyard(uint32 zoneid, const glm::vec4& graveyardPosition);
 
+	void		LoadZoneBanishPoint(const char* zone);
 	void		LoadBlockedSpells(uint32 zoneid);
 	void		ClearBlockedSpells();
 	bool		IsSpellBlocked(uint32 spell_id, const glm::vec3& location);
@@ -278,6 +292,8 @@ public:
 	std::unordered_map<int, item_tick_struct> tick_items;
 
 	void ApplyRandomLoc(uint32 zoneid, float& x, float& y);
+
+	bool CanClientEngage(Client * initiator, Mob * target);
 
 	// random object that provides random values for the zone
 	EQ::Random random;
@@ -314,6 +330,7 @@ public:
 
 private:
 	uint32	zoneid;
+	uint32	guildid;
 	char*	short_name;
 	char	file_name[16];
 	char*	long_name;
@@ -338,6 +355,8 @@ private:
 
 	int	totalBS;
 	ZoneSpellsBlocked *blocked_spells;
+
+	ZoneBanishPoint zone_banish_point;
 
 	int		totalAAs;
 	SendAA_Struct **aas;	//array of AA structs

@@ -96,7 +96,6 @@ SET(common_sources
 SET(repositories
 	# Base Repositories
 	repositories/base/base_blocked_spells_repository.h
-	repositories/base/base_bug_reports_repository.h
 	repositories/base/base_bugs_repository.h
 	repositories/base/base_char_create_combinations_repository.h
 	repositories/base/base_char_create_point_allocations_repository.h
@@ -190,7 +189,6 @@ SET(repositories
 	repositories/base/base_zone_repository.h
 	repositories/base/base_aa_actions_repository.h
 	repositories/base/base_aa_effects_repository.h
-	repositories/base/base_aa_required_level_cost_repository.h
 	repositories/base/base_account_flags_repository.h
 	repositories/base/base_account_ip_repository.h
 	repositories/base/base_account_repository.h
@@ -199,7 +197,6 @@ SET(repositories
 	repositories/base/base_base_data_repository.h
 	
 	# Extended Repositories
-	repositories/bug_reports_repository.h
 	repositories/bugs_repository.h
 	repositories/char_create_combinations_repository.h
 	repositories/char_create_point_allocations_repository.h
@@ -293,7 +290,6 @@ SET(repositories
 	repositories/zone_repository.h
 	repositories/aa_actions_repository.h
 	repositories/aa_effects_repository.h
-	repositories/aa_required_level_cost_repository.h
 	repositories/account_flags_repository.h
 	repositories/account_ip_repository.h
 	repositories/account_repository.h
@@ -305,7 +301,6 @@ SET(repositories
 
 SET(common_headers
 	additive_lagged_fibonacci_engine.h
-	any.h
 	base_packet.h
 	base_data.h
 	bodytypes.h
@@ -503,5 +498,9 @@ ADD_LIBRARY(common ${common_sources} ${common_headers} ${repositories})
 IF(UNIX)
 	SET_SOURCE_FILES_PROPERTIES("patches/mac.cpp" PROPERTIES COMPILE_FLAGS -O0)
 ENDIF(UNIX)
+
+IF (WIN32 AND EQEMU_BUILD_PCH)
+    TARGET_PRECOMPILE_HEADERS(common PRIVATE pch/pch.h)
+ENDIF()
 
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

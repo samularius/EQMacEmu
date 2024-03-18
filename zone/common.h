@@ -109,7 +109,8 @@ enum {
 	NO_HASTE = 51,
 	IMMUNE_DISARM = 52,
 	IMMUNE_RIPOSTE = 53,
-	MAX_SPECIAL_ATTACK = 54
+	PROX_AGGRO2 = 54,
+	MAX_SPECIAL_ATTACK = 55
 	
 };
 
@@ -140,7 +141,7 @@ struct Buffs_Struct {
 	uint16	casterid;		// Maybe change this to a pointer sometime, but gotta make sure it's 0'd when it no longer points to anything
 	char	caster_name[64];
 	int32	ticsremaining;
-	uint32	counters;
+	int32	counters;
 	uint32	melee_rune;
 	uint32	magic_rune;
 	int32	ExtraDIChance;
@@ -152,6 +153,7 @@ struct Buffs_Struct {
 	bool	isdisc;
 	bool	remove_me;
 	bool	first_tic;
+	int32	bufftype;
 };
 
 struct StatBonuses {

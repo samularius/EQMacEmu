@@ -80,27 +80,27 @@ Zone* zone = 0;
 
 void UpdateWindowTitle(char* iNewTitle);
 
-bool Zone::Bootup(uint32 iZoneID, bool iStaticZone) {
+bool Zone::Bootup(uint32 iZoneID, bool iStaticZone, uint32 iGuildID) {
 	const char* zonename = database.GetZoneName(iZoneID);
 
 	if (iZoneID == 0 || zonename == 0)
 		return false;
 	if (zone != 0 || is_zone_loaded) {
 		std::cerr << "Error: Zone::Bootup call when zone already booted!" << std::endl;
-		worldserver.SetZoneData(0);
+		worldserver.SetZoneData(0, 0);
 		return false;
 	}
 
-	LogInfo("Booting {} ({})", zonename, iZoneID);
+	LogInfo("Booting {} ({}) ({})", zonename, iZoneID, iGuildID);
 
 	numclients = 0;
-	zone = new Zone(iZoneID, zonename);
+	zone = new Zone(iZoneID, zonename, iGuildID);
 
 	//init the zone, loads all the data, etc
 	if (!zone->Init(iStaticZone)) {
 		safe_delete(zone);
 		std::cerr << "Zone->Init failed" << std::endl;
-		worldserver.SetZoneData(0);
+		worldserver.SetZoneData(0, 0);
 		return false;
 	}
 	
@@ -139,11 +139,11 @@ bool Zone::Bootup(uint32 iZoneID, bool iStaticZone) {
 
 	is_zone_loaded = true;
 
-	worldserver.SetZoneData(iZoneID);
+	worldserver.SetZoneData(iZoneID, iGuildID);
 
 	LogInfo("---- Zone server [{}], listening on port:[{}] ----", zonename, ZoneConfig::get()->ZonePort);
-	LogInfo("Zone Bootup: [{}] [{}] ([{}])",
-		(iStaticZone) ? "Static" : "Dynamic", zonename, iZoneID);
+	LogInfo("Zone Bootup: [{}] [{}] ([{}]) ([{}])",
+		(iStaticZone) ? "Static" : "Dynamic", zonename, iZoneID, iGuildID, 0);
  	parse->Init();
 	UpdateWindowTitle(nullptr);
 	zone->GetTimeSync();
@@ -179,24 +179,27 @@ bool Zone::LoadZoneObjects() {
             if (!shortname)
                 continue;
 
-            Door d;
-            memset(&d, 0, sizeof(d));
+			// todo: clean up duplicate code with command_object
+			auto d = DoorsRepository::NewEntity();
 
-            strn0cpy(d.zone_name, shortname, sizeof(d.zone_name));
-            d.db_id = 1000000000 + atoi(row[0]); // Out of range of normal use for doors.id
-            d.door_id = -1; // Client doesn't care if these are all the same door_id
+            d.zone = shortname;
+            d.id = 1000000000 + atoi(row[0]); // Out of range of normal use for doors.id
+            d.doorid = -1; // Client doesn't care if these are all the same door_id
             d.pos_x = atof(row[2]); // xpos
             d.pos_y = atof(row[3]); // ypos
             d.pos_z = atof(row[4]); // zpos
             d.heading = atof(row[5]); // heading
 
-            strn0cpy(d.door_name, row[8], sizeof(d.door_name)); // objectname
-            // Strip trailing "_ACTORDEF" if present. Client won't accept it for doors.
-            int len = strlen(d.door_name);
-            if ((len > 9) && (memcmp(&d.door_name[len - 9], "_ACTORDEF", 10) == 0))
-                d.door_name[len - 9] = '\0';
+            d.name, row[8]; // objectname
 
-            memcpy(d.dest_zone, "NONE", 5);
+            // Strip trailing "_ACTORDEF" if present. Client won't accept it for doors.
+			int pos = d.name.size() - strlen("_ACTORDEF");
+			if (pos > 0 && d.name.compare(pos, std::string::npos, "_ACTORDEF") == 0)
+			{
+				d.name.erase(pos);
+			}
+
+            d.dest_zone = "NONE";
 
             if ((d.size = atoi(row[11])) == 0) // optional size percentage
                 d.size = 100;
@@ -214,7 +217,7 @@ bool Zone::LoadZoneObjects() {
             d.incline = atoi(row[13]); // optional model incline value
             d.client_version_mask = 0xFFFFFFFF; //We should load the mask from the zone.
 
-	    auto door = new Doors(&d);
+	    auto door = new Doors(d);
 	    entity_list.AddDoor(door);
 	}
 
@@ -786,31 +789,22 @@ void Zone::LoadZoneDoors(const char* zone)
 {
 	LogInfo("Loading doors for {} ...", zone);
 
-	uint32 maxid;
-	int32 count = database.GetDoorsCount(&maxid, zone);
-	if(count < 1) {
+	auto door_entries = database.LoadDoors(zone);
+	if (door_entries.empty())
+	{
 		LogInfo("... No doors loaded.");
 		return;
 	}
 
-	auto dlist = new Door[count];
-
-	if(!database.LoadDoors(count, dlist, zone)) {
-		LogError("... Failed to load doors.");
-		delete[] dlist;
-		return;
-	}
-
-	int r;
-	Door *d = dlist;
-	for(r = 0; r < count; r++, d++) {
-		auto newdoor = new Doors(d);
+	for (const auto &entry : door_entries)
+	{
+		auto newdoor = new Doors(entry);
 		entity_list.AddDoor(newdoor);
+		LogInfo("Door added to entity list, db id: [{}], door_id: [{}]", entry.id, entry.doorid);
 	}
-	delete[] dlist;
 }
 
-Zone::Zone(uint32 in_zoneid, const char* in_short_name)
+Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 :	autoshutdown_timer((RuleI(Zone, AutoShutdownDelay))),
 	clientauth_timer(AUTHENTICATION_TIMEOUT * 1000),
 	spawn2_timer(1000),
@@ -819,6 +813,7 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name)
 	m_Graveyard(0.0f,0.0f,0.0f,0.0f)
 {
 	zoneid = in_zoneid;
+	guildid = in_guildid;
 	zonemap = nullptr;
 	watermap = nullptr;
 	pathing = nullptr;
@@ -833,6 +828,7 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name)
 	lootvar = 0;
 
 	memset(&last_quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
+	memset(&zone_banish_point, 0, sizeof(ZoneBanishPoint));
 
 	short_name = strcpy(new char[strlen(in_short_name)+1], in_short_name);
 	std::string tmp = short_name;
@@ -930,7 +926,7 @@ Zone::~Zone() {
 	safe_delete(watermap);
 	safe_delete(pathing);
 	if (worldserver.Connected()) {
-		worldserver.SetZoneData(0);
+		worldserver.SetZoneData(0, guildid);
 	}
 	safe_delete_array(short_name);
 	safe_delete_array(long_name);
@@ -995,7 +991,7 @@ bool Zone::Init(bool iStaticZone) {
 	}
 
 	LogInfo("Loading spawn2 points...");
-	if (!database.PopulateZoneSpawnList(zoneid, spawn2_list))
+	if (!database.PopulateZoneSpawnList(zoneid, spawn2_list, GetGuildID()))
 	{
 		LogError("Loading spawn2 points failed.");
 		return false;
@@ -1008,7 +1004,7 @@ bool Zone::Init(bool iStaticZone) {
 	}
 
 	LogInfo("Loading player corpses...");
-	if (!database.LoadCharacterCorpses(zoneid)) {
+	if (!database.LoadCharacterCorpses(zoneid, GetGuildID())) {
 		LogError("Loading player corpses failed.");
 		return false;
 	}
@@ -1038,6 +1034,7 @@ bool Zone::Init(bool iStaticZone) {
 	//load up the zone's doors (prints inside)
 	zone->LoadZoneDoors(zone->GetShortName());
 	zone->LoadBlockedSpells(zone->GetZoneID());
+	zone->LoadZoneBanishPoint(zone->GetShortName());
 
 	//clear trader items if we are loading the bazaar
 	if(strncasecmp(short_name,"bazaar",6)==0) {
@@ -1075,6 +1072,8 @@ bool Zone::Init(bool iStaticZone) {
 
 	LoadGrids();
 	LoadTickItems();
+
+	//database.LoadQuakeData(zone->last_quake_struct);
 
 	if (zone->newzone_data.maxclip > 0.0f)
 		zone->update_range = std::max(250.0f, zone->newzone_data.maxclip + 50.0f);
@@ -1290,12 +1289,15 @@ bool Zone::Process() {
 	if (EndQuake_Timer->Check())
 	{
 		uint32 cur_time = Timer::GetTimeSeconds();
-		bool should_broadcast_notif = zone->ResetEngageNotificationTargets(RuleI(Quarm, QuakeRepopDelay) * 1000); // if we reset at least one, this is true
+		bool should_broadcast_notif = zone->ResetEngageNotificationTargets((RuleI(Quarm, QuakeMaxVariance) * 2) * 1000, true); // if we reset at least one, this is true
 		if (should_broadcast_notif)
 		{
-			entity_list.Message(CC_Default, CC_Yellow, "Raid targets in this zone will repop in %i minutes! Please adhere to the standard (GM-Enforced Rotations) ruleset, also in the /motd", (RuleI(Quarm, QuakeRepopDelay) / 60), QuakeTypeToString(zone->last_quake_struct.quake_type).c_str());
+			entity_list.Message(CC_Default, CC_Yellow, "The quake has concluded. Rules 9.x and 10.x will once again apply where relevant.");
 		}
+		entity_list.TogglePVPForQuake();
 		EndQuake_Timer->Disable();
+		memset(&last_quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
+
 	}
 
 	if(qGlobals)
@@ -1564,13 +1566,13 @@ void Zone::RepopClose(const glm::vec4& client_position, uint32 repop_distance)
 
 	quest_manager.ClearAllTimers();
 
-	if (!database.PopulateZoneSpawnListClose(zoneid, spawn2_list, client_position, repop_distance))
+	if (!database.PopulateZoneSpawnListClose(zoneid, spawn2_list, client_position, repop_distance, GetGuildID()))
 		Log(Logs::General, Logs::None, "Error in Zone::Repop: database.PopulateZoneSpawnList failed");
 
 	entity_list.UpdateAllTraps(true, true);
 }
 
-bool Zone::ResetEngageNotificationTargets(uint32 in_respawn_timer)
+bool Zone::ResetEngageNotificationTargets(uint32 in_respawn_timer, bool update_respawn_in_db)
 {
 	bool reset_at_least_one_spawn2 = false;
 	LinkedListIterator<Spawn2*> iterator(spawn2_list);
@@ -1578,14 +1580,21 @@ bool Zone::ResetEngageNotificationTargets(uint32 in_respawn_timer)
 	iterator.Reset();
 	while (iterator.MoreElements()) {
 		Spawn2* pSpawn2 = iterator.GetData();
-		if (pSpawn2->IsRaidTargetSpawnpoint())
+		if (pSpawn2 && pSpawn2->IsRaidTargetSpawnpoint())
 		{
 			reset_at_least_one_spawn2 = true;
-			pSpawn2->Repop(in_respawn_timer); // milliseconds
+			if (update_respawn_in_db)
+			{
+				pSpawn2->QuakeReset();
+			}
+			else
+			{
+				pSpawn2->Repop(in_respawn_timer); // milliseconds
+			}
 		}
 		iterator.Advance();
 	}
-	return true;
+	return reset_at_least_one_spawn2;
 }
 
 void Zone::Repop() {
@@ -1614,7 +1623,7 @@ void Zone::Repop() {
 		LogError("Loading spawn conditions failed, continuing without them");
 	}
 
-	if (!database.PopulateZoneSpawnList(zoneid, spawn2_list)) {
+	if (!database.PopulateZoneSpawnList(zoneid, spawn2_list, GetGuildID())) {
 		LogError("Error in Zone::Repop: database.PopulateZoneSpawnList failed");
 	}
 
@@ -2022,6 +2031,10 @@ bool Zone::HasGraveyard() {
 void Zone::SetGraveyard(uint32 zoneid, const glm::vec4& graveyardPosition) {
 	pgraveyard_zoneid = zoneid;
 	m_Graveyard = graveyardPosition;
+}
+
+void Zone::LoadZoneBanishPoint(const char* zone) {
+	database.GetZoneBanishPoint(zone_banish_point, zone);
 }
 
 void Zone::LoadBlockedSpells(uint32 zoneid)
@@ -2696,8 +2709,50 @@ void Zone::ApplyRandomLoc(uint32 zoneid, float& x, float& y)
 	return;
 }
 
+bool Zone::CanClientEngage(Client* initiator, Mob* target)
+{
+	if (!initiator || !target)
+	{
+		return false;
+	}
+
+	if (initiator->Admin() >= RuleI(Quarm, MinStatusToZoneIntoAnyGuildZone))
+		return(true);
+
+	if (GetGuildID() == GUILD_NONE)
+		return true;
+
+	Raid* raid = initiator->GetRaid();
+	if (!raid)
+		return false;
+
+	return raid->GetEngageCachedResult();
+}
+
 bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 {
+	if (current && other && zone->GetGuildID() != GUILD_NONE)
+	{
+		if (current->IsClient() && current->CastToClient()->InstanceBootGraceTimerExpired())
+		{
+			bool bCanEngage = CanClientEngage(current->CastToClient(), other);
+			if (!bCanEngage)
+			{
+				current->CastToClient()->BootFromGuildInstance();
+				return false;
+			}
+		}
+		if (other->IsClient() && other->CastToClient()->InstanceBootGraceTimerExpired())
+		{
+			bool bCanEngage = CanClientEngage(other->CastToClient(), current);
+			if (!bCanEngage)
+			{
+				other->CastToClient()->BootFromGuildInstance();
+				return false;
+			}
+		}
+	}
+
 	if (CanDoCombat())
 	{
 		return true;

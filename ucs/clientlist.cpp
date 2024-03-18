@@ -211,6 +211,8 @@ Clientlist::Clientlist(int ChatPort) {
 Client::Client(std::shared_ptr<EQStream> eqs) {
 
 	ClientStream = eqs;
+	if(ClientStream != nullptr)
+		ClientStream->PutInUse();
 
 	Announce = false;
 
@@ -295,6 +297,16 @@ void Clientlist::CLClearStaleConnections()
 		}
 	}
 	MClientChatConnections.unlock();
+}
+
+void Clientlist::CheckForStaleConnectionsAll() {
+	LogDebug("Checking for stale connections");
+
+	auto it = ClientChatConnections.begin();
+	while (it != ClientChatConnections.end()) {
+		(*it)->SendKeepAlive();
+		++it;
+	}
 }
 
 void Clientlist::CheckForStaleConnections(Client *c) {
@@ -610,6 +622,10 @@ void Client::AddCharacter(int CharID, const char *CharacterName, int Level, int 
 	NewCharacter.Class = Class;
 
 	Characters.push_back(NewCharacter);
+}
+
+void Client::SendKeepAlive() {
+	QueuePacket(new EQApplicationPacket(OP_SessionReady, 0));
 }
 
 void Client::SendChatlist() {
@@ -1011,7 +1027,7 @@ void Client::SendChannelMessage(std::string Message)
 			}
 			if(char_ent)
 			{
-				if(char_ent->Level < RuleI(Chat, GlobalChatLevelLimit))
+				if(char_ent->Level < RuleI(Chat, KarmaGlobalChatLevelLimit))
 				{
 					GeneralChannelMessage("You are either not high enough level or high enough karma to talk in this channel right now.");
 					return;
@@ -1124,7 +1140,7 @@ void Client::SendChannelMessageByNumber(std::string Message) {
 			}
 			if(char_ent)
 			{
-				if(char_ent->Level < RuleI(Chat, GlobalChatLevelLimit))
+				if(char_ent->Level < RuleI(Chat, KarmaGlobalChatLevelLimit))
 				{
 					GeneralChannelMessage("You are either not high enough level or high enough karma to talk in this channel right now.");
 					return;

@@ -20,6 +20,7 @@
 #include "../common/features.h"
 #include "../common/rulesys.h"
 #include "../common/strings.h"
+#include "../common/races.h"
 
 #include "client.h"
 #include "groups.h"
@@ -55,6 +56,15 @@ float Mob::GetBaseEXP()
 	// AK had a permanent 20% XP increase.
 	if (RuleB(AlKabor, ServerExpBonus))
 		server_bonus += 0.20f;
+	// Thanksgiving xp bonus
+	if (RuleB(Quarm, ThanksgivingExpBonus)) {
+		if (IsFlyingCreatureRace(GetRace())) {
+			server_bonus += RuleR(Quarm, FlyingRaceExpBonus);
+		}
+		if (zone->CanCastOutdoor() && !zone->CanCastDungeon()) {
+			server_bonus += RuleR(Quarm, ThanksgivingExpBonusOutdoorAmt);
+		}
+	}
 	float npc_pct = 1.0f;
 	if (IsNPC())
 		npc_pct = static_cast<float>(CastToNPC()->GetExpPercent()) / 100.0f;
@@ -100,7 +110,7 @@ float Mob::GetBaseEXP()
 // this is an intermediate step to adding exp from a NPC kill and will multiply it based on levels involved and client race.  this is called AFTER group/raid splits.
 // quest rewards do not use this
 // is_split is so we can send the correct exp gain message later on.  it's true when the kill's exp is shared.  group members sometimes get solo exp
-void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 avg_level, bool is_split) {
+void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 avg_level, bool is_split, int16 highest_level) {
 
 	if(IsMule() || !killed_mob)
 		return;
@@ -123,6 +133,23 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	float class_mult = 1.0f;	// since we don't factor class into exp required for level like Sony did, we have to add exp on kills.  does not apply to AAs
 	if (GetClass() == WARRIOR) class_mult = 10.0f / 9.0f;
 	if (GetClass() == ROGUE) class_mult = 10.0f / 9.05f;
+
+	if (m_epp.married_character_id != 0 && IsGrouped())
+	{
+		Group* our_group = GetGroup();
+		for (int x = 0; x < MAX_GROUP_MEMBERS; ++x)
+		{
+			if (our_group->members[x] != nullptr && our_group->members[x]->IsClient()) // If Group Member is Client
+			{
+				if (m_epp.married_character_id == our_group->members[x]->CastToClient()->CharacterID())
+				{
+					class_mult += 0.20f;
+					Message(CC_Yellow, "You receive a bonus! (Partner)");
+					break;
+				}
+			}
+		}
+	}
 
 	// This logic replicates the September 4 & 6 2002 patch exp modifications that granted a large
 	// experience bonus to kills within +/-5 levels of the player for level 51+ players
@@ -152,16 +179,30 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	}
 	else if (conlevel == CON_LIGHTBLUE)
 	{
-		lb_mult = 0.2f;
+		// ShowEQ data from late 2002 showed high light blues granting 80% and 60% then dropping off to 20%
+		// Older comments said that high light blues were 50% and low dark light blues were 25%, so this is contradictory
+		// Sony may have changed light blue exp mid-Luclin
 
-		if (GetLevel() > 40)
+		lb_mult = 0.2f;
+		if (!is_split)
+			highest_level = GetLevel();
+
+		if (highest_level)
 		{
-			// when light blue range increases to 4 and 5 levels, then highest light blues start returning 60% and 80% exp instead of 20% (data suggests this anyway)
-			// not the most elagant way to do this but it works and doesn't require new methods
-			if (GetLevelCon(GetLevel(), moblevel - 4) == CON_LIGHTBLUE)
-				lb_mult = 0.8f;
-			else if (GetLevelCon(GetLevel(), moblevel - 3) == CON_LIGHTBLUE)
-				lb_mult = 0.6f;
+			if (highest_level > 40)
+			{
+				// not the most elegant way to do this but it works and doesn't require new methods
+				if (GetLevelCon(highest_level, moblevel + 1) == CON_BLUE)
+					lb_mult = 0.8f;
+				else if (GetLevelCon(highest_level, moblevel + 2) == CON_BLUE)
+					lb_mult = 0.6f;
+			}
+			else if (highest_level > 30)
+			{
+				// how it should scale at lower levels is unknown
+				if (GetLevelCon(highest_level, moblevel + 1) == CON_BLUE)
+					lb_mult = 0.6f;
+			}
 		}
 	}
 
@@ -269,7 +310,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 			else if (GetRace() == TROLL || GetRace() == IKSAR)
 				race_mult = 0.8f;
 		}
-
+		
 		add_aaxp = static_cast<uint32>(add_aaxp * race_mult * aa_lvl_mod * aa_mult);
 	}
 
@@ -383,7 +424,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp, bool is_spl
 	Log(Logs::Detail, Logs::None, "Attempting to Set Exp for %s (XP: %u, AAXP: %u, Rez: %s, Split: %s)", 
 		this->GetCleanName(), set_exp, set_aaxp, isrezzexp ? "true" : "false", is_split ? "true" : "false");
 	//max_AAXP = GetEXPForLevel(52) - GetEXPForLevel(51);	//GetEXPForLevel() doesn't depend on class/race, just level, so it shouldn't change between Clients
-	max_AAXP = max_AAXP = GetEXPForLevel(0, true);	//this may be redundant since we're doing this in Client::FinishConnState2()
+	max_AAXP = GetEXPForLevel(0, true);	//this may be redundant since we're doing this in Client::FinishConnState2()
 	if (max_AAXP == 0 || GetEXPForLevel(GetLevel()) == 0xFFFFFFFF) {
 		Message(CC_Red, "Error in Client::SetEXP. EXP not set.");
 		return; // Must be invalid class/race
@@ -1018,7 +1059,7 @@ void Group::GiveGroupSplitExp(Mob* killed_mob, uint8 maxlevel, int16 weighted_le
 								local_conlevel = Mob::GetLevelCon(cmember->GetLevel(), killed_mob->GetLevel());
 
 							Log(Logs::Detail, Logs::Group, "%s splits %0.2f with the rest of the group. Their share: %0.2f (%0.2f PERCENT)  weighted_levels: %i;  close_count: %i", cmember->GetName(), groupexp, splitgroupxp, split_percent * 100, weighted_levels, close_count);
-							cmember->AddEXP(static_cast<uint32>(splitgroupxp), local_conlevel, killed_mob, weighted_levels/close_count, close_count == 1 ? false : true);
+							cmember->AddEXP(static_cast<uint32>(splitgroupxp), local_conlevel, killed_mob, weighted_levels/close_count, close_count == 1 ? false : true, maxlevel);
 						}
 						else
 						{
@@ -1104,6 +1145,7 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 		return;
 
 	float groupexp = static_cast<float>(exp) * RuleR(Character, RaidExpMultiplier);
+	int conlevel = Mob::GetLevelCon(maxlevel, killed_mob->GetLevel());
 	Log(Logs::Detail, Logs::Group, "Raid XP: %d Final XP: %0.2f", exp, groupexp);
 
 	//Assigns XP if the qualifications are met.
@@ -1118,13 +1160,12 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 			{
 				if (cmember->IsInLevelRange(maxlevel))
 				{
-					int conlevel = Mob::GetLevelCon(cmember->GetLevel(), killed_mob->GetLevel());
 					float split_percent = static_cast<float>(cmember->GetLevel()) / weighted_levels;
 					float splitgroupxp = groupexp * split_percent;
 					if (splitgroupxp < 1)
 						splitgroupxp = 1;
 
-					cmember->AddEXP(static_cast<uint32>(splitgroupxp), conlevel, killed_mob, 0, true);
+					cmember->AddEXP(static_cast<uint32>(splitgroupxp), conlevel, killed_mob, 0, true, maxlevel);
 					Log(Logs::Detail, Logs::Group, "%s splits %0.2f with %d players in the raid. Their share is %0.2f", cmember->GetName(), groupexp, membercount, splitgroupxp);
 				}
 				else

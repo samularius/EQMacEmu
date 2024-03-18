@@ -1291,6 +1291,7 @@ bool SharedDatabase::LoadSpells(const std::string &prefix, int32 *records, const
 		LogError("Error Loading Spells: {0}", ex.what());
 		return false;
 	}
+
 	return true;
 }
 
@@ -1727,7 +1728,7 @@ void SharedDatabase::LoadLootDrops(void *data, uint32 size)
 
 	const std::string query = "SELECT lootdrop.id, lootdrop_entries.item_id, lootdrop_entries.item_charges, "
                             "lootdrop_entries.equip_item, lootdrop_entries.chance, lootdrop_entries.minlevel, "
-                            "lootdrop_entries.maxlevel, lootdrop_entries.multiplier, lootdrop_entries.min_expansion, lootdrop_entries.max_expansion, lootdrop_entries.min_looter_level FROM lootdrop JOIN lootdrop_entries "
+                            "lootdrop_entries.maxlevel, lootdrop_entries.multiplier, lootdrop_entries.min_expansion, lootdrop_entries.max_expansion, lootdrop_entries.min_looter_level, lootdrop_entries.item_loot_lockout_timer FROM lootdrop JOIN lootdrop_entries "
                             "ON lootdrop.id = lootdrop_entries.lootdrop_id ORDER BY lootdrop_id";
     auto results = QueryDatabase(query);
     if (!results.Success()) {
@@ -1761,6 +1762,7 @@ void SharedDatabase::LoadLootDrops(void *data, uint32 size)
 		ld->Entries[current_entry].min_expansion = (std::stof(row[8]));
 		ld->Entries[current_entry].max_expansion = (std::stof(row[9]));
 		ld->Entries[current_entry].min_looter_level = (atoi(row[10]));
+		ld->Entries[current_entry].item_loot_lockout_timer = static_cast<uint32>(atoul(row[11]));
 		
         ++(ld->NumEntries);
         ++current_entry;
@@ -1852,4 +1854,46 @@ bool SharedDatabase::VerifyToken(std::string token, int& status)
 	status = atoi(row[0]);
 
 	return results.Success();
+}
+
+uint32 SharedDatabase::GetSpellsCount()
+{
+	auto results = QueryDatabase("SELECT count(*) FROM spells_new");
+	if (!results.Success() || !results.RowCount()) {
+		return 0;
+	}
+
+	auto& row = results.begin();
+
+	if (row[0]) {
+		return atoul(row[0]);
+	}
+
+	return 0;
+}
+
+uint32 SharedDatabase::GetItemsCount()
+{
+	auto results = QueryDatabase("SELECT count(*) FROM items");
+	if (!results.Success() || !results.RowCount()) {
+		return 0;
+	}
+
+	auto& row = results.begin();
+
+	if (row[0]) {
+		return atoul(row[0]);
+	}
+
+	return 0;
+}
+
+void SharedDatabase::SetSharedItemsCount(uint32 shared_items_count)
+{
+	SharedDatabase::m_shared_items_count = shared_items_count;
+}
+
+void SharedDatabase::SetSharedSpellsCount(uint32 shared_spells_count)
+{
+	SharedDatabase::m_shared_spells_count = shared_spells_count;
 }

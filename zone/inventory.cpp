@@ -275,7 +275,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 			//make sure we are not completely full...
 			if(to_slot == EQ::invslot::slotCursor || to_slot == INVALID_INDEX)
 			{
-				if (inst->GetItem()->NoDrop == 0)
+				if (inst->GetItem()->NoDrop == 0 || zone && zone->GetGuildID() != GUILD_NONE)
 				{
 					//If it's no drop, force it to the cursor. This carries the risk of deletion if the player already has this item on their cursor
 					// or if the cursor queue is full. But in this situation, we have little other recourse.
@@ -353,19 +353,64 @@ void Client::DropItem(int16 slot_id)
 //This differs from EntityList::CreateGroundObject by using the inst, so bag contents are
 //preserved. EntityList creates a new instance using ID, so bag contents are lost. Also,
 //EntityList can be used by NPCs for things like disarm.
-void Client::CreateGroundObject(const EQ::ItemInstance* inst, glm::vec4 coords, uint32 decay_time, bool message)
+void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coords, uint32 decay_time, bool message)
 {
-	if (!inst) {
+
+	if (zone && zone->GetGuildID() != GUILD_NONE)
+	{
+		auto broken_string = fmt::format("You cannot drop items in the ground. item {} (qty {} ).This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst_in->GetID(), inst_in->GetCharges());
+		Message(CC_Red, broken_string.c_str());
+		if (RuleB(QueryServ, PlayerLogItemDesyncs))
+		{
+			QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID());
+		}
+		return;
+	}
+
+	if (!inst_in) {
 		// Item doesn't exist in inventory!
 		Message(CC_Red, "Error: Item not found");
 		return;
 	}
 
+	// make a copy so we can remove no drop items if we need to
+	EQ::ItemInstance *inst = new EQ::ItemInstance(*inst_in);
 	if (inst->GetItem()->NoDrop == 0)
 	{
 		Message(CC_Red, "This item is NODROP. Deleting.");
+		auto msg = fmt::format("Dropped item is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst->GetCharges(), inst->GetItem()->Name);
+		QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
+		Message(CC_Red, msg.c_str());
+		if (inst->IsType(EQ::item::ItemClassBag))
+		{
+			for (uint8 sub_slot = EQ::invbag::SLOT_BEGIN; (sub_slot <= EQ::invbag::SLOT_END); ++sub_slot)
+			{
+				const EQ::ItemInstance *bag_inst = inst->GetItem(sub_slot);
+				if (bag_inst)
+				{
+					msg = fmt::format("Dropped bag was NODROP. Deleting contents. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
+					QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
+					Message(CC_Red, msg.c_str());
+				}
+			}
+		}
+		safe_delete(inst);
 		return;
 	}
+	if (inst->IsType(EQ::item::ItemClassBag))
+	{
+		for (uint8 sub_slot = EQ::invbag::SLOT_BEGIN; (sub_slot <= EQ::invbag::SLOT_END); ++sub_slot)
+		{
+			const EQ::ItemInstance *bag_inst = inst->GetItem(sub_slot);
+			if (bag_inst && bag_inst->GetItem()->NoDrop == 0)
+			{
+				auto msg = fmt::format("Dropped bag contains item that is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
+				Message(CC_Red, msg.c_str());
+				inst->DeleteItem(sub_slot);
+			}
+		}
+	}
+
 
 	if (RuleB(QueryServ, PlayerLogGroundSpawn) && inst)
 	{
@@ -392,6 +437,8 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst, glm::vec4 coords, 
 	Object *object = new Object(inst, coords.x, coords.y, coords.z, coords.w ,decay_time, true, this);
 	entity_list.AddObject(object, true);
 	object->Save();
+
+	safe_delete(inst);
 }
 
 // Returns a slot's item ID (returns INVALID_ID if not found)
@@ -712,6 +759,9 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 		Message_StringID(CC_Default, DUP_LORE);
 		return false;
 	}
+
+	if (zone && zone->GetGuildID() != GUILD_NONE)
+		drop = false;
 
 	EQ::ItemInstance* cursoritem = m_inv.GetItem(EQ::invslot::slotCursor);
 	if (cursoritem == nullptr)

@@ -28,11 +28,6 @@
 #include <deque>
 #include <list>
 
-
-#ifdef _WINDOWS
-	#define M_PI	3.141592654
-#endif
-
 #define LEAVECOMBAT 0
 #define ENTERCOMBAT 1
 #define	ONDEATH		2
@@ -139,6 +134,7 @@ public:
 
 	virtual bool	AI_IdleCastCheck();
 	virtual void	AI_Event_SpellCastFinished(bool iCastSucceeded, uint16 slot);
+	void			TriggerAutoCastTimer() { if (!IsCasting() && AIautocastspell_timer) AIautocastspell_timer->Trigger(); }
 
 	void LevelScale();
 	void CalcNPCResists();
@@ -183,7 +179,7 @@ public:
 	virtual void SpellProcess();
 	virtual void FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho);
 
-	void	AddLootDrop(const EQ::ItemData*dbitem, ItemList* itemlistconst, int8 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange = false, bool quest = false, bool pet = false, bool force_equip = false, uint8 min_looter_level = 0);
+	void	AddLootDrop(const EQ::ItemData*dbitem, ItemList* itemlistconst, int8 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange = false, bool quest = false, bool pet = false, bool force_equip = false, uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0);
 	void	AddItem(uint32 itemid, int8 charges, bool equipitem = true, bool quest = false);
 	void	AddLootTable();
 	void	AddLootTable(uint32 ldid);
@@ -385,7 +381,7 @@ public:
 	const bool HasPrivateCorpse() const { return private_corpse; }
 	const bool IsAggroOnPC() const { return aggro_pc; }
 	const bool IsUnderwaterOnly() const { return underwater; }
-	const char* GetRawNPCTypeName() const { return NPCTypedata->name; }
+	const char* GetRawNPCTypeName() const { return NPCTypedata.name; }
 
 	inline bool GetNPCAggro() { return npc_aggro; }
 	inline void SetNPCAggro(bool state) { npc_aggro = state; }
@@ -452,6 +448,9 @@ public:
 	uint32 fte_charid;
 
 	uint32 guild_fte;
+
+	uint32 loot_lockout_timer;
+
 	
 	// IDs of the guilds who are currently locked out from triggering FTE messages for this NPC and their last disengage time.
 	std::map<uint32, uint32> guild_fte_lockouts;
@@ -473,7 +472,7 @@ public:
 
 protected:
 
-	const NPCType*	NPCTypedata;
+	NPCType	NPCTypedata;
 
 	friend class EntityList;
 	std::list<struct NPCFaction*> faction_list;

@@ -189,6 +189,7 @@ RULE_BOOL(AlKabor, EnableMobLevelModifier, true) // AK behavior is true.  If tru
 RULE_BOOL(AlKabor, EnableEraItemRules, false) // AK behavior is false. If true, disable item data in the era they did not exist in.
 RULE_BOOL(AlKabor, EnableLuclinHarmonyResistOverride, true) // AK behavior is true. If true, enable the late Luclin Harmony resist override.
 RULE_BOOL(AlKabor, EnableLatePlanesHarmonyNerf, true) // AK behavior is true. If true, enable the late Planes of Power Harmony nerf
+RULE_BOOL (AlKabor, GreenmistHack, true) // Greenmist recourse didn't work on AK.  The spell data is messed up so it's not properly fixable without modifying the client.  This enables a partial workaround that is not AKurate but provides some benefit to players using this weapon.
 RULE_CATEGORY_END()
 
 
@@ -243,6 +244,24 @@ RULE_INT(Quarm, BardDamagingAOECap, 4)
 RULE_BOOL(Quarm, CorpseUnlockIsHalvedDecayTime, true)
 RULE_INT(Quarm, AccidentalFallTimerMS, 15000) // Length of initial zonein fall protection, in MS.
 RULE_REAL(Quarm, AccidentalFallUnitDist, 50.0) // Length of initial zonein fall protection, in MS.
+RULE_BOOL(Quarm, ThanksgivingExpBonus, false)
+RULE_REAL(Quarm, ThanksgivingExpBonusOutdoorAmt, 0.20)
+RULE_REAL(Quarm, FlyingRaceExpBonus, 0.50)
+RULE_INT(Quarm, AntiSpamMuteInSeconds, 900) // Defaults to 15 minutes. Live will likely adjust this
+RULE_BOOL(Quarm, EnableNPCProximityAggroSystem, false) // Classic behavior is true. Live Quarm has this false by default. CSR complaints about training warranted this behavior.
+RULE_INT(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement, 30) // Required level to participate in raid content.
+RULE_INT(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement, 12) // Required amount of members to participate in a raid encounter. Not all of these must be in the same guild (see below rule.)
+RULE_INT(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement, 18) // Required amount of same-guild members to participate in a raid encounter. These must be in the same guild, and one officer from the current guild must be in the raid.
+RULE_INT(Quarm, MinStatusToZoneIntoAnyGuildZone, 100) // Required amount of same-guild members to participate in a raid encounter. These must be in the same guild, and one officer from the current guild must be in the raid.
+RULE_BOOL(Quarm, EnableGuildZoneRequirementOnEntry, false) // Classic behavior is true. Live Quarm has this false by default. CSR complaints about training warranted this behavior.
+RULE_INT(Quarm, AOEThrottlingMaxAOETargets, 50) // This will curb nonsense with performance issues relating to amount of targets if the amount of clients exceeds 300 in a single zone.
+RULE_INT(Quarm, AOEThrottlingMaxClients, 300) // This will curb nonsense with performance issues relating to amount of targets if the amount of clients exceeds 300 in a single zone.
+RULE_INT(Quarm, EnableLuclinEraShieldACOvercap, false)
+RULE_INT(Quarm, ClientInstanceBootGraceMS, 60000)
+RULE_INT(Quarm, DeletedCharacterMarkLevel, 10)
+RULE_BOOL(Quarm, EastCommonMules, true)
+RULE_BOOL(Quarm, IncludeMulesInServerCount, false)
+RULE_BOOL(Quarm, ErollsiDayEvent, false)
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Map )
@@ -283,7 +302,7 @@ RULE_REAL ( Spells, ResistChance, 2.0) //chance to resist given no resists and s
 RULE_INT ( Spells, WizCritLevel, 12) // level wizards first get spell crits
 RULE_INT ( Spells, TranslocateTimeLimit, 0) // If not zero, time in seconds to accept a Translocate.
 RULE_INT ( Spells, SacrificeMinLevel, 46)	//first level Sacrifice will work on
-RULE_INT ( Spells, SacrificeMaxLevel, 69)	//last level Sacrifice will work on
+RULE_INT ( Spells, SacrificeMaxLevel, 60)	//last level Sacrifice will work on
 RULE_INT ( Spells, SacrificeItemID, 9963)	//Item ID of the item Sacrifice will return (defaults to an EE)
 RULE_BOOL ( Spells, EnableSpellGlobals, false)	// If Enabled, spells check the spell_globals table and compare character data from the quest globals before allowing that spell to scribe with scribespells
 RULE_INT ( Spells, MaxBuffSlotsNPC, 30)
@@ -317,6 +336,7 @@ RULE_BOOL ( Spells, SHDProcIDOffByOne, true) // pre June 2009 SHD spell procs we
 RULE_BOOL ( Spells, SwarmPetTargetLock, false) // Use old method of swarm pets target locking till target dies then despawning.
 RULE_INT ( Spells, SpellRecoveryTimer, 2500) // Begins when a cast is complete, and is checked after the next spell finishes casting. If not expired, the new spell is interrupted. Clickies are exempt.
 RULE_BOOL ( Spells, JamFestAAOnlyAffectsBard, true) // Bard Jam Fest AA only worked on bards themselves but was changed after AK's era.  Changing this to false will put the client stats out of sync with the server.
+RULE_BOOL ( Spells, ReducePacifyDuration, false) // AK and the eqmac client have 60 tick Pacify (spell 45) duration.  This rule reduces the duration to 7 ticks without desyncing the cast bar and focus effects for custom servers that want this.
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Combat )
@@ -385,6 +405,7 @@ RULE_INT ( Chat, MaxMessagesBeforeKick, 60)
 RULE_INT ( Chat, IntervalDurationMS, 60000)
 RULE_INT ( Chat, KarmaUpdateIntervalMS, 120000)
 RULE_INT ( Chat, KarmaGlobalChatLimit, 12) //amount of karma you need to be able to talk in ooc/auction/chat below the level limit
+RULE_INT ( Chat, KarmaGlobalChatLevelLimit, 8) //level limit you need to of reached to talk in ooc/auction/chat if your karma is too low.
 RULE_INT ( Chat, GlobalChatLevelLimit, 8) //level limit you need to of reached to talk in ooc/auction/chat if your karma is too low.
 RULE_CATEGORY_END()
 

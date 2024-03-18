@@ -188,7 +188,8 @@ namespace EQ
 
 
 	namespace spells {
-		enum class CastingSlot : uint32 {
+		enum class CastingSlot : int32 {
+			Invalid = -1,
 			Gem1 = 0,
 			Gem2 = 1,
 			Gem3 = 2,
@@ -297,8 +298,8 @@ enum ConsiderLevel : uint8 {
 enum QuakeType : uint8_t
 {
 	QuakeDisabled = 0,
-	QuakeFTE = 1,
-	QuakeDPSRace = 2,
+	QuakeNormal = 1,
+	QuakePVP = 2,
 	QuakeMax
 };
 

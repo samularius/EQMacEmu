@@ -119,7 +119,8 @@ typedef enum {
 	SummonPC, // In-zone GMMove() always: Call of the Hero spell or some other type of in zone only summons
 	Rewind, // Summon to /rewind location.
 	EvacToSafeCoords,
-	ForceZoneToBindPoint
+	ForceZoneToBindPoint,
+	ZoneToGuildZone
 } ZoneMode;
 
 typedef enum {
@@ -310,10 +311,10 @@ public:
 	virtual void SetMaxHP();
 	static int32 LevelRegen(int level, bool is_sitting, bool is_resting, bool is_feigned, bool is_famished, bool has_racial_regen_bonus);
 	void SetGM(bool toggle);
-	void SetPVP(bool toggle);
+	void SetPVP(uint8 toggle);
 	void	SetAnon(bool toogle);
 
-	inline bool GetPVP() const { return m_pp.pvp != 0; }
+	inline uint8 GetPVP() const { return m_pp.pvp; }
 	inline bool GetGM() const { return m_pp.gm != 0; }
 
 	inline void SetBaseClass(uint32 i) { m_pp.class_=i; }
@@ -370,6 +371,14 @@ public:
 
 	inline const char* GetLastName() const { return lastname; }
 
+	inline const char* GetTemporaryLastName() const { return m_epp.temp_last_name; }
+	bool HasTemporaryLastName();
+
+	uint32 GetTemporaryMarriageCharacterID() { return pending_marriage_character_id; }
+	void SetTemporaryMarriageCharacterID(uint32 pending_id) { pending_marriage_character_id = pending_id; }
+	void SetMarried(const char* playerName);
+	bool IsMarried();
+
 	typedef struct {
 		glm::vec4 l_Position;
 		float last_distance;
@@ -419,7 +428,7 @@ public:
 	inline virtual int32 GetPR() const { return PR; }
 	inline virtual int32 GetCR() const { return CR; }
 
-	int32 GetMaxStat() const;
+	int32 GetMaxStat(int32 aabonusAmount) const;
 	int32 GetMaxResist() const;
 	int32 GetMaxSTR() const;
 	int32 GetMaxSTA() const;
@@ -506,7 +515,7 @@ public:
 
 	inline uint32 GetEXP() const { return m_pp.exp; }
 
-	void	AddEXP(uint32 in_add_exp, uint8 conlevel = 0xFF, Mob* killed_mob = nullptr, int16 avg_level = 0, bool is_split = false);
+	void	AddEXP(uint32 in_add_exp, uint8 conlevel = 0xFF, Mob* killed_mob = nullptr, int16 avg_level = 0, bool is_split = false, int16 highest_level = 0);
 	void	SetEXP(uint32 set_exp, uint32 set_aaxp, bool resexp=false, bool is_split = false);
 	void	AddQuestEXP(uint32 in_add_exp, bool bypass_cap = false);
 	void	AddEXPPercent(uint8 percent, uint8 level = 1);
@@ -519,16 +528,20 @@ public:
 	bool	IsInLevelRange(uint8 maxlevel);
 
 	void GoToBind(uint8 bindnum = 0);
-	void GoToSafeCoords(uint16 zone_id);
+	void BootFromGuildInstance();
+	void GoToSafeCoords(uint16 zone_id, uint32 zone_guild_id);
 	void Gate();
 	void SetBindPoint(int to_zone = -1, const glm::vec3& location = glm::vec3());
 	void SetBindPoint2(int to_zone = -1, const glm::vec4& location = glm::vec4());
 	uint32 GetStartZone(void);
 	void MovePC(const char* zonename, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
 	void MovePC(uint32 zoneID, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
+	void MovePCGuildID(uint32 zoneID, uint32 zone_guild_id, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
+	void MovePCQuest(uint32 zoneID, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
 	void MovePC(float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
 	bool CheckLoreConflict(const EQ::ItemData* item);
 	void ChangeLastName(const char* in_lastname);
+	void SetTemporaryLastName(char* in_lastname);
 	void SacrificeConfirm(Client* caster);
 	void Sacrifice(Client* caster);
 	void GoToDeath();
@@ -646,8 +659,20 @@ public:
 	void MemSpell(uint16 spell_id, int slot, bool update_client = true);
 	void UnmemSpell(int slot, bool update_client = true);
 	void UnmemSpellAll(bool update_client = true);
-	void ScribeSpell(uint16 spell_id, int slot, bool update_client = true);
-	void UnscribeSpell(int slot, bool update_client = true);
+	std::vector<int> GetMemmedSpells();
+	std::vector<int> GetScribeableSpells(uint8 min_level = 1, uint8 max_level = 0);
+	std::vector<int> GetScribedSpells();
+
+	// Bulk Scribe/Learn
+	uint16 ScribeSpells(uint8 min_level, uint8 max_level);
+
+	// defer save used when bulk saving
+	void ScribeSpell(uint16 spell_id, int slot, bool update_client = true, bool defer_save = false);
+	void SaveSpells();
+
+	// defer save used when bulk saving
+	void UnscribeSpell(int slot, bool update_client = true, bool defer_save = false);
+
 	void UnscribeSpellAll(bool update_client = true);
 	bool SpellGlobalCheck(uint16 Spell_ID, uint32 Char_ID);
 	uint32 GetCharMaxLevelFromQGlobal();
@@ -748,6 +773,12 @@ public:
 	bool	IsValidSlot(uint32 slot);
 	bool	IsBankSlot(uint32 slot);
 
+
+	std::map<uint32, LootLockout> loot_lockouts;
+	std::map<uint16, LootItemLockout>	looted_legacy_items;
+	bool IsLootLockedOutOfNPC(uint32 npctype_id);
+
+
 	inline bool IsTrader() const { return(Trader); }
 	eqFilterMode GetFilter(eqFilterType filter_id) const { return ClientFilters[filter_id]; }
 	void SetFilter(eqFilterType filter_id, eqFilterMode value) { ClientFilters[filter_id]=value; }
@@ -766,7 +797,7 @@ public:
 	void SetConsumption(int16 in_hunger, int16 in_thirst);
 	void ProcessHungerThirst();
 	void ProcessFatigue();
-	void AddWeaponAttackFatigue(EQ::ItemInstance *weapon);
+	void AddWeaponAttackFatigue(const EQ::ItemInstance *weapon);
 
 	bool	CheckTradeLoreConflict(Client* other);
 	void	LinkDead();
@@ -886,7 +917,7 @@ public:
 	void SendTargetCommand(uint32 EntityID);
 	bool MoveItemToInventory(EQ::ItemInstance *BInst, bool UpdateClient = false);
 	std::list<RespawnOption> respawn_options;
-	void SetPendingRezzData(int XP, uint32 DBID, uint16 SpellID, const char *CorpseName) { PendingRezzXP = XP; PendingRezzDBID = DBID; PendingRezzSpellID = SpellID; PendingRezzCorpseName = CorpseName; }
+	void SetPendingRezzData(uint32 zoneID, uint32 zoneGuildID, int XP, uint32 DBID, uint16 SpellID, const char *CorpseName) { PendingRezzZoneID = zoneID, PendingRezzZoneGuildID = zoneGuildID, PendingRezzXP = XP; PendingRezzDBID = DBID; PendingRezzSpellID = SpellID; PendingRezzCorpseName = CorpseName; }
 	bool IsRezzPending() { return PendingRezzSpellID > 0; }
 	bool IsDraggingCorpse(uint16 CorpseID);
 	inline bool IsDraggingCorpse() { return (DraggedCorpses.size() > 0); }
@@ -953,7 +984,6 @@ public:
 	void SendMerchantEnd();
 	float GetPortHeading(uint16 newx, uint16 newy);
 	bool IsMule() { return (Admin() < 80 && m_pp.mule); }
-	void RefreshSpellIcon();
 	void SendCancelTrade(Mob* with);
 	void ClearPTimers(uint16 type);
 	void UpdateItemHP(EQ::ItemInstance* item, bool equip = true);
@@ -1013,10 +1043,12 @@ public:
 	bool ShowHelm() { return m_pp.showhelm; }
 	void SetShowHelm(bool value) { m_pp.showhelm = value; }
 	bool SpillBeer();
-	void AddLootedLegacyItem(uint16 item_id);
+	void AddLootedLegacyItem(uint16 item_id, uint32 legacy_item_expiry);
 	bool RemoveLootedLegacyItem(uint16 item_id);
+	void RevokeSelf();
 	void ShowLegacyItemsLooted(Client* to);
 	bool CheckLegacyItemLooted(uint16 item_id);
+	std::string GetLegacyItemLockoutFailureMessage(uint16 item_id);
 	void LoadLootedLegacyItems();
 	void ResetSkill(EQ::skills::SkillType skillid, bool reset_timer = false);
 	void ResetAllSkills();
@@ -1041,7 +1073,7 @@ public:
 
 	bool IsUnderWater();
 	bool IsInWater();
-	bool CanBeInZone(uint32 zoneid = 0);
+	bool CanBeInZone(uint32 zoneid = 0, uint32 guild_id = 0);
 
 	// this is a TAKP enhancement that tries to give some leeway for /corpse drag range when the player is moving while dragging
 	// https://www.takproject.net/forums/index.php?threads/11-9-2022.23725/
@@ -1052,6 +1084,8 @@ public:
 
 	void CorpseSummoned(Corpse *corpse);
 	void CorpseSummonOnPositionUpdate();
+
+	inline bool InstanceBootGraceTimerExpired() { return instance_boot_grace_timer.Check(); }
 
 protected:
 	friend class Mob;
@@ -1064,7 +1098,7 @@ protected:
 	void MakeBuffFadePacket(uint16 spell_id, int slot_id, bool send_message = true);
 	bool client_data_loaded;
 
-	int16 GetFocusEffect(focusType type, uint16 spell_id, std::string& item_name, bool dot_tick = false, int spell_level = -1);
+	int16 GetFocusEffect(focusType type, uint16 spell_id, std::string& item_name, bool dot_tick = false, int spell_level = -1, bool include_items = true, bool include_spells = true, bool include_aa = true);
 
 	Mob* bind_sight_target;
 
@@ -1079,7 +1113,7 @@ private:
 	eqFilterMode ClientFilters[_FilterCount];
 	int32 HandlePacket(const EQApplicationPacket *app);
 	void OPTGB(const EQApplicationPacket *app);
-	void OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, float x, float y, float z);
+	void OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 GuildZoneID, float x, float y, float z);
 	void OPMemorizeSpell(const EQApplicationPacket *app);
 	void OPMoveCoin(const EQApplicationPacket* app);
 	void MoveItemCharges(EQ::ItemInstance &from, int16 to_slot, uint8 type);
@@ -1140,7 +1174,6 @@ private:
 	uint16				duel_target;
 	bool				duelaccepted;
 	std::list<uint32>	keyring;
-	std::set<uint16>	looted_legacy_items;
 
 	bool				tellsoff;	// GM /toggle
 	bool				gmhideme;
@@ -1175,6 +1208,8 @@ private:
 public:
 	bool IsLockSavePosition() const;
 	void SetLockSavePosition(bool lock_save_position);
+	inline bool IsMuleInitiated() { return mule_initiated; }
+	inline void SetMuleInitiated(bool initiated) { mule_initiated = initiated; }
 private:
 
 
@@ -1194,12 +1229,13 @@ private:
 	//Zoning related stuff
 	void SendZoneCancel(ZoneChange_Struct *zc);
 	void SendZoneError(ZoneChange_Struct *zc, int8 err);
-	void DoZoneSuccess(ZoneChange_Struct *zc, uint16 zone_id, float dest_x, float dest_y, float dest_z, float dest_h, int8 ignore_r);
-	void ZonePC(uint32 zoneID, float x, float y, float z, float heading, uint8 ignorerestrictions, ZoneMode zm);
-	void ProcessMovePC(uint32 zoneID, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
+	void DoZoneSuccess(ZoneChange_Struct *zc, uint16 zone_id, uint32 zone_guild_id, float dest_x, float dest_y, float dest_z, float dest_h, int8 ignore_r);
+	void ZonePC(uint32 zoneID, uint32 zoneGuildID, float x, float y, float z, float heading, uint8 ignorerestrictions, ZoneMode zm);
+	void ProcessMovePC(uint32 zoneID, uint32 zoneguildid, float x, float y, float z, float heading, uint8 ignorerestrictions = 0, ZoneMode zm = ZoneSolicited);
 
 	glm::vec4 m_ZoneSummonLocation;
 	uint16 zonesummon_id;
+	uint32 zonesummon_guildid;
 	uint8 zonesummon_ignorerestrictions;
 	ZoneMode zone_mode;
 
@@ -1241,6 +1277,7 @@ private:
 	Timer underwater_timer;
 
 	Timer zoning_timer;
+	Timer instance_boot_grace_timer;
 
     glm::vec3 m_Proximity;
 
@@ -1309,6 +1346,8 @@ private:
 	bool PendingGuildInvitation;
 	int PendingRezzXP;
 	uint32 PendingRezzDBID;
+	uint32 PendingRezzZoneID;
+	uint32 PendingRezzZoneGuildID;
 	uint16 PendingRezzSpellID; // Only used for resurrect while hovering.
 	std::string PendingRezzCorpseName; // Only used for resurrect while hovering.
 
@@ -1338,6 +1377,8 @@ private:
 	Timer ranged_attack_leeway_timer;
 	uint32 feigned_time; // GetCurrentTime() when feigned
 	int8 last_fatigue;
+	bool mule_initiated;
+	uint32 pending_marriage_character_id;
 };
 
 #endif

@@ -129,8 +129,14 @@ public:
 	void UnmemSpell(int slot, bool update_client);
 	void UnmemSpellAll();
 	void UnmemSpellAll(bool update_client);
+	luabind::object GetMemmedSpells(lua_State* L);
+	luabind::object GetScribedSpells(lua_State* L);
+	luabind::object GetScribeableSpells(lua_State* L);
+	luabind::object GetScribeableSpells(lua_State* L, uint8 min_level);
+	luabind::object GetScribeableSpells(lua_State* L, uint8 min_level, uint8 max_level);
 	void ScribeSpell(int spell_id, int slot);
 	void ScribeSpell(int spell_id, int slot, bool update_client);
+	uint16 ScribeSpells(uint8 min_level, uint8 max_level);
 	void UnscribeSpell(int slot);
 	void UnscribeSpell(int slot, bool update_client);
 	void UnscribeSpellAll();
@@ -249,6 +255,10 @@ public:
 	void QuestReward(Lua_Mob target, luabind::adl::object reward);
 	int GetHandToHandDamage();
 	int GetHandToHandDelay();
+	bool IsMarried();
+	void SetMarried(const char*);
+	void SetTemporaryLastName(char*);
+	bool HasTemporaryLastName();
 };
 
 #endif

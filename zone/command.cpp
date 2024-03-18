@@ -268,6 +268,7 @@ int command_init(void)
 		command_add("kill", "- Kill your target.", AccountStatus::GMLeadAdmin, command_kill) ||
 
 		command_add("lastname", "[new lastname] - Set your or your player target's lastname.", AccountStatus::EQSupport, command_lastname) ||
+		command_add("leaderboard", "[SFHC|SSFHC|SFHCOnly|HC] - List hardcore leaderboard.", AccountStatus::Player, command_leaderboard) ||
 		command_add("level", "[level] - Set your or your target's level.", AccountStatus::QuestTroupe, command_level) ||
 		command_add("listnpcs", "[name/range] - Search NPCs.", AccountStatus::EQSupport, command_listnpcs) ||
 		command_add("load_shared_memory", "[shared_memory_name] - Reloads shared memory and uses the input as output", AccountStatus::GMImpossible, command_load_shared_memory) ||
@@ -275,6 +276,7 @@ int command_init(void)
 		command_add("logs", "Manage anything to do with logs.", AccountStatus::GMCoder, command_logs) ||
 		command_add("logtest", "Performs log performance testing.", AccountStatus::GMImpossible, command_logtest) ||
 
+		command_add("makemule", "Flags the account of the player who runs the command as a mule.", AccountStatus::Player, command_makemule) ||
 		command_add("makepet", "[level] [class] [race] [texture] - Make a pet.", AccountStatus::QuestMaster, command_makepet) ||
 		command_add("mana", "- Fill your or your target's mana.", AccountStatus::GMMgmt, command_mana) ||
 		command_add("manaburn", "- Use AA Wizard class skill manaburn on target.", AccountStatus::GMAreas, command_manaburn) ||
@@ -332,7 +334,7 @@ int command_init(void)
 
 		command_add("qglobal", "[on/off/view] - Toggles qglobal functionality on an NPC.", AccountStatus::GMImpossible, command_qglobal) ||
 		command_add("qtest", "- QueryServ testing command.", AccountStatus::GMTester, command_qtest) ||
-		command_add("quaketrigger", "- Triggers an earthquake manually", AccountStatus::GMImpossible, command_quaketrigger) ||
+		command_add("quaketrigger", "- [type_num (1 = Normal, 2 = PVP)] Triggers an earthquake manually", AccountStatus::GMImpossible, command_quaketrigger) ||
 		command_add("questerrors", "Shows quest errors.",AccountStatus::Player, command_questerrors) ||
 
 		command_add("race", "[racenum] - Change your or your target's race. Use racenum 0 to return to normal.", AccountStatus::QuestMaster, command_race) ||
@@ -384,7 +386,9 @@ int command_init(void)
 		command_add("showbuffs", "- List buffs active on your target or you if no target.", AccountStatus::Guide, command_showbuffs) ||
 		command_add("showfilters", "- list client serverfilter settings.", AccountStatus::GMCoder, command_showfilters) ||
 		command_add("showhelm", "on/off [all] Toggles displaying of player helms (including your own.) Specifying 'all' toggles every character currently on your account", AccountStatus::Player, command_showhelm) ||
+		command_add("showlootlockouts", "- Shows your currently active loot lockouts. These do not apply to earthquake creatures.", AccountStatus::Player, command_showlootlockouts) ||
 		command_add("showpetspell", "[spellid/searchstring] - search pet summoning spells.", AccountStatus::Guide, command_showpetspell) ||
+		command_add("showquake", "- Shows current earthquake timer. Requires you to be a guild officer or leader.", AccountStatus::Player, command_showquake) ||
 		command_add("showregen", "- Shows information about your target's regen.", AccountStatus::GMAdmin, command_showregen) ||
 		command_add("showskills", "- Show the values of your skills if no target, or your target's skills.", AccountStatus::Guide, command_showskills) ||
 		command_add("showspellslist", "Shows spell list of targeted NPC.", AccountStatus::GMStaff, command_showspellslist) ||
@@ -445,6 +449,7 @@ int command_init(void)
 		command_add("zheader", "[zonename] - Load zheader for zonename from the database.", AccountStatus::GMImpossible, command_zheader) ||
 		command_add("zone", "[Zone ID|Zone Short Name] [X] [Y] [Z] - Teleport to specified Zone by ID or Short Name (coordinates are optional).", AccountStatus::QuestTroupe, command_zone) ||
 		command_add("zonebootup", "(shortname) (ZoneServerID) - Make a zone server boot a specific zone. If no arguments are given, it will find and boot any crashed zones.", AccountStatus::GMImpossible, command_zonebootup) ||
+			command_add("zoneguild", "[Zone ID|Zone Short Name] [Guild ID] [X] [Y] [Z] - Teleport to specified Zone by ID or Short Name (coordinates are optional).", AccountStatus::QuestTroupe, command_zoneguild) ||
 		command_add("zonelock", "[list/lock/unlock] - Set/query lock flag for zoneservers.", AccountStatus::GMAreas, command_zonelock) ||
 		command_add("zoneshutdown", "[shortname] - Shut down a zone server.", AccountStatus::GMImpossible, command_zoneshutdown) ||
 		command_add("zonespawn", "- Not implemented.", AccountStatus::Max, command_zonespawn) ||
@@ -1301,6 +1306,7 @@ void command_summon(Client *c, const Seperator *sep){
 				szp->x_pos = c->GetX(); // May need to add a factor of 8 in here..
 				szp->y_pos = c->GetY();
 				szp->z_pos = c->GetZ();
+				szp->zoneguildid = zone->GetGuildID();
 				worldserver.SendPacket(pack);
 				safe_delete(pack);
 			}
@@ -1342,7 +1348,7 @@ void command_summon(Client *c, const Seperator *sep){
 		}
 
 		c->Message(CC_Default, "Summoning player %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
-		t->CastToClient()->MovePC(zone->GetZoneID(), c->GetX(), c->GetY(), c->GetZ(), c->GetHeading(), 2, GMSummon);
+		t->CastToClient()->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), c->GetX(), c->GetY(), c->GetZ(), c->GetHeading(), 2, GMSummon);
 	}
 }
 
@@ -1356,7 +1362,7 @@ void command_zone(Client *c, const Seperator *sep)
 
 	const char* zone_identifier = sep->arg[1];
 
-	if (Strings::IsNumber(zone_identifier) && zone_identifier == "0") {
+	if (Strings::IsNumber(zone_identifier) && !strcmp(zone_identifier, "0")) {
 		c->Message(CC_Default, "Sending you to the safe coordinates of this zone.");
 
 		c->MovePC(
@@ -1400,6 +1406,82 @@ void command_zone(Client *c, const Seperator *sep)
 
 	c->MovePC(
 		zone_id,
+		x,
+		y,
+		z,
+		0.0f,
+		0,
+		zone_mode
+	);
+}
+
+void command_zoneguild(Client *c, const Seperator *sep)
+{
+	int arguments = sep->argnum;
+	if (!arguments) {
+		c->Message(CC_Default, "Usage: #zoneguild [Zone ID|Zone Short Name] [Guild Id] [X] [Y] [Z]");
+		return;
+	}
+
+	const char* zone_identifier = sep->arg[1];
+
+	if (Strings::IsNumber(zone_identifier) && !strcmp(zone_identifier, "0")) {
+		c->Message(CC_Default, "Sending you to the safe coordinates of this zone.");
+
+		c->MovePC(
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0,
+			ZoneToSafeCoords
+		);
+		return;
+	}
+
+	auto zone_id = (
+		sep->IsNumber(1) ?
+		std::stoul(zone_identifier) :
+		database.GetZoneID(zone_identifier)
+		);
+	auto zone_short_name = database.GetZoneName(zone_id);
+	if (!zone_id || !zone_short_name) {
+		c->Message(
+			CC_Default,
+			fmt::format(
+				"No zones were found matching '{}'.",
+				zone_identifier
+			).c_str()
+		);
+		return;
+	}
+
+	auto min_status = database.GetMinStatus(zone_id);
+	if (c->Admin() < min_status) {
+		c->Message(CC_Default, "Your status is not high enough to go to this zone.");
+		return;
+	}
+
+
+	const char* guild_identifier = sep->arg[2];
+
+	uint32 guild_id = (uint32)(
+		sep->IsNumber(2) ?
+		atol(guild_identifier) :
+		GUILD_NONE
+		);
+
+	if (guild_id == 0)
+		guild_id = GUILD_NONE;
+
+	auto x = sep->IsNumber(3) ? std::stof(sep->arg[3]) : 0.0f;
+	auto y = sep->IsNumber(4) ? std::stof(sep->arg[4]) : 0.0f;
+	auto z = sep->IsNumber(5) ? std::stof(sep->arg[5]) : 0.0f;
+	auto zone_mode = sep->IsNumber(3) ? ZoneSolicited : ZoneToSafeCoords;
+
+	c->MovePCGuildID(
+		zone_id,
+		guild_id,
 		x,
 		y,
 		z,
@@ -1777,54 +1859,75 @@ void command_listnpcs(Client *c, const Seperator *sep){
 	}
 }
 
-void command_date(Client *c, const Seperator *sep){
-	//yyyy mm dd hh mm local
-	if (sep->arg[3][0] == 0 || !sep->IsNumber(1) || !sep->IsNumber(2) || !sep->IsNumber(3)) {
-		c->Message(CC_Red, "Usage: #date yyyy mm dd [HH MM]");
+void command_date(Client *c, const Seperator *sep)
+{
+	const auto arguments = sep->argnum;
+	if (
+		arguments < 1 ||
+		!sep->IsNumber(1) ||
+		!sep->IsNumber(2) ||
+		!sep->IsNumber(3)
+		) {
+		c->Message(CC_Default, "Usage: #date [Year] [Month] [Day] [Hour] [Minute]");
+		c->Message(CC_Default, "Hour and Minute are optional");
+		return;
 	}
-	else {
-		int h = 0, m = 0;
-		TimeOfDay_Struct eqTime;
-		zone->zone_time.getEQTimeOfDay(time(0), &eqTime);
-		if (!sep->IsNumber(4))
-			h = eqTime.hour;
-		else
-			h = atoi(sep->arg[4]);
-		if (!sep->IsNumber(5))
-			m = eqTime.minute;
-		else
-			m = atoi(sep->arg[5]);
-		c->Message(CC_Red, "Setting world time to %s-%s-%s %i:%i...", sep->arg[1], sep->arg[2], sep->arg[3], h, m);
-		zone->SetDate(atoi(sep->arg[1]), atoi(sep->arg[2]), atoi(sep->arg[3]), h, m);
-	}
+
+	TimeOfDay_Struct eqTime;
+	zone->zone_time.getEQTimeOfDay(time(0), &eqTime);
+
+	const uint16 year = Strings::ToUnsignedInt(sep->arg[1]);
+	const uint8  month = Strings::ToUnsignedInt(sep->arg[2]);
+	const uint8  day = Strings::ToUnsignedInt(sep->arg[3]);
+	const uint8  hour = !sep->IsNumber(4) ? eqTime.hour : Strings::ToUnsignedInt(sep->arg[4]);
+	const uint8  minute = !sep->IsNumber(5) ? eqTime.minute : Strings::ToUnsignedInt(sep->arg[5]);
+	
+	c->Message(CC_Default, fmt::format("Setting world time to {}-{}-{} {}:{}...", year, month, day, hour, minute).c_str());
+	zone->SetDate(year, month, day, hour, minute);
 }
 
-void command_timezone(Client *c, const Seperator *sep){
-	if (sep->arg[1][0] == 0 && !sep->IsNumber(1)) {
-		c->Message(CC_Red, "Usage: #timezone HH [MM]");
-		c->Message(CC_Red, "Current timezone is: %ih %im", zone->zone_time.getEQTimeZoneHr(), zone->zone_time.getEQTimeZoneMin());
+void command_timezone(Client *c, const Seperator *sep)
+{
+	const auto arguments = sep->argnum;
+	if (arguments < 1 || sep->IsNumber(1)) {
+		c->Message(CC_Default, "Usage: #timezone HH [MM]");
+		c->Message(CC_Default, fmt::format("Current timezone is: {}h {}m", zone->zone_time.getEQTimeZoneHr(), zone->zone_time.getEQTimeZoneMin()).c_str());
+		return;
 	}
-	else {
-		uint8 hours = atoi(sep->arg[1]);
-		uint8 minutes = atoi(sep->arg[2]);
-		if (!sep->IsNumber(2))
-			minutes = 0;
-		c->Message(CC_Red, "Setting timezone to %i h %i m", hours, minutes);
-		uint32 ntz = (hours * 60) + minutes;
-		zone->zone_time.setEQTimeZone(ntz);
-		database.SetZoneTZ(zone->GetZoneID(), ntz);
 
-		// Update all clients with new TZ.
-		auto outapp = new EQApplicationPacket(OP_TimeOfDay, sizeof(TimeOfDay_Struct));
-		TimeOfDay_Struct* tod = (TimeOfDay_Struct*)outapp->pBuffer;
-		zone->zone_time.getEQTimeOfDay(time(0), tod);
-		entity_list.QueueClients(c, outapp);
-		safe_delete(outapp);
+	uint8 minutes = 0;
+	uint8 hours = Strings::ToUnsignedInt(sep->arg[1]);
+
+	if (hours > 24) {
+		hours = 24;
 	}
+
+	if (!sep->IsNumber(2)) {
+		minutes = Strings::ToUnsignedInt(sep->arg[2]);
+
+		if (minutes > 59) {
+			minutes = 59;
+		}
+	}
+
+	c->Message(CC_Default, fmt::format("Setting timezone to {} h {} m", hours, minutes).c_str());
+	const int new_timezone = ((hours * 60) + minutes);
+	zone->zone_time.setEQTimeZone(new_timezone);
+	database.SetZoneTZ(zone->GetZoneID(), new_timezone);
+
+	// Update all clients with new TZ.
+	auto outapp = new EQApplicationPacket(OP_TimeOfDay, sizeof(TimeOfDay_Struct));
+
+	auto tod = (TimeOfDay_Struct*)outapp->pBuffer;
+	zone->zone_time.getEQTimeOfDay(time(0), tod);
+
+	entity_list.QueueClients(c, outapp);
+	safe_delete(outapp);
 }
 
-void command_synctod(Client *c, const Seperator *sep){
-	c->Message(CC_Red, "Updating Time/Date for all clients in zone...");
+void command_synctod(Client *c, const Seperator *sep)
+{
+	c->Message(CC_Default, "Updating Time/Date for all clients in zone...");
 	auto outapp = new EQApplicationPacket(OP_TimeOfDay, sizeof(TimeOfDay_Struct));
 	TimeOfDay_Struct* tod = (TimeOfDay_Struct*)outapp->pBuffer;
 	zone->zone_time.getEQTimeOfDay(time(0), tod);
@@ -2871,12 +2974,12 @@ void command_size(Client *c, const Seperator *sep){
 	else 
 	{
 		float newsize = atof(sep->arg[1]);
-		if (newsize > 255)
-		{
-			c->Message(CC_Default, "Error: #size: Size can not be greater than 255.");
-			return;
-		}
-		else if (newsize < 0)
+		//if (newsize > 255)
+		//{
+		//	c->Message(CC_Default, "Error: #size: Size can not be greater than 255.");
+		//	return;
+		//}
+		if (newsize < 0)
 		{
 			c->Message(CC_Default, "Error: #size: Size can not be less than 0.");
 			return;
@@ -2887,7 +2990,7 @@ void command_size(Client *c, const Seperator *sep){
 		}
 		else 
 		{
-			target->ChangeSize(newsize);
+			target->ChangeSize(newsize, true);
 			c->Message(CC_Default, "%s is now size %0.1f", target->GetName(), atof(sep->arg[1]));
 		}
 	}
@@ -3652,6 +3755,76 @@ void command_findnpctype(Client *c, const Seperator *sep)
 
 }
 
+void command_leaderboard(Client *c, const Seperator *sep)
+{
+	if (sep->arg[1][0] == 0) {
+		c->Message(CC_Default, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
+		return;
+	}
+
+	std::string query = "SELECT level, class, name, race, e_solo_only, e_self_found FROM character_data WHERE ";
+
+	if(strncasecmp(sep->arg[1], "SFHCOnly", 8) == 0)
+	{
+		query += "e_solo_only = 0 AND e_self_found = 1 AND e_hardcore = 1";
+	}
+	else if(strncasecmp(sep->arg[1], "SFHC", 4) == 0)
+	{
+		query += "e_self_found = 1 AND e_hardcore = 1";
+	}
+	else if(strncasecmp(sep->arg[1], "SSFHC", 5) == 0)
+	{
+		query += "e_solo_only = 1 AND e_self_found = 1 AND e_hardcore = 1";
+	}
+	else if(strncasecmp(sep->arg[1], "HC", 2) == 0)
+	{
+		query += "e_hardcore = 1";
+	}
+	else
+	{
+		c->Message(CC_Default, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
+		return;
+	}
+
+	query += " ORDER BY level DESC LIMIT 25;";
+
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		c->Message(CC_Default, "Error querying database.");
+		c->Message(CC_Default, query.c_str());
+		return;
+	}
+
+	int count = 0;
+	const int maxrows = 25;
+
+	c->Message(CC_Default, "---------------------------");
+
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		if (++count > maxrows) {
+			c->Message(CC_Default, "%i players shown.", maxrows);
+			break;
+		}
+
+		bool IsSolo = strcmp(row[4], "1") == 0; 
+		bool IsSelfFound = strcmp(row[5], "1") == 0; 
+
+		std::string SSFTag = "";
+		if(IsSolo)
+			SSFTag += "Solo ";
+		if(IsSelfFound)
+			SSFTag += "Self Found";
+
+		// Convert race and class to strings
+		c->Message(CC_Default, "[%s %s] %s (%s) - %s", row[0], GetClassIDName(std::stoi(row[1]), std::stoi(row[0])), row[2], GetRaceIDName(std::stoi(row[3])), SSFTag.c_str());
+	}
+
+	if (count <= maxrows)
+		c->Message(CC_Default, "Query complete. %i rows shown.", count);
+	else if (count == 0)
+		c->Message(CC_Default, "No matches found for %s.", sep->arg[1]);
+}
+
 void command_findzone(Client *c, const Seperator *sep)
 {
 	if (sep->arg[1][0] == 0) {
@@ -4011,6 +4184,102 @@ void command_zonelock(Client *c, const Seperator *sep){
 	safe_delete(pack);
 }
 
+void command_showquake(Client *c, const Seperator *sep)
+{
+	if (!c)
+		return;
+	
+	if (c->GuildID() == GUILD_NONE)
+	{
+		c->Message(CC_Default, "You must be part of a guild to use this command.");
+		return;
+	}
+
+	if (c->GuildRank() == 0)
+	{
+		c->Message(CC_Default, "You must be an officer rank or higher to use this command.");
+		return;
+	}
+
+	if (zone)
+	{
+		ServerEarthquakeImminent_Struct quake_struct;
+		memset(&quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
+		database.LoadQuakeData(quake_struct);
+		int64 nextQuakeTime = quake_struct.next_start_timestamp;
+		int64 curTime = Timer::GetTimeSeconds();
+
+		if (nextQuakeTime - curTime > 0)
+		{
+			std::string time_str = "The next earthquake will begin in ";
+			time_str += Strings::SecondsToTime(nextQuakeTime - curTime);
+			time_str += "";
+			c->Message(CC_Yellow, time_str.c_str());
+		}
+	}
+}
+
+void command_showlootlockouts(Client *c, const Seperator *sep)
+{
+	if (!c)
+		return;
+
+	int64_t curTime = Timer::GetTimeSeconds();
+
+
+	c->Message(CC_LightGreen, "=== Current Loot Lockouts ===");
+
+	for (auto lockout : c->loot_lockouts)
+	{
+		int64_t time_remaining = lockout.second.expirydate - curTime;
+		if (time_remaining >= 1)
+		{
+			c->Message(CC_Red, "== %s: Expires in %s", lockout.second.npc_name, Strings::SecondsToTime((int)time_remaining).c_str());
+		}
+		else
+		{
+			if (time_remaining <= 1)
+			{
+				c->Message(CC_LightGreen, "== %s: Available", lockout.second.npc_name);
+			}
+		}
+	}
+
+
+	c->Message(CC_LightGreen, "=== Current Legacy Item Lockouts ===");
+
+	for (auto legacyitem : c->looted_legacy_items)
+	{
+		const EQ::ItemData* item = database.GetItem(legacyitem.first);
+
+		if (!item)
+			continue;
+
+		if (!item->Name[0])
+			continue;
+
+		int64_t time_remaining = 0xFFFFFFFFFFFFFFFF;
+		if (legacyitem.second.expirydate != 0)
+		{
+			time_remaining = legacyitem.second.expirydate - curTime;
+		}
+
+		//Magic number
+		if (time_remaining == 0xFFFFFFFFFFFFFFFF) // Never unlocks
+		{
+			c->Message(CC_Red, "== %s: Never Expires", item->Name);
+		}
+		else if (time_remaining >= 1) // Lockout present
+		{
+			c->Message(CC_Red, "== %s: Expires in %s", item->Name, Strings::SecondsToTime((int)time_remaining).c_str());
+		}
+		else //Available
+		{
+			c->Message(CC_LightGreen, "== %s: Available", item->Name);
+		}
+	}
+}
+
 void command_corpse(Client *c, const Seperator *sep)
 {
 	std::string help0 = "#Corpse commands usage:";
@@ -4081,7 +4350,7 @@ void command_corpse(Client *c, const Seperator *sep)
 				return;
 			}
 
-			Corpse* PlayerCorpse = database.SummonBuriedCharacterCorpses(t->CharacterID(), t->GetZoneID(), t->GetPosition());
+			Corpse* PlayerCorpse = database.SummonBuriedCharacterCorpses(t->CharacterID(), t->GetZoneID(), zone->GetGuildID(), t->GetPosition());
 
 			if (!PlayerCorpse)
 				c->Message(CC_Default, "Your target doesn't have any buried corpses.");
@@ -4199,7 +4468,7 @@ void command_corpse(Client *c, const Seperator *sep)
 		else
 		{
 			c->Message(CC_Red, "CorpseID : Zone , x , y , z , Buried");
-			std::string query = StringFormat("SELECT id, zone_id, x, y, z, is_buried FROM character_corpses WHERE charid = %d", target->CastToClient()->CharacterID());
+			std::string query = StringFormat("SELECT id, zone_id, x, y, z, is_buried, zone_guild_id FROM character_corpses WHERE charid = %d", target->CastToClient()->CharacterID());
 			auto results = database.QueryDatabase(query);
 
 			if (!results.Success() || results.RowCount() == 0)
@@ -4211,7 +4480,7 @@ void command_corpse(Client *c, const Seperator *sep)
 			for (auto row = results.begin(); row != results.end(); ++row)
 			{
 
-				c->Message(CC_Yellow, " %s:	%s, %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[2], row[3], row[4], row[5]);
+				c->Message(CC_Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[6], row[2], row[3], row[4], row[5]);
 			}
 		}
 	}
@@ -4254,17 +4523,27 @@ void command_corpse(Client *c, const Seperator *sep)
 	}
 	else if (strcasecmp(sep->arg[1], "backups") == 0)
 	{
+
 		if (target == 0 || !target->IsClient())
 			c->Message(CC_Default, "Error: Target must be a player to list their backups.");
 		else
 		{
-			c->Message(CC_Red, "CorpseID : Zone , x , y , z , Items");
-			std::string query = StringFormat("SELECT id, zone_id, x, y, z FROM character_corpses_backup WHERE charid = %d", target->CastToClient()->CharacterID());
+			uint32 charid = 0;
+			if (!sep->arg[2][0])
+			{
+				charid = target->CastToClient()->CharacterID();
+			}
+			else
+				charid = database.GetCharacterID(sep->arg[2]);
+
+
+			c->Message(CC_Red, "CorpseID : Zone , Guild, x , y , z , Items");
+			std::string query = StringFormat("SELECT id, zone_id, x, y, z, zone_guild_id FROM character_corpses_backup WHERE charid = %d", charid);
 			auto results = database.QueryDatabase(query);
 
 			if (!results.Success() || results.RowCount() == 0)
 			{
-				c->Message(CC_Red, "No corpse backups exist for %s with ID: %i.", target->GetName(), target->CastToClient()->CharacterID());
+				c->Message(CC_Red, "No corpse backups exist for %s with ID: %i.", sep->arg[3], charid);
 				return;
 			}
 
@@ -4274,7 +4553,7 @@ void command_corpse(Client *c, const Seperator *sep)
 				auto ic_results = database.QueryDatabase(ic_query);
 				auto ic_row = ic_results.begin();
 
-				c->Message(CC_Yellow, " %s:	%s, %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[2], row[3], row[4], ic_row[0]);
+				c->Message(CC_Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[5], row[2], row[3], row[4], ic_row[0]);
 			}
 		}
 	}
@@ -4295,11 +4574,19 @@ void command_corpse(Client *c, const Seperator *sep)
 
 			if (!sep->IsNumber(2))
 			{
-				c->Message(CC_Default, "Usage: #corpse restore [corpse_id].");
+				c->Message(CC_Default, "Usage: #corpse restore [corpse_id] [charid].");
 				return;
 			}
 			else
 				corpseid = atoi(sep->arg[2]);
+
+			uint32 charid = 0;
+			if (!sep->arg[3][0])
+			{
+				charid = t->CharacterID();
+			}
+			else
+				charid = database.GetCharacterID(sep->arg[3]);
 
 			if(!database.IsValidCorpseBackup(corpseid))
 			{
@@ -4311,16 +4598,11 @@ void command_corpse(Client *c, const Seperator *sep)
 				c->Message(CC_Red, "Corpse %i has been found! Please summon or delete it before attempting to restore from a backup.", atoi(sep->arg[2]));
 				return;
 			}
-			else if(!database.IsCorpseBackupOwner(corpseid, t->CharacterID()))
-			{
-				c->Message(CC_Red, "Targetted player is not the owner of the specified corpse!");
-				return;
-			}
 			else
 			{
 				if(database.CopyBackupCorpse(corpseid))
 				{
-					Corpse* PlayerCorpse = database.SummonCharacterCorpse(corpseid, t->CharacterID(), t->GetZoneID(), t->GetPosition());
+					Corpse* PlayerCorpse = database.SummonCharacterCorpse(corpseid, charid, t->GetZoneID(), zone->GetGuildID(), t->GetPosition());
 
 					if (!PlayerCorpse)
 						c->Message(CC_Default, "Summoning of backup corpse failed. Please escalate this issue.");
@@ -4891,8 +5173,9 @@ void command_repop(Client *c, const Seperator *sep)
 			iterator.Reset();
 			while (iterator.MoreElements()) {
 				std::string query = StringFormat(
-					"DELETE FROM respawn_times WHERE id = %lu",
-					(unsigned long)iterator.GetData()->GetID()
+					"DELETE FROM respawn_times WHERE id = %lu and guild_id = %lu",
+					(unsigned long)iterator.GetData()->GetID(),
+					(unsigned long)zone->GetGuildID()
 				);
 				auto results = database.QueryDatabase(query);
 				iterator.Advance();
@@ -4916,8 +5199,8 @@ void command_repopclose(Client *c, const Seperator *sep)
 		iterator.Reset();
 		while (iterator.MoreElements()) {
 			std::string query = StringFormat(
-				"DELETE FROM respawn_times WHERE id = %lu",
-				(unsigned long)iterator.GetData()->GetID()
+				"DELETE FROM respawn_times WHERE id = %lu and guild_id = %lu",
+				(unsigned long)iterator.GetData()->GetID(), zone->GetGuildID()
 			);
 			auto results = database.QueryDatabase(query);
 			iterator.Advance();
@@ -5301,7 +5584,8 @@ void command_loc(Client *c, const Seperator *sep)
 
 	auto target_position = target->GetPosition();
 
-	c->Message(CC_Default, fmt::format(" {} Location | XYZ: {:.2f}, {:.2f}, {:.2f} Heading: {:.2f} ", (c == target ? "Your" : fmt::format(" {} ({}) ", target->GetCleanName(), target->GetID())), target_position.x, target_position.y, target_position.z, target_position.w).c_str());
+	// client heading uses 0 - 511 if target is client.
+	c->Message(CC_Default, fmt::format(" {} Location | XYZ: {:.2f}, {:.2f}, {:.2f} Heading: {:.2f} ", (c == target ? "Your" : fmt::format(" {} ({}) ", target->GetCleanName(), target->GetID())), target_position.x, target_position.y, target_position.z, (c == target || target->IsClient()) ? target_position.w * 2 : target_position.w).c_str());
 		
 	float newz = 0;
 	if (!zone->zonemap)
@@ -5536,32 +5820,48 @@ void command_flag(Client *c, const Seperator *sep){
 	}
 }
 
-void command_time(Client *c, const Seperator *sep){
-	char timeMessage[255];
-	int minutes = 0;
-	if (sep->IsNumber(1)) {
-		if (sep->IsNumber(2)) {
-			minutes = atoi(sep->arg[2]);
-		}
-		c->Message(CC_Red, "Setting world time to %s:%i (Timezone: 0)...", sep->arg[1], minutes);
-		zone->SetTime(atoi(sep->arg[1]) + 1, minutes);
-		LogInfo("{} :: Setting world time to {}:{} (Timezone: 0)...", c->GetCleanName(), sep->arg[1], minutes);
-	}
-	else {
-		c->Message(CC_Red, "To set the Time: #time HH [MM]");
+void command_time(Client *c, const Seperator *sep)
+{
+	const auto arguments = sep->argnum;
+	if (arguments < 1 || !sep->IsNumber(1)) {
+		c->Message(CC_Default, "To set the Time: #time HH [MM]");
+
 		TimeOfDay_Struct eqTime;
 		zone->zone_time.getEQTimeOfDay(time(0), &eqTime);
-		sprintf(timeMessage, "%02d:%s%d %s (Timezone: %ih %im)",
-			((eqTime.hour - 1) % 12) == 0 ? 12 : ((eqTime.hour - 1) % 12),
+
+		auto time_string = fmt::format("{}:{}{} {}",
+			((eqTime.hour) % 12) == 0 ? 12 : ((eqTime.hour) % 12),
 			(eqTime.minute < 10) ? "0" : "",
 			eqTime.minute,
-			(eqTime.hour >= 13) ? "pm" : "am",
-			zone->zone_time.getEQTimeZoneHr(),
-			zone->zone_time.getEQTimeZoneMin()
-			);
-		c->Message(CC_Red, "It is now %s.", timeMessage);
-		LogInfo("Current Time is: {} ", timeMessage);
+			(eqTime.hour >= 12 && eqTime.hour < 24) ? "PM" : "AM"
+		);
+
+		c->Message(CC_Default, fmt::format("It is now {}.", time_string).c_str());
+
+		return;
 	}
+
+	uint8 minutes = 0;
+	uint8 hours = Strings::ToUnsignedInt(sep->arg[1]);
+
+	if (hours > 24) {
+		hours = 24;
+	}
+
+
+	if (sep->IsNumber(2)) {
+		minutes = Strings::ToUnsignedInt(sep->arg[2]);
+
+		if (minutes > 59) {
+			minutes = 59;
+		}
+	}
+		
+	c->Message(CC_Default, fmt::format("Setting world time to {}:{} ...", hours, minutes).c_str());
+		
+	zone->SetTime(hours, minutes);
+	
+	LogInfo("{} :: Setting world time to {}:{} ...", c->GetCleanName(), hours, minutes);
 }
 
 void command_guild(Client *c, const Seperator *sep){
@@ -6465,99 +6765,65 @@ void command_beardcolor(Client *c, const Seperator *sep){
 	}
 }
 
-void command_scribespells(Client *c, const Seperator *sep){
-	uint8 max_level, min_level;
-	uint16 book_slot, curspell, count;
-	Client *t = c;
+void command_scribespells(Client *c, const Seperator *sep) {
+	Client *target = c;
+	if (c->GetTarget() && c->GetTarget()->IsClient() && c->GetGM()) {
+		target = c->GetTarget()->CastToClient();
+	}
 
-	if (c->GetTarget() && c->GetTarget()->IsClient() && c->GetGM())
-		t = c->GetTarget()->CastToClient();
-
-	if (!sep->arg[1][0])
-	{
+	if (sep->argnum < 1 || !sep->IsNumber(1)) {
 		c->Message(CC_Default, "FORMAT: #scribespells <max level> <min level>");
 		return;
 	}
 
-	max_level = (uint8)atoi(sep->arg[1]);
-	if (!c->GetGM() && max_level > RuleI(Character, MaxLevel))
-		max_level = RuleI(Character, MaxLevel);	//default to Character:MaxLevel if we're not a GM & it's higher than the max level
-	min_level = sep->arg[2][0] ? (uint8)atoi(sep->arg[2]) : 1;	//default to 1 if there isn't a 2nd argument
-	if (!c->GetGM() && min_level > RuleI(Character, MaxLevel))
-		min_level = RuleI(Character, MaxLevel);	//default to Character:MaxLevel if we're not a GM & it's higher than the max level
+	uint8 rule_max_level = (uint8)RuleI(Character, MaxLevel);
+	uint8 max_level = (uint8)std::stoi(sep->arg[1]);
+	uint8 min_level = (
+		sep->IsNumber(2) ?
+		(uint8)
+		std::stoi(sep->arg[2]) :
+		1
+		); // Default to Level 1 if there isn't a 2nd argument
+	
+	if (!c->GetGM()) { // Default to Character:MaxLevel if we're not a GM and Level is higher than the max level
+		if (max_level > rule_max_level) {
+			max_level = rule_max_level;
+		}
 
+		if (min_level > rule_max_level) {
+			min_level = rule_max_level;
+		}
+	}
 
-	if (max_level < 1 || min_level < 1)
-	{
-		c->Message(CC_Default, "ERROR: Level must be greater than 1.");
+	if (max_level < 1 || min_level < 1) {
+		c->Message(CC_Default, "ERROR: Level must be greater than or equal to 1.");
 		return;
 	}
+
 	if (min_level > max_level) {
-		c->Message(CC_Default, "Error: Min Level must be less than or equal to Max Level.");
+		c->Message(CC_Default, "ERROR: Minimum Level must be less than or equal to Maximum Level.");
 		return;
 	}
 
-	t->Message(CC_Default, "Scribing spells to spellbook.");
-	if (t != c)
-		c->Message(CC_Default, "Scribing spells for %s.", t->GetName());
-	Log(Logs::General, Logs::Normal, "Scribe spells request for %s from %s, levels: %u -> %u", t->GetName(), c->GetName(), min_level, max_level);
-
-	for (curspell = 0, book_slot = t->GetNextAvailableSpellBookSlot(), count = 0; curspell < SPDAT_RECORDS && book_slot < MAX_PP_SPELLBOOK; curspell++, book_slot = t->GetNextAvailableSpellBookSlot(book_slot))
-	{
-		if
+	uint16 scribed_spells = target->ScribeSpells(min_level, max_level);
+	if (target != c) {
+		std::string spell_message = (
+			scribed_spells > 0 ?
 			(
-			spells[curspell].classes[WARRIOR] != 0 && // check if spell exists
-			spells[curspell].classes[t->GetPP().class_ - 1] <= max_level &&	//maximum level
-			spells[curspell].classes[t->GetPP().class_ - 1] >= min_level &&	//minimum level
-			spells[curspell].skill != 52 &&
-			!spells[curspell].not_player_spell
-			)
-		{
-			if (book_slot == -1) {	//no more book slots
-				t->Message(CC_Red, "Unable to scribe spell %s (%u) to spellbook: no more spell book slots available.", spells[curspell].name, curspell);
-				if (t != c)
-					c->Message(CC_Red, "Error scribing spells: %s ran out of spell book slots on spell %s (%u)", t->GetName(), spells[curspell].name, curspell);
-				break;
-			}
-			if (!t->HasSpellScribed(curspell)) {	//we don't already have it scribed
-				t->ScribeSpell(curspell, book_slot);
-				++count;
-			}
-		}
-	}
-
-	uint16 totalcount = 0;
-	for (curspell = 0; curspell < SPDAT_RECORDS; ++curspell)
-	{
-		if
-			(
-				spells[curspell].classes[WARRIOR] != 0 && // check if spell exists
-				spells[curspell].classes[t->GetPP().class_ - 1] <= max_level &&	//maximum level
-				spells[curspell].classes[t->GetPP().class_ - 1] >= min_level &&	//minimum level
-				spells[curspell].skill != 52 &&
-				!spells[curspell].not_player_spell
-			)
-		{
-			++totalcount;
-		}
-	}
-
-	if (count > 0) {
-		t->Message(CC_Default, "Successfully scribed %u spells.", count);
-		if (totalcount > MAX_PP_SPELLBOOK)
-		{
-			uint16 new_count = totalcount - MAX_PP_SPELLBOOK;
-			t->Message(CC_Red, "The last %d spells will not be displayed due to spellbook limit!", new_count);
-		}
-		if (t != c)
-		{
-			c->Message(CC_Default, "Successfully scribed %u spells for %s.", count, t->GetName());
-		}
-	}
-	else {
-		t->Message(CC_Default, "No spells scribed.");
-		if (t != c)
-			c->Message(CC_Default, "No spells scribed for %s.", t->GetName());
+				scribed_spells == 1 ?
+				"A new spell" :
+				fmt::format("{} New spells", scribed_spells)
+				) :
+			"No new spells"
+			);
+		c->Message(
+			CC_Default,
+			fmt::format(
+				"{} scribed for {}.",
+				spell_message,
+				target->GetCleanName()
+			).c_str()
+		);
 	}
 }
 
@@ -7278,8 +7544,8 @@ void command_ipban(Client *c, const Seperator *sep){
 
 void command_revoke(Client *c, const Seperator *sep)
 {
-	if (sep->arg[1][0] == 0 || sep->arg[2][0] == 0) {
-		c->Message(CC_Default, "Usage: #revoke [charname] [1/0]");
+	if (sep->arg[1][0] == 0 || sep->arg[2][0] == 0 || sep->arg[3][0] == 0) {
+		c->Message(CC_Default, "Usage: #revoke [charname] [0(unrevoke) / 1(all but guild/group/raid) / 2(guild/group/raid mute)] [duration in days (0 days is perma)]");
 		return;
 	}
 
@@ -7293,16 +7559,20 @@ void command_revoke(Client *c, const Seperator *sep)
 	std::string query = StringFormat("UPDATE account SET revoked = %d WHERE id = %i", flag, characterID);
 	auto results = database.QueryDatabase(query);
 
-	c->Message(CC_Red, "%s account number %i with the character %s.", flag ? "Revoking" : "Unrevoking", characterID, sep->arg[1]);
-
-	Client* revokee = entity_list.GetClientByAccID(characterID);
-	if (revokee) {
-		c->Message(CC_Default, "Found %s in this zone.", revokee->GetName());
-		revokee->SetRevoked(flag);
-		return;
+	int duration_in_days = atoi(sep->arg[3]);
+	if (duration_in_days != 0 && flag != 0)
+	{
+		std::string query2 = StringFormat("UPDATE `account` SET `revokeduntil` = DATE_ADD(NOW(), INTERVAL %i DAY) WHERE `id` = %i", duration_in_days, characterID);
+		auto results2 = database.QueryDatabase(query2);
+	}
+	else
+	{
+		//perma, or unrevoke
+		std::string query3 = StringFormat("UPDATE `account` SET `revokeduntil` = '0000-00-00 00:00:00' WHERE `id` = %i", characterID);
+		auto results3 = database.QueryDatabase(query3);
 	}
 
-	c->Message(CC_Red, "#revoke: Couldn't find %s in this zone, passing request to worldserver.", sep->arg[1]);
+	c->Message(CC_Red, "%s account number %i with the character %s.", flag ? "Revoking" : "Unrevoking", characterID, sep->arg[1]);
 
 	auto outapp = new ServerPacket(ServerOP_Revoke, sizeof(RevokeStruct));
 	RevokeStruct* revoke = (RevokeStruct*)outapp->pBuffer;
@@ -9736,8 +10006,10 @@ void command_qtest(Client *c, const Seperator *sep){
 			sem->minstatus = c->Admin();
 			sem->type = 1;
 			strncpy(sem->to, c->GetTarget()->GetCleanName(), 64);
-			strncpy(sem->to, c->GetCleanName(), 64);
+			strncpy(sem->from, c->GetCleanName(), 64);
 			sem->guilddbid = c->GuildID();
+			sem->characterid = c->CharacterID();
+			sem->groupid = 0;
 			worldserver.SendPacket(pack);
 			safe_delete(pack);
 		}
@@ -9829,7 +10101,7 @@ void command_zopp(Client *c, const Seperator *sep){
 		return;
 	else if (sep->argnum < 3 || sep->argnum > 4)
 		c->Message(CC_Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
-	else if (!strcasecmp(sep->arg[1], "trade") == 0 && !strcasecmp(sep->arg[1], "t") == 0 && !strcasecmp(sep->arg[1], "summon") == 0 && !strcasecmp(sep->arg[1], "s") == 0)
+	else if (strcasecmp(sep->arg[1], "trade") && strcasecmp(sep->arg[1], "t") && strcasecmp(sep->arg[1], "summon") && strcasecmp(sep->arg[1], "s"))
 		c->Message(CC_Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
 	else if (!sep->IsNumber(2) || !sep->IsNumber(3) || (sep->argnum == 4 && !sep->IsNumber(4)))
 		c->Message(CC_Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
@@ -10397,6 +10669,46 @@ void command_undeletechar(Client *c, const Seperator *sep)
 
 void command_hotfix(Client *c, const Seperator *sep)
 {
+	auto items_count = database.GetItemsCount();
+	auto shared_items_count = database.GetSharedItemsCount();
+	if (items_count != shared_items_count) {
+		c->Message(CC_Yellow, "Your database does not have the same item count as your shared memory.");
+
+		c->Message(
+			CC_Yellow,
+			fmt::format(
+				"Database Count: {} Shared Memory Count: {}",
+				items_count,
+				shared_items_count
+			).c_str()
+		);
+
+		c->Message(CC_Yellow, "If you want to be able to add new items to your server while it is online, you need to create placeholder entries in the database ahead of time and do not add or remove rows/entries. Only modify the existing placeholder rows/entries to safely use #hotfix.");
+
+		return;
+	}
+
+	auto spells_count = database.GetSpellsCount();
+	auto shared_spells_count = database.GetSharedSpellsCount();
+	if (spells_count != shared_spells_count) {
+		c->Message(CC_Yellow, "Your database does not have the same spell count as your shared memory.");
+
+		c->Message(
+			CC_Yellow,
+			fmt::format(
+				"Database Count: {} Shared Memory Count: {}",
+				spells_count,
+				shared_spells_count
+			).c_str()
+		);
+
+		c->Message(CC_Yellow, "If you want to be able to add new spells to your server while it is online, you need to create placeholder entries in the database ahead of time and do not add or remove rows/entries. Only modify the existing placeholder rows/entries to safely use #hotfix.");
+
+		c->Message(CC_Yellow, "Note: You may still have to distribute a spell file, even with dynamic changes.");
+
+		return;
+	}
+
 	std::string hotfix;
 	database.GetVariable("hotfix_name", hotfix);
 
@@ -10667,6 +10979,46 @@ void command_skilldifficulty(Client *c, const Seperator *sep)
 		c->Message(CC_Default, "#skills reload - Reloads skill difficulty in each zone.");
 		c->Message(CC_Default, "#skills values - Displays target's skill values.");
 	}
+}
+
+void command_makemule(Client* c, const Seperator* sep)
+{
+	if (!c) {
+		return;
+	}
+	if (c->IsMule()) {
+		c->Message(CC_Red, "Account is already flagged as a mule.");
+		return;
+	}
+	if (c->GetLevel() < RuleI(Chat, GlobalChatLevelLimit)) {
+		c->Message(CC_Red, "To flag an account as a mule you must first level to %i.", RuleI(Chat, GlobalChatLevelLimit));
+		return;
+	}
+	if (c->IsMuleInitiated() && sep->arg[1][0] != 0 && strcasecmp(sep->arg[1], "confirm") == 0) {
+		if (!database.SetMule(c->GetName())) {
+			c->Message(CC_Red, "Could not set mule status for this account. More than one character already exists on account.");
+		}
+		else {
+			c->Message(CC_Green, "Successfully flagged your account as a mule.");
+			c->SetLevel(1);
+			if (RuleB(Quarm, EastCommonMules)) {
+				c->SetBindPoint(ecommons, glm::vec3(-164.0f, -1651.0f, 4.0f));
+			}
+			else {
+				c->SetBindPoint(bazaar, glm::vec3(140.0f, -821.0f, 5.0f));
+			}
+			c->WorldKick();
+		}
+		return;
+	}
+	if (sep->arg[1][0] != 0 && strcasecmp(sep->arg[1], "confirm") != 0) {
+		c->Message(CC_Red, "To confirm your mule account you must type: #makemule confirm");
+		return;
+	}
+	c->SetMuleInitiated(true);
+	c->Message(CC_Default, "You have initiated the process to make this account a mule. Mules can not leave designated trader zones or level past 1.");
+	c->Message(CC_Default, "Once an account is made a mule it can not be undone. If successful then you will be disconnected and must re-enter the world.");
+	c->Message(CC_Default, "If you wish to proceed then type: #makemule confirm");
 }
 
 void command_mule(Client *c, const Seperator *sep)
@@ -11109,8 +11461,21 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 
 void command_quaketrigger(Client* c, const Seperator* sep)
 {
-	ServerPacket pack(ServerOP_QuakeRequest, 0);
-	worldserver.SendPacket(&pack);
+	//Arguments?
+	if (sep->IsNumber(1))
+	{
+		uint8_t quaketype = atoi(sep->arg[1]);
+		auto pack = new ServerPacket(ServerOP_QuakeRequest, sizeof(ServerEarthquakeRequest_Struct));
+		ServerEarthquakeRequest_Struct* sqr = (ServerEarthquakeRequest_Struct*)pack->pBuffer;
+		sqr->type = (QuakeType)quaketype;
+		worldserver.SendPacket(pack);
+		safe_delete(pack);
+		c->Message(15, "Triggered an earthquake!");
+	}
+	else
+	{
+		c->Message(15, "Invalid parameters. Usage: #quaketrigger [type_num]");
+	}
 }
 
 void command_betabuff(Client* c, const Seperator* sep)

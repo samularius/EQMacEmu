@@ -224,6 +224,38 @@ int16 Database::CheckStatus(uint32 account_id) {
 	return status;
 }
 
+uint8 Database::CheckRevoked(uint32 account_id) {
+	auto query = fmt::format(
+		"SELECT `revoked`, UNIX_TIMESTAMP(`revokeduntil`) as `revokeduntil`, UNIX_TIMESTAMP() as `current` FROM `account` WHERE `id` = {} ",
+		account_id
+	);
+
+	auto results = QueryDatabase(query);
+	if (!results.Success() || results.RowCount() != 1) {
+		return 0;
+	}
+
+
+	auto row = results.begin();
+	uint8 status = std::stoi(row[0]);
+	int32 suspendeduntil = 0;
+
+	// MariaDB initalizes with NULL if unix_timestamp() is out of range
+	if (row[1] != nullptr) {
+		suspendeduntil = std::stoi(row[1]);
+	}
+
+	if (suspendeduntil == 0) // legacy behavior. Don't use timestamp in this case
+		return status;
+
+	int32 current = atoi(row[2]);
+
+	if (suspendeduntil > current)
+		return status;
+
+	return 0;
+}
+
 int16 Database::CheckExemption(uint32 account_id)
 {
 	std::string query = StringFormat("SELECT `ip_exemption_multiplier` FROM `account` WHERE `id` = %i", account_id);
@@ -357,7 +389,14 @@ bool Database::ReserveName(uint32 account_id, char* name) {
 }
 
 bool Database::MarkCharacterDeleted(char *name) {
-	std::string query = StringFormat("UPDATE character_data SET is_deleted = 1 where name='%s'", Strings::Escape(name).c_str());
+
+	std::string unix_timestamp_name = Strings::Escape(name);
+
+	uint64 current_time = Timer::GetTimeSeconds();
+
+	unix_timestamp_name += std::to_string(current_time);
+
+	std::string query = StringFormat("UPDATE character_data SET is_deleted = 1, name='%s' where name='%s'", unix_timestamp_name.c_str(), Strings::Escape(name).c_str());
 
 	auto results = QueryDatabase(query);
 
@@ -397,6 +436,38 @@ bool Database::SetIPExemption(const char *name, uint8 amount) {
 		return false;
 	}
 
+	if (results.RowsAffected() == 0) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Database::SetMule(const char* charname) {
+	// get account for the character with charname
+	std::string query = StringFormat("SELECT `account_id`, `name` FROM `character_data` WHERE `name` = '%s'", charname);
+
+	auto results = QueryDatabase(query);
+	if (!results.Success() || results.RowCount() != 1) {
+		return false;
+	}
+	auto row = results.begin();
+	uint32 account_id = std::stoul(row[0]);
+	
+	// iterate over every character associated with account and verify they're all level 1 (exclude char with charname)
+	query = StringFormat("SELECT `account_id` FROM `character_data` WHERE `account_id` = %u", account_id);
+	results = QueryDatabase(query);
+	if (results.RowCount() != 1) {
+		Log(Logs::General, Logs::WorldServer, "Can not set mule status on account because more than one character exists on account.");
+		return false;
+	}
+
+	// finally set account to mule status
+	query = StringFormat("UPDATE account SET mule = %d where id = %u AND status < 80", 1, account_id);
+	results = QueryDatabase(query);
+	if (!results.Success()) {
+		return false;
+	}
 	if (results.RowsAffected() == 0) {
 		return false;
 	}
@@ -1351,9 +1422,9 @@ bool Database::AddToNameFilter(const char* name) {
 	return true;
 }
 
-uint32 Database::GetAccountIDFromLSID(uint32 iLSID, char* oAccountName, int16* oStatus, int8* oRevoked) {
+uint32 Database::GetAccountIDFromLSID(uint32 iLSID, char* oAccountName, int16* oStatus, int8* oRevoked, bool* isMule) {
 	uint32 account_id = 0;
-	std::string query = StringFormat("SELECT id, name, status, revoked FROM account WHERE lsaccount_id=%i", iLSID);
+	std::string query = StringFormat("SELECT id, name, status, revoked, mule FROM account WHERE lsaccount_id=%i", iLSID);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
@@ -1372,6 +1443,8 @@ uint32 Database::GetAccountIDFromLSID(uint32 iLSID, char* oAccountName, int16* o
 			*oStatus = atoi(row[2]);
 		if (oRevoked)
 			*oRevoked = atoi(row[3]);
+		if (isMule)
+			*isMule = atoi(row[4]);
 	}
 
 	return account_id;
@@ -1520,7 +1593,7 @@ uint16 Database::MoveCharacterToBind(uint32 CharID)
 
 bool Database::SetHackerFlag(const char* accountname, const char* charactername, const char* hacked) { 
 	std::string new_hacked = std::string(hacked);
-	replace_all(new_hacked, "'", "_");
+	Strings::FindReplace(new_hacked, "'", "_");
 	std::string query = StringFormat("INSERT INTO `hackers` (account, name, hacked) values('%s','%s','%s')", accountname, charactername, new_hacked.c_str());
 	auto results = QueryDatabase(query);
 
@@ -1534,7 +1607,7 @@ bool Database::SetHackerFlag(const char* accountname, const char* charactername,
 bool Database::SetMQDetectionFlag(const char* accountname, const char* charactername, const char* hacked, const char* zone) { 
 	//Utilize the "hacker" table, but also give zone information.
 	std::string new_hacked = std::string(hacked);
-	replace_all(new_hacked, "'", "_");
+	Strings::FindReplace(new_hacked, "'", "_");
 	std::string query = StringFormat("INSERT INTO hackers(account,name,hacked,zone) values('%s','%s','%s','%s')", accountname, charactername, new_hacked.c_str(), zone);
 	auto results = QueryDatabase(query);
 
@@ -1626,8 +1699,8 @@ uint8 Database::GetSkillCap(uint8 skillid, uint8 in_race, uint8 in_class, uint16
 	return base_cap;
 }
 
-uint32 Database::GetCharacterInfo(const char* iName, uint32* oAccID, uint32* oZoneID, float* oX, float* oY, float* oZ, uint64* oDeathTime) { 
-	std::string query = StringFormat("SELECT `id`, `account_id`, `zone_id`, `x`, `y`, `z`, `e_hardcore_death_time` FROM `character_data` WHERE `name` = '%s'", iName);
+uint32 Database::GetCharacterInfo(const char* iName, uint32* oAccID, uint32* oZoneID, uint32* oZoneGuildID, float* oX, float* oY, float* oZ, uint64* oDeathTime) {
+	std::string query = StringFormat("SELECT `id`, `account_id`, `zone_id`, `x`, `y`, `z`, `e_hardcore_death_time`, `e_zone_guild_id` FROM `character_data` WHERE `name` = '%s'", iName);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
@@ -1645,6 +1718,7 @@ uint32 Database::GetCharacterInfo(const char* iName, uint32* oAccID, uint32* oZo
 	if (oY){ *oY = atof(row[4]); }
 	if (oZ){ *oZ = atof(row[5]); }
 	if (oDeathTime) { *oDeathTime = atoll(row[6]); }
+	if (oZoneGuildID) { *oZoneGuildID = (unsigned long)atoll(row[7]); }
 	return charid;
 }
 
@@ -2039,7 +2113,6 @@ void Database::ClearGroupLeader(uint32 gid) {
 
 bool Database::GetAccountRestriction(uint32 acctid, uint16& expansion, bool& mule)
 {
-
 	std::string query = StringFormat("SELECT expansion, mule FROM account WHERE id=%i",acctid);
 	auto results = QueryDatabase(query);
 
@@ -2240,6 +2313,26 @@ struct TimeOfDay_Struct Database::LoadTime(time_t &realtime)
 }
 
 
+void Database::LoadQuakeData(ServerEarthquakeImminent_Struct& earthquake_struct)
+{
+
+	memset(&earthquake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
+
+	std::string query = StringFormat("SELECT start_timestamp, next_timestamp, ruleset FROM quake_data");
+	auto results = QueryDatabase(query);
+
+	if (!results.Success() || results.RowCount() == 0)
+	{
+		return;
+	}
+
+	auto row = results.begin();
+	uint32 realtime_ = atoi(row[0]);
+	uint32 next_realtime_ = atoi(row[1]);
+	earthquake_struct.start_timestamp = realtime_;
+	earthquake_struct.next_start_timestamp = next_realtime_;
+	earthquake_struct.quake_type = (QuakeType)atoi(row[2]);
+}
 
 bool Database::LoadNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_struct)
 {
@@ -2252,12 +2345,11 @@ bool Database::LoadNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_str
 	if (!results.Success() || results.RowCount() == 0)
 	{
 		random.Reseed();
-		QuakeType ruleset = (QuakeType)(random.Int(QuakeType::QuakeDisabled + 1, QuakeType::QuakeMax - 1));
 		uint32 random_timestamp = random.Int(RuleI(Quarm, QuakeMinVariance), RuleI(Quarm, QuakeMaxVariance));
 		Log(Logs::Detail, Logs::WorldServer, "Loading quake time failed.  Using default rules values and a random ruleset...");
 		earthquake_struct.start_timestamp = Timer::GetTimeSeconds() + RuleI(Quarm, QuakeRepopDelay);
 		earthquake_struct.next_start_timestamp = earthquake_struct.start_timestamp + random_timestamp;
-		earthquake_struct.quake_type = ruleset;
+		earthquake_struct.quake_type = QuakeNormal;
 
 		std::string query1 = StringFormat("DELETE FROM quake_data");
 		auto results1 = QueryDatabase(query1);
@@ -2280,7 +2372,7 @@ bool Database::LoadNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_str
 		if (Timer::GetTimeSeconds() < earthquake_struct.start_timestamp + RuleI(Quarm, QuakeEndTimeDuration))
 		{
 			Log(Logs::Detail, Logs::WorldServer, "Recovering-from-downtime within 24 hour window. Using default rules values and a random ruleset...");
-			QuakeType ruleset = (QuakeType)(random.Int(QuakeType::QuakeDisabled + 1, QuakeType::QuakeMax - 1));
+			QuakeType ruleset = QuakeNormal;
 			uint32 random_timestamp = random.Int(RuleI(Quarm, QuakeMinVariance), RuleI(Quarm, QuakeMaxVariance));
 			earthquake_struct.start_timestamp = Timer::GetTimeSeconds() + RuleI(Quarm, QuakeRepopDelay);
 			earthquake_struct.quake_type = ruleset;
@@ -2301,15 +2393,14 @@ bool Database::LoadNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_str
 }
 
 //For usage on quake trigger. Does the 'fail logic' from above in the load process to set the next timer and current timer.
-bool Database::SaveNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_struct)
+bool Database::SaveNextQuakeTime(ServerEarthquakeImminent_Struct& earthquake_struct, QuakeType in_quake_type)
 {
 	EQ::Random random;
 	random.Reseed();
-	QuakeType ruleset = (QuakeType)(random.Int(QuakeType::QuakeDisabled + 1, QuakeType::QuakeMax - 1));
 	uint32 random_timestamp = random.Int(RuleI(Quarm, QuakeMinVariance), RuleI(Quarm, QuakeMaxVariance));
 	earthquake_struct.start_timestamp = Timer::GetTimeSeconds() + RuleI(Quarm, QuakeRepopDelay);
 	earthquake_struct.next_start_timestamp = earthquake_struct.start_timestamp + random_timestamp;
-	earthquake_struct.quake_type = ruleset;
+	earthquake_struct.quake_type = in_quake_type;
 
 
 	std::string query1 = StringFormat("DELETE FROM quake_data");

@@ -471,8 +471,15 @@ bool EntityList::AICheckClientAggro(NPC* aggressor)
 		return false;
 
 	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
+	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
 	bool engaged = aggressor->IsEngaged();
 	bool found = false;
+
+	if (!RuleB(Quarm, EnableNPCProximityAggroSystem) && !aggressor->HasEngageNotice() && proxAggro)
+		proxAggro = false;
+
+	if (proxAggro2)
+		proxAggro = true;
 
 	if (aggressor->GetTarget() && engaged && !proxAggro)		// also check for a target as NPC may be ignoring all haters due to distance
 		return false;
@@ -485,7 +492,7 @@ bool EntityList::AICheckClientAggro(NPC* aggressor)
 	{
 		Client *client = it->second;
 
-		if ((client->IsFeigned() && !aggressor->GetSpecialAbility(IMMUNE_FEIGN_DEATH)) || !client->InZone())
+		if ((client->IsFeigned() && !aggressor->GetSpecialAbility(IMMUNE_FEIGN_DEATH)) || !client->InZone() || client->IsMule())
 			continue;
 
 		if (!aggressor->CheckAggro(client) && aggressor->CheckWillAggro(client))
@@ -508,6 +515,11 @@ bool EntityList::AICheckNPCAggro(NPC* aggressor)
 		return false;
 
 	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
+	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
+	if (!RuleB(Quarm, EnableNPCProximityAggroSystem) && !aggressor->HasEngageNotice() && proxAggro)
+		proxAggro = false;
+	if(proxAggro2)
+		proxAggro = true;
 	bool engaged = aggressor->IsEngaged();
 	bool found = false;
 
@@ -548,6 +560,9 @@ bool EntityList::AICheckPetAggro(NPC* aggressor)
 		return false;
 
 	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
+	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
+	if (proxAggro2)
+		proxAggro = true;
 	bool engaged = aggressor->IsEngaged();
 	bool found = false;
 
@@ -869,8 +884,8 @@ bool Mob::IsAttackAllowed(Mob *target, bool isSpellAttack, int16 spellid)
 
 				if	// if both are pvp they can fight
 				(
-					c1->GetPVP() &&
-					c2->GetPVP()
+					(bool)c1->GetPVP() &&
+					(bool)c2->GetPVP()
 				)
 					return true;
 				else if	// if they're dueling they can go at it
@@ -1070,7 +1085,7 @@ bool Mob::IsBeneficialAllowed(Mob *target)
 						return false;
 				}
 
-				if (c1->GetPVP() == c2->GetPVP())
+				if ((bool)c1->GetPVP() == (bool)c2->GetPVP())
 					return true;
 
 			}

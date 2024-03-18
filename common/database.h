@@ -132,7 +132,7 @@ public:
 	uint32	GetAccountIDByName(std::string account_name, int16* status = 0, uint32* lsid = 0);
 	void	GetAccountName(uint32 accountid, char* name, uint32* oLSAccountID = 0);
 	void	GetCharName(uint32 char_id, char* name);
-	uint32	GetCharacterInfo(const char* iName, uint32* oAccID = 0, uint32* oZoneID = 0, float* oX = 0, float* oY = 0, float* oZ = 0, uint64* oDeathTime = 0);
+	uint32	GetCharacterInfo(const char* iName, uint32* oAccID = 0, uint32* oZoneID = 0, uint32* oGuildID = 0, float* oX = 0, float* oY = 0, float* oZ = 0, uint64* oDeathTime = 0);
 	uint32	GetCharacterID(const char *name);
 	bool	AddBannedIP(std::string banned_ip, std::string notes); //Add IP address to the banned_ips table.
 	bool	CheckBannedIPs(std::string login_ip); //Check incoming connection against banned IP table.
@@ -152,13 +152,14 @@ public:
 	void	GetAccountFromID(uint32 id, char* oAccountName, int16* oStatus, int8* oRevoked = 0);
 	uint32	CheckLogin(const char* name, const char* password, int16* oStatus = 0, int8* oRevoked = 0);
 	int16	CheckStatus(uint32 account_id);
+	uint8	CheckRevoked(uint32 account_id);
 	int16	CheckExemption(uint32 account_id);
 	uint32	CreateAccount(const char* name, const char* password, int16 status, uint32 lsaccount_id = 0);
 	bool	DeleteAccount(const char* name);
 	bool	SetAccountStatus(const char* name, int16 status);
 	bool	SetAccountStatus(const std::string& account_name, int16 status);
 	bool	SetLocalPassword(uint32 accid, const char* password);
-	uint32	GetAccountIDFromLSID(uint32 iLSID, char* oAccountName = 0, int16* oStatus = 0, int8* oRevoked = 0);
+	uint32	GetAccountIDFromLSID(uint32 iLSID, char* oAccountName = 0, int16* oStatus = 0, int8* oRevoked = 0, bool* isMule = nullptr);
 	bool	UpdateLiveChar(char* charname,uint32 lsaccount_id);
 	bool	GetLiveChar(uint32 account_id, char* cname);
 	bool	GetLiveCharByLSID(uint32 ls_id, char* cname);
@@ -166,6 +167,7 @@ public:
 	void	ClearAllConsented();
 	void	ClearAllConsented(char* oname, uint32 corpse_id, LinkedList<ConsentDenied_Struct*>* purged);
 	bool	SetIPExemption(const char* accountname, uint8 amount);
+	bool	SetMule(const char* charname);
 	bool	SetMule(const char* accountname, uint8 toggle);
 	bool	SetExpansion(const char* accountname, uint8 toggle);
 
@@ -226,8 +228,9 @@ public:
 	void	SetFirstLogon(uint32 CharID, uint8 firstlogon);
 	void	AddReport(std::string who, std::string against, std::string lines);
 	struct TimeOfDay_Struct		LoadTime(time_t &realtime);
+	void LoadQuakeData(ServerEarthquakeImminent_Struct & earthquake_struct);
 	bool LoadNextQuakeTime(ServerEarthquakeImminent_Struct &realtime);
-	bool SaveNextQuakeTime(ServerEarthquakeImminent_Struct & earthquake_struct);
+	bool SaveNextQuakeTime(ServerEarthquakeImminent_Struct & earthquake_struct, QuakeType in_quake_type = QuakeType::QuakeNormal);
 	bool	SaveTime(int8 minute, int8 hour, int8 day, int8 month, int16 year);
 	bool	AdjustSpawnTimes();
 	uint8   GetZoneRandomLoc(uint32 zoneid);

@@ -135,7 +135,9 @@ NPC::NPC(const NPCType* d, Spawn2* in_respawn, const glm::vec4& position, int if
 	if (mob != 0)
 		entity_list.RemoveEntity(mob->GetID());
 
-	NPCTypedata = d;
+	loot_lockout_timer = 0;
+	memset(&NPCTypedata, 0, sizeof(NPCTypedata));
+	memcpy(&NPCTypedata, d, sizeof(NPCTypedata));
 	respawn2 = in_respawn;
 	swarm_timer.Disable();
 
@@ -201,6 +203,8 @@ NPC::NPC(const NPCType* d, Spawn2* in_respawn, const glm::vec4& position, int if
 
 	accuracy_rating = d->accuracy_rating;
 	ATK = d->ATK;
+
+	loot_lockout_timer = d->loot_lockout;
 
 	CalcMaxMana();
 	SetMana(GetMaxMana());
@@ -443,8 +447,6 @@ NPC::~NPC()
 	}
 
 	safe_delete(reface_timer);
-	if (GetSwarmInfo())
-		safe_delete(NPCTypedata);	// created in Mob::CreateTemporaryPet
 	safe_delete(swarmInfoPtr);
 	safe_delete(qGlobals);
 	UninitializeBuffSlots();
@@ -1267,7 +1269,7 @@ uint32 NPC::GetMaxDamage(uint8 tlevel)
 
 void NPC::PickPocket(Client* thief) 
 {
-	if(bodytype != BT_Humanoid || IsPet() || thief->IsInvisible(this))
+	if(bodytype != BT_Humanoid || IsPet() || (thief->hidden || thief->invisible))
 	{
 		thief->SendPickPocketResponse(this, 0, PickPocketFailed, 0, nullptr, true);
 		return;
@@ -1853,23 +1855,23 @@ void NPC::DoNPCEmote(uint8 event_, uint16 emoteid, Mob* target)
 	}
 
 	std::string processed = nes->text;
-	replace_all(processed, "$mname", GetCleanName());
-	replace_all(processed, "$mracep", GetRaceIDNamePlural(GetRace()));
-	replace_all(processed, "$mrace", GetRaceIDName(GetRace()));
-	replace_all(processed, "$mclass", GetClassIDName(GetClass()));
+	Strings::FindReplace(processed, "$mname", GetCleanName());
+	Strings::FindReplace(processed, "$mracep", GetRaceIDNamePlural(GetRace()));
+	Strings::FindReplace(processed, "$mrace", GetRaceIDName(GetRace()));
+	Strings::FindReplace(processed, "$mclass", GetClassIDName(GetClass()));
 	if (target)
 	{
-		replace_all(processed, "$name", target->GetCleanName());
-		replace_all(processed, "$racep", GetRaceIDNamePlural(target->GetRace()));
-		replace_all(processed, "$race", GetRaceIDName(target->GetRace()));
-		replace_all(processed, "$class", GetClassIDName(target->GetClass()));
+		Strings::FindReplace(processed, "$name", target->GetCleanName());
+		Strings::FindReplace(processed, "$racep", GetRaceIDNamePlural(target->GetRace()));
+		Strings::FindReplace(processed, "$race", GetRaceIDName(target->GetRace()));
+		Strings::FindReplace(processed, "$class", GetClassIDName(target->GetClass()));
 	}
 	else
 	{
-		replace_all(processed, "$name", "foe");
-		replace_all(processed, "$racep", "races");
-		replace_all(processed, "$race", "race");
-		replace_all(processed, "$class", "class");
+		Strings::FindReplace(processed, "$name", "foe");
+		Strings::FindReplace(processed, "$racep", "races");
+		Strings::FindReplace(processed, "$race", "race");
+		Strings::FindReplace(processed, "$class", "class");
 	}
 
 	if(emoteid == nes->emoteid)
@@ -2744,7 +2746,7 @@ void NPC::ProcessFTE()
 				}
 				if (!guild_string.empty())
 				{
-					entity_list.Message(0, 15, "Guild %s is no longer FTE locked out of %s!", guild_string.c_str(), GetCleanName());
+					//entity_list.Message(0, 15, "Guild %s is no longer FTE locked out of %s!", guild_string.c_str(), GetCleanName());
 				}
 				it = guild_fte_lockouts.erase(it);
 				continue;

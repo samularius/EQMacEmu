@@ -128,10 +128,10 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 	if (droplimit == 0 && mindrop == 0) {
 		for (uint32 i = 0; i < lds->NumEntries; ++i) {
 
-			bool min_expansion_enabled = lds->Entries[i].min_expansion >= RuleR(World, CurrentExpansion);
-			bool max_expansion_enabled = lds->Entries[i].max_expansion < RuleR(World, CurrentExpansion);
+			bool min_expansion_enabled = RuleR(World, CurrentExpansion) >= lds->Entries[i].min_expansion;
+			bool max_expansion_enabled = RuleR(World, CurrentExpansion) < lds->Entries[i].max_expansion;
 			bool expansion_all = lds->Entries[i].min_expansion == 0.0f;
-			if (!min_expansion_enabled && !max_expansion_enabled && !expansion_all)
+			if (!expansion_all && (!min_expansion_enabled || !max_expansion_enabled))
 				continue;
 
 			int multiplier = lds->Entries[i].multiplier;
@@ -147,7 +147,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 					}
 					bool force_equip = lds->Entries[i].equip_item == 2;
 					npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[i].minlevel,
-						lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level);
+						lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level, lds->Entries[i].item_loot_lockout_timer);
 				}
 			}
 		}
@@ -166,10 +166,10 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 	float roll_t_min = 0.0f;
 	bool active_item_list = false;
 	for (uint32 i = 0; i < lds->NumEntries; ++i) {
-		bool min_expansion_enabled = lds->Entries[i].min_expansion >= RuleR(World, CurrentExpansion);
-		bool max_expansion_enabled = lds->Entries[i].max_expansion < RuleR(World, CurrentExpansion);
+		bool min_expansion_enabled =  RuleR(World, CurrentExpansion) >= lds->Entries[i].min_expansion;
+		bool max_expansion_enabled = RuleR(World, CurrentExpansion) < lds->Entries[i].max_expansion;
 		bool expansion_all = lds->Entries[i].min_expansion == 0.0f;
-		if (!min_expansion_enabled && !max_expansion_enabled && !expansion_all)
+		if (!expansion_all && (!min_expansion_enabled || !max_expansion_enabled))
 			continue;
 
 		uint32 itemid = lds->Entries[i].item_id;
@@ -196,10 +196,10 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 	for(int i = 0; i < mindrop; ++i) {
 		float roll = (float)zone->random.Real(0.0, roll_t_min);
 		for(uint32 j = 0; j < lds->NumEntries; ++j) {
-			bool min_expansion_enabled = lds->Entries[j].min_expansion >= RuleR(World, CurrentExpansion);
-			bool max_expansion_enabled = lds->Entries[j].max_expansion < RuleR(World, CurrentExpansion);
+			bool min_expansion_enabled = RuleR(World, CurrentExpansion) >= lds->Entries[j].min_expansion;
+			bool max_expansion_enabled = RuleR(World, CurrentExpansion) < lds->Entries[j].max_expansion;
 			bool expansion_all = lds->Entries[j].min_expansion == 0.0f;
-			if (!min_expansion_enabled && !max_expansion_enabled && !expansion_all)
+			if (!expansion_all && (!min_expansion_enabled || !max_expansion_enabled))
 				continue;
 
 			uint32 itemid = lds->Entries[j].item_id;
@@ -214,7 +214,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 				if(roll < lds->Entries[j].chance) {
 					bool force_equip = lds->Entries[j].equip_item == 2;
 					npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[j].minlevel,
-									 lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level);
+									 lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level, lds->Entries[j].item_loot_lockout_timer);
 
 					int multiplier = (int)lds->Entries[j].multiplier;
 					multiplier = EQ::ClampLower(multiplier, 1);
@@ -224,7 +224,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 						if(c_roll <= lds->Entries[j].chance) {
 							bool force_equip = lds->Entries[j].equip_item == 2;
 							npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[j].minlevel,
-											 lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level);
+											 lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level, lds->Entries[j].item_loot_lockout_timer);
 						}
 					}
 
@@ -244,11 +244,11 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 		float roll = (float)zone->random.Real(0.0, roll_t);
 		for (uint32 j = 0; j < lds->NumEntries; ++j)
 		{
-			bool min_expansion_enabled = lds->Entries[j].min_expansion >= RuleR(World, CurrentExpansion);
-			bool max_expansion_enabled = lds->Entries[j].max_expansion < RuleR(World, CurrentExpansion);
+			bool min_expansion_enabled = RuleR(World, CurrentExpansion) >= lds->Entries[j].min_expansion;
+			bool max_expansion_enabled = RuleR(World, CurrentExpansion) < lds->Entries[j].max_expansion;
 			bool expansion_all = lds->Entries[j].min_expansion == 0.0f;
 			
-			if (!min_expansion_enabled && !max_expansion_enabled && !expansion_all)
+			if (!expansion_all && (!min_expansion_enabled || !max_expansion_enabled))
 				continue;
 
 			uint32 itemid = lds->Entries[j].item_id;
@@ -263,7 +263,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 				if (roll < lds->Entries[j].chance) {
 					bool force_equip = lds->Entries[j].equip_item == 2;
 					npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[j].minlevel,
-						lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level);
+						lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level, lds->Entries[j].item_loot_lockout_timer);
 
 					int multiplier = (int)lds->Entries[j].multiplier;
 					multiplier = EQ::ClampLower(multiplier, 1);
@@ -273,7 +273,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 						if (c_roll <= lds->Entries[j].chance) {
 							bool force_equip = lds->Entries[j].equip_item == 2;
 							npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[j].minlevel,
-								lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level);
+								lds->Entries[j].maxlevel, lds->Entries[j].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[j].min_looter_level, lds->Entries[j].item_loot_lockout_timer);
 						}
 					}
 					break;
@@ -298,8 +298,8 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 		{
 			if (dropCount >= droplimit)
 				break;
-			bool min_expansion_enabled = lds->Entries[i].min_expansion >= RuleR(World, CurrentExpansion);
-			bool max_expansion_enabled = lds->Entries[i].max_expansion < RuleR(World, CurrentExpansion);
+			bool min_expansion_enabled = RuleR(World, CurrentExpansion) >= lds->Entries[i].min_expansion;
+			bool max_expansion_enabled = RuleR(World, CurrentExpansion) < lds->Entries[i].max_expansion;
 			bool expansion_all = lds->Entries[i].min_expansion == 0.0f;
 
 			uint32 itemid = lds->Entries[i].item_id;
@@ -316,7 +316,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 				{
 					bool force_equip = lds->Entries[i].equip_item == 2;
 					npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[i].minlevel,
-						lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level);
+						lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level, lds->Entries[i].item_loot_lockout_timer);
 
 					int multiplier = (int)lds->Entries[i].multiplier;
 					multiplier = EQ::ClampLower(multiplier, 1);
@@ -326,7 +326,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 						if (c_roll <= lds->Entries[i].chance) {
 							bool force_equip = lds->Entries[i].equip_item == 2;
 							npc->AddLootDrop(db_item, itemlist, charges, lds->Entries[i].minlevel,
-								lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level);
+								lds->Entries[i].maxlevel, lds->Entries[i].equip_item > 0 ? true : false, false, false, false, force_equip, lds->Entries[i].min_looter_level, lds->Entries[i].item_loot_lockout_timer);
 						}
 					}
 					dropCount = dropCount + 1;
@@ -346,7 +346,7 @@ void ZoneDatabase::AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* item
 }
 
 //if itemlist is null, just send wear changes
-void NPC::AddLootDrop(const EQ::ItemData *item2, ItemList* itemlist, int8 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange, bool quest, bool pet, bool force_equip, uint8 min_looter_level) {
+void NPC::AddLootDrop(const EQ::ItemData *item2, ItemList* itemlist, int8 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange, bool quest, bool pet, bool force_equip, uint8 min_looter_level, uint32 item_loot_lockout_timer) {
 	if(item2 == nullptr)
 		return;
 
@@ -381,6 +381,16 @@ void NPC::AddLootDrop(const EQ::ItemData *item2, ItemList* itemlist, int8 charge
 	item->pet = pet;
 	item->forced = false;
 	item->min_looter_level = min_looter_level;
+	item->item_loot_lockout_timer = item_loot_lockout_timer;
+
+	// unsure if required to equip, YOLO for now
+	if (item2->ItemType == EQ::item::ItemTypeBow) {
+		SetBowEquipped(true);
+	}
+
+	if (item2->ItemType == EQ::item::ItemTypeArrow) {
+		SetArrowEquipped(true);
+	}
 
 	if(pet && quest)
 	{
@@ -1053,7 +1063,7 @@ bool NPC::MoveItemToGeneralInventory(ServerLootItem_Struct* weapon)
 		RemoveItem(weapon);
 
 		Log(Logs::Detail, Logs::Trading, "%s is moving %d in slot %d to general inventory. quantity: %d", GetCleanName(), weaponid, slot, charges);
-		AddLootDrop(item, &itemlist, charges, min_level, max_level, false, false, quest, pet, false, weapon->min_looter_level);
+		AddLootDrop(item, &itemlist, charges, min_level, max_level, false, false, quest, pet, false, weapon->min_looter_level, weapon->item_loot_lockout_timer);
 
 		return true;
 	}

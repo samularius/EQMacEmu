@@ -43,6 +43,7 @@
 #include "../common/rulesys.h"
 #include "../common/platform.h"
 #include "../common/crash.h"
+#include "../common/event/timer.h"
 #include "client.h"
 #include "worlddb.h"
 #ifdef _WINDOWS
@@ -133,18 +134,16 @@ void LoadDatabaseConnections()
 Timer NextQuakeTimer(900000);
 Timer DisableQuakeTimer(900000);
 
-void TriggerManualQuake()
+void TriggerManualQuake(QuakeType in_quake_type)
 {
 	uint32 cur_time = Timer::GetTimeSeconds();
-	database.SaveNextQuakeTime(next_quake);
+	database.SaveNextQuakeTime(next_quake, in_quake_type);
 
 	NextQuakeTimer.Enable();
 	NextQuakeTimer.Start((next_quake.next_start_timestamp - cur_time) * 1000);
 
 	std::string motd_str = "Welcome to Project Quarm! ";
-	motd_str += "The ";
-	motd_str += QuakeTypeToString(next_quake.quake_type).c_str();
-	motd_str += " earthquake ruleset is currently in effect.";
+	motd_str += "An earthquake ruleset is currently in effect in raid zones.";
 
 	database.SetVariable("MOTD", motd_str.c_str());
 
@@ -156,13 +155,13 @@ void TriggerManualQuake()
 	zoneserver_list.SendPacket(pack2);
 
 	//Roleplay flavor text, go!
-	zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'Mortals... they always aren't content with what they have, aren't they?'");
-	zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's projection alters time and space. The effective ruleset changes to: %s", QuakeTypeToString(next_quake.quake_type).c_str());
+	zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'Beware, mortal. Creatures of legendary strength return to the world for a limited time.'");
+	zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's projection alters time and space. Raid creatures have appeared in open world for a short time. Rule 9.x and Rule 10.x have been suspended in open world raid zones temporarily.");
 
 	//Inform of imminent quake. This happens after the MOTD so zone denizens are informed again with relevant information.
 	auto pack = new ServerPacket(ServerOP_QuakeImminent, sizeof(ServerEarthquakeImminent_Struct));
 	ServerEarthquakeImminent_Struct* seis = (ServerEarthquakeImminent_Struct*)pack->pBuffer;
-	seis->quake_type = next_quake.quake_type;
+	seis->quake_type = in_quake_type;
 	seis->next_start_timestamp = next_quake.next_start_timestamp;
 	seis->start_timestamp = next_quake.start_timestamp;
 	zoneserver_list.SendPacket(pack);
@@ -366,6 +365,7 @@ int main(int argc, char** argv) {
 		if (bQuakeReset)
 		{
 			//We're outside of the 24 hour window. Players will wait normal "next_start_timestamp" amount.
+			next_quake.quake_type = QuakeType::QuakeDisabled;
 			NextQuakeTimer.Enable();
 			NextQuakeTimer.Start((next_quake.next_start_timestamp - Timer::GetTimeSeconds()) * 1000);
 			Log(Logs::Detail, Logs::WorldServer, "Using next_start_timestamp to calculate next trigger time.. %i", (next_quake.next_start_timestamp - Timer::GetTimeSeconds()));
@@ -375,6 +375,7 @@ int main(int argc, char** argv) {
 			//Start the timer in 15 minutes. (magic value is set in fail condition)
 			//Process normal quake logic after.
 			Log(Logs::Detail, Logs::WorldServer, "Using start_timestamp to calculate next trigger time.. %i", (next_quake.start_timestamp - Timer::GetTimeSeconds()));
+			next_quake.quake_type = QuakeType::QuakeDisabled;
 			NextQuakeTimer.Enable();
 			NextQuakeTimer.Start((next_quake.start_timestamp - Timer::GetTimeSeconds()) * 1000);
 		}
@@ -433,8 +434,16 @@ int main(int argc, char** argv) {
 	EmuTCPConnection* tcpc;
 	EQStreamInterface *eqsi;
 
-	while(RunLoops) {
+	auto loop_fn = [&](EQ::Timer* t) {
 		Timer::SetCurrentTime();
+
+		if (!RunLoops) {
+			EQ::EventLoop::Get().Shutdown();
+			return;
+		}
+
+		//give the stream identifier a chance to do its work....
+		stream_identifier.Process();
 
 		int i = 5;
 		//check the factory for any new incoming streams.
@@ -450,6 +459,7 @@ int main(int argc, char** argv) {
 			if (i == 5)
 				break;
 		}
+
 		i = 0;
 		//check the factory for any new incoming streams.
 		while ((eqos = eqsf.PopOld())) {
@@ -465,8 +475,6 @@ int main(int argc, char** argv) {
 				break;
 		}
 
-		//give the stream identifier a chance to do its work....
-		stream_identifier.Process();
 		i = 0;
 		//check the stream identifier for any now-identified streams
 		while((eqsi = stream_identifier.PopIdentified())) {
@@ -534,9 +542,9 @@ int main(int argc, char** argv) {
 				NextQuakeTimer.Start((next_quake.next_start_timestamp - cur_time) * 1000);
 
 				std::string motd_str = "Welcome to Project Quarm! ";
-				motd_str += "The ";
-				motd_str += QuakeTypeToString(next_quake.quake_type).c_str();
-				motd_str += " earthquake ruleset is currently in effect.";
+				motd_str += "The '";
+				motd_str += QuakeTypeToString(next_quake.quake_type);
+				motd_str += "' earthquake ruleset is currently in effect in raid zones.";
 
 				database.SetVariable("MOTD", motd_str.c_str());
 
@@ -548,8 +556,8 @@ int main(int argc, char** argv) {
 				zoneserver_list.SendPacket(pack2);
 
 				//Roleplay flavor text, go!
-				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'Mortals... they always aren't content with what they have, aren't they?'");
-				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's projection alters time and space. The effective ruleset changes to: %s", QuakeTypeToString(next_quake.quake_type).c_str());
+				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'Beware, mortal. Creatures of legendary strength return to the world for a limited time.'");
+				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's projection alters time and space. Raid creatures have appeared in open world for a short time. Rule 9.x and Rule 10.x have been suspended in open world raid zones temporarily.");
 
 				//Inform of imminent quake. This happens after the MOTD so zone denizens are informed again with relevant information.
 				auto pack = new ServerPacket(ServerOP_QuakeImminent, sizeof(ServerEarthquakeImminent_Struct));
@@ -570,7 +578,7 @@ int main(int argc, char** argv) {
 			if (DisableQuakeTimer.Check())
 			{
 				std::string motd_str = "Welcome to Project Quarm! ";
-				motd_str += "The standard ruleset is currently in effect. (GM-Enforced Rotations)";
+				motd_str += "The standard ruleset is currently in effect.";
 				database.SetVariable("MOTD", motd_str.c_str());
 
 				auto pack3 = new ServerPacket(ServerOP_Motd, sizeof(ServerMotd_Struct));
@@ -580,9 +588,20 @@ int main(int argc, char** argv) {
 				zoneserver_list.SendPacket(pack3);
 				safe_delete(pack3);
 
+
+				//Inform of imminent quake. This happens after the MOTD so zone denizens are informed again with relevant information.
+				auto pack4 = new ServerPacket(ServerOP_QuakeEnded, sizeof(ServerEarthquakeImminent_Struct));
+				ServerEarthquakeImminent_Struct* seis = (ServerEarthquakeImminent_Struct*)pack4->pBuffer;
+				next_quake.quake_type = QuakeType::QuakeDisabled;
+				seis->quake_type = next_quake.quake_type;
+				seis->next_start_timestamp = next_quake.next_start_timestamp;
+				seis->start_timestamp = next_quake.start_timestamp;
+				zoneserver_list.SendPacket(pack4);
+				safe_delete(pack4);
+
 				//MOTD has been set. Roleplay flavor text, go!
-				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'It seems as though the mortals have had enough of my games. I must teach them to share again.'");
-				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's grasp no longer archors this land... for now. The effective ruleset changes to: GM-Enforced Rotations.");
+				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, "Druzzil Ro's voice echoes in your mind, 'It seems as though the mortals have had enough of my games...'");
+				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Yellow, "Druzzil Ro's grasp no longer archors this land... for now. The Earthquake has ended, and Rules 9.x and 10.x once again apply.");
 
 				//We're no longer using the timer; we've done our job. The next quake will enable it again.
 				DisableQuakeTimer.Disable();
@@ -617,12 +636,13 @@ int main(int argc, char** argv) {
 				}
 			}
 		}
-		if (numclients == 0) {
-			Sleep(50);
-			continue;
-		}
-		Sleep(20);
-	}
+	};
+
+	EQ::Timer process_timer(loop_fn);
+	process_timer.Start(32, true);
+
+	EQ::EventLoop::Get().Run();
+
 	LogInfo("World main loop completed.");
 	LogInfo("Shutting down console connections (if any).");
 	console_list.KillAll();

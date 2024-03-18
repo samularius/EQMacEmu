@@ -1718,8 +1718,8 @@ void Mob::ChangeSize(float in_size = 0, bool bNoRestriction) {
 	{
 		if (this->IsClient() || this->petid != 0)
 		{
-			if (in_size < 3.0)
-				in_size = 3.0;
+			if (in_size < 1.0)
+				in_size = 1.0;
 
 			if (in_size > 15.0)
 				in_size = 15.0;
@@ -1729,8 +1729,8 @@ void Mob::ChangeSize(float in_size = 0, bool bNoRestriction) {
 	if (in_size < 1.0)
 		in_size = 1.0;
 
-	if (in_size > 255.0)
-		in_size = 255.0;
+	/*if (in_size > 255.0)
+		in_size = 255.0;*/
 	//End of Size Code
 	float newsize = floorf(in_size + 0.5);
 	this->size = newsize;
@@ -1842,11 +1842,12 @@ float Mob::MobAngle(Mob *other, float ourx, float oury) const {
 	return angle;
 }
 
-void Mob::SetZone(uint32 zone_id)
+void Mob::SetZone(uint32 zone_id, uint32 zone_guild_id)
 {
 	if(IsClient())
 	{
 		CastToClient()->GetPP().zone_id = zone_id;
+		CastToClient()->GetEPP().zone_guild_id = zone_guild_id;
 		CastToClient()->Save();
 	}
 	Save();
@@ -2046,15 +2047,16 @@ bool Mob::PlotPositionAroundTarget(Mob* target, float &x_dest, float &y_dest, fl
 bool Mob::CheckHateSummon(Mob* summoned) {
 	// check if mob has ability to summon
 	// 97% is the offical % that summoning starts on live, not 94
-	if (!summoned)
+	if (!summoned) {
 		return false;
+	}
 
-	if(IsCharmedPet() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) // raid bosses may not have been summonable
+	if (IsCharmedPet() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
 		return false;
+	}
 
 	int summon_level = GetSpecialAbility(SPECATK_SUMMON);
-	if(summon_level != 1 && summon_level != 2) 
-	{
+	if(summon_level != 1 && summon_level != 2) {
 		//unsupported summon level or OFF
 		return false;
 	} 
@@ -2066,10 +2068,14 @@ bool Mob::CheckHateSummon(Mob* summoned) {
 		return false;
 	}
 
+	// this is so we don't have to make duplicate types; some mob types are 48-52 and only the 51-52s should summon
+	if (IsNPC() && GetLevel() < 51 && GetLevel() > 47 && zone->GetZoneExpansion() < LuclinEQ) {
+		return false;
+	}
+
 	// now validate the timer
 	Timer *timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
-	if (!timer)
-	{
+	if (!timer) {
 		// dont currently have a timer going, so we are going to summon
 		return true;
 	} else {
@@ -2215,6 +2221,11 @@ void Mob::WipeHateList(bool from_memblur)
 		SetTarget(nullptr);
 		hate_list.Wipe(from_memblur);
 		DamageTotalsWipe();
+	}
+
+	if (!from_memblur)
+	{
+		m_EngagedClientNames.clear();
 	}
 }
 
@@ -5294,4 +5305,43 @@ void Mob::SetHP(int32 hp)
 		cur_hp = max_hp; 
 	else 
 		cur_hp = hp;
+}
+
+void Mob::AddAllClientsToEngagementRecords()
+{
+	if (!IsNPC())
+		return;
+
+	if (IsPet())
+		return;
+
+	if (npctype_id == 0)
+		return;
+
+	auto clientList = entity_list.GetClientList();
+
+	for (auto client : clientList)
+	{
+		if (client.second)
+		{
+			if (m_EngagedClientNames.find(client.second->GetCleanName()) == m_EngagedClientNames.end())
+			{
+				PlayerEngagementRecord record = PlayerEngagementRecord();
+				record.isFlagged = false;
+				record.lockout = LootLockout();
+				record.character_id = client.second->CharacterID();
+				strncpy(record.character_name, client.second->CastToClient()->GetCleanName(), 64);
+				record.isSelfFound = client.second->IsSelfFound();
+				record.isSoloOnly = client.second->IsSoloOnly();
+				strncpy(record.character_name, client.second->GetCleanName(), 64);
+
+				auto lootLockoutItr = client.second->loot_lockouts.find(GetNPCTypeID());
+				if (lootLockoutItr != client.second->loot_lockouts.end())
+				{
+					memcpy(&record.lockout, &lootLockoutItr->second, sizeof(LootLockout));
+				}
+				m_EngagedClientNames.emplace(client.second->GetCleanName(), record);
+			}
+		}
+	}
 }
