@@ -686,6 +686,14 @@ void Client::CompleteConnect()
 	SendToBoat(true);
 	worldserver.RequestTellQueue(GetName());
 
+	if (GetBaseRace() == IKSAR && IsMule() && RuleB(Quarm, RestrictIksarsToKunark) && zone)
+	{
+		Save();
+		Kick();
+		eqs->Close();
+		return;
+	}
+
 	//enforce some rules..
 	if (!CanBeInZone()) {
 		Log(Logs::Detail, Logs::Status, "[CLIENT] Kicking char from zone, not allowed here");
