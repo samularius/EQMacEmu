@@ -2734,6 +2734,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 			if (castspell->spell_id == SPELL_MANA_CONVERT && !zone->AllowManastoneClick())
 			{
 				Message_StringID(CC_Red, SPELL_DOES_NOT_WORK_HERE);
+				InterruptSpell(SPELL_RECAST, CC_User_SpellFailure, castspell->spell_id);
 				return;
 			}
 
