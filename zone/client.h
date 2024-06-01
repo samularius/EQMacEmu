@@ -379,20 +379,6 @@ public:
 	void SetMarried(const char* playerName);
 	bool IsMarried();
 
-	typedef struct {
-		glm::vec4 l_Position;
-		float last_distance;
-		bool  inside;
-	} DynamicPosition_Struct;
-	std::unordered_map<uint16, DynamicPosition_Struct> dynamic_positions;
-	inline void SetLastDistance(uint16 entity_id, float distance) { dynamic_positions[entity_id].last_distance = distance; }
-	inline float GetLastDistance(uint16 entity_id) { return dynamic_positions[entity_id].last_distance; }
-	inline bool GetInside(uint16 entity_id) { return dynamic_positions[entity_id].inside; }
-	inline void SetInside(uint16 entity_id, bool state) { dynamic_positions[entity_id].inside = state; }
-	inline glm::vec4 GetLastPosition(uint16 entity_id) { return dynamic_positions[entity_id].l_Position; }
-	inline void SetLastPosition(uint16 entity_id, const glm::vec4& pos) { dynamic_positions[entity_id].l_Position = pos; }
-	inline bool SameLastPosition(uint16 entity_id, const glm::vec4& pos) { return dynamic_positions[entity_id].l_Position == pos; }
-
 	inline float ProximityX() const { return m_Proximity.x; }
 	inline float ProximityY() const { return m_Proximity.y; }
 	inline float ProximityZ() const { return m_Proximity.z; }
@@ -1261,7 +1247,6 @@ private:
 	Timer	charm_cast_timer;
 	Timer	qglobal_purge_timer;
 	Timer	TrackingTimer;
-	Timer	client_distance_timer;
 
 	Timer anon_toggle_timer;
 	Timer afk_toggle_timer;

@@ -139,7 +139,6 @@ Client::Client(EQStreamInterface* ieqs)
 	charm_cast_timer(3500),
 	qglobal_purge_timer(30000),
 	TrackingTimer(2000),
-	client_distance_timer(1000),
 	ItemTickTimer(10000),
 	ItemQuestTimer(500),
 	anon_toggle_timer(250),
@@ -278,8 +277,6 @@ Client::Client(EQStreamInterface* ieqs)
 	HideCorpseMode = HideCorpseNone;
 	PendingGuildInvitation = false;
 
-	client_distance_timer.Disable();
-
 	InitializeBuffSlots();
 
 	LoadAccountFlags();
@@ -413,7 +410,6 @@ Client::~Client() {
 	safe_delete(KarmaUpdateTimer);
 	safe_delete(GlobalChatLimiterTimer);
 	safe_delete(qGlobals);
-	dynamic_positions.clear();
 
 	DepopPet();
 	numclients--;
@@ -3071,7 +3067,6 @@ void Client::LinkDead()
 //	save_timer.Start(2500);
 	linkdead_timer.Start(RuleI(Zone,ClientLinkdeadMS));
 	SendAppearancePacket(AT_Linkdead, 1);
-	client_distance_timer.Disable();
 	client_state = CLIENT_LINKDEAD;
 	if (IsSitting())
 	{

@@ -397,8 +397,6 @@ void Client::CompleteConnect()
 	hpupdate_timer.Start();
 	position_timer.Start();
 	autosave_timer.Start();
-	entity_list.UpdateNewClientDistances(this);
-	client_distance_timer.Start(2000, false);
 	SetDuelTarget(0);
 	SetDueling(false);
 
@@ -1901,8 +1899,6 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	outapp->priority = 6;
 	FastQueuePacket(&outapp);
 
-	// this sets locations mobs were, when bulk zone spawns sent
-	entity_list.BulkNewClientDistances(this);
 	/* Zone Spawns Packet */
 	entity_list.SendZoneSpawnsBulk(this);
 	entity_list.SendZoneCorpsesBulk(this);
