@@ -1182,12 +1182,12 @@ bool Client::CanBeInZone(uint32 zoneid, uint32 guild_id)
 	uint8 zone_expansion = zone->GetZoneExpansion();
 	if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
 	{
-		if (GetBaseRace() == IKSAR && zone_expansion != KunarkEQEra)
+		if (GetBaseRace() == IKSAR && zone_expansion != KunarkEQ)
 		{
 			Message_StringID(CC_Red, NO_EXPAN);
 			return false;
 		}
-		else if (GetBaseRace() != IKSAR && zone_expansion == KunarkEQEra)
+		else if (GetBaseRace() != IKSAR && zone_expansion == KunarkEQ)
 		{
 			Message_StringID(CC_Red, NO_EXPAN);
 			return false;

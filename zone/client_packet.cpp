@@ -694,12 +694,12 @@ void Client::CompleteConnect()
 
 		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
 		{
-			if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQEra)
+			if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
 			{
 				MovePCGuildID(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 				return;
 			}
-			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQEra)
+			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
 				MovePC(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				return;
