@@ -2731,6 +2731,12 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 				return;
 			}
 
+			if (castspell->spell_id == SPELL_MANA_CONVERT && !zone->AllowManastoneClick())
+			{
+				Message_StringID(CC_Red, SPELL_DOES_NOT_WORK_HERE);
+				return;
+			}
+
 			// packet field types will be reviewed as packet transistions occur -U
 			const EQ::ItemInstance* inst = m_inv[castspell->inventoryslot]; //slot values are int16, need to check packet on this field
 			//bool cancast = true;

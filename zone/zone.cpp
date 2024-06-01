@@ -77,7 +77,7 @@ Mutex MZoneShutdown;
 
 volatile bool is_zone_loaded = false;
 Zone* zone = 0;
-
+const static std::set<std::string> arrClassicPlanes = { "hateplane", "airplane", "fearplane" };
 void UpdateWindowTitle(char* iNewTitle);
 
 bool Zone::Bootup(uint32 iZoneID, bool iStaticZone, uint32 iGuildID) {
@@ -2803,4 +2803,15 @@ void Zone::LoadGrids()
 Timer Zone::GetInitgridsTimer()
 {
 	return initgrids_timer;
+}
+
+bool Zone::AllowManastoneClick()
+{
+	if (GetZoneExpansion() != 1) {
+		return false;
+	}
+	if (arrClassicPlanes.find(GetShortName()) != arrClassicPlanes.end()) {
+		return false;
+	}
+	return true;
 }
