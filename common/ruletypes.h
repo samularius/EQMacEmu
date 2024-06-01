@@ -266,6 +266,7 @@ RULE_BOOL(Quarm, EastCommonMules, true)
 RULE_BOOL(Quarm, IncludeMulesInServerCount, false)
 RULE_BOOL(Quarm, ErollsiDayEvent, false)
 RULE_BOOL(Quarm, RestrictIksarsToKunark, false)
+RULE_BOOL(Quarm, AllowBypassMaxClientsOnWorldEnter, false)
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Map )
