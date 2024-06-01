@@ -692,9 +692,9 @@ void Client::CompleteConnect()
 	if (!CanBeInZone()) {
 		Log(Logs::Detail, Logs::Status, "[CLIENT] Kicking char from zone, not allowed here");
 
-		if (RuleB(Quarm, RestrictIksarsToKunark))
+		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
 		{
-			if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQEra && zone->GetZoneID())
+			if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQEra)
 			{
 				MovePCGuildID(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 				return;
