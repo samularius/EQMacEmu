@@ -2807,7 +2807,7 @@ Timer Zone::GetInitgridsTimer()
 
 bool Zone::AllowManastoneClick()
 {
-	if (GetZoneExpansion() != 1) {
+	if (GetZoneExpansion() != ClassicEQ) {
 		return false;
 	}
 	if (arrClassicPlanes.find(GetShortName()) != arrClassicPlanes.end()) {
