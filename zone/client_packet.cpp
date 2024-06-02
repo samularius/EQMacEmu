@@ -2179,7 +2179,7 @@ void Client::Handle_OP_AutoAttack(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -2664,7 +2664,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -2969,7 +2969,7 @@ void Client::Handle_OP_ClickObject(const EQApplicationPacket *app)
 		{
 			if(GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 				msg = "You're not allowed to pick up dropped items if you're an Iksar in classic zones right now.";
-			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
 				msg = "You're not allowed to pick up any items if you're a non-Iksar in Kunark zones right now.";
 			}
@@ -3854,7 +3854,7 @@ void Client::Handle_OP_CreateObject(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -6332,7 +6332,7 @@ void Client::Handle_OP_LootItem(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -7957,7 +7957,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -8323,7 +8323,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -9419,7 +9419,7 @@ void Client::Handle_OP_TraderBuy(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -9477,7 +9477,7 @@ void Client::Handle_OP_TradeRequest(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
@@ -9616,7 +9616,7 @@ void Client::Handle_OP_TradeRequestAck(const EQApplicationPacket *app)
 	{
 		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
 			return;
-		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 		{
 			return;
 		}
