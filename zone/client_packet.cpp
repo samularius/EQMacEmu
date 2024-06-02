@@ -694,6 +694,7 @@ void Client::CompleteConnect()
 		return;
 	}
 
+
 	//enforce some rules..
 	if (!CanBeInZone()) {
 		Log(Logs::Detail, Logs::Status, "[CLIENT] Kicking char from zone, not allowed here");
@@ -740,6 +741,9 @@ void Client::CompleteConnect()
 				}
 			}
 		}
+		Save();
+		Kick();
+		eqs->Close();
 		return;
 	}
 
@@ -2170,6 +2174,17 @@ void Client::Handle_OP_AutoAttack(const EQApplicationPacket *app)
 	}
 
 
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	if (Admin() > 0)
 	{
 		Message(CC_Red, "You cannot autoattack as a GM.");
@@ -2643,6 +2658,18 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		std::cout << "Wrong size: OP_CastSpell, size=" << app->size << ", expected " << sizeof(CastSpell_Struct) << std::endl;
 		return;
 	}
+
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	if (IsAIControlled() && !has_zomm) {
 		this->Message_StringID(CC_Red, NOT_IN_CONTROL);
 		return;
@@ -2936,9 +2963,20 @@ void Client::Handle_OP_ClickObject(const EQApplicationPacket *app)
 	auto* entity = entity_list.GetID(click_object->drop_id);
 	if (entity && entity->IsObject()) {
 		Object* object = entity->CastToObject();
+		
+		std::string msg;
+		if (RuleB(Quarm, RestrictIksarsToKunark))
+		{
+			if(GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+				msg = "You're not allowed to pick up dropped items if you're an Iksar in classic zones right now.";
+			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+			{
+				msg = "You're not allowed to pick up any items if you're a non-Iksar in Kunark zones right now.";
+			}
+		}
+		
 		if (object->IsPlayerDrop())
 		{
-			std::string msg;
 			if (Admin() > 0)
 			{
 				msg = "You cannot pick up dropped player items because you're a GM and that would make the players around you a sad panda.";
@@ -3810,6 +3848,18 @@ void Client::Handle_OP_CorpseDrop(const EQApplicationPacket *app)
 
 void Client::Handle_OP_CreateObject(const EQApplicationPacket *app)
 {
+
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	if (Admin() > 0)
 	{
 		EQ::ItemInstance *inst = m_inv.GetItem(EQ::invslot::slotCursor);
@@ -6277,6 +6327,17 @@ void Client::Handle_OP_LootItem(const EQApplicationPacket *app)
 		return;
 	}
 
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	auto* l = (LootingItem_Struct*)app->pBuffer;
 	auto entity = entity_list.GetID(*((uint16*)app->pBuffer));
 	if (!entity) {
@@ -7891,6 +7952,17 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 			sizeof(Merchant_Sell_Struct), app->size);
 		return;
 	}
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	RDTSC_Timer t1;
 	t1.start();
 	Merchant_Sell_Struct* mp = (Merchant_Sell_Struct*)app->pBuffer;
@@ -8244,6 +8316,17 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 		Log(Logs::General, Logs::Error, "Invalid size on OP_ShopPlayerSell: Expected %i, Got %i",
 			sizeof(Merchant_Purchase_Struct), app->size);
 		return;
+	}
+
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
 	}
 
 
@@ -9331,6 +9414,17 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 void Client::Handle_OP_TraderBuy(const EQApplicationPacket *app) 
 {
 
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	if (IsSoloOnly() || IsSelfFound())
 	{
 		TradeRequestFailed(app);
@@ -9378,6 +9472,16 @@ void Client::Handle_OP_TradeRequest(const EQApplicationPacket *app)
 	// Trade session not started until OP_TradeRequestAck is sent
 	if (!trade_timer.Check())
 		return;
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
 
 	CommonBreakInvisible(true);
 
@@ -9507,6 +9611,17 @@ void Client::Handle_OP_TradeRequestAck(const EQApplicationPacket *app)
 		Log(Logs::General, Logs::Error, "Wrong size: OP_TradeRequestAck, size=%i, expected %i", app->size, sizeof(TradeRequest_Struct));
 		return;
 	}
+
+	if (RuleB(Quarm, RestrictIksarsToKunark))
+	{
+		if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() == ClassicEQ)
+			return;
+		else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion == KunarkEQ)
+		{
+			return;
+		}
+	}
+
 	// Trade request recipient is acknowledging they are able to trade
 	// After this, the trade session has officially started
 	// Send ack on to trade initiator if client
