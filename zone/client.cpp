@@ -6909,3 +6909,19 @@ bool Client::HasTemporaryLastName()
 {
 	return m_epp.temp_last_name[0] != 0;
 }
+
+uint16 Client::GetWeaponEffectID(int slot)
+{
+	if (slot != EQ::invslot::slotPrimary && slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo)
+		return 0;
+
+	EQ::ItemInstance* weaponInst = GetInv().GetItem(slot);
+	const EQ::ItemData* weapon = nullptr;
+	if (weaponInst)
+		weapon = weaponInst->GetItem();
+
+	if (weapon)
+		return weapon->Proc.Effect;
+	else
+		return 0;
+}
