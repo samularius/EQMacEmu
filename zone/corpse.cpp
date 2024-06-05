@@ -2399,110 +2399,112 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 		else if (give_exp_client->IsRaidGrouped())
 		{
 			Raid* kr = give_exp_client->GetRaid();
-			for (uint32 i = 0; i < MAX_RAID_MEMBERS; i++)
+			if(kr)
 			{
-				Client* mclient = kr->members[i].member;
-
-				if (kr->members[i].membername[0])
+				for (uint32 i = 0; i < MAX_RAID_MEMBERS; i++)
 				{
-					auto playerItr = records.find(kr->members[i].membername);
+					Client* mclient = kr->members[i].member;
 
-					if (playerItr == records.end())
-						continue;
-
-					bool noLockouts = !playerItr->second.HasLockout(cur_time);
-
-					if (noLockouts)
+					if (kr->members[i].membername[0])
 					{
-						LootLockout lootLockout;
-						memset(&lootLockout, 0, sizeof(LootLockout));
+						auto playerItr = records.find(kr->members[i].membername);
 
-						bool bIsAALockout = false;
+						if (playerItr == records.end())
+							continue;
 
-						lootLockout.character_id = playerItr->second.character_id;
-						lootLockout.expirydate = cur_time + loot_lockout_timer;
-						lootLockout.npctype_id = in_npc->GetNPCTypeID();
-						strncpy(lootLockout.npc_name, in_npc->GetCleanName(), 64);
+						bool noLockouts = !playerItr->second.HasLockout(cur_time);
 
-						if (mclient && mclient->IsClient())
+						if (noLockouts)
 						{
-							auto clientLootLockoutItr = mclient->CastToClient()->loot_lockouts.find(in_npc->GetNPCTypeID());
-							if (clientLootLockoutItr != mclient->CastToClient()->loot_lockouts.end())
+							LootLockout lootLockout;
+							memset(&lootLockout, 0, sizeof(LootLockout));
+
+							bool bIsAALockout = false;
+
+							lootLockout.character_id = playerItr->second.character_id;
+							lootLockout.expirydate = cur_time + loot_lockout_timer;
+							lootLockout.npctype_id = in_npc->GetNPCTypeID();
+							strncpy(lootLockout.npc_name, in_npc->GetCleanName(), 64);
+
+							if (mclient && mclient->IsClient())
 							{
-								clientLootLockoutItr->second = lootLockout;
+								auto clientLootLockoutItr = mclient->CastToClient()->loot_lockouts.find(in_npc->GetNPCTypeID());
+								if (clientLootLockoutItr != mclient->CastToClient()->loot_lockouts.end())
+								{
+									clientLootLockoutItr->second = lootLockout;
+								}
+								else
+								{
+									mclient->CastToClient()->loot_lockouts.emplace(in_npc->GetNPCTypeID(), lootLockout);
+								}
 							}
+
+
+							std::string message = "You have incurred a lockout for ";
+							message += in_npc->GetCleanName();
+							message += " that expires in ";
+							message += Strings::SecondsToTime(loot_lockout_timer).c_str();
+							message += ".";
+
+							if (mclient && mclient->IsClient())
+								mclient->CastToClient()->Message(CC_Yellow, message.c_str());
 							else
 							{
-								mclient->CastToClient()->loot_lockouts.emplace(in_npc->GetNPCTypeID(), lootLockout);
+
+
+								uint32 message_len = strlen(kr->members[i].membername) + 1;
+								uint32 message_len2 = strlen(message.c_str()) + 1;
+								auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
+								CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
+								CZSC->Type = CC_Yellow;
+								strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
+								strn0cpy(CZSC->Message, message.c_str(), 512);
+								worldserver.SendPacket(pack);
+								safe_delete(pack);
 							}
-						}
 
+							std::string appendedCharName = kr->members[i].membername;
 
-						std::string message = "You have incurred a lockout for ";
-						message += in_npc->GetCleanName();
-						message += " that expires in ";
-						message += Strings::SecondsToTime(loot_lockout_timer).c_str();
-						message += ".";
+							if (playerItr->second.isSelfFound)
+								appendedCharName += "-SF";
 
-						if (mclient && mclient->IsClient())
-							mclient->CastToClient()->Message(CC_Yellow, message.c_str());
-						else
-						{
-
-
-							uint32 message_len = strlen(kr->members[i].membername) + 1;
-							uint32 message_len2 = strlen(message.c_str()) + 1;
-							auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
-							CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-							CZSC->Type = CC_Yellow;
-							strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
-							strn0cpy(CZSC->Message, message.c_str(), 512);
-							worldserver.SendPacket(pack);
-							safe_delete(pack);
-						}
-
-						std::string appendedCharName = kr->members[i].membername;
-
-						if (playerItr->second.isSelfFound)
-							appendedCharName += "-SF";
-
-						if (playerItr->second.isSoloOnly)
-							appendedCharName += "-Solo";
+							if (playerItr->second.isSoloOnly)
+								appendedCharName += "-Solo";
 
 							temporarily_allowed_looters.emplace(appendedCharName);
 
 
-						//if they're not in zone, this will be loaded once they are.
-						database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
-						records.erase(playerItr);
-					}
-					else
-					{
-						if (mclient && mclient->IsClient())
-							mclient->CastToClient()->Message(CC_Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
+							//if they're not in zone, this will be loaded once they are.
+							database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
+							records.erase(playerItr);
+						}
 						else
 						{
-							std::string message = "You were locked out of ";
-							message += in_npc->GetCleanName();
-							message += " and receive no loot.";
+							if (mclient && mclient->IsClient())
+								mclient->CastToClient()->Message(CC_Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
+							else
+							{
+								std::string message = "You were locked out of ";
+								message += in_npc->GetCleanName();
+								message += " and receive no loot.";
 
-							uint32 message_len = strlen(kr->members[i].membername) + 1;
-							uint32 message_len2 = strlen(message.c_str()) + 1;
-							auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
-							CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-							CZSC->Type = CC_Yellow;
-							strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
-							strn0cpy(CZSC->Message, message.c_str(), 512);
-							worldserver.SendPacket(pack);
-							safe_delete(pack);
+								uint32 message_len = strlen(kr->members[i].membername) + 1;
+								uint32 message_len2 = strlen(message.c_str()) + 1;
+								auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
+								CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
+								CZSC->Type = CC_Yellow;
+								strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
+								strn0cpy(CZSC->Message, message.c_str(), 512);
+								worldserver.SendPacket(pack);
+								safe_delete(pack);
+							}
+
+							DenyPlayerLoot(kr->members[i].membername);
+							records.erase(playerItr);
 						}
-
-						DenyPlayerLoot(kr->members[i].membername);
-						records.erase(playerItr);
 					}
 				}
 			}
-
 		}
 		else if (give_exp_client)
 		{
