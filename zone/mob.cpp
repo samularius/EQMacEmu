@@ -5064,7 +5064,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 					spell_base = IKSAR_SKELETON;
 
 				if (GetBaseRace() == GNOME && spell_id != 581)
-					spell_model_size = 4;
+					spell_model_size = 4.0f;
 
 				break;
             }
@@ -5079,7 +5079,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			texture,
 			spell.max[i], // seems to be 0 for every illusion
 			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-			-1.0f // default size
+			spell_model_size // default size
 		);
 
 		this->z_offset = CalcZOffset();
