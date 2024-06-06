@@ -122,6 +122,7 @@ RULE_INT(World, MuleToonLimit, 8) // The number of characters a mule account can
 RULE_BOOL(World, DontBootDynamics, false) // If true, dynamic zones will not boot when a player tries to enter them.
 RULE_REAL(World, CurrentExpansion, 6.0)
 RULE_INT(World, WorldClientLinkdeadMS, 45000) //the time before a client times out as stale from world. 45s default.
+RULE_INT(World, ClientTimeoutStaleAmount, 3)
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Zone)

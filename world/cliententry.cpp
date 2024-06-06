@@ -345,7 +345,7 @@ void ClientListEntry::Camp(ZoneServer* iZS) {
 		}
 	}
 	if (pOnline < CLE_Status_Online)
-		stale = 3; // new state is offline
+		stale = RuleI(World, ClientTimeoutStaleAmount); // new state is offline
 	else
 		stale = 0; // new state is online or charselect
 
@@ -355,7 +355,7 @@ void ClientListEntry::Camp(ZoneServer* iZS) {
 
 bool ClientListEntry::CheckStale() {
 	stale++;
-	if (stale >= 3) {
+	if (stale >= RuleI(World, ClientTimeoutStaleAmount)) {
 		if (pOnline > CLE_Status_Offline) {
 			SetOnline(CLE_Status_Offline);
 		}
