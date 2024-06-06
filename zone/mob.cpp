@@ -4957,6 +4957,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 {
 	uint16 spell_id = spell.id;
 	uint16 spell_base = spell.base[i];
+	float spell_model_size = -1.0f;
 
 	// Gender Illusions
 	if (spell_base == -1)
@@ -5055,12 +5056,17 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 				break;
 			}
 
+            case 581:
             case 644:
             case 1611:
             {
-                if (GetBaseRace() == IKSAR && spell_base == SKELETON)
-                    spell_base = IKSAR_SKELETON;
-                break;
+				if (GetBaseRace() == IKSAR && spell_base == SKELETON)
+					spell_base = IKSAR_SKELETON;
+
+				if (GetBaseRace() == GNOME && spell_id != 581)
+					spell_model_size = 4;
+
+				break;
             }
 
 			}

@@ -20,6 +20,7 @@
 #include "../common/spdat.h"
 #include "../common/strings.h"
 #include "../common/types.h"
+#include "../common/data_verification.h"
 
 #include "entity.h"
 #include "client.h"
@@ -209,6 +210,9 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	if ((GetClass() == NECROMANCER || GetClass() == SHADOWKNIGHT) && GetBaseRace() == IKSAR && npc_type->race == SKELETON) {
 		npc_type->race = IKSAR_SKELETON;
     }
+
+	if (GetClass() == NECROMANCER && GetBaseRace() == GNOME && npc_type->race == SKELETON && npc_type->size != 0)
+		npc_type->size = EQ::ClampUpper((float)npc_type->size - 2.0f, 3.0f);
 
 	npc_type->loot_lockout = 0;
 	// If pet power is set to -1 in the DB, use stat scaling
