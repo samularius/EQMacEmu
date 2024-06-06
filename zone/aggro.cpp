@@ -1567,7 +1567,13 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 	// procs and clickables capped at 400.  Sony did it this way instead of using a 'isproc' parameter
 	// damage aggro is still added later, so procs like the SoD's anarchy still do more than 400
 	if (!CanClassCastSpell(spell_id) && nonDamageHate > 400)
-		nonDamageHate = 400;
+	{
+		if (!IsClient() || RuleR(World, CurrentExpansion) > (float)ExpansionEras::VeliousEQEra + 0.19
+			|| (CastToClient()->GetWeaponEffectID() != spell_id && CastToClient()->GetWeaponEffectID(EQ::invslot::slotSecondary) != spell_id))
+		{
+			nonDamageHate = 400;
+		}
+	}
 
 	// bard spell hate is capped very low.  this was from Live server experiments
 	if (GetClass() == BARD)
