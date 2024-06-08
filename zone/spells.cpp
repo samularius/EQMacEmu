@@ -3778,6 +3778,8 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 
 	// SummonedPet is actually the owner Mob
 	Mob* SummonedPet = GetOwner() && !IsCharmedPet() && GetPetType() != petHatelist && caster->IsNPC() ? GetOwner() : nullptr;
+	if (RuleR(World, CurrentExpansion) < (float)ExpansionEras::LuclinEQEra + 0.64)
+		SummonedPet = nullptr;
 
 	int fire = GetFR();
 	int cold = GetCR();
