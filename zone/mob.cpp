@@ -5056,7 +5056,15 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 				break;
 			}
 
+			case 1416:
+			{
+				if (GetBaseRace() == GNOME)
+					spell_model_size = 4.0f;
+				break;
+			}
+
             case 581:
+			case 643:
             case 644:
             case 1611:
             {
