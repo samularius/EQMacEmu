@@ -1374,6 +1374,7 @@ bool Mob::CheckLosFN(float posX, float posY, float posZ, float mobSize, Mob* oth
 int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 {
 	int nonDamageHate = 0;
+	bool setStandardHate = false;
 	int instantHate = 0;
 	int slevel = GetLevel();
 	int damage = 0;
@@ -1415,7 +1416,7 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 			{
 				int val = CalcSpellEffectValue_formula(spells[spell_id].formula[o], spells[spell_id].base[o], spells[spell_id].max[o], slevel, spell_id);
 				if (val < 0)
-					nonDamageHate += standardSpellHate;
+					setStandardHate = true;
 				break;
 			}
 			case SE_AttackSpeed:
@@ -1424,7 +1425,7 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 			{
 				int val = CalcSpellEffectValue_formula(spells[spell_id].formula[o], spells[spell_id].base[o], spells[spell_id].max[o], slevel, spell_id);
 				if (val < 100)
-					nonDamageHate += standardSpellHate;
+					setStandardHate = true;
 				break;
 			}
 			case SE_Stun:
@@ -1433,14 +1434,14 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 			case SE_Charm:
 			case SE_Fear:
 			{
-				nonDamageHate += standardSpellHate;
+				setStandardHate = true;
 				break;
 			}
 			case SE_ArmorClass:
 			{
 				int val = CalcSpellEffectValue_formula(spells[spell_id].formula[o], spells[spell_id].base[o], spells[spell_id].max[o], slevel, spell_id);
 				if (val < 0)
-					nonDamageHate += standardSpellHate;
+					setStandardHate = true;
 				break;
 			}
 			case SE_DiseaseCounter:						// disease counter hate was removed most likely in early May 2002
@@ -1449,13 +1450,13 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 				{
 					if (IsSlowSpell(spell_id))
 						break;
-					nonDamageHate += standardSpellHate;
+					setStandardHate = true;
 				}
 				break;
 			}
 			case SE_PoisonCounter:
 			{
-				nonDamageHate += standardSpellHate;
+				setStandardHate = true;
 				break;
 			}
 			case SE_Root:
@@ -1503,7 +1504,7 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 			case SE_Silence:
 			case SE_Destroy:
 			{
-				nonDamageHate += standardSpellHate;
+				setStandardHate = true;
 				break;
 			}
 			case SE_Harmony:
@@ -1556,6 +1557,9 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 			}
 		}
 	}
+
+	if (setStandardHate)
+		nonDamageHate += standardSpellHate;
 
 	if (spells[spell_id].HateAdded > 0)
 		nonDamageHate = spells[spell_id].HateAdded;		// tash and terror lines.  this overrides the spell hate
