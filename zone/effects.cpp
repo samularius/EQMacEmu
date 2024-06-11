@@ -1018,8 +1018,6 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 
 	bool limit_all_aoes = false;
 
-	bool limit_all_detrimental_aes = false;
-
 	if (caster->IsNPC())
 		MAX_TARGETS_ALLOWED = 999;
 
@@ -1052,7 +1050,7 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 	}
 
 
-	if (!limit_all_aoes && IsDetrimentalSpell(spell_id) && spells[spell_id].targettype == ST_AECaster && RuleB(Quarm, LimitPBAOEDetrimentalSpells))
+	if (!caster->IsNPC() && !limit_all_aoes && IsDetrimentalSpell(spell_id) && spells[spell_id].targettype == ST_AECaster && RuleB(Quarm, LimitPBAOEDetrimentalSpells))
 	{
 		MAX_TARGETS_ALLOWED = RuleI(Quarm, AOEMaxHostilePBAOETargets);
 		limit_all_aoes = true;
@@ -1206,7 +1204,7 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 				break;
 			}
 		}
-		else if (enable_bard_limit && IsBardAOEDamageSpell(spell_id))
+		else if (!caster->IsNPC() && enable_bard_limit && IsBardAOEDamageSpell(spell_id))
 		{
 			uint32 bard_aoe_cap = RuleI(Quarm, BardDamagingAOECap);
 			if (targets_hit < bard_aoe_cap || curmob->IsClient() && !curmob->CastToClient()->GetHideMe())
