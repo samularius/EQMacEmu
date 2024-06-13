@@ -58,6 +58,7 @@
 #define SPELL_AA_BOASTFUL_BELLOW 3282
 #define SPELL_EPOCH_CONVICTION 3767
 #define SPELL_GREENMIST_RECOURSE 3978
+#define SPELL_LIFE_DRAIN 931
 
 #define EFFECT_COUNT 12
 #define MAX_SPELL_TRIGGER 12	// One for each slot(only 6 for AA since AA use 2)
