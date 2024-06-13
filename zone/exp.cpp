@@ -285,6 +285,11 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 		aa_lvl_mod = zone->level_exp_mod[GetLevel()].AAExpMod;
 		if (!aa_lvl_mod)
 			aa_lvl_mod = 1.0f;
+
+		if (GetLevel() == 50 && hbm < 1.0f && RuleR(World, CurrentExpansion) < (float)ExpansionEras::KunarkEQEra)
+			hbm = 1.0f;
+		if (GetLevel() == 60 && hbm < 1.0f && RuleR(World, CurrentExpansion) < (float)ExpansionEras::PlanesEQEra)
+			hbm = 1.0f;
 	}
 
 	if (m_epp.perAA<0 || m_epp.perAA>100)
