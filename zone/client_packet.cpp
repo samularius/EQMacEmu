@@ -689,8 +689,8 @@ void Client::CompleteConnect()
 	if (GetBaseRace() == IKSAR && IsMule() && RuleB(Quarm, RestrictIksarsToKunark) && zone)
 	{
 		Save();
-		Kick();
-		eqs->Close();
+		WorldKick();
+		Disconnect();
 		return;
 	}
 
@@ -698,18 +698,15 @@ void Client::CompleteConnect()
 	//enforce some rules..
 	if (!CanBeInZone()) {
 		Log(Logs::Detail, Logs::Status, "[CLIENT] Kicking char from zone, not allowed here");
-		Save();
 		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
 		{
 			// Mules by their very nature require access to at least Luclin. Set that here.
 			if (IsMule() && GetBaseRace() != IKSAR)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
 					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 				else {
-					database.MoveCharacterToZone(CharacterID(), "bazaar");
 					MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
@@ -719,12 +716,10 @@ void Client::CompleteConnect()
 			}
 			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
 			{
-				database.MoveCharacterToZone(CharacterID(), "fieldofbone");
 				MovePCGuildID(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 			}
 			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
-				database.MoveCharacterToZone(CharacterID(), "ecommons");
 				MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 			}
 		}
@@ -734,12 +729,10 @@ void Client::CompleteConnect()
 			if (m_pp.expansions & LuclinEQ)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
 					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 
 				}
 				else {
-					database.MoveCharacterToZone(CharacterID(), "bazaar");
 					MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
@@ -749,22 +742,75 @@ void Client::CompleteConnect()
 				if (IsMule())
 				{
 					if (RuleB(Quarm, EastCommonMules)) {
-						database.MoveCharacterToZone(CharacterID(), "ecommons");
 						MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 					}
 					else {
-						database.MoveCharacterToZone(CharacterID(), "bazaar");
 						MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 					}
 				}
 				else {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
 					MovePC(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 			}
 		}
-		Kick();
-		eqs->Close();
+		Save();
+		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
+		{
+			// Mules by their very nature require access to at least Luclin. Set that here.
+			if (IsMule() && GetBaseRace() != IKSAR)
+			{
+				if (RuleB(Quarm, EastCommonMules)) {
+					database.MoveCharacterToZone(CharacterID(), "ecommons");
+				}
+				else {
+					database.MoveCharacterToZone(CharacterID(), "bazaar");
+				}
+			}
+			else if (IsMule() && GetBaseRace() == IKSAR)
+			{
+				//Do nothing, just dc.
+			}
+			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
+			{
+				database.MoveCharacterToZone(CharacterID(), "fieldofbone");
+			}
+			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
+			{
+				database.MoveCharacterToZone(CharacterID(), "ecommons");
+			}
+		}
+		else
+		{
+
+			if (m_pp.expansions & LuclinEQ)
+			{
+				if (RuleB(Quarm, EastCommonMules)) {
+					database.MoveCharacterToZone(CharacterID(), "ecommons");
+
+				}
+				else {
+					database.MoveCharacterToZone(CharacterID(), "bazaar");
+				}
+			}
+			else
+			{
+				// Mules by their very nature require access to at least Luclin. Set that here.
+				if (IsMule())
+				{
+					if (RuleB(Quarm, EastCommonMules)) {
+						database.MoveCharacterToZone(CharacterID(), "ecommons");
+					}
+					else {
+						database.MoveCharacterToZone(CharacterID(), "bazaar");
+					}
+				}
+				else {
+					database.MoveCharacterToZone(CharacterID(), "ecommons");
+				}
+			}
+		}
+		WorldKick();
+		Disconnect();
 		return;
 	}
 
@@ -1084,8 +1130,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 				Log(Logs::General, Logs::Error, "Ghosting client: Account ID:%i Name:%s Character:%s IP:%s PORT:%d Incoming IP:%s PORT:%d",
 					client->AccountID(), client->AccountName(), client->GetName(), inet_ntoa(ghost_addr), ntohs(eqs->GetRemotePort()), inet_ntoa(local_addr), client->GetPort());
 				client->Save();
-				Kick();
-				eqs->Close();
+				client->Kick();
+				client->Disconnect();
 				return;
 			}
 		}
@@ -1113,7 +1159,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 		if (client != 0 && client_state != CLIENT_AUTH_RECEIVED) {
 			Log(Logs::General, Logs::Error, "GetAuth() returned false kicking client");
 			client->Save();
-			client->Kick();
+			client->Disconnect();
 			return;
 		}
 		else {
