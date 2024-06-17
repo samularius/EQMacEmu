@@ -749,11 +749,10 @@ void Client::CompleteConnect()
 					}
 				}
 				else {
-					MovePC(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 			}
 		}
-		Save();
 		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
 		{
 			// Mules by their very nature require access to at least Luclin. Set that here.
@@ -809,8 +808,7 @@ void Client::CompleteConnect()
 				}
 			}
 		}
-		WorldKick();
-		Disconnect();
+		Save();
 		return;
 	}
 
@@ -1620,7 +1618,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 
 	CalcBonuses();
 
-	if (m_pp.cur_hp <= 0)
+	if (m_pp.cur_hp <= -200)
 	{
 		m_pp.cur_hp = GetMaxHP();
 	}

@@ -544,10 +544,17 @@ bool Client::Save(uint8 iCommitNow) {
 	m_pp.guildrank = guildrank;
 
 	/* Mana and HP */
-	if (GetHP() <= 0) {
+
+	if (GetHP() <= -200)
+	{
 		m_pp.cur_hp = GetMaxHP();
 	}
-	else {
+	else if (GetHP() <= 0)
+	{
+		m_pp.cur_hp = 1;
+	}
+	else 
+	{
 		m_pp.cur_hp = GetHP();
 	}
 
