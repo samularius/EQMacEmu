@@ -704,10 +704,10 @@ void Client::CompleteConnect()
 			if (IsMule() && GetBaseRace() != IKSAR)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 				else {
-					MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else if (IsMule() && GetBaseRace() == IKSAR)
@@ -716,11 +716,11 @@ void Client::CompleteConnect()
 			}
 			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
 			{
-				MovePCGuildID(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
+				DoZoneMove(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 			}
 			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
-				MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+				DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 			}
 		}
 		else
@@ -729,11 +729,11 @@ void Client::CompleteConnect()
 			if (m_pp.expansions & LuclinEQ)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 
 				}
 				else {
-					MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else
@@ -742,73 +742,18 @@ void Client::CompleteConnect()
 				if (IsMule())
 				{
 					if (RuleB(Quarm, EastCommonMules)) {
-						MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+						DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 					}
 					else {
-						MovePCGuildID(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+						DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 					}
 				}
 				else {
-					MovePCGuildID(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 			}
 		}
-		if (RuleB(Quarm, RestrictIksarsToKunark) && zone)
-		{
-			// Mules by their very nature require access to at least Luclin. Set that here.
-			if (IsMule() && GetBaseRace() != IKSAR)
-			{
-				if (RuleB(Quarm, EastCommonMules)) {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
-				}
-				else {
-					database.MoveCharacterToZone(CharacterID(), "bazaar");
-				}
-			}
-			else if (IsMule() && GetBaseRace() == IKSAR)
-			{
-				//Do nothing, just dc.
-			}
-			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
-			{
-				database.MoveCharacterToZone(CharacterID(), "fieldofbone");
-			}
-			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
-			{
-				database.MoveCharacterToZone(CharacterID(), "ecommons");
-			}
-		}
-		else
-		{
-
-			if (m_pp.expansions & LuclinEQ)
-			{
-				if (RuleB(Quarm, EastCommonMules)) {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
-
-				}
-				else {
-					database.MoveCharacterToZone(CharacterID(), "bazaar");
-				}
-			}
-			else
-			{
-				// Mules by their very nature require access to at least Luclin. Set that here.
-				if (IsMule())
-				{
-					if (RuleB(Quarm, EastCommonMules)) {
-						database.MoveCharacterToZone(CharacterID(), "ecommons");
-					}
-					else {
-						database.MoveCharacterToZone(CharacterID(), "bazaar");
-					}
-				}
-				else {
-					database.MoveCharacterToZone(CharacterID(), "ecommons");
-				}
-			}
-		}
-		Save();
+		Disconnect();
 		return;
 	}
 

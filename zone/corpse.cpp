@@ -467,6 +467,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 		}
 			
 		client->CalcBonuses(); // will only affect offline profile viewing of dead characters..unneeded overhead
+		SetHP(-100);
 		client->Save();
 
 		IsRezzed(false);

@@ -1202,7 +1202,7 @@ void Mob::DamageCommand(Mob* other, int32 damage, bool skipaggro, uint16 spell_i
 
 	if (HasDied()) 
 	{
-		SetHP(-500);
+		SetHP(-100);
 	}
 
 	if (IsNPC())
@@ -1584,6 +1584,8 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 
 	m_pp.intoxication = 0;
 	m_pp.air_remaining = CalculateLungCapacity();
+	SetHP(-100);
+	m_pp.cur_hp = -100;
 
 	Save();
 
@@ -3256,8 +3258,12 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				else if (IsClient())
 					died = CastToClient()->CheckDeath();
 
-				if(died)
-					SetHP(-500);
+				if (died)
+				{
+					if (IsClient())
+						CastToClient()->m_pp.cur_hp = -100;
+					SetHP(-100);
+				}
 			}
 		}
 		else

@@ -545,7 +545,7 @@ bool Client::Save(uint8 iCommitNow) {
 
 	/* Mana and HP */
 
-	if (GetHP() <= -200)
+	if (GetHP() <= -100)
 	{
 		m_pp.cur_hp = GetMaxHP();
 	}
@@ -3280,7 +3280,7 @@ void Client::Sacrifice(Client *caster)
 				SetID(0);
 			}
 
-			SetHP(-500);
+			SetHP(-100);
 			SetMana(GetMaxMana());
 
 			Save();
