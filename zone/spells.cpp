@@ -3971,10 +3971,52 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		}
 	}
 
+	bool use_classic_resists = RuleR(World, CurrentExpansion) < (float)ExpansionEras::LuclinEQEra + 0.79;
+
 	//Add our level, resist and -spell resist modifier to our roll chance
-	resist_chance += level_mod;
-	resist_chance += resist_modifier;
 	resist_chance += target_resist;
+	resist_chance += level_mod;
+	if (use_classic_resists && IsClient())
+	{
+		if (resist_chance > 200 && spells[spell_id].targettype == ST_Tap)
+			resist_chance = 200;
+
+		if (caster->IsNPC())
+		{
+			if (spell_id == 837)	// Stun Breath
+				resist_modifier = -50;
+			if (spell_id == 843)	// Immolating Breath
+				resist_modifier = -100;
+
+			if (resist_modifier == -150)
+			{
+				// dragon aoes
+				resist_modifier = -100;
+			}
+		}
+
+		int hardcap = 350;
+		if (RuleR(World, CurrentExpansion) < (float)ExpansionEras::VeliousEQEra)
+			hardcap = 250;
+
+		if (resist_chance > hardcap)
+			resist_chance = hardcap;
+
+		if (resist_chance > 200)
+			resist_chance = 200 + (resist_chance - 200) / 2;
+	}
+
+	resist_chance += resist_modifier;
+
+	if (use_classic_resists && caster->IsNPC() && caster->GetLevel() > 24 && zone->GetZoneID() != sirens
+		&& (caster->GetClass() == ENCHANTER || caster->GetClass() == ENCHANTERGM) )
+	{
+		if (GetLevel() < resist_chance)
+			resist_chance = GetLevel();
+
+		if (resist_chance > 80)
+			resist_chance = 80;
+	}
 
 	if (tick_save)
 	{
@@ -4038,16 +4080,19 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		}
 		else
 		{
+			if (use_classic_resists && resist_chance > 200 && IsClient())
+				resist_chance = 200;
+
 			int partial_modifier = ((150 * (resist_chance - roll)) / resist_chance);
 
 			if(IsNPC())
 			{
-				if(target_level > caster_level && target_level >= 17 && caster_level <= 50)
+				if(target_level > caster_level && target_level >= 17 && (caster_level <= 50 || use_classic_resists))
 				{
 					partial_modifier += 5;
 				}
 
-				if(target_level >= 30 && caster_level <= 50)
+				if(target_level >= 30 && (caster_level <= 50 || use_classic_resists))
 				{
 					partial_modifier += (caster_level - 25);
 				}
