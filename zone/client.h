@@ -380,6 +380,10 @@ public:
 	void SetMarried(const char* playerName);
 	bool IsMarried();
 
+	uint8 GetCharExportFlag() { return m_epp.char_export_flag; };
+
+	void SetCharExportFlag(uint8 flag);
+
 	inline float ProximityX() const { return m_Proximity.x; }
 	inline float ProximityY() const { return m_Proximity.y; }
 	inline float ProximityZ() const { return m_Proximity.z; }
