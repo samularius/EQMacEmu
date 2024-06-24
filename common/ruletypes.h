@@ -269,6 +269,8 @@ RULE_BOOL(Quarm, IncludeMulesInServerCount, false)
 RULE_BOOL(Quarm, ErollsiDayEvent, false)
 RULE_BOOL(Quarm, RestrictIksarsToKunark, false)
 RULE_BOOL(Quarm, AllowBypassMaxClientsOnWorldEnter, false)
+RULE_BOOL(Quarm, InstanceAlwaysHasMinimumSpawnTime, true)
+RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000)
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Map )
