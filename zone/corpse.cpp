@@ -330,7 +330,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 	EQ::ItemInstance *item = nullptr;
 
 	/* Check if Zone has Graveyard First */
-	if(!zone->HasGraveyard()) {
+	if(!zone->HasGraveyard() || zone->GetGuildID() == GUILD_NONE && zone->GetZoneID() < 1000) {
 		corpse_graveyard_timer.Disable();
 	}
 	corpse_graveyard_moved_timer.Disable();
