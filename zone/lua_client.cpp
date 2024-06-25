@@ -202,21 +202,52 @@ void Lua_Client::SetDeity(int v) {
 
 void Lua_Client::AddEXP(uint32 add_exp, int conlevel, Lua_Mob other) {
 	Lua_Safe_Call_Void();
+	
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
 	self->AddEXP(add_exp, conlevel, other);
 }
 
 void Lua_Client::SetEXP(uint32 set_exp, uint32 set_aaxp) {
 	Lua_Safe_Call_Void();
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
 	self->SetEXP(set_exp, set_aaxp);
 }
 
 void Lua_Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool resexp) {
 	Lua_Safe_Call_Void();
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
 	self->SetEXP(set_exp, set_aaxp, resexp);
 }
 
 void Lua_Client::AddEXPPercent(uint8 percent, uint8 level) {
 	Lua_Safe_Call_Void();
+	
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
+
 	self->AddEXPPercent(percent, level);
 }
 
@@ -968,11 +999,29 @@ uint32 Lua_Client::GetIP() {
 
 void Lua_Client::AddLevelBasedExp(int exp_pct) {
 	Lua_Safe_Call_Void();
+	
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
+
 	self->AddLevelBasedExp(exp_pct);
 }
 
 void Lua_Client::AddLevelBasedExp(int exp_pct, int max_level) {
 	Lua_Safe_Call_Void();
+
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
+
 	self->AddLevelBasedExp(exp_pct, max_level);
 }
 

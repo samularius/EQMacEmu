@@ -381,6 +381,15 @@ void Client::AddQuestEXP(uint32 in_add_exp, bool bypass_cap) {
 	if(IsMule())
 		return;
 
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (self->GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
+
+
 	this->EVENT_ITEM_ScriptStopReturn();
 
 	uint32 add_exp = in_add_exp;

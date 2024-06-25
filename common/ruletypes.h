@@ -271,6 +271,8 @@ RULE_BOOL(Quarm, RestrictIksarsToKunark, false)
 RULE_BOOL(Quarm, AllowBypassMaxClientsOnWorldEnter, false)
 RULE_BOOL(Quarm, InstanceAlwaysHasMinimumSpawnTime, true)
 RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000)
+RULE_BOOL(Quarm, EnableQuestBasedXPLimit, true) // Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.
+RULE_INT(Quarm, QuestBasedXPLimitLevel, 51) // For Kunark. Adjust for POP Launch.
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Map )
