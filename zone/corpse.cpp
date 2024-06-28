@@ -950,7 +950,7 @@ bool Corpse::Process() {
 		return true;
 	}
 
-	if (worldserver.Connected() && corpse_graveyard_timer.Check() && && zone->ZoneGuildID() != 0) {
+	if (worldserver.Connected() && corpse_graveyard_timer.Check() && zone->ZoneGuildID() != 0) {
 		if (zone->HasGraveyard()) {
 			Save();
 
