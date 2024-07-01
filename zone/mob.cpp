@@ -4993,6 +4993,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 		int8 gender = Mob::GetDefaultGender(spell_base, GetGender());
 		// Texture doesn't seem to be in our spell data :I
 		int8 texture = 0;
+		int8 helmtexture = spell.max[i];
 		if (IsRacialIllusion(spell_id))
 		{
 			texture = GetTexture();
@@ -5069,7 +5070,10 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
             case 1611:
             {
 				if (GetBaseRace() == IKSAR && spell_base == SKELETON)
+				{
 					spell_base = IKSAR_SKELETON;
+					helmtexture = GetGender();
+				}
 
 				if (GetBaseRace() == GNOME && spell_id != 581)
 					spell_model_size = 4.0f;
@@ -5085,7 +5089,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			spell_base,
 			gender,
 			texture,
-			spell.max[i], // seems to be 0 for every illusion
+			helmtexture, // seems to be 0 for every illusion
 			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 			spell_model_size // default size
 		);

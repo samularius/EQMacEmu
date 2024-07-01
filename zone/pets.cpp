@@ -209,6 +209,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	if ((GetClass() == NECROMANCER || GetClass() == SHADOWKNIGHT) && GetBaseRace() == IKSAR && npc_type->race == SKELETON) {
 		npc_type->race = IKSAR_SKELETON;
+		npc_type->helmtexture = GetGender();
     }
 
 	if (GetClass() == NECROMANCER && GetBaseRace() == GNOME && npc_type->race == SKELETON && npc_type->size != 0)
