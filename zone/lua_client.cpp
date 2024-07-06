@@ -1303,6 +1303,11 @@ int Lua_Client::GetHandToHandDelay() {
 	return self->GetHandToHandDelay();
 }
 
+void Lua_Client::PermaGender(uint32 in_Gender) {
+	Lua_Safe_Call_Void();
+	self->PermaGender(in_Gender);
+}
+
 luabind::scope lua_register_client() {
 	return luabind::class_<Lua_Client, Lua_Mob>("Client")
 		.def(luabind::constructor<>())
@@ -1535,7 +1540,8 @@ luabind::scope lua_register_client() {
 		.def("IsMarried", (bool(Lua_Client::*)())&Lua_Client::IsMarried)
 		.def("SetMarried", (void(Lua_Client::*)(const char*))&Lua_Client::SetMarried)
 		.def("SetTemporaryLastName", (void(Lua_Client::*)(const char*))&Lua_Client::SetTemporaryLastName)
-		.def("HasTemporaryLastName", (bool(Lua_Client::*)(void))&Lua_Client::HasTemporaryLastName);
+		.def("HasTemporaryLastName", (bool(Lua_Client::*)(void))&Lua_Client::HasTemporaryLastName)
+		.def("PermaGender", (void(Lua_Client::*)(uint32))&Lua_Client::PermaGender);
 }
 
 luabind::scope lua_register_inventory_where() {
