@@ -222,6 +222,9 @@ Corpse::Corpse(NPC* in_npc, ItemList* in_itemlist, uint32 in_npctypeid, uint32 i
 	else
 		loot_lockout_timer = 0;
 
+	if (zone->GetGuildID() == GUILD_NONE)
+		loot_lockout_timer = 0;
+
 	if (in_itemlist) {
 		itemlist = *in_itemlist;
 		in_itemlist->clear();
