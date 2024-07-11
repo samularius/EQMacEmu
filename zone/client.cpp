@@ -6933,7 +6933,7 @@ uint16 Client::GetWeaponEffectID(int slot)
 		return 0;
 }
 
-bool Client::PermaGender(uint32 gender)
+void Client::PermaGender(uint32 gender)
 {
 	SetBaseGender(gender);
 	Save();
