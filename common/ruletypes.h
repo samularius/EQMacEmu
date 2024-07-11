@@ -250,13 +250,14 @@ RULE_REAL(Quarm, AccidentalFallUnitDist, 50.0) // Length of initial zonein fall 
 RULE_BOOL(Quarm, ThanksgivingExpBonus, false)
 RULE_REAL(Quarm, ThanksgivingExpBonusOutdoorAmt, 0.20)
 RULE_REAL(Quarm, FlyingRaceExpBonus, 0.50)
+RULE_REAL(Quarm, InstanceZEMOverride, 20)
 RULE_INT(Quarm, AntiSpamMuteInSeconds, 900) // Defaults to 15 minutes. Live will likely adjust this
 RULE_BOOL(Quarm, EnableNPCProximityAggroSystem, false) // Classic behavior is true. Live Quarm has this false by default. CSR complaints about training warranted this behavior.
 RULE_INT(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement, 30) // Required level to participate in raid content.
 RULE_INT(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement, 12) // Required amount of members to participate in a raid encounter. Not all of these must be in the same guild (see below rule.)
 RULE_INT(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement, 18) // Required amount of same-guild members to participate in a raid encounter. These must be in the same guild, and one officer from the current guild must be in the raid.
 RULE_INT(Quarm, MinStatusToZoneIntoAnyGuildZone, 100) // Required amount of same-guild members to participate in a raid encounter. These must be in the same guild, and one officer from the current guild must be in the raid.
-RULE_BOOL(Quarm, EnableGuildZoneRequirementOnEntry, false) // Classic behavior is true. Live Quarm has this false by default. CSR complaints about training warranted this behavior.
+RULE_BOOL(Quarm, EnableGuildZoneRequirementOnEntry, false) 
 RULE_INT(Quarm, AOEThrottlingMaxAOETargets, 50) // This will curb nonsense with performance issues relating to amount of targets if the amount of clients exceeds 300 in a single zone.
 RULE_INT(Quarm, AOEMaxHostilePBAOETargets, 30)
 RULE_BOOL(Quarm, LimitPBAOEDetrimentalSpells, true)
@@ -269,6 +270,10 @@ RULE_BOOL(Quarm, IncludeMulesInServerCount, false)
 RULE_BOOL(Quarm, ErollsiDayEvent, false)
 RULE_BOOL(Quarm, RestrictIksarsToKunark, false)
 RULE_BOOL(Quarm, AllowBypassMaxClientsOnWorldEnter, false)
+RULE_BOOL(Quarm, InstanceAlwaysHasMinimumSpawnTime, true)
+RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000)
+RULE_BOOL(Quarm, EnableQuestBasedXPLimit, true) // Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.
+RULE_INT(Quarm, QuestBasedXPLimitLevel, 51) // For Kunark. Adjust for POP Launch.
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Map )

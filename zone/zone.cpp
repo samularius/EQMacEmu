@@ -1123,6 +1123,9 @@ void Zone::ReloadStaticData() {
 	KeyRingDataList.Clear();
 	zone->LoadKeyRingData(&KeyRingDataList);
 
+	LogInfo("Reloading Zone Data...");
+	database.GetZoneLongName(short_name, &long_name, file_name, &m_SafePoint.x, &m_SafePoint.y, &m_SafePoint.z, &pgraveyard_id, &pgraveyard_timer, &pMaxClients);
+
 	//load the zone config file.
 	if (!LoadZoneCFG(zone->GetShortName(), true)) { // try loading the zone name...
 		LoadZoneCFG(zone->GetFileName());

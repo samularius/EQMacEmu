@@ -199,6 +199,8 @@ public:
 	int GetHandToHandDelay();
 	uint16 GetWeaponEffectID(int slot = EQ::invslot::slotPrimary);
 
+	void PermaGender(uint32 gender);
+
 	float GetQuiverHaste();
 	int	GetHasteCap();
 

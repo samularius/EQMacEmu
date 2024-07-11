@@ -1748,6 +1748,7 @@ NPCType* ZoneDatabase::GrabNPCType(uint32 id)
 		tmp_npctype->stuck_behavior			= n.stuck_behavior;
 		tmp_npctype->flymode				= n.flymode;
 		tmp_npctype->loot_lockout			= n.loot_lockout;
+		tmp_npctype->instance_spawn_timer_override = n.instance_spawn_timer_override;
 
 		if (tmp_npctype->flymode < 0 || tmp_npctype->flymode > 3)
 			tmp_npctype->flymode = EQ::constants::GravityBehavior::Water;

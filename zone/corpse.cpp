@@ -222,6 +222,9 @@ Corpse::Corpse(NPC* in_npc, ItemList* in_itemlist, uint32 in_npctypeid, uint32 i
 	else
 		loot_lockout_timer = 0;
 
+	if (zone->GetGuildID() == GUILD_NONE)
+		loot_lockout_timer = 0;
+
 	if (in_itemlist) {
 		itemlist = *in_itemlist;
 		in_itemlist->clear();
@@ -330,7 +333,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 	EQ::ItemInstance *item = nullptr;
 
 	/* Check if Zone has Graveyard First */
-	if(!zone->HasGraveyard()) {
+	if(!zone->HasGraveyard() || zone->GetGuildID() == GUILD_NONE && zone->GetZoneID() < 1000) {
 		corpse_graveyard_timer.Disable();
 	}
 	corpse_graveyard_moved_timer.Disable();
@@ -467,7 +470,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 		}
 			
 		client->CalcBonuses(); // will only affect offline profile viewing of dead characters..unneeded overhead
-		SetHP(-100);
+		client->SetHP(-100);
 		client->Save();
 
 		IsRezzed(false);
@@ -607,7 +610,7 @@ Corpse::Corpse(uint32 in_dbid, uint32 in_charid, const char* in_charname, ItemLi
 
 	LoadPlayerCorpseDecayTime(in_dbid, empty);
 
-	if (!zone->HasGraveyard() || wasAtGraveyard){
+	if (!zone->HasGraveyard() || wasAtGraveyard || zone->GetGuildID() == GUILD_NONE && zone->GetZoneID() < 1000){
 		corpse_graveyard_timer.Disable();
 	}
 	corpse_graveyard_moved_timer.Disable();
@@ -950,7 +953,7 @@ bool Corpse::Process() {
 		return true;
 	}
 
-	if (worldserver.Connected() && corpse_graveyard_timer.Check()) {
+	if (worldserver.Connected() && corpse_graveyard_timer.Check() && zone->GetGuildID() != GUILD_NONE) {
 		if (zone->HasGraveyard()) {
 			Save();
 
@@ -981,7 +984,7 @@ bool Corpse::Process() {
 		return false;
 	}
 
-	if (IsPlayerCorpse() && zone->HasGraveyard() && !corpse_graveyard_timer.Enabled())
+	if (IsPlayerCorpse() && zone->HasGraveyard() && !corpse_graveyard_timer.Enabled() && zone->GetGuildID() != GUILD_NONE && zone->GetZoneID() >= 1000)
 	{
 		// it already went to GY, prevent dragging it back out
 		if (!corpse_graveyard_moved_timer.Enabled())
@@ -2284,6 +2287,9 @@ void Corpse::RemoveLegacyItemLooter(std::string client_name)
 void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 {
 	if (loot_lockout_timer == 0)
+		return;
+
+	if (zone->GetGuildID() == GUILD_NONE)
 		return;
 
 	auto cur_time = time(nullptr);

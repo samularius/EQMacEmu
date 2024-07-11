@@ -6960,3 +6960,10 @@ uint16 Client::GetWeaponEffectID(int slot)
 	else
 		return 0;
 }
+
+void Client::PermaGender(uint32 gender)
+{
+	SetBaseGender(gender);
+	Save();
+	SendIllusionPacket(gender);
+}

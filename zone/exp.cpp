@@ -65,6 +65,11 @@ float Mob::GetBaseEXP()
 			server_bonus += RuleR(Quarm, ThanksgivingExpBonusOutdoorAmt);
 		}
 	}
+	if (zone && zone->GetGuildID() != GUILD_NONE)
+	{
+		zemmod = RuleR(Quarm, InstanceZEMOverride);
+	}
+
 	float npc_pct = 1.0f;
 	if (IsNPC())
 		npc_pct = static_cast<float>(CastToNPC()->GetExpPercent()) / 100.0f;
@@ -380,6 +385,15 @@ void Client::AddQuestEXP(uint32 in_add_exp, bool bypass_cap) {
 
 	if(IsMule())
 		return;
+
+	if (RuleB(Quarm, EnableQuestBasedXPLimit))
+	{
+		if (GetLevel() >= RuleI(Quarm, QuestBasedXPLimitLevel))
+		{
+			return;
+		}
+	}
+
 
 	this->EVENT_ITEM_ScriptStopReturn();
 
