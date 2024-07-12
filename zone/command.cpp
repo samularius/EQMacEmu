@@ -9055,7 +9055,8 @@ void command_allowexport(Client* c, const Seperator* sep) {
 	}
 	else 
 	{ 
-		c->Message(CC_Default, "All export options will include character name, level, guild, stats, skills, factions, and keyrings.")}
+		c->Message(CC_Default, "All export options will include character name, level, guild, stats, skills, factions, and keyrings.")
+	}
 
 	c->Message(CC_Default, "Usage:");
 	c->Message(CC_Default, "#allowexport status - shows your current setting.");
