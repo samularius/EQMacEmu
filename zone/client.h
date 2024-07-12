@@ -382,9 +382,9 @@ public:
 	void SetMarried(const char* playerName);
 	bool IsMarried();
 
-	uint8 GetCharExportFlag() { return m_epp.char_export_flag; };
+	inline uint8 GetCharExportFlag() { return m_epp.char_export_flag; };
 
-	inline void SetCharExportFlag(uint8 flag);
+	void SetCharExportFlag(uint8 flag);
 
 	inline float ProximityX() const { return m_Proximity.x; }
 	inline float ProximityY() const { return m_Proximity.y; }
