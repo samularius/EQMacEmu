@@ -6920,19 +6920,19 @@ void Client::SetCharExportFlag(uint8 flag)
 		Message(CC_Default, "Character export disabled.");
 		return;
 	}
-	if (flag == 1) {
+	else if (flag == 1) {
 		m_epp.char_export_flag = 1;
 		Save(1);
 		Message(CC_Default, "Character \"worn\" export enabled.");
 		return;
 	}
-	if (flag == 2) {
+	else if (flag == 2) {
 		m_epp.char_export_flag = 2;
 		Save(1);
 		Message(CC_Default, "Character \"inventory\" export enabled.");
 		return;
 	}
-	if (flag == 3) {
+	else if (flag == 3) {
 		m_epp.char_export_flag = 3;
 		Save(1);
 		Message(CC_Default, "Character \"bank\" export enabled.");

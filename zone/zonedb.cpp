@@ -1289,10 +1289,10 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // e_hardcore
 		"%lld," // e_hardcore_death_time
 		"%u,"   // e_betabuff_gear_flag
-		"%lu, "   // e_zone_guild_id
-		"'%s', "  // e_temp_last_name
-		"%u, "  // e_married_character_id
-		"%u "  // e_char_export_flag
+		"%lu,"   // e_zone_guild_id
+		"'%s',"  // e_temp_last_name
+		"%u,"  // e_married_character_id
+		"%u"  // e_char_export_flag
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "

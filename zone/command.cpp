@@ -9036,21 +9036,26 @@ void command_allowexport(Client* c, const Seperator* sep) {
 		c->SetCharExportFlag(0);
 		return;
 	}
-	if (!strcasecmp(sep->arg[1], "worn")) {
+	else if (!strcasecmp(sep->arg[1], "worn")) {
 		c->SetCharExportFlag(1);
 		return;
 	}
-	if (!strcasecmp(sep->arg[1], "inventory")) {
+	else if (!strcasecmp(sep->arg[1], "inventory")) {
 		c->SetCharExportFlag(2);
 		return;
 	}
-	if (!strcasecmp(sep->arg[1], "bank")) {
+	else if (!strcasecmp(sep->arg[1], "bank")) {
 		c->SetCharExportFlag(3);
 		return;
 	}
 
-	if (arguments) { c->Message(CC_Default, "Invalid argument"); }
-	else { c->Message(CC_Default, "All export options will include character name, level, guild, stats, skills, factions, and keyrings."); }
+	if (arguments) 
+	{ 
+		c->Message(CC_Default, "Invalid argument"); 
+	}
+	else 
+	{ 
+		c->Message(CC_Default, "All export options will include character name, level, guild, stats, skills, factions, and keyrings.")}
 
 	c->Message(CC_Default, "Usage:");
 	c->Message(CC_Default, "#allowexport status - shows your current setting.");
