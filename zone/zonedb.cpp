@@ -1014,6 +1014,32 @@ bool ZoneDatabase::LoadCharacterLootLockouts(std::map<uint32, LootLockout>& loot
 	return true;
 }
 
+bool ZoneDatabase::LoadCharacterReimbursements(std::list<TempMerchantList>& reimbursement_list, uint32 character_id)
+{
+	std::string query = StringFormat(
+		"SELECT                   "
+		"slot,                    "
+		"itemid,                  "
+		"charges,                 "
+		"quantity                 "
+		"FROM `character_reimbursements` WHERE (charid = %u)", character_id);
+	auto results = database.QueryDatabase(query);
+	for (auto row = results.begin(); row != results.end(); ++row) {
+
+		TempMerchantList tmpReimbursement = TempMerchantList();
+		uint32 charid_id = atoi(row[2]);
+		tmpReimbursement.slot = atoi(row[0]);
+		tmpReimbursement.item = atoi(row[1]);
+		tmpReimbursement.charges = atoi(row[2]);
+		tmpReimbursement.origslot = tmpReimbursement.slot;
+		tmpReimbursement.quantity = atoi(row[3]);
+		tmpReimbursement.npcid = character_id;
+		reimbursement_list.emplace_back(tmpReimbursement);
+	}
+
+	return true;
+}
+
 bool ZoneDatabase::SaveCharacterLootLockout(uint32 character_id, uint32 expiry, uint32 npctype_id, const char* npc_name)
 {
 	auto zone_id_number = zone ? zone->GetZoneID() : 0;
@@ -1785,10 +1811,24 @@ void ZoneDatabase::SaveMerchantTemp(uint32 npcid, uint32 slot, uint32 item, uint
     QueryDatabase(query);
 }
 
-void ZoneDatabase::DeleteMerchantTemp(uint32 npcid, uint32 slot){
-	std::string query = StringFormat("DELETE FROM merchantlist_temp WHERE npcid=%d AND slot=%d", npcid, slot);
+void ZoneDatabase::DeleteReimbursementItem(uint32 charid, uint32 slot){
+	std::string query = StringFormat("DELETE FROM character_reimbursements WHERE charid=%d AND slot=%d", charid, slot);
 	QueryDatabase(query);
 }
+
+void ZoneDatabase::SaveReimbursementItem(uint32 charid, uint32 slot, uint32 item, uint32 charges, uint32 quantity) 
+{
+	std::string query = StringFormat("REPLACE INTO character_reimbursements (charid, slot, itemid, charges, quantity) "
+		"VALUES(%d, %d, %d, %d, %d)", charid, slot, item, charges, quantity);
+	QueryDatabase(query);
+}
+
+void ZoneDatabase::DeleteMerchantTemp(uint32 npcid, uint32 slot)
+{
+	std::string query = StringFormat("DELETE FROM character_reimbursement WHERE charid=%d AND slot=%d", npcid, slot);
+	QueryDatabase(query);
+}
+
 
 void ZoneDatabase::DeleteMerchantTempList(uint32 npcid) {
 	std::string query = StringFormat("DELETE FROM merchantlist_temp WHERE npcid=%d", npcid);

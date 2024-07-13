@@ -764,7 +764,7 @@ public:
 
 
 	std::map<uint32, LootLockout> loot_lockouts;
-	std::map<uint16, LootItemLockout>	looted_legacy_items;
+	std::map<uint16, LootItemLockout> looted_legacy_items;
 	bool IsLootLockedOutOfNPC(uint32 npctype_id);
 
 
@@ -1163,6 +1163,7 @@ private:
 	uint16				duel_target;
 	bool				duelaccepted;
 	std::list<uint32>	keyring;
+	std::list<TempMerchantList> item_reimbursement_list;
 
 	bool				tellsoff;	// GM /toggle
 	bool				gmhideme;
