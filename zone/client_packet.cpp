@@ -8040,7 +8040,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	uint8 quantity_left = 0;
 	const EQ::ItemData* item = nullptr;
 
-	if (merchantid == 1)
+	if (merchantid != 1)
 	{
 		std::list<MerchantList> merlist = zone->merchanttable[merchantid];
 		std::list<MerchantList>::const_iterator itr;
@@ -8105,8 +8105,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 			}
 		}
 	}
-
-	if (merchantid == 1 && item_id == 0)
+	else if (merchantid == 1 && item_id == 0)
 	{
 		for (auto item : item_reimbursement_list)
 		{
@@ -8403,7 +8402,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	if (itemid == 0)
 		return;
 
-	if (vendor->CastToNPC()->MerchantType > 0)
+	if (vendor->CastToNPC()->MerchantType == 1)
 	{
 		Message(CC_Red, "This merchant can only be bought from.");
 		auto outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(OldMerchant_Purchase_Struct));
