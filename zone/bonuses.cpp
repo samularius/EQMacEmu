@@ -1385,10 +1385,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses* ne
 			}
 
 			case SE_MovementSpeed:
-				int buff_slot_found = GetBuffSlotFromType(SE_MovementSpeed2);
-				if (buff_slot_found >= 0 && IsNPC())
-				{
-				}
 				new_bonus->movementspeed += effect_value;
 				break;
 
