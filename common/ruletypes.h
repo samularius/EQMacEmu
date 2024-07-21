@@ -445,7 +445,7 @@ RULE_BOOL ( EventLog, SkipCommonPacketLogging, true, " Doesn't log OP_MobHealth 
 RULE_CATEGORY_END()
 
 RULE_CATEGORY ( AA )
-RULE_INT ( AA, ExpPerPoint, 18750000, "Amount of exp per AA", " ")
+RULE_INT ( AA, ExpPerPoint, 18750000, "Amount of exp per AA")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Console )
