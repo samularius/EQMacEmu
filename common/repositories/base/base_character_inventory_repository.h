@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharacterInventoryRepository {
 public:
 	struct CharacterInventory {
@@ -140,13 +139,13 @@ public:
 		if (results.RowCount() == 1) {
 			CharacterInventory e{};
 
-			e.id            = static_cast<int32_t>(atoi(row[0]));
-			e.slotid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.itemid        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.charges       = static_cast<uint16_t>(strtoul(row[3], nullptr, 10));
+			e.id            = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.slotid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.itemid        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.charges       = row[3] ? static_cast<uint16_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.custom_data   = row[4] ? row[4] : "";
-			e.serialnumber  = static_cast<int32_t>(atoi(row[5]));
-			e.initialserial = static_cast<int8_t>(atoi(row[6]));
+			e.serialnumber  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.initialserial = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
 
 			return e;
 		}
@@ -284,13 +283,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterInventory e{};
 
-			e.id            = static_cast<int32_t>(atoi(row[0]));
-			e.slotid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.itemid        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.charges       = static_cast<uint16_t>(strtoul(row[3], nullptr, 10));
+			e.id            = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.slotid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.itemid        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.charges       = row[3] ? static_cast<uint16_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.custom_data   = row[4] ? row[4] : "";
-			e.serialnumber  = static_cast<int32_t>(atoi(row[5]));
-			e.initialserial = static_cast<int8_t>(atoi(row[6]));
+			e.serialnumber  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.initialserial = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -315,13 +314,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterInventory e{};
 
-			e.id            = static_cast<int32_t>(atoi(row[0]));
-			e.slotid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.itemid        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.charges       = static_cast<uint16_t>(strtoul(row[3], nullptr, 10));
+			e.id            = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.slotid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.itemid        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.charges       = row[3] ? static_cast<uint16_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.custom_data   = row[4] ? row[4] : "";
-			e.serialnumber  = static_cast<int32_t>(atoi(row[5]));
-			e.initialserial = static_cast<int8_t>(atoi(row[6]));
+			e.serialnumber  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.initialserial = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
 
 			all_entries.push_back(e);
 		}

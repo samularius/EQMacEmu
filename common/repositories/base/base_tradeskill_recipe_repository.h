@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseTradeskillRecipeRepository {
 public:
 	struct TradeskillRecipe {
@@ -30,6 +29,10 @@ public:
 		std::string notes;
 		int8_t      quest;
 		int8_t      enabled;
+		std::string content_flags;
+		std::string content_flags_disabled;
+		float       min_expansion;
+		float       max_expansion;
 	};
 
 	static std::string PrimaryKey()
@@ -50,6 +53,10 @@ public:
 			"notes",
 			"quest",
 			"enabled",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -66,6 +73,10 @@ public:
 			"notes",
 			"quest",
 			"enabled",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -106,16 +117,20 @@ public:
 	{
 		TradeskillRecipe e{};
 
-		e.id                = 0;
-		e.name              = "";
-		e.tradeskill        = 0;
-		e.skillneeded       = 0;
-		e.trivial           = 0;
-		e.nofail            = 0;
-		e.replace_container = 0;
-		e.notes             = "";
-		e.quest             = 0;
-		e.enabled           = 1;
+		e.id                     = 0;
+		e.name                   = "";
+		e.tradeskill             = 0;
+		e.skillneeded            = 0;
+		e.trivial                = 0;
+		e.nofail                 = 0;
+		e.replace_container      = 0;
+		e.notes                  = "";
+		e.quest                  = 0;
+		e.enabled                = 1;
+		e.content_flags          = "";
+		e.content_flags_disabled = "";
+		e.min_expansion          = -1;
+		e.max_expansion          = -1;
 
 		return e;
 	}
@@ -152,16 +167,20 @@ public:
 		if (results.RowCount() == 1) {
 			TradeskillRecipe e{};
 
-			e.id                = static_cast<int32_t>(atoi(row[0]));
-			e.name              = row[1] ? row[1] : "";
-			e.tradeskill        = static_cast<int16_t>(atoi(row[2]));
-			e.skillneeded       = static_cast<int16_t>(atoi(row[3]));
-			e.trivial           = static_cast<int16_t>(atoi(row[4]));
-			e.nofail            = static_cast<int8_t>(atoi(row[5]));
-			e.replace_container = static_cast<int8_t>(atoi(row[6]));
-			e.notes             = row[7] ? row[7] : "";
-			e.quest             = static_cast<int8_t>(atoi(row[8]));
-			e.enabled           = static_cast<int8_t>(atoi(row[9]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.name                   = row[1] ? row[1] : "";
+			e.tradeskill             = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.skillneeded            = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.trivial                = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.nofail                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.replace_container      = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.notes                  = row[7] ? row[7] : "";
+			e.quest                  = row[8] ? static_cast<int8_t>(atoi(row[8])) : 0;
+			e.enabled                = row[9] ? static_cast<int8_t>(atoi(row[9])) : 1;
+			e.content_flags          = row[10] ? row[10] : "";
+			e.content_flags_disabled = row[11] ? row[11] : "";
+			e.min_expansion          = row[12] ? strtof(row[12], nullptr) : -1;
+			e.max_expansion          = row[13] ? strtof(row[13], nullptr) : -1;
 
 			return e;
 		}
@@ -204,6 +223,10 @@ public:
 		v.push_back(columns[7] + " = '" + Strings::Escape(e.notes) + "'");
 		v.push_back(columns[8] + " = " + std::to_string(e.quest));
 		v.push_back(columns[9] + " = " + std::to_string(e.enabled));
+		v.push_back(columns[10] + " = '" + Strings::Escape(e.content_flags) + "'");
+		v.push_back(columns[11] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(columns[12] + " = " + std::to_string(e.min_expansion));
+		v.push_back(columns[13] + " = " + std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -235,6 +258,10 @@ public:
 		v.push_back("'" + Strings::Escape(e.notes) + "'");
 		v.push_back(std::to_string(e.quest));
 		v.push_back(std::to_string(e.enabled));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -274,6 +301,10 @@ public:
 			v.push_back("'" + Strings::Escape(e.notes) + "'");
 			v.push_back(std::to_string(e.quest));
 			v.push_back(std::to_string(e.enabled));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -307,16 +338,20 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			TradeskillRecipe e{};
 
-			e.id                = static_cast<int32_t>(atoi(row[0]));
-			e.name              = row[1] ? row[1] : "";
-			e.tradeskill        = static_cast<int16_t>(atoi(row[2]));
-			e.skillneeded       = static_cast<int16_t>(atoi(row[3]));
-			e.trivial           = static_cast<int16_t>(atoi(row[4]));
-			e.nofail            = static_cast<int8_t>(atoi(row[5]));
-			e.replace_container = static_cast<int8_t>(atoi(row[6]));
-			e.notes             = row[7] ? row[7] : "";
-			e.quest             = static_cast<int8_t>(atoi(row[8]));
-			e.enabled           = static_cast<int8_t>(atoi(row[9]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.name                   = row[1] ? row[1] : "";
+			e.tradeskill             = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.skillneeded            = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.trivial                = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.nofail                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.replace_container      = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.notes                  = row[7] ? row[7] : "";
+			e.quest                  = row[8] ? static_cast<int8_t>(atoi(row[8])) : 0;
+			e.enabled                = row[9] ? static_cast<int8_t>(atoi(row[9])) : 1;
+			e.content_flags          = row[10] ? row[10] : "";
+			e.content_flags_disabled = row[11] ? row[11] : "";
+			e.min_expansion          = row[12] ? strtof(row[12], nullptr) : -1;
+			e.max_expansion          = row[13] ? strtof(row[13], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}
@@ -341,16 +376,20 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			TradeskillRecipe e{};
 
-			e.id                = static_cast<int32_t>(atoi(row[0]));
-			e.name              = row[1] ? row[1] : "";
-			e.tradeskill        = static_cast<int16_t>(atoi(row[2]));
-			e.skillneeded       = static_cast<int16_t>(atoi(row[3]));
-			e.trivial           = static_cast<int16_t>(atoi(row[4]));
-			e.nofail            = static_cast<int8_t>(atoi(row[5]));
-			e.replace_container = static_cast<int8_t>(atoi(row[6]));
-			e.notes             = row[7] ? row[7] : "";
-			e.quest             = static_cast<int8_t>(atoi(row[8]));
-			e.enabled           = static_cast<int8_t>(atoi(row[9]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.name                   = row[1] ? row[1] : "";
+			e.tradeskill             = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.skillneeded            = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.trivial                = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.nofail                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.replace_container      = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.notes                  = row[7] ? row[7] : "";
+			e.quest                  = row[8] ? static_cast<int8_t>(atoi(row[8])) : 0;
+			e.enabled                = row[9] ? static_cast<int8_t>(atoi(row[9])) : 1;
+			e.content_flags          = row[10] ? row[10] : "";
+			e.content_flags_disabled = row[11] ? row[11] : "";
+			e.min_expansion          = row[12] ? strtof(row[12], nullptr) : -1;
+			e.max_expansion          = row[13] ? strtof(row[13], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}

@@ -15,6 +15,8 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
+#define PLATFORM_WORLD 1
+
 #include "../common/global_define.h"
 
 #include <iostream>
@@ -87,6 +89,8 @@
 #include "ucs.h"
 #include "queryserv.h"
 #include "world_server_command_handler.h"
+#include "../common/content/world_content_service.h"
+#include "world_event_scheduler.h"
 
 TimeoutManager timeout_manager;
 EQStreamFactory eqsf(WorldStream,9000);
@@ -97,6 +101,7 @@ LoginServerList loginserverlist;
 UCSConnection UCSLink;
 QueryServConnection QSLink;
 LauncherList launcher_list; 
+WorldEventScheduler event_scheduler;
 EQ::Random emu_random;
 volatile bool RunLoops = true;
 uint32 numclients = 0;
@@ -105,6 +110,7 @@ bool holdzones = false;
 const WorldConfig *Config;
 EQEmuLogSys LogSys;
 ServerEarthquakeImminent_Struct next_quake;
+WorldContentService content_service;
 
 extern ConsoleList console_list;
 
@@ -317,8 +323,17 @@ int main(int argc, char** argv) {
 
 	LogInfo("Loading guilds..");
 	guild_mgr.LoadGuilds();
+
 	//rules:
 	{
+		if (!RuleManager::Instance()->UpdateOrphanedRules(&database)) {
+			LogInfo("Failed to process 'Orphaned Rules' update operation.");
+		}
+
+		if (!RuleManager::Instance()->UpdateInjectedRules(&database, "default")) {
+			LogInfo("Failed to process 'Injected Rules' for ruleset 'default' update operation.");
+		}
+
 		std::string tmp;
 		if (database.GetVariable("RuleSet", tmp)) {
 			LogInfo("Loading rule set [{0}]", tmp.c_str());
@@ -334,8 +349,12 @@ int main(int argc, char** argv) {
 				LogInfo("Loaded default rule set 'default'", tmp.c_str());
 			}
 		}
+
+		if (!RuleManager::Instance()->RestoreRuleNotes(&database)) {
+			LogInfo("Failed to process 'Restore Rule Notes' update operation.");
+		}
 	}
-	if (RuleB(World, ClearTempMerchantlist)) {
+	if(RuleB(World, ClearTempMerchantlist)){
 		LogInfo("Clearing temporary merchant lists...");
 		database.ClearMerchantTemp();
 	}
@@ -403,6 +422,13 @@ int main(int argc, char** argv) {
 	LogInfo("Loading char create info...");
 	database.LoadCharacterCreateAllocations();
 	database.LoadCharacterCreateCombos();
+
+	event_scheduler.SetDatabase(&database)->LoadScheduledEvents();
+
+	LogInfo("Initializing [WorldContentService]");
+	content_service.SetDatabase(&database)
+		->SetExpansionContext()
+		->ReloadContentFlags();
 
 	char errbuf[TCPConnection_ErrorBufferSize];
 	if (tcps.Open(Config->WorldTCPPort, errbuf)) {
@@ -503,6 +529,8 @@ int main(int argc, char** argv) {
 			if (i == 5)
 				break;
 		}
+
+		event_scheduler.Process(&zoneserver_list);
 
 		client_list.Process();
 		i = 0;

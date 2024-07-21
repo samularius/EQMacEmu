@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseLevelExpModsRepository {
 public:
 	struct LevelExpMods {
@@ -124,9 +123,9 @@ public:
 		if (results.RowCount() == 1) {
 			LevelExpMods e{};
 
-			e.level      = static_cast<int32_t>(atoi(row[0]));
-			e.exp_mod    = strtof(row[1], nullptr);
-			e.aa_exp_mod = strtof(row[2], nullptr);
+			e.level      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.exp_mod    = row[1] ? strtof(row[1], nullptr) : 0;
+			e.aa_exp_mod = row[2] ? strtof(row[2], nullptr) : 0;
 
 			return e;
 		}
@@ -252,9 +251,9 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LevelExpMods e{};
 
-			e.level      = static_cast<int32_t>(atoi(row[0]));
-			e.exp_mod    = strtof(row[1], nullptr);
-			e.aa_exp_mod = strtof(row[2], nullptr);
+			e.level      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.exp_mod    = row[1] ? strtof(row[1], nullptr) : 0;
+			e.aa_exp_mod = row[2] ? strtof(row[2], nullptr) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -279,9 +278,9 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LevelExpMods e{};
 
-			e.level      = static_cast<int32_t>(atoi(row[0]));
-			e.exp_mod    = strtof(row[1], nullptr);
-			e.aa_exp_mod = strtof(row[2], nullptr);
+			e.level      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.exp_mod    = row[1] ? strtof(row[1], nullptr) : 0;
+			e.aa_exp_mod = row[2] ? strtof(row[2], nullptr) : 0;
 
 			all_entries.push_back(e);
 		}

@@ -2257,7 +2257,11 @@ void EntityList::RemoveAllDoors()
 void EntityList::DespawnAllDoors()
 {
 	auto outapp = new EQApplicationPacket(OP_DespawnDoor, 0);
-	this->QueueClients(0,outapp);
+	for (auto it = client_list.begin(); it != client_list.end(); ++it) {
+		if (it->second) {
+			it->second->QueuePacket(outapp);
+		}
+	}
 	safe_delete(outapp);
 }
 
@@ -4139,11 +4143,11 @@ void EntityList::SendZoneAppearance(Client *c)
 				continue;
 			}
 			if (cur->GetAppearance() != eaStanding) {
-				cur->SendAppearancePacket(AT_Anim, cur->GetAppearanceValue(cur->GetAppearance()), false, true, c);
+				cur->SendAppearancePacket(AppearanceType::Animation, cur->GetAppearanceValue(cur->GetAppearance()), false, true, c);
 			}
 			if (cur->GetSize() != cur->GetBaseSize()) {
 				uint32 newsize = floor(cur->GetSize() + 0.5);
-				cur->SendAppearancePacket(AT_Size, newsize, false, true, c);
+				cur->SendAppearancePacket(AppearanceType::Size, newsize, false, true, c);
 			}
 		}
 		++it;
@@ -4645,7 +4649,7 @@ void EntityList::SendClientAppearances(Client *to_client)
 		int levitate_value = c->GetFlyMode() ? c->GetFlyMode() : (c->FindType(SE_Levitate) ? 2 : 0);
 		if (levitate_value)
 		{
-			c->SendAppearancePacket(AT_Levitate, levitate_value, false, true, to_client);
+			c->SendAppearancePacket(AppearanceType::FlyMode, levitate_value, false, true, to_client);
 		}
 	}
 }

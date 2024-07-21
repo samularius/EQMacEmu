@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseGmIpsRepository {
 public:
 	struct GmIps {
@@ -125,7 +124,7 @@ public:
 			GmIps e{};
 
 			e.name       = row[0] ? row[0] : "";
-			e.account_id = static_cast<int32_t>(atoi(row[1]));
+			e.account_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
 			e.ip_address = row[2] ? row[2] : "";
 
 			return e;
@@ -253,7 +252,7 @@ public:
 			GmIps e{};
 
 			e.name       = row[0] ? row[0] : "";
-			e.account_id = static_cast<int32_t>(atoi(row[1]));
+			e.account_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
 			e.ip_address = row[2] ? row[2] : "";
 
 			all_entries.push_back(e);
@@ -280,7 +279,7 @@ public:
 			GmIps e{};
 
 			e.name       = row[0] ? row[0] : "";
-			e.account_id = static_cast<int32_t>(atoi(row[1]));
+			e.account_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
 			e.ip_address = row[2] ? row[2] : "";
 
 			all_entries.push_back(e);

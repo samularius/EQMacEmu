@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseBlockedSpellsRepository {
 public:
 	struct BlockedSpells {
@@ -160,16 +159,16 @@ public:
 		if (results.RowCount() == 1) {
 			BlockedSpells e{};
 
-			e.id          = static_cast<int32_t>(atoi(row[0]));
-			e.spellid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.type        = static_cast<int8_t>(atoi(row[2]));
-			e.zoneid      = static_cast<int32_t>(atoi(row[3]));
-			e.x           = strtof(row[4], nullptr);
-			e.y           = strtof(row[5], nullptr);
-			e.z           = strtof(row[6], nullptr);
-			e.x_diff      = strtof(row[7], nullptr);
-			e.y_diff      = strtof(row[8], nullptr);
-			e.z_diff      = strtof(row[9], nullptr);
+			e.id          = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spellid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.type        = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.zoneid      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.x           = row[4] ? strtof(row[4], nullptr) : 0;
+			e.y           = row[5] ? strtof(row[5], nullptr) : 0;
+			e.z           = row[6] ? strtof(row[6], nullptr) : 0;
+			e.x_diff      = row[7] ? strtof(row[7], nullptr) : 0;
+			e.y_diff      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.z_diff      = row[9] ? strtof(row[9], nullptr) : 0;
 			e.message     = row[10] ? row[10] : "";
 			e.description = row[11] ? row[11] : "";
 
@@ -323,16 +322,16 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			BlockedSpells e{};
 
-			e.id          = static_cast<int32_t>(atoi(row[0]));
-			e.spellid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.type        = static_cast<int8_t>(atoi(row[2]));
-			e.zoneid      = static_cast<int32_t>(atoi(row[3]));
-			e.x           = strtof(row[4], nullptr);
-			e.y           = strtof(row[5], nullptr);
-			e.z           = strtof(row[6], nullptr);
-			e.x_diff      = strtof(row[7], nullptr);
-			e.y_diff      = strtof(row[8], nullptr);
-			e.z_diff      = strtof(row[9], nullptr);
+			e.id          = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spellid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.type        = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.zoneid      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.x           = row[4] ? strtof(row[4], nullptr) : 0;
+			e.y           = row[5] ? strtof(row[5], nullptr) : 0;
+			e.z           = row[6] ? strtof(row[6], nullptr) : 0;
+			e.x_diff      = row[7] ? strtof(row[7], nullptr) : 0;
+			e.y_diff      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.z_diff      = row[9] ? strtof(row[9], nullptr) : 0;
 			e.message     = row[10] ? row[10] : "";
 			e.description = row[11] ? row[11] : "";
 
@@ -359,16 +358,16 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			BlockedSpells e{};
 
-			e.id          = static_cast<int32_t>(atoi(row[0]));
-			e.spellid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.type        = static_cast<int8_t>(atoi(row[2]));
-			e.zoneid      = static_cast<int32_t>(atoi(row[3]));
-			e.x           = strtof(row[4], nullptr);
-			e.y           = strtof(row[5], nullptr);
-			e.z           = strtof(row[6], nullptr);
-			e.x_diff      = strtof(row[7], nullptr);
-			e.y_diff      = strtof(row[8], nullptr);
-			e.z_diff      = strtof(row[9], nullptr);
+			e.id          = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spellid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.type        = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.zoneid      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.x           = row[4] ? strtof(row[4], nullptr) : 0;
+			e.y           = row[5] ? strtof(row[5], nullptr) : 0;
+			e.z           = row[6] ? strtof(row[6], nullptr) : 0;
+			e.x_diff      = row[7] ? strtof(row[7], nullptr) : 0;
+			e.y_diff      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.z_diff      = row[9] ? strtof(row[9], nullptr) : 0;
 			e.message     = row[10] ? row[10] : "";
 			e.description = row[11] ? row[11] : "";
 

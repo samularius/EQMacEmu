@@ -26,6 +26,7 @@
 #include "worldserver.h"
 #include "zone.h"
 #include "zonedb.h"
+#include "../common/repositories/criteria/content_filter_criteria.h"
 #include <limits.h>
 
 extern EntityList entity_list;
@@ -225,7 +226,7 @@ bool Spawn2::Process() {
 		}
 
 		//try to find our NPC type.
-		const NPCType* tmp = database.GetNPCType(npcid);
+		const NPCType* tmp = database.LoadNPCTypesData(npcid);
 		if (tmp == nullptr) {
 			Log(Logs::Moderate, Logs::Spawns, "Spawn2 %d: Spawn group %d yielded an invalid NPC type %d", spawn2_id, spawngroup_id_, npcid);
 			Reset();	//try again later
@@ -319,6 +320,9 @@ bool Spawn2::Process() {
 
 		npcthis = npc;
 		npc->AddLootTable();
+		if (npc->DropsGlobalLoot()) {
+			npc->CheckGlobalLootTables();
+		}
 		npc->SetSp2(spawngroup_id_);
 		npc->SaveGuardPointAnim(anim);
 		npc->SetAppearance((EmuAppearance)anim);
@@ -586,7 +590,7 @@ bool ZoneDatabase::PopulateZoneSpawnListClose(uint32 zoneid, LinkedList<Spawn2*>
 		"raid_target_spawnpoint "
 		"FROM "
 		"spawn2 "
-		"AND ((%.2f >= min_expansion AND %.2f < max_expansion) OR (min_expansion = 0 AND max_expansion = 0))",
+		"AND ((%.2f >= min_expansion AND %.2f < max_expansion) OR (min_expansion = -1.0 AND max_expansion = -1.0))",
 		zone_name,
 		RuleR(World, CurrentExpansion),
 		RuleR(World, CurrentExpansion)
@@ -649,7 +653,7 @@ bool ZoneDatabase::PopulateZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spa
 	gettimeofday(&tv, nullptr);
 
 	/* Bulk Load NPC Types Data into the cache*/
-	database.GetNPCType(0, true);
+	database.LoadNPCTypesData(0, true);
 
 	std::string spawn_query = StringFormat(
 		"SELECT "
@@ -675,7 +679,7 @@ bool ZoneDatabase::PopulateZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spa
 	}
 
 	const char *zone_name = database.GetZoneName(zoneid);
-	std::string query = StringFormat(
+	std::string query = fmt::format(
 		"SELECT "
 		"id, "
 		"spawngroupID, "
@@ -694,10 +698,9 @@ bool ZoneDatabase::PopulateZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spa
 		"raid_target_spawnpoint "
 		"FROM "
 		"spawn2 "
-		"WHERE zone = '%s' AND ((%.2f >= min_expansion AND %.2f < max_expansion) OR (min_expansion = 0 AND max_expansion = 0))",
-		zone_name,
-		RuleR(World, CurrentExpansion),
-		RuleR(World, CurrentExpansion)
+		"WHERE TRUE {} AND zone = '{}'",
+		ContentFilterCriteria::apply(),
+		zone_name
 	);
 	results = QueryDatabase(query);
 
@@ -745,12 +748,19 @@ bool ZoneDatabase::PopulateRandomZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*
 	const char *zone_name = database.GetZoneName(zoneid);
 	uint32 next_id = RANDOM_SPAWNID + (zoneid * 1000);
 
-	std::string query2 = StringFormat("SELECT DISTINCT(spawngroupID), "
-		"spawngroup.rand_spawns, spawngroup.rand_respawntime, spawngroup.rand_variance, "
+	std::string query2 = fmt::format(
+		"SELECT DISTINCT(spawngroupID), "
+		"spawngroup.rand_spawns, "
+		"spawngroup.rand_respawntime, "
+		"spawngroup.rand_variance, "
 		"spawngroup.rand_condition_ "
-		"FROM spawn2, spawngroup WHERE spawn2.spawngroupID = spawngroup.ID "
-		"AND zone = '%s' AND spawngroup.rand_spawns > 0 AND "
-		"(spawngroup.max_x != 0 OR spawngroup.min_x != 0 OR spawngroup.max_y != 0 OR spawngroup.min_y != 0)", zone_name);
+		"FROM spawn2, spawngroup "
+		"WHERE spawn2.spawngroupID = spawngroup.ID "
+		"AND TRUE {} AND zone = '{}' AND spawngroup.rand_spawns > 0 AND "
+		"(spawngroup.max_x != 0 OR spawngroup.min_x != 0 OR spawngroup.max_y != 0 OR spawngroup.min_y != 0)",
+		ContentFilterCriteria::apply(),
+		zone_name
+	);
 	auto results = QueryDatabase(query2);
 
 	if (!results.Success()) {

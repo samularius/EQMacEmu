@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseLoottableEntriesRepository {
 public:
 	struct LoottableEntries {
@@ -140,13 +139,13 @@ public:
 		if (results.RowCount() == 1) {
 			LoottableEntries e{};
 
-			e.loottable_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.lootdrop_id    = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.multiplier     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.probability    = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.droplimit      = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.mindrop        = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.multiplier_min = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.loottable_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.lootdrop_id    = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.multiplier     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.probability    = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 100;
+			e.droplimit      = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.mindrop        = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.multiplier_min = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -284,13 +283,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LoottableEntries e{};
 
-			e.loottable_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.lootdrop_id    = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.multiplier     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.probability    = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.droplimit      = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.mindrop        = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.multiplier_min = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.loottable_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.lootdrop_id    = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.multiplier     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.probability    = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 100;
+			e.droplimit      = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.mindrop        = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.multiplier_min = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -315,13 +314,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LoottableEntries e{};
 
-			e.loottable_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.lootdrop_id    = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.multiplier     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.probability    = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.droplimit      = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.mindrop        = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.multiplier_min = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.loottable_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.lootdrop_id    = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.multiplier     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.probability    = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 100;
+			e.droplimit      = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.mindrop        = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.multiplier_min = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

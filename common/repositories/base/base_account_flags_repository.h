@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAccountFlagsRepository {
 public:
 	struct AccountFlags {
@@ -124,7 +123,7 @@ public:
 		if (results.RowCount() == 1) {
 			AccountFlags e{};
 
-			e.p_accid = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.p_accid = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.p_flag  = row[1] ? row[1] : "";
 			e.p_value = row[2] ? row[2] : "";
 
@@ -252,7 +251,7 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AccountFlags e{};
 
-			e.p_accid = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.p_accid = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.p_flag  = row[1] ? row[1] : "";
 			e.p_value = row[2] ? row[2] : "";
 
@@ -279,7 +278,7 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AccountFlags e{};
 
-			e.p_accid = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.p_accid = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.p_flag  = row[1] ? row[1] : "";
 			e.p_value = row[2] ? row[2] : "";
 

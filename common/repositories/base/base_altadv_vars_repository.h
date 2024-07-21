@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAltadvVarsRepository {
 public:
 	struct AltadvVars {
@@ -184,24 +183,24 @@ public:
 		if (results.RowCount() == 1) {
 			AltadvVars e{};
 
-			e.skill_id              = static_cast<int32_t>(atoi(row[0]));
+			e.skill_id              = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                  = row[1] ? row[1] : "";
-			e.cost                  = static_cast<int32_t>(atoi(row[2]));
-			e.max_level             = static_cast<int32_t>(atoi(row[3]));
-			e.type                  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.spellid               = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.prereq_skill          = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.prereq_minpoints      = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.spell_type            = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.spell_refresh         = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.classes               = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.class_type            = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.cost_inc              = static_cast<int8_t>(atoi(row[12]));
-			e.aa_expansion          = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.special_category      = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.account_time_required = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.level_inc             = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.eqmacid               = static_cast<int32_t>(atoi(row[17]));
+			e.cost                  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.max_level             = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.type                  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 1;
+			e.spellid               = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.prereq_skill          = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.prereq_minpoints      = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.spell_type            = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.spell_refresh         = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.classes               = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 65534;
+			e.class_type            = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.cost_inc              = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.aa_expansion          = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 3;
+			e.special_category      = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 4294967295;
+			e.account_time_required = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.level_inc             = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.eqmacid               = row[17] ? static_cast<int32_t>(atoi(row[17])) : 0;
 
 			return e;
 		}
@@ -372,24 +371,24 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AltadvVars e{};
 
-			e.skill_id              = static_cast<int32_t>(atoi(row[0]));
+			e.skill_id              = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                  = row[1] ? row[1] : "";
-			e.cost                  = static_cast<int32_t>(atoi(row[2]));
-			e.max_level             = static_cast<int32_t>(atoi(row[3]));
-			e.type                  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.spellid               = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.prereq_skill          = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.prereq_minpoints      = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.spell_type            = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.spell_refresh         = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.classes               = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.class_type            = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.cost_inc              = static_cast<int8_t>(atoi(row[12]));
-			e.aa_expansion          = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.special_category      = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.account_time_required = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.level_inc             = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.eqmacid               = static_cast<int32_t>(atoi(row[17]));
+			e.cost                  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.max_level             = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.type                  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 1;
+			e.spellid               = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.prereq_skill          = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.prereq_minpoints      = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.spell_type            = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.spell_refresh         = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.classes               = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 65534;
+			e.class_type            = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.cost_inc              = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.aa_expansion          = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 3;
+			e.special_category      = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 4294967295;
+			e.account_time_required = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.level_inc             = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.eqmacid               = row[17] ? static_cast<int32_t>(atoi(row[17])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -414,24 +413,24 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AltadvVars e{};
 
-			e.skill_id              = static_cast<int32_t>(atoi(row[0]));
+			e.skill_id              = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                  = row[1] ? row[1] : "";
-			e.cost                  = static_cast<int32_t>(atoi(row[2]));
-			e.max_level             = static_cast<int32_t>(atoi(row[3]));
-			e.type                  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.spellid               = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.prereq_skill          = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.prereq_minpoints      = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.spell_type            = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.spell_refresh         = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.classes               = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.class_type            = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.cost_inc              = static_cast<int8_t>(atoi(row[12]));
-			e.aa_expansion          = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.special_category      = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.account_time_required = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.level_inc             = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.eqmacid               = static_cast<int32_t>(atoi(row[17]));
+			e.cost                  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.max_level             = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.type                  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 1;
+			e.spellid               = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.prereq_skill          = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.prereq_minpoints      = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.spell_type            = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.spell_refresh         = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.classes               = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 65534;
+			e.class_type            = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.cost_inc              = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.aa_expansion          = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 3;
+			e.special_category      = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 4294967295;
+			e.account_time_required = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.level_inc             = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.eqmacid               = row[17] ? static_cast<int32_t>(atoi(row[17])) : 0;
 
 			all_entries.push_back(e);
 		}

@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseNpcFactionEntriesRepository {
 public:
 	struct NpcFactionEntries {
@@ -136,12 +135,12 @@ public:
 		if (results.RowCount() == 1) {
 			NpcFactionEntries e{};
 
-			e.npc_faction_id = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.faction_id     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value          = static_cast<int32_t>(atoi(row[2]));
-			e.npc_value      = static_cast<int8_t>(atoi(row[3]));
-			e.temp           = static_cast<int8_t>(atoi(row[4]));
-			e.sort_order     = static_cast<int8_t>(atoi(row[5]));
+			e.npc_faction_id = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.faction_id     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.value          = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.npc_value      = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.temp           = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.sort_order     = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
 
 			return e;
 		}
@@ -276,12 +275,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcFactionEntries e{};
 
-			e.npc_faction_id = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.faction_id     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value          = static_cast<int32_t>(atoi(row[2]));
-			e.npc_value      = static_cast<int8_t>(atoi(row[3]));
-			e.temp           = static_cast<int8_t>(atoi(row[4]));
-			e.sort_order     = static_cast<int8_t>(atoi(row[5]));
+			e.npc_faction_id = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.faction_id     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.value          = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.npc_value      = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.temp           = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.sort_order     = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -306,12 +305,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcFactionEntries e{};
 
-			e.npc_faction_id = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.faction_id     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value          = static_cast<int32_t>(atoi(row[2]));
-			e.npc_value      = static_cast<int8_t>(atoi(row[3]));
-			e.temp           = static_cast<int8_t>(atoi(row[4]));
-			e.sort_order     = static_cast<int8_t>(atoi(row[5]));
+			e.npc_faction_id = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.faction_id     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.value          = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.npc_value      = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.temp           = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.sort_order     = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}

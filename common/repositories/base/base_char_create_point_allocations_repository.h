@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharCreatePointAllocationsRepository {
 public:
 	struct CharCreatePointAllocations {
@@ -172,21 +171,21 @@ public:
 		if (results.RowCount() == 1) {
 			CharCreatePointAllocations e{};
 
-			e.id        = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.base_str  = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.base_sta  = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.base_dex  = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base_agi  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.base_int  = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.base_wis  = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.base_cha  = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.alloc_str = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.alloc_sta = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.alloc_dex = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.alloc_agi = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.alloc_int = static_cast<uint32_t>(strtoul(row[12], nullptr, 10));
-			e.alloc_wis = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.alloc_cha = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
+			e.id        = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.base_str  = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.base_sta  = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.base_dex  = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base_agi  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.base_int  = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.base_wis  = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.base_cha  = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.alloc_str = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.alloc_sta = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.alloc_dex = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.alloc_agi = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.alloc_int = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.alloc_wis = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.alloc_cha = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -348,21 +347,21 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharCreatePointAllocations e{};
 
-			e.id        = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.base_str  = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.base_sta  = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.base_dex  = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base_agi  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.base_int  = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.base_wis  = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.base_cha  = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.alloc_str = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.alloc_sta = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.alloc_dex = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.alloc_agi = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.alloc_int = static_cast<uint32_t>(strtoul(row[12], nullptr, 10));
-			e.alloc_wis = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.alloc_cha = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
+			e.id        = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.base_str  = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.base_sta  = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.base_dex  = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base_agi  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.base_int  = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.base_wis  = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.base_cha  = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.alloc_str = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.alloc_sta = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.alloc_dex = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.alloc_agi = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.alloc_int = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.alloc_wis = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.alloc_cha = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -387,21 +386,21 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharCreatePointAllocations e{};
 
-			e.id        = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.base_str  = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.base_sta  = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.base_dex  = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base_agi  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.base_int  = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.base_wis  = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.base_cha  = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.alloc_str = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.alloc_sta = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.alloc_dex = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.alloc_agi = static_cast<uint32_t>(strtoul(row[11], nullptr, 10));
-			e.alloc_int = static_cast<uint32_t>(strtoul(row[12], nullptr, 10));
-			e.alloc_wis = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.alloc_cha = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
+			e.id        = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.base_str  = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.base_sta  = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.base_dex  = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base_agi  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.base_int  = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.base_wis  = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.base_cha  = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.alloc_str = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.alloc_sta = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.alloc_dex = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.alloc_agi = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.alloc_int = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.alloc_wis = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.alloc_cha = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

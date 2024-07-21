@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BasePetitionsRepository {
 public:
 	struct Petitions {
@@ -176,22 +175,22 @@ public:
 		if (results.RowCount() == 1) {
 			Petitions e{};
 
-			e.dib          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.petid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
+			e.dib          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.petid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.charname     = row[2] ? row[2] : "";
 			e.accountname  = row[3] ? row[3] : "";
 			e.lastgm       = row[4] ? row[4] : "";
 			e.petitiontext = row[5] ? row[5] : "";
 			e.gmtext       = row[6] ? row[6] : "";
 			e.zone         = row[7] ? row[7] : "";
-			e.urgency      = static_cast<int32_t>(atoi(row[8]));
-			e.charclass    = static_cast<int32_t>(atoi(row[9]));
-			e.charrace     = static_cast<int32_t>(atoi(row[10]));
-			e.charlevel    = static_cast<int32_t>(atoi(row[11]));
-			e.checkouts    = static_cast<int32_t>(atoi(row[12]));
-			e.unavailables = static_cast<int32_t>(atoi(row[13]));
-			e.ischeckedout = static_cast<int8_t>(atoi(row[14]));
-			e.senttime     = strtoll(row[15], nullptr, 10);
+			e.urgency      = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.charclass    = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.charrace     = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
+			e.charlevel    = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.checkouts    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.unavailables = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.ischeckedout = row[14] ? static_cast<int8_t>(atoi(row[14])) : 0;
+			e.senttime     = row[15] ? strtoll(row[15], nullptr, 10) : 0;
 
 			return e;
 		}
@@ -355,22 +354,22 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Petitions e{};
 
-			e.dib          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.petid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
+			e.dib          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.petid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.charname     = row[2] ? row[2] : "";
 			e.accountname  = row[3] ? row[3] : "";
 			e.lastgm       = row[4] ? row[4] : "";
 			e.petitiontext = row[5] ? row[5] : "";
 			e.gmtext       = row[6] ? row[6] : "";
 			e.zone         = row[7] ? row[7] : "";
-			e.urgency      = static_cast<int32_t>(atoi(row[8]));
-			e.charclass    = static_cast<int32_t>(atoi(row[9]));
-			e.charrace     = static_cast<int32_t>(atoi(row[10]));
-			e.charlevel    = static_cast<int32_t>(atoi(row[11]));
-			e.checkouts    = static_cast<int32_t>(atoi(row[12]));
-			e.unavailables = static_cast<int32_t>(atoi(row[13]));
-			e.ischeckedout = static_cast<int8_t>(atoi(row[14]));
-			e.senttime     = strtoll(row[15], nullptr, 10);
+			e.urgency      = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.charclass    = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.charrace     = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
+			e.charlevel    = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.checkouts    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.unavailables = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.ischeckedout = row[14] ? static_cast<int8_t>(atoi(row[14])) : 0;
+			e.senttime     = row[15] ? strtoll(row[15], nullptr, 10) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -395,22 +394,22 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Petitions e{};
 
-			e.dib          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.petid        = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
+			e.dib          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.petid        = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.charname     = row[2] ? row[2] : "";
 			e.accountname  = row[3] ? row[3] : "";
 			e.lastgm       = row[4] ? row[4] : "";
 			e.petitiontext = row[5] ? row[5] : "";
 			e.gmtext       = row[6] ? row[6] : "";
 			e.zone         = row[7] ? row[7] : "";
-			e.urgency      = static_cast<int32_t>(atoi(row[8]));
-			e.charclass    = static_cast<int32_t>(atoi(row[9]));
-			e.charrace     = static_cast<int32_t>(atoi(row[10]));
-			e.charlevel    = static_cast<int32_t>(atoi(row[11]));
-			e.checkouts    = static_cast<int32_t>(atoi(row[12]));
-			e.unavailables = static_cast<int32_t>(atoi(row[13]));
-			e.ischeckedout = static_cast<int8_t>(atoi(row[14]));
-			e.senttime     = strtoll(row[15], nullptr, 10);
+			e.urgency      = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.charclass    = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.charrace     = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
+			e.charlevel    = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.checkouts    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.unavailables = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.ischeckedout = row[14] ? static_cast<int8_t>(atoi(row[14])) : 0;
+			e.senttime     = row[15] ? strtoll(row[15], nullptr, 10) : 0;
 
 			all_entries.push_back(e);
 		}

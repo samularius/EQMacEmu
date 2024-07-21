@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharacterInspectMessagesRepository {
 public:
 	struct CharacterInspectMessages {
@@ -120,7 +119,7 @@ public:
 		if (results.RowCount() == 1) {
 			CharacterInspectMessages e{};
 
-			e.id              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.inspect_message = row[1] ? row[1] : "";
 
 			return e;
@@ -244,7 +243,7 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterInspectMessages e{};
 
-			e.id              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.inspect_message = row[1] ? row[1] : "";
 
 			all_entries.push_back(e);
@@ -270,7 +269,7 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterInspectMessages e{};
 
-			e.id              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.inspect_message = row[1] ? row[1] : "";
 
 			all_entries.push_back(e);

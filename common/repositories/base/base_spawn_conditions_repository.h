@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseSpawnConditionsRepository {
 public:
 	struct SpawnConditions {
@@ -133,9 +132,9 @@ public:
 			SpawnConditions e{};
 
 			e.zone     = row[0] ? row[0] : "";
-			e.id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value    = static_cast<int32_t>(atoi(row[2]));
-			e.onchange = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
+			e.id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 1;
+			e.value    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.onchange = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name     = row[4] ? row[4] : "";
 
 			return e;
@@ -269,9 +268,9 @@ public:
 			SpawnConditions e{};
 
 			e.zone     = row[0] ? row[0] : "";
-			e.id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value    = static_cast<int32_t>(atoi(row[2]));
-			e.onchange = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
+			e.id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 1;
+			e.value    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.onchange = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name     = row[4] ? row[4] : "";
 
 			all_entries.push_back(e);
@@ -298,9 +297,9 @@ public:
 			SpawnConditions e{};
 
 			e.zone     = row[0] ? row[0] : "";
-			e.id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.value    = static_cast<int32_t>(atoi(row[2]));
-			e.onchange = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
+			e.id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 1;
+			e.value    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.onchange = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name     = row[4] ? row[4] : "";
 
 			all_entries.push_back(e);

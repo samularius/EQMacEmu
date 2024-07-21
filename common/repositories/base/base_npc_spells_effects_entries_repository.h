@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseNpcSpellsEffectsEntriesRepository {
 public:
 	struct NpcSpellsEffectsEntries {
@@ -144,14 +143,14 @@ public:
 		if (results.RowCount() == 1) {
 			NpcSpellsEffectsEntries e{};
 
-			e.id                    = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.npc_spells_effects_id = static_cast<int32_t>(atoi(row[1]));
-			e.spell_effect_id       = static_cast<int16_t>(atoi(row[2]));
-			e.minlevel              = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.maxlevel              = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.se_base               = static_cast<int32_t>(atoi(row[5]));
-			e.se_limit              = static_cast<int32_t>(atoi(row[6]));
-			e.se_max                = static_cast<int32_t>(atoi(row[7]));
+			e.id                    = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.npc_spells_effects_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.spell_effect_id       = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.minlevel              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.maxlevel              = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 255;
+			e.se_base               = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.se_limit              = row[6] ? static_cast<int32_t>(atoi(row[6])) : 0;
+			e.se_max                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
 
 			return e;
 		}
@@ -291,14 +290,14 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcSpellsEffectsEntries e{};
 
-			e.id                    = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.npc_spells_effects_id = static_cast<int32_t>(atoi(row[1]));
-			e.spell_effect_id       = static_cast<int16_t>(atoi(row[2]));
-			e.minlevel              = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.maxlevel              = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.se_base               = static_cast<int32_t>(atoi(row[5]));
-			e.se_limit              = static_cast<int32_t>(atoi(row[6]));
-			e.se_max                = static_cast<int32_t>(atoi(row[7]));
+			e.id                    = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.npc_spells_effects_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.spell_effect_id       = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.minlevel              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.maxlevel              = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 255;
+			e.se_base               = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.se_limit              = row[6] ? static_cast<int32_t>(atoi(row[6])) : 0;
+			e.se_max                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -323,14 +322,14 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcSpellsEffectsEntries e{};
 
-			e.id                    = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.npc_spells_effects_id = static_cast<int32_t>(atoi(row[1]));
-			e.spell_effect_id       = static_cast<int16_t>(atoi(row[2]));
-			e.minlevel              = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.maxlevel              = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.se_base               = static_cast<int32_t>(atoi(row[5]));
-			e.se_limit              = static_cast<int32_t>(atoi(row[6]));
-			e.se_max                = static_cast<int32_t>(atoi(row[7]));
+			e.id                    = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.npc_spells_effects_id = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.spell_effect_id       = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.minlevel              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.maxlevel              = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 255;
+			e.se_base               = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.se_limit              = row[6] ? static_cast<int32_t>(atoi(row[6])) : 0;
+			e.se_max                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
 
 			all_entries.push_back(e);
 		}

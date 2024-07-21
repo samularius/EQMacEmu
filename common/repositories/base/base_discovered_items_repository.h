@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseDiscoveredItemsRepository {
 public:
 	struct DiscoveredItems {
@@ -128,10 +127,10 @@ public:
 		if (results.RowCount() == 1) {
 			DiscoveredItems e{};
 
-			e.item_id         = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.item_id         = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.char_name       = row[1] ? row[1] : "";
-			e.discovered_date = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.account_status  = static_cast<int32_t>(atoi(row[3]));
+			e.discovered_date = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.account_status  = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
 
 			return e;
 		}
@@ -260,10 +259,10 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			DiscoveredItems e{};
 
-			e.item_id         = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.item_id         = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.char_name       = row[1] ? row[1] : "";
-			e.discovered_date = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.account_status  = static_cast<int32_t>(atoi(row[3]));
+			e.discovered_date = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.account_status  = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -288,10 +287,10 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			DiscoveredItems e{};
 
-			e.item_id         = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.item_id         = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.char_name       = row[1] ? row[1] : "";
-			e.discovered_date = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.account_status  = static_cast<int32_t>(atoi(row[3]));
+			e.discovered_date = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.account_status  = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
 
 			all_entries.push_back(e);
 		}

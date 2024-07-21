@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseNpcTypesTintRepository {
 public:
 	struct NpcTypesTint {
@@ -228,35 +227,35 @@ public:
 		if (results.RowCount() == 1) {
 			NpcTypesTint e{};
 
-			e.id            = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id            = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.tint_set_name = row[1] ? row[1] : "";
-			e.red1h         = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.grn1h         = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.blu1h         = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.red2c         = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.grn2c         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.blu2c         = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.red3a         = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.grn3a         = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.blu3a         = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
-			e.red4b         = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.grn4b         = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.blu4b         = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.red5g         = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.grn5g         = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
-			e.blu5g         = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.red6l         = static_cast<uint8_t>(strtoul(row[17], nullptr, 10));
-			e.grn6l         = static_cast<uint8_t>(strtoul(row[18], nullptr, 10));
-			e.blu6l         = static_cast<uint8_t>(strtoul(row[19], nullptr, 10));
-			e.red7f         = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.grn7f         = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.blu7f         = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.red8x         = static_cast<uint8_t>(strtoul(row[23], nullptr, 10));
-			e.grn8x         = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.blu8x         = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.red9x         = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.grn9x         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.blu9x         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
+			e.red1h         = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.grn1h         = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.blu1h         = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.red2c         = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.grn2c         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.blu2c         = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.red3a         = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.grn3a         = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.blu3a         = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.red4b         = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.grn4b         = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.blu4b         = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.red5g         = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.grn5g         = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.blu5g         = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.red6l         = row[17] ? static_cast<uint8_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.grn6l         = row[18] ? static_cast<uint8_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.blu6l         = row[19] ? static_cast<uint8_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.red7f         = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.grn7f         = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.blu7f         = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.red8x         = row[23] ? static_cast<uint8_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.grn8x         = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.blu8x         = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.red9x         = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.grn9x         = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.blu9x         = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -460,35 +459,35 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcTypesTint e{};
 
-			e.id            = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id            = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.tint_set_name = row[1] ? row[1] : "";
-			e.red1h         = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.grn1h         = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.blu1h         = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.red2c         = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.grn2c         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.blu2c         = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.red3a         = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.grn3a         = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.blu3a         = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
-			e.red4b         = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.grn4b         = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.blu4b         = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.red5g         = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.grn5g         = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
-			e.blu5g         = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.red6l         = static_cast<uint8_t>(strtoul(row[17], nullptr, 10));
-			e.grn6l         = static_cast<uint8_t>(strtoul(row[18], nullptr, 10));
-			e.blu6l         = static_cast<uint8_t>(strtoul(row[19], nullptr, 10));
-			e.red7f         = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.grn7f         = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.blu7f         = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.red8x         = static_cast<uint8_t>(strtoul(row[23], nullptr, 10));
-			e.grn8x         = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.blu8x         = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.red9x         = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.grn9x         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.blu9x         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
+			e.red1h         = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.grn1h         = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.blu1h         = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.red2c         = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.grn2c         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.blu2c         = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.red3a         = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.grn3a         = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.blu3a         = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.red4b         = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.grn4b         = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.blu4b         = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.red5g         = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.grn5g         = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.blu5g         = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.red6l         = row[17] ? static_cast<uint8_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.grn6l         = row[18] ? static_cast<uint8_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.blu6l         = row[19] ? static_cast<uint8_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.red7f         = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.grn7f         = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.blu7f         = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.red8x         = row[23] ? static_cast<uint8_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.grn8x         = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.blu8x         = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.red9x         = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.grn9x         = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.blu9x         = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -513,35 +512,35 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			NpcTypesTint e{};
 
-			e.id            = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id            = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.tint_set_name = row[1] ? row[1] : "";
-			e.red1h         = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.grn1h         = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.blu1h         = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.red2c         = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.grn2c         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.blu2c         = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.red3a         = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.grn3a         = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.blu3a         = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
-			e.red4b         = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.grn4b         = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.blu4b         = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.red5g         = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.grn5g         = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
-			e.blu5g         = static_cast<uint8_t>(strtoul(row[16], nullptr, 10));
-			e.red6l         = static_cast<uint8_t>(strtoul(row[17], nullptr, 10));
-			e.grn6l         = static_cast<uint8_t>(strtoul(row[18], nullptr, 10));
-			e.blu6l         = static_cast<uint8_t>(strtoul(row[19], nullptr, 10));
-			e.red7f         = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.grn7f         = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.blu7f         = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.red8x         = static_cast<uint8_t>(strtoul(row[23], nullptr, 10));
-			e.grn8x         = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.blu8x         = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.red9x         = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.grn9x         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.blu9x         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
+			e.red1h         = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.grn1h         = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.blu1h         = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.red2c         = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.grn2c         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.blu2c         = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.red3a         = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.grn3a         = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.blu3a         = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.red4b         = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.grn4b         = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.blu4b         = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.red5g         = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.grn5g         = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.blu5g         = row[16] ? static_cast<uint8_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.red6l         = row[17] ? static_cast<uint8_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.grn6l         = row[18] ? static_cast<uint8_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.blu6l         = row[19] ? static_cast<uint8_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.red7f         = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.grn7f         = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.blu7f         = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.red8x         = row[23] ? static_cast<uint8_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.grn8x         = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.blu8x         = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.red9x         = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.grn9x         = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.blu9x         = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

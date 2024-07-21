@@ -309,9 +309,9 @@ std::string QuakeTypeToString(QuakeType in_type)
 	case QuakeType::QuakePVP:
 		out_stringtype = "PVP Quake";
 		break;
-	//case QuakeType::QuakeExtraMob:
-	//	out_stringtype = "Extra Target for Server Rotation";
-	//	break;
+		//case QuakeType::QuakeExtraMob:
+		//	out_stringtype = "Extra Target for Server Rotation";
+		//	break;
 	case QuakeType::QuakeDisabled:
 	case QuakeType::QuakeMax:
 	default:
@@ -319,4 +319,46 @@ std::string QuakeTypeToString(QuakeType in_type)
 		break;
 	}
 	return out_stringtype;
+}
+
+const std::map<uint32, std::string> &EQ::constants::GetAppearanceTypeMap()
+{
+	static const std::map<uint32, std::string> appearance_type_map = {
+		{ AppearanceType::Die, "Die" },
+		{ AppearanceType::WhoLevel, "Who Level" },
+		{ AppearanceType::MaxHealth, "Max Health" },
+		{ AppearanceType::Invisibility, "Invisibility" },
+		{ AppearanceType::PVP, "PVP" },
+		{ AppearanceType::Light, "Light" },
+		{ AppearanceType::Animation, "Animation" },
+		{ AppearanceType::Sneak, "Sneak" },
+		{ AppearanceType::SpawnID, "Spawn ID" },
+		{ AppearanceType::Health, "Health" },
+		{ AppearanceType::Linkdead, "Linkdead" },
+		{ AppearanceType::FlyMode, "Fly Mode" },
+		{ AppearanceType::GM, "GM" },
+		{ AppearanceType::Anonymous, "Anonymous" },
+		{ AppearanceType::GuildID, "Guild ID" },
+		{ AppearanceType::GuildRank, "Guild Rank" },
+		{ AppearanceType::AFK, "AFK" },
+		{ AppearanceType::Pet, "Pet" },
+		{ AppearanceType::Summoned, "Summoned" },
+		{ AppearanceType::Split, "Split" },
+		{ AppearanceType::Size, "Size" },
+		{ AppearanceType::SetType, "Set Type" },
+		{ AppearanceType::NPCName, "NPCName" },
+		{ AppearanceType::DamageState, "Damage State" },
+	};
+
+	return appearance_type_map;
+}
+
+std::string EQ::constants::GetAppearanceTypeName(uint32 appearance_type)
+{
+	const auto &a = EQ::constants::GetAppearanceTypeMap().find(appearance_type);
+	if (a != EQ::constants::GetAppearanceTypeMap().end()) {
+		return a->second;
+	}
+
+	return std::string();
 }

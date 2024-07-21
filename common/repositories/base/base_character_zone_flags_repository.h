@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharacterZoneFlagsRepository {
 public:
 	struct CharacterZoneFlags {
@@ -124,9 +123,9 @@ public:
 		if (results.RowCount() == 1) {
 			CharacterZoneFlags e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneID = static_cast<int32_t>(atoi(row[1]));
-			e.key_   = static_cast<int8_t>(atoi(row[2]));
+			e.id     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneID = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.key_   = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
 
 			return e;
 		}
@@ -252,9 +251,9 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterZoneFlags e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneID = static_cast<int32_t>(atoi(row[1]));
-			e.key_   = static_cast<int8_t>(atoi(row[2]));
+			e.id     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneID = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.key_   = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -279,9 +278,9 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterZoneFlags e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneID = static_cast<int32_t>(atoi(row[1]));
-			e.key_   = static_cast<int8_t>(atoi(row[2]));
+			e.id     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneID = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.key_   = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
 
 			all_entries.push_back(e);
 		}

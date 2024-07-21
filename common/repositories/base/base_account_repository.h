@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAccountRepository {
 public:
 	struct Account {
@@ -45,6 +44,7 @@ public:
 		int8_t      flymode;
 		int8_t      ignore_tells;
 		int8_t      mule;
+		time_t      revokeduntil;
 	};
 
 	static std::string PrimaryKey()
@@ -80,6 +80,7 @@ public:
 			"flymode",
 			"ignore_tells",
 			"mule",
+			"revokeduntil",
 		};
 	}
 
@@ -111,6 +112,7 @@ public:
 			"flymode",
 			"ignore_tells",
 			"mule",
+			"UNIX_TIMESTAMP(revokeduntil)",
 		};
 	}
 
@@ -176,6 +178,7 @@ public:
 		e.flymode                 = 0;
 		e.ignore_tells            = 0;
 		e.mule                    = 0;
+		e.revokeduntil            = 0;
 
 		return e;
 	}
@@ -212,31 +215,32 @@ public:
 		if (results.RowCount() == 1) {
 			Account e{};
 
-			e.id                      = static_cast<int32_t>(atoi(row[0]));
+			e.id                      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                    = row[1] ? row[1] : "";
 			e.charname                = row[2] ? row[2] : "";
-			e.sharedplat              = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
+			e.sharedplat              = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.password                = row[4] ? row[4] : "";
-			e.status                  = static_cast<int32_t>(atoi(row[5]));
-			e.lsaccount_id            = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.forum_id                = static_cast<int32_t>(atoi(row[7]));
-			e.gmspeed                 = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.revoked                 = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.karma                   = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
+			e.status                  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.lsaccount_id            = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.forum_id                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.gmspeed                 = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.revoked                 = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.karma                   = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
 			e.minilogin_ip            = row[11] ? row[11] : "";
-			e.hideme                  = static_cast<int8_t>(atoi(row[12]));
-			e.rulesflag               = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
+			e.hideme                  = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.rulesflag               = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
 			e.suspendeduntil          = strtoll(row[14] ? row[14] : "-1", nullptr, 10);
-			e.time_creation           = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.expansion               = static_cast<int8_t>(atoi(row[16]));
+			e.time_creation           = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.expansion               = row[16] ? static_cast<int8_t>(atoi(row[16])) : 12;
 			e.ban_reason              = row[17] ? row[17] : "";
 			e.suspend_reason          = row[18] ? row[18] : "";
-			e.active                  = static_cast<int8_t>(atoi(row[19]));
-			e.ip_exemption_multiplier = static_cast<int32_t>(atoi(row[20]));
-			e.gminvul                 = static_cast<int8_t>(atoi(row[21]));
-			e.flymode                 = static_cast<int8_t>(atoi(row[22]));
-			e.ignore_tells            = static_cast<int8_t>(atoi(row[23]));
-			e.mule                    = static_cast<int8_t>(atoi(row[24]));
+			e.active                  = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.ip_exemption_multiplier = row[20] ? static_cast<int32_t>(atoi(row[20])) : 1;
+			e.gminvul                 = row[21] ? static_cast<int8_t>(atoi(row[21])) : 0;
+			e.flymode                 = row[22] ? static_cast<int8_t>(atoi(row[22])) : 0;
+			e.ignore_tells            = row[23] ? static_cast<int8_t>(atoi(row[23])) : 0;
+			e.mule                    = row[24] ? static_cast<int8_t>(atoi(row[24])) : 0;
+			e.revokeduntil            = strtoll(row[25] ? row[25] : "-1", nullptr, 10);
 
 			return e;
 		}
@@ -294,6 +298,7 @@ public:
 		v.push_back(columns[22] + " = " + std::to_string(e.flymode));
 		v.push_back(columns[23] + " = " + std::to_string(e.ignore_tells));
 		v.push_back(columns[24] + " = " + std::to_string(e.mule));
+		v.push_back(columns[25] + " = FROM_UNIXTIME(" + (e.revokeduntil > 0 ? std::to_string(e.revokeduntil) : "null") + ")");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -340,6 +345,7 @@ public:
 		v.push_back(std::to_string(e.flymode));
 		v.push_back(std::to_string(e.ignore_tells));
 		v.push_back(std::to_string(e.mule));
+		v.push_back("FROM_UNIXTIME(" + (e.revokeduntil > 0 ? std::to_string(e.revokeduntil) : "null") + ")");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -394,6 +400,7 @@ public:
 			v.push_back(std::to_string(e.flymode));
 			v.push_back(std::to_string(e.ignore_tells));
 			v.push_back(std::to_string(e.mule));
+			v.push_back("FROM_UNIXTIME(" + (e.revokeduntil > 0 ? std::to_string(e.revokeduntil) : "null") + ")");
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -427,31 +434,32 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Account e{};
 
-			e.id                      = static_cast<int32_t>(atoi(row[0]));
+			e.id                      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                    = row[1] ? row[1] : "";
 			e.charname                = row[2] ? row[2] : "";
-			e.sharedplat              = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
+			e.sharedplat              = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.password                = row[4] ? row[4] : "";
-			e.status                  = static_cast<int32_t>(atoi(row[5]));
-			e.lsaccount_id            = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.forum_id                = static_cast<int32_t>(atoi(row[7]));
-			e.gmspeed                 = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.revoked                 = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.karma                   = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
+			e.status                  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.lsaccount_id            = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.forum_id                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.gmspeed                 = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.revoked                 = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.karma                   = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
 			e.minilogin_ip            = row[11] ? row[11] : "";
-			e.hideme                  = static_cast<int8_t>(atoi(row[12]));
-			e.rulesflag               = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
+			e.hideme                  = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.rulesflag               = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
 			e.suspendeduntil          = strtoll(row[14] ? row[14] : "-1", nullptr, 10);
-			e.time_creation           = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.expansion               = static_cast<int8_t>(atoi(row[16]));
+			e.time_creation           = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.expansion               = row[16] ? static_cast<int8_t>(atoi(row[16])) : 12;
 			e.ban_reason              = row[17] ? row[17] : "";
 			e.suspend_reason          = row[18] ? row[18] : "";
-			e.active                  = static_cast<int8_t>(atoi(row[19]));
-			e.ip_exemption_multiplier = static_cast<int32_t>(atoi(row[20]));
-			e.gminvul                 = static_cast<int8_t>(atoi(row[21]));
-			e.flymode                 = static_cast<int8_t>(atoi(row[22]));
-			e.ignore_tells            = static_cast<int8_t>(atoi(row[23]));
-			e.mule                    = static_cast<int8_t>(atoi(row[24]));
+			e.active                  = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.ip_exemption_multiplier = row[20] ? static_cast<int32_t>(atoi(row[20])) : 1;
+			e.gminvul                 = row[21] ? static_cast<int8_t>(atoi(row[21])) : 0;
+			e.flymode                 = row[22] ? static_cast<int8_t>(atoi(row[22])) : 0;
+			e.ignore_tells            = row[23] ? static_cast<int8_t>(atoi(row[23])) : 0;
+			e.mule                    = row[24] ? static_cast<int8_t>(atoi(row[24])) : 0;
+			e.revokeduntil            = strtoll(row[25] ? row[25] : "-1", nullptr, 10);
 
 			all_entries.push_back(e);
 		}
@@ -476,31 +484,32 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Account e{};
 
-			e.id                      = static_cast<int32_t>(atoi(row[0]));
+			e.id                      = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name                    = row[1] ? row[1] : "";
 			e.charname                = row[2] ? row[2] : "";
-			e.sharedplat              = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
+			e.sharedplat              = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.password                = row[4] ? row[4] : "";
-			e.status                  = static_cast<int32_t>(atoi(row[5]));
-			e.lsaccount_id            = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.forum_id                = static_cast<int32_t>(atoi(row[7]));
-			e.gmspeed                 = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.revoked                 = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.karma                   = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
+			e.status                  = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
+			e.lsaccount_id            = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.forum_id                = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.gmspeed                 = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.revoked                 = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.karma                   = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
 			e.minilogin_ip            = row[11] ? row[11] : "";
-			e.hideme                  = static_cast<int8_t>(atoi(row[12]));
-			e.rulesflag               = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
+			e.hideme                  = row[12] ? static_cast<int8_t>(atoi(row[12])) : 0;
+			e.rulesflag               = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
 			e.suspendeduntil          = strtoll(row[14] ? row[14] : "-1", nullptr, 10);
-			e.time_creation           = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.expansion               = static_cast<int8_t>(atoi(row[16]));
+			e.time_creation           = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.expansion               = row[16] ? static_cast<int8_t>(atoi(row[16])) : 12;
 			e.ban_reason              = row[17] ? row[17] : "";
 			e.suspend_reason          = row[18] ? row[18] : "";
-			e.active                  = static_cast<int8_t>(atoi(row[19]));
-			e.ip_exemption_multiplier = static_cast<int32_t>(atoi(row[20]));
-			e.gminvul                 = static_cast<int8_t>(atoi(row[21]));
-			e.flymode                 = static_cast<int8_t>(atoi(row[22]));
-			e.ignore_tells            = static_cast<int8_t>(atoi(row[23]));
-			e.mule                    = static_cast<int8_t>(atoi(row[24]));
+			e.active                  = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.ip_exemption_multiplier = row[20] ? static_cast<int32_t>(atoi(row[20])) : 1;
+			e.gminvul                 = row[21] ? static_cast<int8_t>(atoi(row[21])) : 0;
+			e.flymode                 = row[22] ? static_cast<int8_t>(atoi(row[22])) : 0;
+			e.ignore_tells            = row[23] ? static_cast<int8_t>(atoi(row[23])) : 0;
+			e.mule                    = row[24] ? static_cast<int8_t>(atoi(row[24])) : 0;
+			e.revokeduntil            = strtoll(row[25] ? row[25] : "-1", nullptr, 10);
 
 			all_entries.push_back(e);
 		}

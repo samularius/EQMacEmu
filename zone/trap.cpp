@@ -24,6 +24,7 @@
 #include "entity.h"
 #include "mob.h"
 #include "trap.h"
+#include "../common/repositories/criteria/content_filter_criteria.h"
 
 /*
 
@@ -162,12 +163,15 @@ void Trap::Trigger(Mob* trigger)
 
 			for (i = 0; i < effectvalue2; i++)
 			{
-				if ((tmp = database.GetNPCType(effectvalue)))
+				if ((tmp = database.LoadNPCTypesData(effectvalue)))
 				{
 					auto randomOffset = glm::vec4(zone->random.Int(-5, 5),zone->random.Int(-5, 5),zone->random.Int(-5, 5), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
 					auto new_npc = new NPC(tmp, nullptr, spawnPosition, EQ::constants::GravityBehavior::Water);
 					new_npc->AddLootTable();
+					if (new_npc->DropsGlobalLoot()) {
+						new_npc->CheckGlobalLootTables();
+					}
 					entity_list.AddNPC(new_npc);
 					new_npc->AddToHateList(trigger,1);
 				}
@@ -185,12 +189,15 @@ void Trap::Trigger(Mob* trigger)
 
 			for (i = 0; i < effectvalue2; i++)
 			{
-				if ((tmp = database.GetNPCType(effectvalue)))
+				if ((tmp = database.LoadNPCTypesData(effectvalue)))
 				{
 					auto randomOffset = glm::vec4(zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
 					auto new_npc = new NPC(tmp, nullptr, spawnPosition, EQ::constants::GravityBehavior::Water);
 					new_npc->AddLootTable();
+					if (new_npc->DropsGlobalLoot()) {
+						new_npc->CheckGlobalLootTables();
+					}
 					entity_list.AddNPC(new_npc);
 					new_npc->AddToHateList(trigger,1);
 				}
@@ -398,9 +405,14 @@ void EntityList::ClearTrapPointers()
 
 bool ZoneDatabase::LoadTraps(const char* zonename) {
 
-	std::string query = StringFormat("SELECT id, x, y, z, effect, effectvalue, effectvalue2, skill, "
-									"maxzdiff, radius, chance, message, respawn_time, respawn_var, level, "
-									"`group`, triggered_number, despawn_when_triggered, undetectable FROM traps WHERE zone='%s'", zonename);
+	std::string query = StringFormat(
+		"SELECT id, x, y, z, effect, effectvalue, effectvalue2, skill, "
+		"maxzdiff, radius, chance, message, respawn_time, respawn_var, level, "
+		"`group`, triggered_number, despawn_when_triggered, undetectable FROM traps WHERE zone='%s' %s", 
+		zonename,
+		ContentFilterCriteria::apply().c_str()
+	);
+
 	auto results = QueryDatabase(query);
 	if (!results.Success()) {
 		return false;
@@ -451,7 +463,7 @@ void Trap::CreateHiddenTrigger()
 	if(hiddenTrigger)
 		return;
 
-	const NPCType *base_type = database.GetNPCType(500);
+	const NPCType *base_type = database.LoadNPCTypesData(500);
 	auto make_npc = new NPCType;
 	memcpy(make_npc, base_type, sizeof(NPCType));
 	make_npc->max_hp = 100000;

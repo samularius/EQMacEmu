@@ -369,12 +369,11 @@ public:
 	void		AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* itemlist, uint8 droplimit, uint8 mindrop);
 	uint32		GetMaxNPCSpellsID();
 	uint32		GetMaxNPCSpellsEffectsID();
+	void LoadGlobalLoot();
 
 	DBnpcspells_Struct*				GetNPCSpells(uint32 iDBSpellsID);
 	DBnpcspellseffects_Struct*		GetNPCSpellsEffects(uint32 iDBSpellsEffectsID);
-	const NPCType*					GetNPCType(uint32 id, bool bulk_load = false);
-	NPCType*					    GetNPCTypeTemp(uint32 id);
-	NPCType*						GrabNPCType(uint32 id);
+	const NPCType*					LoadNPCTypesData(uint32 id, bool bulk_load = false);
 
 	/* Petitions   */
 	void	UpdateBug(BugReport_Struct* bug_report, uint32 clienttype);

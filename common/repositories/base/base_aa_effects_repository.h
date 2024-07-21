@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAaEffectsRepository {
 public:
 	struct AaEffects {
@@ -136,12 +135,12 @@ public:
 		if (results.RowCount() == 1) {
 			AaEffects e{};
 
-			e.id       = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.aaid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.slot     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.effectid = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base1    = static_cast<int32_t>(atoi(row[4]));
-			e.base2    = static_cast<int32_t>(atoi(row[5]));
+			e.id       = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.aaid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.slot     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.effectid = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base1    = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.base2    = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
 
 			return e;
 		}
@@ -275,12 +274,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AaEffects e{};
 
-			e.id       = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.aaid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.slot     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.effectid = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base1    = static_cast<int32_t>(atoi(row[4]));
-			e.base2    = static_cast<int32_t>(atoi(row[5]));
+			e.id       = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.aaid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.slot     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.effectid = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base1    = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.base2    = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -305,12 +304,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AaEffects e{};
 
-			e.id       = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.aaid     = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.slot     = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.effectid = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.base1    = static_cast<int32_t>(atoi(row[4]));
-			e.base2    = static_cast<int32_t>(atoi(row[5]));
+			e.id       = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.aaid     = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.slot     = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.effectid = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.base1    = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.base2    = row[5] ? static_cast<int32_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}

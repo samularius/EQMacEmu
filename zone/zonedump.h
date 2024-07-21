@@ -131,6 +131,8 @@ struct NPCType
 	int8	stuck_behavior;
 	int8	flymode;
 	uint32	loot_lockout;
+	bool	skip_global_loot;
+	bool	rare_spawn;
 	uint32	instance_spawn_timer_override;
 };
 

@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseSpawngroupRepository {
 public:
 	struct Spawngroup {
@@ -176,22 +175,22 @@ public:
 		if (results.RowCount() == 1) {
 			Spawngroup e{};
 
-			e.id               = static_cast<int32_t>(atoi(row[0]));
+			e.id               = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name             = row[1] ? row[1] : "";
-			e.spawn_limit      = static_cast<int8_t>(atoi(row[2]));
-			e.max_x            = strtof(row[3], nullptr);
-			e.min_x            = strtof(row[4], nullptr);
-			e.max_y            = strtof(row[5], nullptr);
-			e.min_y            = strtof(row[6], nullptr);
-			e.delay            = static_cast<int32_t>(atoi(row[7]));
-			e.mindelay         = static_cast<int32_t>(atoi(row[8]));
-			e.despawn          = static_cast<int8_t>(atoi(row[9]));
-			e.despawn_timer    = static_cast<int32_t>(atoi(row[10]));
-			e.rand_spawns      = static_cast<int32_t>(atoi(row[11]));
-			e.rand_respawntime = static_cast<int32_t>(atoi(row[12]));
-			e.rand_variance    = static_cast<int32_t>(atoi(row[13]));
-			e.rand_condition_  = static_cast<int32_t>(atoi(row[14]));
-			e.wp_spawns        = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
+			e.spawn_limit      = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.max_x            = row[3] ? strtof(row[3], nullptr) : 0;
+			e.min_x            = row[4] ? strtof(row[4], nullptr) : 0;
+			e.max_y            = row[5] ? strtof(row[5], nullptr) : 0;
+			e.min_y            = row[6] ? strtof(row[6], nullptr) : 0;
+			e.delay            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 45000;
+			e.mindelay         = row[8] ? static_cast<int32_t>(atoi(row[8])) : 15000;
+			e.despawn          = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.despawn_timer    = row[10] ? static_cast<int32_t>(atoi(row[10])) : 100;
+			e.rand_spawns      = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.rand_respawntime = row[12] ? static_cast<int32_t>(atoi(row[12])) : 1200;
+			e.rand_variance    = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.rand_condition_  = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.wp_spawns        = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -355,22 +354,22 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Spawngroup e{};
 
-			e.id               = static_cast<int32_t>(atoi(row[0]));
+			e.id               = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name             = row[1] ? row[1] : "";
-			e.spawn_limit      = static_cast<int8_t>(atoi(row[2]));
-			e.max_x            = strtof(row[3], nullptr);
-			e.min_x            = strtof(row[4], nullptr);
-			e.max_y            = strtof(row[5], nullptr);
-			e.min_y            = strtof(row[6], nullptr);
-			e.delay            = static_cast<int32_t>(atoi(row[7]));
-			e.mindelay         = static_cast<int32_t>(atoi(row[8]));
-			e.despawn          = static_cast<int8_t>(atoi(row[9]));
-			e.despawn_timer    = static_cast<int32_t>(atoi(row[10]));
-			e.rand_spawns      = static_cast<int32_t>(atoi(row[11]));
-			e.rand_respawntime = static_cast<int32_t>(atoi(row[12]));
-			e.rand_variance    = static_cast<int32_t>(atoi(row[13]));
-			e.rand_condition_  = static_cast<int32_t>(atoi(row[14]));
-			e.wp_spawns        = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
+			e.spawn_limit      = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.max_x            = row[3] ? strtof(row[3], nullptr) : 0;
+			e.min_x            = row[4] ? strtof(row[4], nullptr) : 0;
+			e.max_y            = row[5] ? strtof(row[5], nullptr) : 0;
+			e.min_y            = row[6] ? strtof(row[6], nullptr) : 0;
+			e.delay            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 45000;
+			e.mindelay         = row[8] ? static_cast<int32_t>(atoi(row[8])) : 15000;
+			e.despawn          = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.despawn_timer    = row[10] ? static_cast<int32_t>(atoi(row[10])) : 100;
+			e.rand_spawns      = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.rand_respawntime = row[12] ? static_cast<int32_t>(atoi(row[12])) : 1200;
+			e.rand_variance    = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.rand_condition_  = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.wp_spawns        = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -395,22 +394,22 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Spawngroup e{};
 
-			e.id               = static_cast<int32_t>(atoi(row[0]));
+			e.id               = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name             = row[1] ? row[1] : "";
-			e.spawn_limit      = static_cast<int8_t>(atoi(row[2]));
-			e.max_x            = strtof(row[3], nullptr);
-			e.min_x            = strtof(row[4], nullptr);
-			e.max_y            = strtof(row[5], nullptr);
-			e.min_y            = strtof(row[6], nullptr);
-			e.delay            = static_cast<int32_t>(atoi(row[7]));
-			e.mindelay         = static_cast<int32_t>(atoi(row[8]));
-			e.despawn          = static_cast<int8_t>(atoi(row[9]));
-			e.despawn_timer    = static_cast<int32_t>(atoi(row[10]));
-			e.rand_spawns      = static_cast<int32_t>(atoi(row[11]));
-			e.rand_respawntime = static_cast<int32_t>(atoi(row[12]));
-			e.rand_variance    = static_cast<int32_t>(atoi(row[13]));
-			e.rand_condition_  = static_cast<int32_t>(atoi(row[14]));
-			e.wp_spawns        = static_cast<uint8_t>(strtoul(row[15], nullptr, 10));
+			e.spawn_limit      = row[2] ? static_cast<int8_t>(atoi(row[2])) : 0;
+			e.max_x            = row[3] ? strtof(row[3], nullptr) : 0;
+			e.min_x            = row[4] ? strtof(row[4], nullptr) : 0;
+			e.max_y            = row[5] ? strtof(row[5], nullptr) : 0;
+			e.min_y            = row[6] ? strtof(row[6], nullptr) : 0;
+			e.delay            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 45000;
+			e.mindelay         = row[8] ? static_cast<int32_t>(atoi(row[8])) : 15000;
+			e.despawn          = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.despawn_timer    = row[10] ? static_cast<int32_t>(atoi(row[10])) : 100;
+			e.rand_spawns      = row[11] ? static_cast<int32_t>(atoi(row[11])) : 0;
+			e.rand_respawntime = row[12] ? static_cast<int32_t>(atoi(row[12])) : 1200;
+			e.rand_variance    = row[13] ? static_cast<int32_t>(atoi(row[13])) : 0;
+			e.rand_condition_  = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.wp_spawns        = row[15] ? static_cast<uint8_t>(strtoul(row[15], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

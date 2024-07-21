@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseSpawn2Repository {
 public:
 	struct Spawn2 {
@@ -38,6 +37,11 @@ public:
 		int8_t      clear_timer_onboot;
 		int32_t     boot_variance;
 		int8_t      force_z;
+		float       min_expansion;
+		float       max_expansion;
+		uint8_t     raid_target_spawnpoint;
+		std::string content_flags;
+		std::string content_flags_disabled;
 	};
 
 	static std::string PrimaryKey()
@@ -66,6 +70,11 @@ public:
 			"clear_timer_onboot",
 			"boot_variance",
 			"force_z",
+			"min_expansion",
+			"max_expansion",
+			"raid_target_spawnpoint",
+			"content_flags",
+			"content_flags_disabled",
 		};
 	}
 
@@ -90,6 +99,11 @@ public:
 			"clear_timer_onboot",
 			"boot_variance",
 			"force_z",
+			"min_expansion",
+			"max_expansion",
+			"raid_target_spawnpoint",
+			"content_flags",
+			"content_flags_disabled",
 		};
 	}
 
@@ -130,24 +144,29 @@ public:
 	{
 		Spawn2 e{};
 
-		e.id                 = 0;
-		e.spawngroupID       = 0;
-		e.zone               = "";
-		e.x                  = 0.000000;
-		e.y                  = 0.000000;
-		e.z                  = 0.000000;
-		e.heading            = 0.000000;
-		e.respawntime        = 0;
-		e.variance           = 0;
-		e.pathgrid           = 0;
-		e._condition         = 0;
-		e.cond_value         = 1;
-		e.enabled            = 1;
-		e.animation          = 0;
-		e.boot_respawntime   = 0;
-		e.clear_timer_onboot = 0;
-		e.boot_variance      = 0;
-		e.force_z            = 0;
+		e.id                     = 0;
+		e.spawngroupID           = 0;
+		e.zone                   = "";
+		e.x                      = 0.000000;
+		e.y                      = 0.000000;
+		e.z                      = 0.000000;
+		e.heading                = 0.000000;
+		e.respawntime            = 0;
+		e.variance               = 0;
+		e.pathgrid               = 0;
+		e._condition             = 0;
+		e.cond_value             = 1;
+		e.enabled                = 1;
+		e.animation              = 0;
+		e.boot_respawntime       = 0;
+		e.clear_timer_onboot     = 0;
+		e.boot_variance          = 0;
+		e.force_z                = 0;
+		e.min_expansion          = -1;
+		e.max_expansion          = -1;
+		e.raid_target_spawnpoint = 0;
+		e.content_flags          = "";
+		e.content_flags_disabled = "";
 
 		return e;
 	}
@@ -184,24 +203,29 @@ public:
 		if (results.RowCount() == 1) {
 			Spawn2 e{};
 
-			e.id                 = static_cast<int32_t>(atoi(row[0]));
-			e.spawngroupID       = static_cast<int32_t>(atoi(row[1]));
-			e.zone               = row[2] ? row[2] : "";
-			e.x                  = strtof(row[3], nullptr);
-			e.y                  = strtof(row[4], nullptr);
-			e.z                  = strtof(row[5], nullptr);
-			e.heading            = strtof(row[6], nullptr);
-			e.respawntime        = static_cast<int32_t>(atoi(row[7]));
-			e.variance           = static_cast<int32_t>(atoi(row[8]));
-			e.pathgrid           = static_cast<int32_t>(atoi(row[9]));
-			e._condition         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.cond_value         = static_cast<int32_t>(atoi(row[11]));
-			e.enabled            = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.animation          = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.boot_respawntime   = static_cast<int32_t>(atoi(row[14]));
-			e.clear_timer_onboot = static_cast<int8_t>(atoi(row[15]));
-			e.boot_variance      = static_cast<int32_t>(atoi(row[16]));
-			e.force_z            = static_cast<int8_t>(atoi(row[17]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spawngroupID           = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.zone                   = row[2] ? row[2] : "";
+			e.x                      = row[3] ? strtof(row[3], nullptr) : 0.000000;
+			e.y                      = row[4] ? strtof(row[4], nullptr) : 0.000000;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0.000000;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0.000000;
+			e.respawntime            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.variance               = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.pathgrid               = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e._condition             = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.cond_value             = row[11] ? static_cast<int32_t>(atoi(row[11])) : 1;
+			e.enabled                = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 1;
+			e.animation              = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.boot_respawntime       = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.clear_timer_onboot     = row[15] ? static_cast<int8_t>(atoi(row[15])) : 0;
+			e.boot_variance          = row[16] ? static_cast<int32_t>(atoi(row[16])) : 0;
+			e.force_z                = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.min_expansion          = row[18] ? strtof(row[18], nullptr) : -1;
+			e.max_expansion          = row[19] ? strtof(row[19], nullptr) : -1;
+			e.raid_target_spawnpoint = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.content_flags          = row[21] ? row[21] : "";
+			e.content_flags_disabled = row[22] ? row[22] : "";
 
 			return e;
 		}
@@ -252,6 +276,11 @@ public:
 		v.push_back(columns[15] + " = " + std::to_string(e.clear_timer_onboot));
 		v.push_back(columns[16] + " = " + std::to_string(e.boot_variance));
 		v.push_back(columns[17] + " = " + std::to_string(e.force_z));
+		v.push_back(columns[18] + " = " + std::to_string(e.min_expansion));
+		v.push_back(columns[19] + " = " + std::to_string(e.max_expansion));
+		v.push_back(columns[20] + " = " + std::to_string(e.raid_target_spawnpoint));
+		v.push_back(columns[21] + " = '" + Strings::Escape(e.content_flags) + "'");
+		v.push_back(columns[22] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -291,6 +320,11 @@ public:
 		v.push_back(std::to_string(e.clear_timer_onboot));
 		v.push_back(std::to_string(e.boot_variance));
 		v.push_back(std::to_string(e.force_z));
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
+		v.push_back(std::to_string(e.raid_target_spawnpoint));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -338,6 +372,11 @@ public:
 			v.push_back(std::to_string(e.clear_timer_onboot));
 			v.push_back(std::to_string(e.boot_variance));
 			v.push_back(std::to_string(e.force_z));
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
+			v.push_back(std::to_string(e.raid_target_spawnpoint));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -371,24 +410,29 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Spawn2 e{};
 
-			e.id                 = static_cast<int32_t>(atoi(row[0]));
-			e.spawngroupID       = static_cast<int32_t>(atoi(row[1]));
-			e.zone               = row[2] ? row[2] : "";
-			e.x                  = strtof(row[3], nullptr);
-			e.y                  = strtof(row[4], nullptr);
-			e.z                  = strtof(row[5], nullptr);
-			e.heading            = strtof(row[6], nullptr);
-			e.respawntime        = static_cast<int32_t>(atoi(row[7]));
-			e.variance           = static_cast<int32_t>(atoi(row[8]));
-			e.pathgrid           = static_cast<int32_t>(atoi(row[9]));
-			e._condition         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.cond_value         = static_cast<int32_t>(atoi(row[11]));
-			e.enabled            = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.animation          = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.boot_respawntime   = static_cast<int32_t>(atoi(row[14]));
-			e.clear_timer_onboot = static_cast<int8_t>(atoi(row[15]));
-			e.boot_variance      = static_cast<int32_t>(atoi(row[16]));
-			e.force_z            = static_cast<int8_t>(atoi(row[17]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spawngroupID           = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.zone                   = row[2] ? row[2] : "";
+			e.x                      = row[3] ? strtof(row[3], nullptr) : 0.000000;
+			e.y                      = row[4] ? strtof(row[4], nullptr) : 0.000000;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0.000000;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0.000000;
+			e.respawntime            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.variance               = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.pathgrid               = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e._condition             = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.cond_value             = row[11] ? static_cast<int32_t>(atoi(row[11])) : 1;
+			e.enabled                = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 1;
+			e.animation              = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.boot_respawntime       = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.clear_timer_onboot     = row[15] ? static_cast<int8_t>(atoi(row[15])) : 0;
+			e.boot_variance          = row[16] ? static_cast<int32_t>(atoi(row[16])) : 0;
+			e.force_z                = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.min_expansion          = row[18] ? strtof(row[18], nullptr) : -1;
+			e.max_expansion          = row[19] ? strtof(row[19], nullptr) : -1;
+			e.raid_target_spawnpoint = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.content_flags          = row[21] ? row[21] : "";
+			e.content_flags_disabled = row[22] ? row[22] : "";
 
 			all_entries.push_back(e);
 		}
@@ -413,24 +457,29 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Spawn2 e{};
 
-			e.id                 = static_cast<int32_t>(atoi(row[0]));
-			e.spawngroupID       = static_cast<int32_t>(atoi(row[1]));
-			e.zone               = row[2] ? row[2] : "";
-			e.x                  = strtof(row[3], nullptr);
-			e.y                  = strtof(row[4], nullptr);
-			e.z                  = strtof(row[5], nullptr);
-			e.heading            = strtof(row[6], nullptr);
-			e.respawntime        = static_cast<int32_t>(atoi(row[7]));
-			e.variance           = static_cast<int32_t>(atoi(row[8]));
-			e.pathgrid           = static_cast<int32_t>(atoi(row[9]));
-			e._condition         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.cond_value         = static_cast<int32_t>(atoi(row[11]));
-			e.enabled            = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.animation          = static_cast<uint8_t>(strtoul(row[13], nullptr, 10));
-			e.boot_respawntime   = static_cast<int32_t>(atoi(row[14]));
-			e.clear_timer_onboot = static_cast<int8_t>(atoi(row[15]));
-			e.boot_variance      = static_cast<int32_t>(atoi(row[16]));
-			e.force_z            = static_cast<int8_t>(atoi(row[17]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.spawngroupID           = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.zone                   = row[2] ? row[2] : "";
+			e.x                      = row[3] ? strtof(row[3], nullptr) : 0.000000;
+			e.y                      = row[4] ? strtof(row[4], nullptr) : 0.000000;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0.000000;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0.000000;
+			e.respawntime            = row[7] ? static_cast<int32_t>(atoi(row[7])) : 0;
+			e.variance               = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.pathgrid               = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e._condition             = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.cond_value             = row[11] ? static_cast<int32_t>(atoi(row[11])) : 1;
+			e.enabled                = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 1;
+			e.animation              = row[13] ? static_cast<uint8_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.boot_respawntime       = row[14] ? static_cast<int32_t>(atoi(row[14])) : 0;
+			e.clear_timer_onboot     = row[15] ? static_cast<int8_t>(atoi(row[15])) : 0;
+			e.boot_variance          = row[16] ? static_cast<int32_t>(atoi(row[16])) : 0;
+			e.force_z                = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.min_expansion          = row[18] ? strtof(row[18], nullptr) : -1;
+			e.max_expansion          = row[19] ? strtof(row[19], nullptr) : -1;
+			e.raid_target_spawnpoint = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.content_flags          = row[21] ? row[21] : "";
+			e.content_flags_disabled = row[22] ? row[22] : "";
 
 			all_entries.push_back(e);
 		}

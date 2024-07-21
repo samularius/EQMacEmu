@@ -20,6 +20,7 @@
 
 #include "../common/worldconn.h"
 #include "../common/eq_packet_structs.h"
+#include "zone_event_scheduler.h"
 
 class ServerPacket;
 class EQApplicationPacket;
@@ -57,6 +58,11 @@ private:
 
 	uint32 cur_groupid;
 	uint32 last_groupid;
+
+	ZoneEventScheduler *m_zone_scheduler;
+public:
+	ZoneEventScheduler *GetScheduler() const;
+	void SetScheduler(ZoneEventScheduler *scheduler);
 };
 #endif
 

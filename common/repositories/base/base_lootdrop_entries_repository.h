@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseLootdropEntriesRepository {
 public:
 	struct LootdropEntries {
@@ -29,6 +28,10 @@ public:
 		uint8_t  maxlevel;
 		uint8_t  multiplier;
 		float    disabled_chance;
+		float    min_expansion;
+		float    max_expansion;
+		uint32_t min_looter_level;
+		uint32_t item_loot_lockout_timer;
 	};
 
 	static std::string PrimaryKey()
@@ -48,6 +51,10 @@ public:
 			"maxlevel",
 			"multiplier",
 			"disabled_chance",
+			"min_expansion",
+			"max_expansion",
+			"min_looter_level",
+			"item_loot_lockout_timer",
 		};
 	}
 
@@ -63,6 +70,10 @@ public:
 			"maxlevel",
 			"multiplier",
 			"disabled_chance",
+			"min_expansion",
+			"max_expansion",
+			"min_looter_level",
+			"item_loot_lockout_timer",
 		};
 	}
 
@@ -103,15 +114,19 @@ public:
 	{
 		LootdropEntries e{};
 
-		e.lootdrop_id     = 0;
-		e.item_id         = 0;
-		e.item_charges    = 1;
-		e.equip_item      = 0;
-		e.chance          = 1;
-		e.minlevel        = 0;
-		e.maxlevel        = 255;
-		e.multiplier      = 1;
-		e.disabled_chance = 0;
+		e.lootdrop_id             = 0;
+		e.item_id                 = 0;
+		e.item_charges            = 1;
+		e.equip_item              = 0;
+		e.chance                  = 1;
+		e.minlevel                = 0;
+		e.maxlevel                = 255;
+		e.multiplier              = 1;
+		e.disabled_chance         = 0;
+		e.min_expansion           = -1;
+		e.max_expansion           = -1;
+		e.min_looter_level        = 0;
+		e.item_loot_lockout_timer = 0;
 
 		return e;
 	}
@@ -148,15 +163,19 @@ public:
 		if (results.RowCount() == 1) {
 			LootdropEntries e{};
 
-			e.lootdrop_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id         = static_cast<int32_t>(atoi(row[1]));
-			e.item_charges    = static_cast<uint16_t>(strtoul(row[2], nullptr, 10));
-			e.equip_item      = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.chance          = strtof(row[4], nullptr);
-			e.minlevel        = static_cast<int8_t>(atoi(row[5]));
-			e.maxlevel        = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.multiplier      = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.disabled_chance = strtof(row[8], nullptr);
+			e.lootdrop_id             = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.item_charges            = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.equip_item              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.chance                  = row[4] ? strtof(row[4], nullptr) : 1;
+			e.minlevel                = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxlevel                = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 255;
+			e.multiplier              = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 1;
+			e.disabled_chance         = row[8] ? strtof(row[8], nullptr) : 0;
+			e.min_expansion           = row[9] ? strtof(row[9], nullptr) : -1;
+			e.max_expansion           = row[10] ? strtof(row[10], nullptr) : -1;
+			e.min_looter_level        = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.item_loot_lockout_timer = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -199,6 +218,10 @@ public:
 		v.push_back(columns[6] + " = " + std::to_string(e.maxlevel));
 		v.push_back(columns[7] + " = " + std::to_string(e.multiplier));
 		v.push_back(columns[8] + " = " + std::to_string(e.disabled_chance));
+		v.push_back(columns[9] + " = " + std::to_string(e.min_expansion));
+		v.push_back(columns[10] + " = " + std::to_string(e.max_expansion));
+		v.push_back(columns[11] + " = " + std::to_string(e.min_looter_level));
+		v.push_back(columns[12] + " = " + std::to_string(e.item_loot_lockout_timer));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -229,6 +252,10 @@ public:
 		v.push_back(std::to_string(e.maxlevel));
 		v.push_back(std::to_string(e.multiplier));
 		v.push_back(std::to_string(e.disabled_chance));
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
+		v.push_back(std::to_string(e.min_looter_level));
+		v.push_back(std::to_string(e.item_loot_lockout_timer));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -267,6 +294,10 @@ public:
 			v.push_back(std::to_string(e.maxlevel));
 			v.push_back(std::to_string(e.multiplier));
 			v.push_back(std::to_string(e.disabled_chance));
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
+			v.push_back(std::to_string(e.min_looter_level));
+			v.push_back(std::to_string(e.item_loot_lockout_timer));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -300,15 +331,19 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LootdropEntries e{};
 
-			e.lootdrop_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id         = static_cast<int32_t>(atoi(row[1]));
-			e.item_charges    = static_cast<uint16_t>(strtoul(row[2], nullptr, 10));
-			e.equip_item      = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.chance          = strtof(row[4], nullptr);
-			e.minlevel        = static_cast<int8_t>(atoi(row[5]));
-			e.maxlevel        = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.multiplier      = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.disabled_chance = strtof(row[8], nullptr);
+			e.lootdrop_id             = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.item_charges            = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.equip_item              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.chance                  = row[4] ? strtof(row[4], nullptr) : 1;
+			e.minlevel                = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxlevel                = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 255;
+			e.multiplier              = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 1;
+			e.disabled_chance         = row[8] ? strtof(row[8], nullptr) : 0;
+			e.min_expansion           = row[9] ? strtof(row[9], nullptr) : -1;
+			e.max_expansion           = row[10] ? strtof(row[10], nullptr) : -1;
+			e.min_looter_level        = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.item_loot_lockout_timer = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -333,15 +368,19 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			LootdropEntries e{};
 
-			e.lootdrop_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id         = static_cast<int32_t>(atoi(row[1]));
-			e.item_charges    = static_cast<uint16_t>(strtoul(row[2], nullptr, 10));
-			e.equip_item      = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.chance          = strtof(row[4], nullptr);
-			e.minlevel        = static_cast<int8_t>(atoi(row[5]));
-			e.maxlevel        = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.multiplier      = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.disabled_chance = strtof(row[8], nullptr);
+			e.lootdrop_id             = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.item_charges            = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.equip_item              = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.chance                  = row[4] ? strtof(row[4], nullptr) : 1;
+			e.minlevel                = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxlevel                = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 255;
+			e.multiplier              = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 1;
+			e.disabled_chance         = row[8] ? strtof(row[8], nullptr) : 0;
+			e.min_expansion           = row[9] ? strtof(row[9], nullptr) : -1;
+			e.max_expansion           = row[10] ? strtof(row[10], nullptr) : -1;
+			e.min_looter_level        = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.item_loot_lockout_timer = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

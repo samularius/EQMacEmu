@@ -29,6 +29,7 @@
 #include "string_ids.h"
 #include "worldserver.h"
 #include "zonedb.h"
+#include "../common/repositories/criteria/content_filter_criteria.h"
 
 #include <iostream>
 #include <string.h>
@@ -741,10 +742,8 @@ std::vector<DoorsRepository::Doors> ZoneDatabase::LoadDoors(const std::string &z
 {
 	auto door_entries = DoorsRepository::GetWhere(
 		*this, fmt::format(
-			"zone = '{}' "
-			" AND (({} >= min_expansion AND {} < max_expansion) OR (min_expansion = 0 AND max_expansion = 0)) "
-			" ORDER BY doorid ASC",
-			zone_name, RuleR(World, CurrentExpansion), RuleR(World, CurrentExpansion)));
+			"zone = '{}' {} ORDER BY doorid ASC",
+			zone_name, ContentFilterCriteria::apply()));
 
 	LogInfo("Loaded doors for [{}]", zone_name);
 

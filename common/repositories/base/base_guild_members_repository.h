@@ -16,13 +16,12 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseGuildMembersRepository {
 public:
 	struct GuildMembers {
 		int32_t     char_id;
 		uint32_t    guild_id;
-		uint8_t     rank;
+		uint8_t     rank_;
 		uint8_t     tribute_enable;
 		uint32_t    total_tribute;
 		uint32_t    last_tribute;
@@ -41,7 +40,7 @@ public:
 		return {
 			"char_id",
 			"guild_id",
-			"rank",
+			"`rank`",
 			"tribute_enable",
 			"total_tribute",
 			"last_tribute",
@@ -56,7 +55,7 @@ public:
 		return {
 			"char_id",
 			"guild_id",
-			"rank",
+			"`rank`",
 			"tribute_enable",
 			"total_tribute",
 			"last_tribute",
@@ -105,7 +104,7 @@ public:
 
 		e.char_id        = 0;
 		e.guild_id       = 0;
-		e.rank           = 0;
+		e.rank_          = 0;
 		e.tribute_enable = 0;
 		e.total_tribute  = 0;
 		e.last_tribute   = 0;
@@ -148,15 +147,15 @@ public:
 		if (results.RowCount() == 1) {
 			GuildMembers e{};
 
-			e.char_id        = static_cast<int32_t>(atoi(row[0]));
-			e.guild_id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.rank           = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.tribute_enable = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.total_tribute  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.last_tribute   = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.banker         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.char_id        = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.guild_id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.rank_          = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.tribute_enable = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.total_tribute  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.last_tribute   = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.banker         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 			e.public_note    = row[7] ? row[7] : "";
-			e.alt            = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
+			e.alt            = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -192,7 +191,7 @@ public:
 
 		v.push_back(columns[0] + " = " + std::to_string(e.char_id));
 		v.push_back(columns[1] + " = " + std::to_string(e.guild_id));
-		v.push_back(columns[2] + " = " + std::to_string(e.rank));
+		v.push_back(columns[2] + " = " + std::to_string(e.rank_));
 		v.push_back(columns[3] + " = " + std::to_string(e.tribute_enable));
 		v.push_back(columns[4] + " = " + std::to_string(e.total_tribute));
 		v.push_back(columns[5] + " = " + std::to_string(e.last_tribute));
@@ -222,7 +221,7 @@ public:
 
 		v.push_back(std::to_string(e.char_id));
 		v.push_back(std::to_string(e.guild_id));
-		v.push_back(std::to_string(e.rank));
+		v.push_back(std::to_string(e.rank_));
 		v.push_back(std::to_string(e.tribute_enable));
 		v.push_back(std::to_string(e.total_tribute));
 		v.push_back(std::to_string(e.last_tribute));
@@ -260,7 +259,7 @@ public:
 
 			v.push_back(std::to_string(e.char_id));
 			v.push_back(std::to_string(e.guild_id));
-			v.push_back(std::to_string(e.rank));
+			v.push_back(std::to_string(e.rank_));
 			v.push_back(std::to_string(e.tribute_enable));
 			v.push_back(std::to_string(e.total_tribute));
 			v.push_back(std::to_string(e.last_tribute));
@@ -300,15 +299,15 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			GuildMembers e{};
 
-			e.char_id        = static_cast<int32_t>(atoi(row[0]));
-			e.guild_id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.rank           = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.tribute_enable = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.total_tribute  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.last_tribute   = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.banker         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.char_id        = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.guild_id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.rank_          = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.tribute_enable = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.total_tribute  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.last_tribute   = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.banker         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 			e.public_note    = row[7] ? row[7] : "";
-			e.alt            = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
+			e.alt            = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -333,15 +332,15 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			GuildMembers e{};
 
-			e.char_id        = static_cast<int32_t>(atoi(row[0]));
-			e.guild_id       = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.rank           = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.tribute_enable = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.total_tribute  = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.last_tribute   = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
-			e.banker         = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
+			e.char_id        = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.guild_id       = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.rank_          = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.tribute_enable = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.total_tribute  = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.last_tribute   = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.banker         = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
 			e.public_note    = row[7] ? row[7] : "";
-			e.alt            = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
+			e.alt            = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

@@ -32,6 +32,10 @@ public:
 		float       target_heading;
 		uint32_t    target_zone_id;
 		uint32_t    client_version_mask;
+		std::string content_flags;
+		std::string content_flags_disabled;
+		float       min_expansion;
+		float       max_expansion;
 	};
 
 	static std::string PrimaryKey()
@@ -55,6 +59,10 @@ public:
 			"target_heading",
 			"target_zone_id",
 			"client_version_mask",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -74,6 +82,10 @@ public:
 			"target_heading",
 			"target_zone_id",
 			"client_version_mask",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -114,19 +126,23 @@ public:
 	{
 		ZonePoints e{};
 
-		e.id                  = 0;
-		e.zone                = "";
-		e.number              = 1;
-		e.y                   = 0;
-		e.x                   = 0;
-		e.z                   = 0;
-		e.heading             = 0;
-		e.target_y            = 0;
-		e.target_x            = 0;
-		e.target_z            = 0;
-		e.target_heading      = 0;
-		e.target_zone_id      = 0;
-		e.client_version_mask = 4294967295;
+		e.id                     = 0;
+		e.zone                   = "";
+		e.number                 = 1;
+		e.y                      = 0;
+		e.x                      = 0;
+		e.z                      = 0;
+		e.heading                = 0;
+		e.target_y               = 0;
+		e.target_x               = 0;
+		e.target_z               = 0;
+		e.target_heading         = 0;
+		e.target_zone_id         = 0;
+		e.client_version_mask    = 4294967295;
+		e.content_flags          = "";
+		e.content_flags_disabled = "";
+		e.min_expansion          = -1;
+		e.max_expansion          = -1;
 
 		return e;
 	}
@@ -163,19 +179,23 @@ public:
 		if (results.RowCount() == 1) {
 			ZonePoints e{};
 
-			e.id                  = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
-			e.zone                = row[1] ? row[1] : "";
-			e.number              = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
-			e.y                   = row[3] ? strtof(row[3], nullptr) : 0;
-			e.x                   = row[4] ? strtof(row[4], nullptr) : 0;
-			e.z                   = row[5] ? strtof(row[5], nullptr) : 0;
-			e.heading             = row[6] ? strtof(row[6], nullptr) : 0;
-			e.target_y            = row[7] ? strtof(row[7], nullptr) : 0;
-			e.target_x            = row[8] ? strtof(row[8], nullptr) : 0;
-			e.target_z            = row[9] ? strtof(row[9], nullptr) : 0;
-			e.target_heading      = row[10] ? strtof(row[10], nullptr) : 0;
-			e.target_zone_id      = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
-			e.client_version_mask = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zone                   = row[1] ? row[1] : "";
+			e.number                 = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.y                      = row[3] ? strtof(row[3], nullptr) : 0;
+			e.x                      = row[4] ? strtof(row[4], nullptr) : 0;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0;
+			e.target_y               = row[7] ? strtof(row[7], nullptr) : 0;
+			e.target_x               = row[8] ? strtof(row[8], nullptr) : 0;
+			e.target_z               = row[9] ? strtof(row[9], nullptr) : 0;
+			e.target_heading         = row[10] ? strtof(row[10], nullptr) : 0;
+			e.target_zone_id         = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.client_version_mask    = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.content_flags          = row[13] ? row[13] : "";
+			e.content_flags_disabled = row[14] ? row[14] : "";
+			e.min_expansion          = row[15] ? strtof(row[15], nullptr) : -1;
+			e.max_expansion          = row[16] ? strtof(row[16], nullptr) : -1;
 
 			return e;
 		}
@@ -221,6 +241,10 @@ public:
 		v.push_back(columns[10] + " = " + std::to_string(e.target_heading));
 		v.push_back(columns[11] + " = " + std::to_string(e.target_zone_id));
 		v.push_back(columns[12] + " = " + std::to_string(e.client_version_mask));
+		v.push_back(columns[13] + " = '" + Strings::Escape(e.content_flags) + "'");
+		v.push_back(columns[14] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(columns[15] + " = " + std::to_string(e.min_expansion));
+		v.push_back(columns[16] + " = " + std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -255,6 +279,10 @@ public:
 		v.push_back(std::to_string(e.target_heading));
 		v.push_back(std::to_string(e.target_zone_id));
 		v.push_back(std::to_string(e.client_version_mask));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -297,6 +325,10 @@ public:
 			v.push_back(std::to_string(e.target_heading));
 			v.push_back(std::to_string(e.target_zone_id));
 			v.push_back(std::to_string(e.client_version_mask));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -330,19 +362,23 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			ZonePoints e{};
 
-			e.id                  = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
-			e.zone                = row[1] ? row[1] : "";
-			e.number              = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
-			e.y                   = row[3] ? strtof(row[3], nullptr) : 0;
-			e.x                   = row[4] ? strtof(row[4], nullptr) : 0;
-			e.z                   = row[5] ? strtof(row[5], nullptr) : 0;
-			e.heading             = row[6] ? strtof(row[6], nullptr) : 0;
-			e.target_y            = row[7] ? strtof(row[7], nullptr) : 0;
-			e.target_x            = row[8] ? strtof(row[8], nullptr) : 0;
-			e.target_z            = row[9] ? strtof(row[9], nullptr) : 0;
-			e.target_heading      = row[10] ? strtof(row[10], nullptr) : 0;
-			e.target_zone_id      = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
-			e.client_version_mask = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zone                   = row[1] ? row[1] : "";
+			e.number                 = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.y                      = row[3] ? strtof(row[3], nullptr) : 0;
+			e.x                      = row[4] ? strtof(row[4], nullptr) : 0;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0;
+			e.target_y               = row[7] ? strtof(row[7], nullptr) : 0;
+			e.target_x               = row[8] ? strtof(row[8], nullptr) : 0;
+			e.target_z               = row[9] ? strtof(row[9], nullptr) : 0;
+			e.target_heading         = row[10] ? strtof(row[10], nullptr) : 0;
+			e.target_zone_id         = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.client_version_mask    = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.content_flags          = row[13] ? row[13] : "";
+			e.content_flags_disabled = row[14] ? row[14] : "";
+			e.min_expansion          = row[15] ? strtof(row[15], nullptr) : -1;
+			e.max_expansion          = row[16] ? strtof(row[16], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}
@@ -367,19 +403,23 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			ZonePoints e{};
 
-			e.id                  = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
-			e.zone                = row[1] ? row[1] : "";
-			e.number              = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
-			e.y                   = row[3] ? strtof(row[3], nullptr) : 0;
-			e.x                   = row[4] ? strtof(row[4], nullptr) : 0;
-			e.z                   = row[5] ? strtof(row[5], nullptr) : 0;
-			e.heading             = row[6] ? strtof(row[6], nullptr) : 0;
-			e.target_y            = row[7] ? strtof(row[7], nullptr) : 0;
-			e.target_x            = row[8] ? strtof(row[8], nullptr) : 0;
-			e.target_z            = row[9] ? strtof(row[9], nullptr) : 0;
-			e.target_heading      = row[10] ? strtof(row[10], nullptr) : 0;
-			e.target_zone_id      = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
-			e.client_version_mask = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zone                   = row[1] ? row[1] : "";
+			e.number                 = row[2] ? static_cast<uint16_t>(strtoul(row[2], nullptr, 10)) : 1;
+			e.y                      = row[3] ? strtof(row[3], nullptr) : 0;
+			e.x                      = row[4] ? strtof(row[4], nullptr) : 0;
+			e.z                      = row[5] ? strtof(row[5], nullptr) : 0;
+			e.heading                = row[6] ? strtof(row[6], nullptr) : 0;
+			e.target_y               = row[7] ? strtof(row[7], nullptr) : 0;
+			e.target_x               = row[8] ? strtof(row[8], nullptr) : 0;
+			e.target_z               = row[9] ? strtof(row[9], nullptr) : 0;
+			e.target_heading         = row[10] ? strtof(row[10], nullptr) : 0;
+			e.target_zone_id         = row[11] ? static_cast<uint32_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.client_version_mask    = row[12] ? static_cast<uint32_t>(strtoul(row[12], nullptr, 10)) : 4294967295;
+			e.content_flags          = row[13] ? row[13] : "";
+			e.content_flags_disabled = row[14] ? row[14] : "";
+			e.min_expansion          = row[15] ? strtof(row[15], nullptr) : -1;
+			e.max_expansion          = row[16] ? strtof(row[16], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}

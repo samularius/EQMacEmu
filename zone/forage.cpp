@@ -31,6 +31,7 @@
 #include "titles.h"
 #include "water_map.h"
 #include "zonedb.h"
+#include "../common/repositories/criteria/content_filter_criteria.h"
 
 #include <iostream>
 
@@ -55,9 +56,26 @@ uint32 ZoneDatabase::GetZoneForage(uint32 ZoneID, uint8 skill) {
 	}
 
 	uint32 chancepool = 0;
-    std::string query = StringFormat("SELECT itemid, chance FROM "
-                                    "forage WHERE zoneid = '%i' and level <= '%i' "
-                                    "LIMIT %i", ZoneID, skill, FORAGE_ITEM_LIMIT);
+    std::string query = fmt::format(
+		SQL(
+			SELECT
+			  itemid,
+			  chance 
+			FROM
+			  forage
+			WHERE
+			  zoneid = '{}' 
+			AND 
+			  level <= '{}'
+	          {}
+			LIMIT
+			  {}
+		), 
+		ZoneID, 
+	    skill, 
+		ContentFilterCriteria::apply(),
+		FORAGE_ITEM_LIMIT
+	);
     auto results = QueryDatabase(query);
 	if (!results.Success()) {
 		return 0;
@@ -107,9 +125,23 @@ uint32 ZoneDatabase::GetZoneFishing(uint32 ZoneID, uint8 skill)
 		chance[c]=0;
 	}
 
-    std::string query = StringFormat("SELECT itemid, chance "
-                                    "FROM fishing WHERE (zoneid = '%i' || zoneid = 0) AND skill_level <= '%i'",
-                                    ZoneID, skill);
+    std::string query = fmt::format(
+		SQL(
+			SELECT 
+			  itemid,
+			  chance
+			FROM 
+			  fishing 
+			WHERE 
+			  (zoneid = '{}' ||  || zoneid = 0)
+			AND 
+			  skill_level <= '{}'
+			  {}
+			),
+			ZoneID, 
+			skill,
+			ContentFilterCriteria::apply()
+		);
     auto results = QueryDatabase(query);
     if (!results.Success()) {
 		return 0;
@@ -144,26 +176,25 @@ uint32 ZoneDatabase::GetZoneFishing(uint32 ZoneID, uint8 skill)
 //we need this function to immediately determine, after we receive OP_Fishing, if we can even try to fish, otherwise we have to wait a while to get the failure
 bool Client::CanFish() {
 
-	if(fishing_timer.Enabled())
-	{
+	if(fishing_timer.Enabled()) {
 		Message_StringID(CC_Default, ALREADY_FISHING);	//You are already fishing!
 		return false;
 	}
 
-	if(m_inv.GetItem(EQ::invslot::slotCursor))
-	{
+	if(m_inv.GetItem(EQ::invslot::slotCursor)) {
 		Message_StringID(CC_User_Skills, FISHING_HANDS_FULL);
 		return false;
 	}
 
 	//make sure we still have a fishing pole on:
 	const EQ::ItemInstance* Pole = m_inv[EQ::invslot::slotPrimary];
-	int32 bslot = m_inv.HasItemByUse(EQ::item::ItemTypeFishingBait, 1, invWhereWorn|invWherePersonal);
+	int32 bslot = m_inv.HasItemByUse(EQ::item::ItemTypeFishingBait, 1, invWhereWorn | invWherePersonal);
 	const EQ::ItemInstance* Bait = nullptr;
-	if (bslot != INVALID_INDEX)
+	if (bslot != INVALID_INDEX) {
 		Bait = m_inv.GetItem(bslot);
+	}
 
-	if(!Pole || !Pole->IsType(EQ::item::ItemClassCommon) || Pole->GetItem()->ItemType != EQ::item::ItemTypeFishingPole) {
+	if(!Pole || !Pole->IsClassCommon() || Pole->GetItem()->ItemType != EQ::item::ItemTypeFishingPole) {
 		if (m_inv.HasItemByUse(EQ::item::ItemTypeFishingPole, 1, invWhereWorn|invWherePersonal|invWhereBank|invWhereTrading|invWhereCursor))	//We have a fishing pole somewhere, just not equipped
 			Message_StringID(MT_Skills, FISHING_EQUIP_POLE);	//You need to put your fishing pole in your primary hand.
 		else	//We don't have a fishing pole anywhere
@@ -171,13 +202,12 @@ bool Client::CanFish() {
 		return false;
 	}
 
-	if (!Bait || !Bait->IsType(EQ::item::ItemClassCommon) || Bait->GetItem()->ItemType != EQ::item::ItemTypeFishingBait) {
+	if (!Bait || !Bait->IsClassCommon() || Bait->GetItem()->ItemType != EQ::item::ItemTypeFishingBait) {
 		Message_StringID(MT_Skills, FISHING_NO_BAIT);	//You can't fish without fishing bait, go buy some.
 		return false;
 	}
 
 	if(zone->zonemap != nullptr && zone->watermap != nullptr && RuleB(Watermap, CheckForWaterWhenFishing)) {
-
 		glm::vec3 rodPosition;
 		// Tweak Rod and LineLength if required
 		const float RodLength = RuleR(Watermap, FishingRodLength);
@@ -185,11 +215,11 @@ bool Client::CanFish() {
 		const float LineExtension = RuleR(Watermap, FishingLineExtension);
 		int HeadingDegrees;
 
-		HeadingDegrees = (int) ((GetHeading()*360)/256);
+		HeadingDegrees = (int)((GetHeading() * 360) / 512);
 		HeadingDegrees = HeadingDegrees % 360;
 
-		rodPosition.x = m_Position.x + RodLength * sin(HeadingDegrees * M_PI/180.0f);
-		rodPosition.y = m_Position.y + RodLength * cos(HeadingDegrees * M_PI/180.0f);
+		rodPosition.x = m_Position.x + RodLength * sin(HeadingDegrees * M_PI / 180.0f);
+		rodPosition.y = m_Position.y + RodLength * cos(HeadingDegrees * M_PI / 180.0f);
 
 		glm::vec3 dest;
 		dest.x = rodPosition.x;
@@ -207,45 +237,46 @@ bool Client::CanFish() {
 		bool in_lava = zone->watermap->InLava(rodPosition);
 		bool in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
 		if (GetZoneID() == powater) {
-			if (zone->IsWaterZone(rodPosition.z))
+			if (zone->IsWaterZone(rodPosition.z)) {
 				in_water = true;
-			else
+			} else {
 				in_water = false;
+			}
 		}
 		Log(Logs::General, Logs::Maps, "Fishing Rod is at %4.3f, %4.3f, %4.3f (dest.z: %4.3f), InWater says %d, InLava says %d Region is: %d RodLength: %f LineLength: %f", rodPosition.x, rodPosition.y, rodPosition.z, dest.z, in_water, in_lava, zone->watermap->ReturnRegionType(rodPosition), RodLength, LineLength);
 		if (in_lava) {
 			Message_StringID(MT_Skills, FISHING_LAVA);	//Trying to catch a fire elemental or something?
 			return false;
 		}
-		if(!in_water) {
+		if (!in_water) {
 			// Our line may be too long, and we are going underworld. Reel our line in, and try again.
-			rodPosition.z = dest.z - (LineLength/2);
+			rodPosition.z = dest.z - (LineLength / 2);
 			in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
 			if (GetZoneID() == powater) {
-				if (zone->IsWaterZone(rodPosition.z))
+				if (zone->IsWaterZone(rodPosition.z)) {
 					in_water = true;
-				else
+				} else {
 					in_water = false;
+				}
 			}
 
 			Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rodPosition.z, in_water);
 
-			if(!in_water)
-			{
+			if (!in_water) {
 				// Our line may be too short. Reel our line out using extension, and try again
-				rodPosition.z = dest.z - (LineLength+LineExtension);
+				rodPosition.z = dest.z - (LineLength + LineExtension);
 				in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
 
 				if (GetZoneID() == powater) {
-					if (zone->IsWaterZone(rodPosition.z))
+					if (zone->IsWaterZone(rodPosition.z)) {
 						in_water = true;
-					else
+					} else {
 						in_water = false;
+					}
 				}
 				Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rodPosition.z, in_water);
 
-				if(!in_water) 
-				{
+				if (!in_water) {
 					Message_StringID(MT_Skills, FISHING_LAND);	//Trying to catch land sharks perhaps?
 					return false;
 				}

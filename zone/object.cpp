@@ -28,6 +28,7 @@
 #include "zonedb.h"
 #include "string_ids.h"
 #include "queryserv.h"
+#include "../common/repositories/criteria/content_filter_criteria.h"
 
 #include <iostream>
 
@@ -741,8 +742,9 @@ uint32 ZoneDatabase::AddObject(uint32 type, uint32 icon, const Object_Struct& ob
 	}
 
     // Save container contents, if container
-    if (inst && inst->IsType(EQ::item::ItemClassBag))
-        SaveWorldContainer(object.zone_id, database_id, inst);
+	if (inst && inst->IsType(EQ::item::ItemClassBag)) {
+		SaveWorldContainer(object.zone_id, database_id, inst);
+	}
 
 	return database_id;
 }
@@ -784,12 +786,17 @@ void ZoneDatabase::UpdateObject(uint32 id, uint32 type, uint32 icon, const Objec
 
 Ground_Spawns* ZoneDatabase::LoadGroundSpawns(uint32 zone_id, Ground_Spawns* gs) {
 
-	std::string query = StringFormat("SELECT max_x, max_y, max_z, "
-                                    "min_x, min_y, heading, name, "
-                                    "item, max_allowed, respawn_timer "
-                                    "FROM ground_spawns "
-                                    "WHERE zoneid = %i AND ((%.2f >= min_expansion AND %.2f < max_expansion) OR (min_expansion = 0 AND max_expansion = 0)) "
-                                    "LIMIT 50", zone_id, RuleR(World, CurrentExpansion), RuleR(World, CurrentExpansion));
+	std::string query = StringFormat(
+		"SELECT max_x, max_y, max_z, "
+        "min_x, min_y, heading, name, "
+        "item, max_allowed, respawn_timer "
+        "FROM ground_spawns "
+        "WHERE zoneid = %i %s"
+        "LIMIT 50", 
+		zone_id,
+		ContentFilterCriteria::apply().c_str()
+		);
+		
     auto results = QueryDatabase(query);
     if (!results.Success()) {
 		return gs;

@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseSkillCapsRepository {
 public:
 	struct SkillCaps {
@@ -132,11 +131,11 @@ public:
 		if (results.RowCount() == 1) {
 			SkillCaps e{};
 
-			e.skillID = static_cast<uint8_t>(strtoul(row[0], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.level   = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.cap     = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
+			e.skillID = row[0] ? static_cast<uint8_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.class_  = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.level   = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.cap     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.class_  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -268,11 +267,11 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			SkillCaps e{};
 
-			e.skillID = static_cast<uint8_t>(strtoul(row[0], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.level   = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.cap     = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
+			e.skillID = row[0] ? static_cast<uint8_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.class_  = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.level   = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.cap     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.class_  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -297,11 +296,11 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			SkillCaps e{};
 
-			e.skillID = static_cast<uint8_t>(strtoul(row[0], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.level   = static_cast<uint8_t>(strtoul(row[2], nullptr, 10));
-			e.cap     = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.class_  = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
+			e.skillID = row[0] ? static_cast<uint8_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.class_  = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.level   = row[2] ? static_cast<uint8_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.cap     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.class_  = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

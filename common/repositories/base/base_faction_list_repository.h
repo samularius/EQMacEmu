@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseFactionListRepository {
 public:
 	struct FactionList {
@@ -136,12 +135,12 @@ public:
 		if (results.RowCount() == 1) {
 			FactionList e{};
 
-			e.id           = static_cast<int32_t>(atoi(row[0]));
+			e.id           = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name         = row[1] ? row[1] : "";
-			e.base         = static_cast<int16_t>(atoi(row[2]));
-			e.see_illusion = static_cast<int8_t>(atoi(row[3]));
-			e.min_cap      = static_cast<int16_t>(atoi(row[4]));
-			e.max_cap      = static_cast<int16_t>(atoi(row[5]));
+			e.base         = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.see_illusion = row[3] ? static_cast<int8_t>(atoi(row[3])) : 1;
+			e.min_cap      = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.max_cap      = row[5] ? static_cast<int16_t>(atoi(row[5])) : 0;
 
 			return e;
 		}
@@ -276,12 +275,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			FactionList e{};
 
-			e.id           = static_cast<int32_t>(atoi(row[0]));
+			e.id           = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name         = row[1] ? row[1] : "";
-			e.base         = static_cast<int16_t>(atoi(row[2]));
-			e.see_illusion = static_cast<int8_t>(atoi(row[3]));
-			e.min_cap      = static_cast<int16_t>(atoi(row[4]));
-			e.max_cap      = static_cast<int16_t>(atoi(row[5]));
+			e.base         = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.see_illusion = row[3] ? static_cast<int8_t>(atoi(row[3])) : 1;
+			e.min_cap      = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.max_cap      = row[5] ? static_cast<int16_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -306,12 +305,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			FactionList e{};
 
-			e.id           = static_cast<int32_t>(atoi(row[0]));
+			e.id           = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.name         = row[1] ? row[1] : "";
-			e.base         = static_cast<int16_t>(atoi(row[2]));
-			e.see_illusion = static_cast<int8_t>(atoi(row[3]));
-			e.min_cap      = static_cast<int16_t>(atoi(row[4]));
-			e.max_cap      = static_cast<int16_t>(atoi(row[5]));
+			e.base         = row[2] ? static_cast<int16_t>(atoi(row[2])) : 0;
+			e.see_illusion = row[3] ? static_cast<int8_t>(atoi(row[3])) : 1;
+			e.min_cap      = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.max_cap      = row[5] ? static_cast<int16_t>(atoi(row[5])) : 0;
 
 			all_entries.push_back(e);
 		}

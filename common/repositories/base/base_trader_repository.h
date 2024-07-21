@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseTraderRepository {
 public:
 	struct Trader {
@@ -136,12 +135,12 @@ public:
 		if (results.RowCount() == 1) {
 			Trader e{};
 
-			e.char_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id   = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.i_slotid  = static_cast<int32_t>(atoi(row[2]));
-			e.charges   = static_cast<int32_t>(atoi(row[3]));
-			e.item_cost = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.slot_id   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
+			e.char_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id   = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.i_slotid  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.charges   = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.item_cost = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.slot_id   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -276,12 +275,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Trader e{};
 
-			e.char_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id   = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.i_slotid  = static_cast<int32_t>(atoi(row[2]));
-			e.charges   = static_cast<int32_t>(atoi(row[3]));
-			e.item_cost = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.slot_id   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
+			e.char_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id   = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.i_slotid  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.charges   = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.item_cost = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.slot_id   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -306,12 +305,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Trader e{};
 
-			e.char_id   = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.item_id   = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.i_slotid  = static_cast<int32_t>(atoi(row[2]));
-			e.charges   = static_cast<int32_t>(atoi(row[3]));
-			e.item_cost = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.slot_id   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
+			e.char_id   = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.item_id   = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.i_slotid  = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.charges   = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.item_cost = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.slot_id   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

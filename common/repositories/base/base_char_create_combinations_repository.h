@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharCreateCombinationsRepository {
 public:
 	struct CharCreateCombinations {
@@ -136,12 +135,12 @@ public:
 		if (results.RowCount() == 1) {
 			CharCreateCombinations e{};
 
-			e.allocation_id  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.race           = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.class_         = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.deity          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.start_zone     = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.expansions_req = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
+			e.allocation_id  = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.race           = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.class_         = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.deity          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.start_zone     = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.expansions_req = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -276,12 +275,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharCreateCombinations e{};
 
-			e.allocation_id  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.race           = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.class_         = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.deity          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.start_zone     = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.expansions_req = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
+			e.allocation_id  = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.race           = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.class_         = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.deity          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.start_zone     = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.expansions_req = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -306,12 +305,12 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharCreateCombinations e{};
 
-			e.allocation_id  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.race           = static_cast<uint32_t>(strtoul(row[1], nullptr, 10));
-			e.class_         = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.deity          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.start_zone     = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.expansions_req = static_cast<uint32_t>(strtoul(row[5], nullptr, 10));
+			e.allocation_id  = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.race           = row[1] ? static_cast<uint32_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.class_         = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.deity          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.start_zone     = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.expansions_req = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

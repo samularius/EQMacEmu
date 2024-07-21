@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BasePetsRepository {
 public:
 	struct Pets {
@@ -145,13 +144,13 @@ public:
 			Pets e{};
 
 			e.type         = row[0] ? row[0] : "";
-			e.petpower     = static_cast<int32_t>(atoi(row[1]));
-			e.npcID        = static_cast<int32_t>(atoi(row[2]));
-			e.temp         = static_cast<int8_t>(atoi(row[3]));
-			e.petcontrol   = static_cast<int8_t>(atoi(row[4]));
-			e.petnaming    = static_cast<int8_t>(atoi(row[5]));
-			e.monsterflag  = static_cast<int8_t>(atoi(row[6]));
-			e.equipmentset = static_cast<int32_t>(atoi(row[7]));
+			e.petpower     = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.npcID        = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.temp         = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.petcontrol   = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.petnaming    = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.monsterflag  = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.equipmentset = row[7] ? static_cast<int32_t>(atoi(row[7])) : -1;
 
 			return e;
 		}
@@ -293,13 +292,13 @@ public:
 			Pets e{};
 
 			e.type         = row[0] ? row[0] : "";
-			e.petpower     = static_cast<int32_t>(atoi(row[1]));
-			e.npcID        = static_cast<int32_t>(atoi(row[2]));
-			e.temp         = static_cast<int8_t>(atoi(row[3]));
-			e.petcontrol   = static_cast<int8_t>(atoi(row[4]));
-			e.petnaming    = static_cast<int8_t>(atoi(row[5]));
-			e.monsterflag  = static_cast<int8_t>(atoi(row[6]));
-			e.equipmentset = static_cast<int32_t>(atoi(row[7]));
+			e.petpower     = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.npcID        = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.temp         = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.petcontrol   = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.petnaming    = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.monsterflag  = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.equipmentset = row[7] ? static_cast<int32_t>(atoi(row[7])) : -1;
 
 			all_entries.push_back(e);
 		}
@@ -325,13 +324,13 @@ public:
 			Pets e{};
 
 			e.type         = row[0] ? row[0] : "";
-			e.petpower     = static_cast<int32_t>(atoi(row[1]));
-			e.npcID        = static_cast<int32_t>(atoi(row[2]));
-			e.temp         = static_cast<int8_t>(atoi(row[3]));
-			e.petcontrol   = static_cast<int8_t>(atoi(row[4]));
-			e.petnaming    = static_cast<int8_t>(atoi(row[5]));
-			e.monsterflag  = static_cast<int8_t>(atoi(row[6]));
-			e.equipmentset = static_cast<int32_t>(atoi(row[7]));
+			e.petpower     = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.npcID        = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.temp         = row[3] ? static_cast<int8_t>(atoi(row[3])) : 0;
+			e.petcontrol   = row[4] ? static_cast<int8_t>(atoi(row[4])) : 0;
+			e.petnaming    = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.monsterflag  = row[6] ? static_cast<int8_t>(atoi(row[6])) : 0;
+			e.equipmentset = row[7] ? static_cast<int32_t>(atoi(row[7])) : -1;
 
 			all_entries.push_back(e);
 		}

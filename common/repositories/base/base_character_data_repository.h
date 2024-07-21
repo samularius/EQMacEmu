@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseCharacterDataRepository {
 public:
 	struct CharacterData {
@@ -55,8 +54,9 @@ public:
 		uint32_t    aa_exp;
 		uint32_t    aa_points;
 		uint32_t    points;
-		uint32_t    cur_hp;
+		int32_t     cur_hp;
 		uint32_t    mana;
+		uint32_t    endurance;
 		uint32_t    intoxication;
 		uint32_t    str;
 		uint32_t    sta;
@@ -78,11 +78,20 @@ public:
 		uint32_t    e_expended_aa_spent;
 		uint32_t    boatid;
 		std::string boatname;
+		int32_t     famished;
 		int8_t      is_deleted;
 		int8_t      showhelm;
-		int8_t      fatigue;
-		uint8_t     magelo_perms;
-		int32_t     zone_instance;
+		int32_t     fatigue;
+		int8_t      e_self_found;
+		int8_t      e_solo_only;
+		int8_t      e_hardcore;
+		int64_t     e_hardcore_death_time;
+		uint8_t     e_betabuff_gear_flag;
+		uint8_t     e_bigger_wolves;
+		uint32_t    e_zone_guild_id;
+		std::string e_temp_last_name;
+		int32_t     e_married_character_id;
+		uint8_t     e_char_export_flag;
 	};
 
 	static std::string PrimaryKey()
@@ -130,6 +139,7 @@ public:
 			"points",
 			"cur_hp",
 			"mana",
+			"endurance",
 			"intoxication",
 			"str",
 			"sta",
@@ -151,11 +161,20 @@ public:
 			"e_expended_aa_spent",
 			"boatid",
 			"boatname",
+			"famished",
 			"is_deleted",
 			"showhelm",
 			"fatigue",
-			"magelo_perms",
-			"zone_instance",
+			"e_self_found",
+			"e_solo_only",
+			"e_hardcore",
+			"e_hardcore_death_time",
+			"e_betabuff_gear_flag",
+			"e_bigger_wolves",
+			"e_zone_guild_id",
+			"e_temp_last_name",
+			"e_married_character_id",
+			"e_char_export_flag",
 		};
 	}
 
@@ -199,6 +218,7 @@ public:
 			"points",
 			"cur_hp",
 			"mana",
+			"endurance",
 			"intoxication",
 			"str",
 			"sta",
@@ -220,11 +240,20 @@ public:
 			"e_expended_aa_spent",
 			"boatid",
 			"boatname",
+			"famished",
 			"is_deleted",
 			"showhelm",
 			"fatigue",
-			"magelo_perms",
-			"zone_instance",
+			"e_self_found",
+			"e_solo_only",
+			"e_hardcore",
+			"e_hardcore_death_time",
+			"e_betabuff_gear_flag",
+			"e_bigger_wolves",
+			"e_zone_guild_id",
+			"e_temp_last_name",
+			"e_married_character_id",
+			"e_char_export_flag",
 		};
 	}
 
@@ -265,69 +294,79 @@ public:
 	{
 		CharacterData e{};
 
-		e.id                  = 0;
-		e.account_id          = 0;
-		e.forum_id            = 0;
-		e.name                = "";
-		e.last_name           = "";
-		e.title               = "";
-		e.suffix              = "";
-		e.zone_id             = 0;
-		e.y                   = 0;
-		e.x                   = 0;
-		e.z                   = 0;
-		e.heading             = 0;
-		e.gender              = 0;
-		e.race                = 0;
-		e.class_              = 0;
-		e.level               = 0;
-		e.deity               = 0;
-		e.birthday            = 0;
-		e.last_login          = 0;
-		e.time_played         = 0;
-		e.level2              = 0;
-		e.anon                = 0;
-		e.gm                  = 0;
-		e.face                = 0;
-		e.hair_color          = 0;
-		e.hair_style          = 0;
-		e.beard               = 0;
-		e.beard_color         = 0;
-		e.eye_color_1         = 0;
-		e.eye_color_2         = 0;
-		e.exp                 = 0;
-		e.aa_points_spent     = 0;
-		e.aa_exp              = 0;
-		e.aa_points           = 0;
-		e.points              = 0;
-		e.cur_hp              = 0;
-		e.mana                = 0;
-		e.intoxication        = 0;
-		e.str                 = 0;
-		e.sta                 = 0;
-		e.cha                 = 0;
-		e.dex                 = 0;
-		e.int_                = 0;
-		e.agi                 = 0;
-		e.wis                 = 0;
-		e.zone_change_count   = 0;
-		e.hunger_level        = 0;
-		e.thirst_level        = 0;
-		e.pvp_status          = 0;
-		e.air_remaining       = 0;
-		e.autosplit_enabled   = 0;
-		e.mailkey             = "";
-		e.firstlogon          = 0;
-		e.e_aa_effects        = 0;
-		e.e_percent_to_aa     = 0;
-		e.e_expended_aa_spent = 0;
-		e.boatid              = 0;
-		e.boatname            = "";
-		e.is_deleted          = 0;
-		e.showhelm            = 0;
-		e.fatigue             = 0;
-		e.magelo_perms        = 0;
-		e.zone_instance       = 0;
+		e.id                     = 0;
+		e.account_id             = 0;
+		e.forum_id               = 0;
+		e.name                   = "";
+		e.last_name              = "";
+		e.title                  = "";
+		e.suffix                 = "";
+		e.zone_id                = 0;
+		e.y                      = 0;
+		e.x                      = 0;
+		e.z                      = 0;
+		e.heading                = 0;
+		e.gender                 = 0;
+		e.race                   = 0;
+		e.class_                 = 0;
+		e.level                  = 0;
+		e.deity                  = 0;
+		e.birthday               = 0;
+		e.last_login             = 0;
+		e.time_played            = 0;
+		e.level2                 = 0;
+		e.anon                   = 0;
+		e.gm                     = 0;
+		e.face                   = 0;
+		e.hair_color             = 0;
+		e.hair_style             = 0;
+		e.beard                  = 0;
+		e.beard_color            = 0;
+		e.eye_color_1            = 0;
+		e.eye_color_2            = 0;
+		e.exp                    = 0;
+		e.aa_points_spent        = 0;
+		e.aa_exp                 = 0;
+		e.aa_points              = 0;
+		e.points                 = 0;
+		e.cur_hp                 = 0;
+		e.mana                   = 0;
+		e.endurance              = 0;
+		e.intoxication           = 0;
+		e.str                    = 0;
+		e.sta                    = 0;
+		e.cha                    = 0;
+		e.dex                    = 0;
+		e.int_                   = 0;
+		e.agi                    = 0;
+		e.wis                    = 0;
+		e.zone_change_count      = 0;
+		e.hunger_level           = 0;
+		e.thirst_level           = 0;
+		e.pvp_status             = 0;
+		e.air_remaining          = 0;
+		e.autosplit_enabled      = 0;
+		e.mailkey                = "";
+		e.firstlogon             = 0;
+		e.e_aa_effects           = 0;
+		e.e_percent_to_aa        = 0;
+		e.e_expended_aa_spent    = 0;
+		e.boatid                 = 0;
+		e.boatname               = "";
+		e.famished               = 0;
+		e.is_deleted             = 0;
+		e.showhelm               = 1;
+		e.fatigue                = 0;
+		e.e_self_found           = 0;
+		e.e_solo_only            = 0;
+		e.e_hardcore             = 0;
+		e.e_hardcore_death_time  = 0;
+		e.e_betabuff_gear_flag   = 0;
+		e.e_bigger_wolves        = 0;
+		e.e_zone_guild_id        = 4294967295;
+		e.e_temp_last_name       = "";
+		e.e_married_character_id = 0;
+		e.e_char_export_flag     = 0;
 
 		return e;
 	}
@@ -364,69 +403,79 @@ public:
 		if (results.RowCount() == 1) {
 			CharacterData e{};
 
-			e.id                  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.account_id          = static_cast<int32_t>(atoi(row[1]));
-			e.forum_id            = static_cast<int32_t>(atoi(row[2]));
-			e.name                = row[3] ? row[3] : "";
-			e.last_name           = row[4] ? row[4] : "";
-			e.title               = row[5] ? row[5] : "";
-			e.suffix              = row[6] ? row[6] : "";
-			e.zone_id             = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.y                   = strtof(row[8], nullptr);
-			e.x                   = strtof(row[9], nullptr);
-			e.z                   = strtof(row[10], nullptr);
-			e.heading             = strtof(row[11], nullptr);
-			e.gender              = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.race                = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.class_              = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.level               = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.deity               = static_cast<uint32_t>(strtoul(row[16], nullptr, 10));
-			e.birthday            = static_cast<uint32_t>(strtoul(row[17], nullptr, 10));
-			e.last_login          = static_cast<uint32_t>(strtoul(row[18], nullptr, 10));
-			e.time_played         = static_cast<uint32_t>(strtoul(row[19], nullptr, 10));
-			e.level2              = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.anon                = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.gm                  = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.face                = static_cast<uint32_t>(strtoul(row[23], nullptr, 10));
-			e.hair_color          = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.hair_style          = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.beard               = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.beard_color         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.eye_color_1         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
-			e.eye_color_2         = static_cast<uint8_t>(strtoul(row[29], nullptr, 10));
-			e.exp                 = static_cast<uint32_t>(strtoul(row[30], nullptr, 10));
-			e.aa_points_spent     = static_cast<uint32_t>(strtoul(row[31], nullptr, 10));
-			e.aa_exp              = static_cast<uint32_t>(strtoul(row[32], nullptr, 10));
-			e.aa_points           = static_cast<uint32_t>(strtoul(row[33], nullptr, 10));
-			e.points              = static_cast<uint32_t>(strtoul(row[34], nullptr, 10));
-			e.cur_hp              = static_cast<uint32_t>(strtoul(row[35], nullptr, 10));
-			e.mana                = static_cast<uint32_t>(strtoul(row[36], nullptr, 10));
-			e.intoxication        = static_cast<uint32_t>(strtoul(row[37], nullptr, 10));
-			e.str                 = static_cast<uint32_t>(strtoul(row[38], nullptr, 10));
-			e.sta                 = static_cast<uint32_t>(strtoul(row[39], nullptr, 10));
-			e.cha                 = static_cast<uint32_t>(strtoul(row[40], nullptr, 10));
-			e.dex                 = static_cast<uint32_t>(strtoul(row[41], nullptr, 10));
-			e.int_                = static_cast<uint32_t>(strtoul(row[42], nullptr, 10));
-			e.agi                 = static_cast<uint32_t>(strtoul(row[43], nullptr, 10));
-			e.wis                 = static_cast<uint32_t>(strtoul(row[44], nullptr, 10));
-			e.zone_change_count   = static_cast<uint32_t>(strtoul(row[45], nullptr, 10));
-			e.hunger_level        = static_cast<uint32_t>(strtoul(row[46], nullptr, 10));
-			e.thirst_level        = static_cast<uint32_t>(strtoul(row[47], nullptr, 10));
-			e.pvp_status          = static_cast<uint8_t>(strtoul(row[48], nullptr, 10));
-			e.air_remaining       = static_cast<uint32_t>(strtoul(row[49], nullptr, 10));
-			e.autosplit_enabled   = static_cast<uint32_t>(strtoul(row[50], nullptr, 10));
-			e.mailkey             = row[51] ? row[51] : "";
-			e.firstlogon          = static_cast<int8_t>(atoi(row[52]));
-			e.e_aa_effects        = static_cast<uint32_t>(strtoul(row[53], nullptr, 10));
-			e.e_percent_to_aa     = static_cast<uint32_t>(strtoul(row[54], nullptr, 10));
-			e.e_expended_aa_spent = static_cast<uint32_t>(strtoul(row[55], nullptr, 10));
-			e.boatid              = static_cast<uint32_t>(strtoul(row[56], nullptr, 10));
-			e.boatname            = row[57] ? row[57] : "";
-			e.is_deleted          = static_cast<int8_t>(atoi(row[58]));
-			e.showhelm            = static_cast<int8_t>(atoi(row[59]));
-			e.fatigue             = static_cast<int8_t>(atoi(row[60]));
-			e.magelo_perms        = static_cast<uint8_t>(strtoul(row[61], nullptr, 10));
-			e.zone_instance       = static_cast<int32_t>(atoi(row[62]));
+			e.id                     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.account_id             = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.forum_id               = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.name                   = row[3] ? row[3] : "";
+			e.last_name              = row[4] ? row[4] : "";
+			e.title                  = row[5] ? row[5] : "";
+			e.suffix                 = row[6] ? row[6] : "";
+			e.zone_id                = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.y                      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.x                      = row[9] ? strtof(row[9], nullptr) : 0;
+			e.z                      = row[10] ? strtof(row[10], nullptr) : 0;
+			e.heading                = row[11] ? strtof(row[11], nullptr) : 0;
+			e.gender                 = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.race                   = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.class_                 = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.level                  = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.deity                  = row[16] ? static_cast<uint32_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.birthday               = row[17] ? static_cast<uint32_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.last_login             = row[18] ? static_cast<uint32_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.time_played            = row[19] ? static_cast<uint32_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.level2                 = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.anon                   = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.gm                     = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.face                   = row[23] ? static_cast<uint32_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.hair_color             = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.hair_style             = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.beard                  = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.beard_color            = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.eye_color_1            = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
+			e.eye_color_2            = row[29] ? static_cast<uint8_t>(strtoul(row[29], nullptr, 10)) : 0;
+			e.exp                    = row[30] ? static_cast<uint32_t>(strtoul(row[30], nullptr, 10)) : 0;
+			e.aa_points_spent        = row[31] ? static_cast<uint32_t>(strtoul(row[31], nullptr, 10)) : 0;
+			e.aa_exp                 = row[32] ? static_cast<uint32_t>(strtoul(row[32], nullptr, 10)) : 0;
+			e.aa_points              = row[33] ? static_cast<uint32_t>(strtoul(row[33], nullptr, 10)) : 0;
+			e.points                 = row[34] ? static_cast<uint32_t>(strtoul(row[34], nullptr, 10)) : 0;
+			e.cur_hp                 = row[35] ? static_cast<int32_t>(atoi(row[35])) : 0;
+			e.mana                   = row[36] ? static_cast<uint32_t>(strtoul(row[36], nullptr, 10)) : 0;
+			e.endurance              = row[37] ? static_cast<uint32_t>(strtoul(row[37], nullptr, 10)) : 0;
+			e.intoxication           = row[38] ? static_cast<uint32_t>(strtoul(row[38], nullptr, 10)) : 0;
+			e.str                    = row[39] ? static_cast<uint32_t>(strtoul(row[39], nullptr, 10)) : 0;
+			e.sta                    = row[40] ? static_cast<uint32_t>(strtoul(row[40], nullptr, 10)) : 0;
+			e.cha                    = row[41] ? static_cast<uint32_t>(strtoul(row[41], nullptr, 10)) : 0;
+			e.dex                    = row[42] ? static_cast<uint32_t>(strtoul(row[42], nullptr, 10)) : 0;
+			e.int_                   = row[43] ? static_cast<uint32_t>(strtoul(row[43], nullptr, 10)) : 0;
+			e.agi                    = row[44] ? static_cast<uint32_t>(strtoul(row[44], nullptr, 10)) : 0;
+			e.wis                    = row[45] ? static_cast<uint32_t>(strtoul(row[45], nullptr, 10)) : 0;
+			e.zone_change_count      = row[46] ? static_cast<uint32_t>(strtoul(row[46], nullptr, 10)) : 0;
+			e.hunger_level           = row[47] ? static_cast<uint32_t>(strtoul(row[47], nullptr, 10)) : 0;
+			e.thirst_level           = row[48] ? static_cast<uint32_t>(strtoul(row[48], nullptr, 10)) : 0;
+			e.pvp_status             = row[49] ? static_cast<uint8_t>(strtoul(row[49], nullptr, 10)) : 0;
+			e.air_remaining          = row[50] ? static_cast<uint32_t>(strtoul(row[50], nullptr, 10)) : 0;
+			e.autosplit_enabled      = row[51] ? static_cast<uint32_t>(strtoul(row[51], nullptr, 10)) : 0;
+			e.mailkey                = row[52] ? row[52] : "";
+			e.firstlogon             = row[53] ? static_cast<int8_t>(atoi(row[53])) : 0;
+			e.e_aa_effects           = row[54] ? static_cast<uint32_t>(strtoul(row[54], nullptr, 10)) : 0;
+			e.e_percent_to_aa        = row[55] ? static_cast<uint32_t>(strtoul(row[55], nullptr, 10)) : 0;
+			e.e_expended_aa_spent    = row[56] ? static_cast<uint32_t>(strtoul(row[56], nullptr, 10)) : 0;
+			e.boatid                 = row[57] ? static_cast<uint32_t>(strtoul(row[57], nullptr, 10)) : 0;
+			e.boatname               = row[58] ? row[58] : "";
+			e.famished               = row[59] ? static_cast<int32_t>(atoi(row[59])) : 0;
+			e.is_deleted             = row[60] ? static_cast<int8_t>(atoi(row[60])) : 0;
+			e.showhelm               = row[61] ? static_cast<int8_t>(atoi(row[61])) : 1;
+			e.fatigue                = row[62] ? static_cast<int32_t>(atoi(row[62])) : 0;
+			e.e_self_found           = row[63] ? static_cast<int8_t>(atoi(row[63])) : 0;
+			e.e_solo_only            = row[64] ? static_cast<int8_t>(atoi(row[64])) : 0;
+			e.e_hardcore             = row[65] ? static_cast<int8_t>(atoi(row[65])) : 0;
+			e.e_hardcore_death_time  = row[66] ? strtoll(row[66], nullptr, 10) : 0;
+			e.e_betabuff_gear_flag   = row[67] ? static_cast<uint8_t>(strtoul(row[67], nullptr, 10)) : 0;
+			e.e_bigger_wolves        = row[68] ? static_cast<uint8_t>(strtoul(row[68], nullptr, 10)) : 0;
+			e.e_zone_guild_id        = row[69] ? static_cast<uint32_t>(strtoul(row[69], nullptr, 10)) : 4294967295;
+			e.e_temp_last_name       = row[70] ? row[70] : "";
+			e.e_married_character_id = row[71] ? static_cast<int32_t>(atoi(row[71])) : 0;
+			e.e_char_export_flag     = row[72] ? static_cast<uint8_t>(strtoul(row[72], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -496,32 +545,42 @@ public:
 		v.push_back(columns[34] + " = " + std::to_string(e.points));
 		v.push_back(columns[35] + " = " + std::to_string(e.cur_hp));
 		v.push_back(columns[36] + " = " + std::to_string(e.mana));
-		v.push_back(columns[37] + " = " + std::to_string(e.intoxication));
-		v.push_back(columns[38] + " = " + std::to_string(e.str));
-		v.push_back(columns[39] + " = " + std::to_string(e.sta));
-		v.push_back(columns[40] + " = " + std::to_string(e.cha));
-		v.push_back(columns[41] + " = " + std::to_string(e.dex));
-		v.push_back(columns[42] + " = " + std::to_string(e.int_));
-		v.push_back(columns[43] + " = " + std::to_string(e.agi));
-		v.push_back(columns[44] + " = " + std::to_string(e.wis));
-		v.push_back(columns[45] + " = " + std::to_string(e.zone_change_count));
-		v.push_back(columns[46] + " = " + std::to_string(e.hunger_level));
-		v.push_back(columns[47] + " = " + std::to_string(e.thirst_level));
-		v.push_back(columns[48] + " = " + std::to_string(e.pvp_status));
-		v.push_back(columns[49] + " = " + std::to_string(e.air_remaining));
-		v.push_back(columns[50] + " = " + std::to_string(e.autosplit_enabled));
-		v.push_back(columns[51] + " = '" + Strings::Escape(e.mailkey) + "'");
-		v.push_back(columns[52] + " = " + std::to_string(e.firstlogon));
-		v.push_back(columns[53] + " = " + std::to_string(e.e_aa_effects));
-		v.push_back(columns[54] + " = " + std::to_string(e.e_percent_to_aa));
-		v.push_back(columns[55] + " = " + std::to_string(e.e_expended_aa_spent));
-		v.push_back(columns[56] + " = " + std::to_string(e.boatid));
-		v.push_back(columns[57] + " = '" + Strings::Escape(e.boatname) + "'");
-		v.push_back(columns[58] + " = " + std::to_string(e.is_deleted));
-		v.push_back(columns[59] + " = " + std::to_string(e.showhelm));
-		v.push_back(columns[60] + " = " + std::to_string(e.fatigue));
-		v.push_back(columns[61] + " = " + std::to_string(e.magelo_perms));
-		v.push_back(columns[62] + " = " + std::to_string(e.zone_instance));
+		v.push_back(columns[37] + " = " + std::to_string(e.endurance));
+		v.push_back(columns[38] + " = " + std::to_string(e.intoxication));
+		v.push_back(columns[39] + " = " + std::to_string(e.str));
+		v.push_back(columns[40] + " = " + std::to_string(e.sta));
+		v.push_back(columns[41] + " = " + std::to_string(e.cha));
+		v.push_back(columns[42] + " = " + std::to_string(e.dex));
+		v.push_back(columns[43] + " = " + std::to_string(e.int_));
+		v.push_back(columns[44] + " = " + std::to_string(e.agi));
+		v.push_back(columns[45] + " = " + std::to_string(e.wis));
+		v.push_back(columns[46] + " = " + std::to_string(e.zone_change_count));
+		v.push_back(columns[47] + " = " + std::to_string(e.hunger_level));
+		v.push_back(columns[48] + " = " + std::to_string(e.thirst_level));
+		v.push_back(columns[49] + " = " + std::to_string(e.pvp_status));
+		v.push_back(columns[50] + " = " + std::to_string(e.air_remaining));
+		v.push_back(columns[51] + " = " + std::to_string(e.autosplit_enabled));
+		v.push_back(columns[52] + " = '" + Strings::Escape(e.mailkey) + "'");
+		v.push_back(columns[53] + " = " + std::to_string(e.firstlogon));
+		v.push_back(columns[54] + " = " + std::to_string(e.e_aa_effects));
+		v.push_back(columns[55] + " = " + std::to_string(e.e_percent_to_aa));
+		v.push_back(columns[56] + " = " + std::to_string(e.e_expended_aa_spent));
+		v.push_back(columns[57] + " = " + std::to_string(e.boatid));
+		v.push_back(columns[58] + " = '" + Strings::Escape(e.boatname) + "'");
+		v.push_back(columns[59] + " = " + std::to_string(e.famished));
+		v.push_back(columns[60] + " = " + std::to_string(e.is_deleted));
+		v.push_back(columns[61] + " = " + std::to_string(e.showhelm));
+		v.push_back(columns[62] + " = " + std::to_string(e.fatigue));
+		v.push_back(columns[63] + " = " + std::to_string(e.e_self_found));
+		v.push_back(columns[64] + " = " + std::to_string(e.e_solo_only));
+		v.push_back(columns[65] + " = " + std::to_string(e.e_hardcore));
+		v.push_back(columns[66] + " = " + std::to_string(e.e_hardcore_death_time));
+		v.push_back(columns[67] + " = " + std::to_string(e.e_betabuff_gear_flag));
+		v.push_back(columns[68] + " = " + std::to_string(e.e_bigger_wolves));
+		v.push_back(columns[69] + " = " + std::to_string(e.e_zone_guild_id));
+		v.push_back(columns[70] + " = '" + Strings::Escape(e.e_temp_last_name) + "'");
+		v.push_back(columns[71] + " = " + std::to_string(e.e_married_character_id));
+		v.push_back(columns[72] + " = " + std::to_string(e.e_char_export_flag));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -580,6 +639,7 @@ public:
 		v.push_back(std::to_string(e.points));
 		v.push_back(std::to_string(e.cur_hp));
 		v.push_back(std::to_string(e.mana));
+		v.push_back(std::to_string(e.endurance));
 		v.push_back(std::to_string(e.intoxication));
 		v.push_back(std::to_string(e.str));
 		v.push_back(std::to_string(e.sta));
@@ -601,11 +661,20 @@ public:
 		v.push_back(std::to_string(e.e_expended_aa_spent));
 		v.push_back(std::to_string(e.boatid));
 		v.push_back("'" + Strings::Escape(e.boatname) + "'");
+		v.push_back(std::to_string(e.famished));
 		v.push_back(std::to_string(e.is_deleted));
 		v.push_back(std::to_string(e.showhelm));
 		v.push_back(std::to_string(e.fatigue));
-		v.push_back(std::to_string(e.magelo_perms));
-		v.push_back(std::to_string(e.zone_instance));
+		v.push_back(std::to_string(e.e_self_found));
+		v.push_back(std::to_string(e.e_solo_only));
+		v.push_back(std::to_string(e.e_hardcore));
+		v.push_back(std::to_string(e.e_hardcore_death_time));
+		v.push_back(std::to_string(e.e_betabuff_gear_flag));
+		v.push_back(std::to_string(e.e_bigger_wolves));
+		v.push_back(std::to_string(e.e_zone_guild_id));
+		v.push_back("'" + Strings::Escape(e.e_temp_last_name) + "'");
+		v.push_back(std::to_string(e.e_married_character_id));
+		v.push_back(std::to_string(e.e_char_export_flag));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -672,6 +741,7 @@ public:
 			v.push_back(std::to_string(e.points));
 			v.push_back(std::to_string(e.cur_hp));
 			v.push_back(std::to_string(e.mana));
+			v.push_back(std::to_string(e.endurance));
 			v.push_back(std::to_string(e.intoxication));
 			v.push_back(std::to_string(e.str));
 			v.push_back(std::to_string(e.sta));
@@ -693,11 +763,20 @@ public:
 			v.push_back(std::to_string(e.e_expended_aa_spent));
 			v.push_back(std::to_string(e.boatid));
 			v.push_back("'" + Strings::Escape(e.boatname) + "'");
+			v.push_back(std::to_string(e.famished));
 			v.push_back(std::to_string(e.is_deleted));
 			v.push_back(std::to_string(e.showhelm));
 			v.push_back(std::to_string(e.fatigue));
-			v.push_back(std::to_string(e.magelo_perms));
-			v.push_back(std::to_string(e.zone_instance));
+			v.push_back(std::to_string(e.e_self_found));
+			v.push_back(std::to_string(e.e_solo_only));
+			v.push_back(std::to_string(e.e_hardcore));
+			v.push_back(std::to_string(e.e_hardcore_death_time));
+			v.push_back(std::to_string(e.e_betabuff_gear_flag));
+			v.push_back(std::to_string(e.e_bigger_wolves));
+			v.push_back(std::to_string(e.e_zone_guild_id));
+			v.push_back("'" + Strings::Escape(e.e_temp_last_name) + "'");
+			v.push_back(std::to_string(e.e_married_character_id));
+			v.push_back(std::to_string(e.e_char_export_flag));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -731,69 +810,79 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterData e{};
 
-			e.id                  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.account_id          = static_cast<int32_t>(atoi(row[1]));
-			e.forum_id            = static_cast<int32_t>(atoi(row[2]));
-			e.name                = row[3] ? row[3] : "";
-			e.last_name           = row[4] ? row[4] : "";
-			e.title               = row[5] ? row[5] : "";
-			e.suffix              = row[6] ? row[6] : "";
-			e.zone_id             = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.y                   = strtof(row[8], nullptr);
-			e.x                   = strtof(row[9], nullptr);
-			e.z                   = strtof(row[10], nullptr);
-			e.heading             = strtof(row[11], nullptr);
-			e.gender              = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.race                = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.class_              = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.level               = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.deity               = static_cast<uint32_t>(strtoul(row[16], nullptr, 10));
-			e.birthday            = static_cast<uint32_t>(strtoul(row[17], nullptr, 10));
-			e.last_login          = static_cast<uint32_t>(strtoul(row[18], nullptr, 10));
-			e.time_played         = static_cast<uint32_t>(strtoul(row[19], nullptr, 10));
-			e.level2              = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.anon                = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.gm                  = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.face                = static_cast<uint32_t>(strtoul(row[23], nullptr, 10));
-			e.hair_color          = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.hair_style          = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.beard               = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.beard_color         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.eye_color_1         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
-			e.eye_color_2         = static_cast<uint8_t>(strtoul(row[29], nullptr, 10));
-			e.exp                 = static_cast<uint32_t>(strtoul(row[30], nullptr, 10));
-			e.aa_points_spent     = static_cast<uint32_t>(strtoul(row[31], nullptr, 10));
-			e.aa_exp              = static_cast<uint32_t>(strtoul(row[32], nullptr, 10));
-			e.aa_points           = static_cast<uint32_t>(strtoul(row[33], nullptr, 10));
-			e.points              = static_cast<uint32_t>(strtoul(row[34], nullptr, 10));
-			e.cur_hp              = static_cast<uint32_t>(strtoul(row[35], nullptr, 10));
-			e.mana                = static_cast<uint32_t>(strtoul(row[36], nullptr, 10));
-			e.intoxication        = static_cast<uint32_t>(strtoul(row[37], nullptr, 10));
-			e.str                 = static_cast<uint32_t>(strtoul(row[38], nullptr, 10));
-			e.sta                 = static_cast<uint32_t>(strtoul(row[39], nullptr, 10));
-			e.cha                 = static_cast<uint32_t>(strtoul(row[40], nullptr, 10));
-			e.dex                 = static_cast<uint32_t>(strtoul(row[41], nullptr, 10));
-			e.int_                = static_cast<uint32_t>(strtoul(row[42], nullptr, 10));
-			e.agi                 = static_cast<uint32_t>(strtoul(row[43], nullptr, 10));
-			e.wis                 = static_cast<uint32_t>(strtoul(row[44], nullptr, 10));
-			e.zone_change_count   = static_cast<uint32_t>(strtoul(row[45], nullptr, 10));
-			e.hunger_level        = static_cast<uint32_t>(strtoul(row[46], nullptr, 10));
-			e.thirst_level        = static_cast<uint32_t>(strtoul(row[47], nullptr, 10));
-			e.pvp_status          = static_cast<uint8_t>(strtoul(row[48], nullptr, 10));
-			e.air_remaining       = static_cast<uint32_t>(strtoul(row[49], nullptr, 10));
-			e.autosplit_enabled   = static_cast<uint32_t>(strtoul(row[50], nullptr, 10));
-			e.mailkey             = row[51] ? row[51] : "";
-			e.firstlogon          = static_cast<int8_t>(atoi(row[52]));
-			e.e_aa_effects        = static_cast<uint32_t>(strtoul(row[53], nullptr, 10));
-			e.e_percent_to_aa     = static_cast<uint32_t>(strtoul(row[54], nullptr, 10));
-			e.e_expended_aa_spent = static_cast<uint32_t>(strtoul(row[55], nullptr, 10));
-			e.boatid              = static_cast<uint32_t>(strtoul(row[56], nullptr, 10));
-			e.boatname            = row[57] ? row[57] : "";
-			e.is_deleted          = static_cast<int8_t>(atoi(row[58]));
-			e.showhelm            = static_cast<int8_t>(atoi(row[59]));
-			e.fatigue             = static_cast<int8_t>(atoi(row[60]));
-			e.magelo_perms        = static_cast<uint8_t>(strtoul(row[61], nullptr, 10));
-			e.zone_instance       = static_cast<int32_t>(atoi(row[62]));
+			e.id                     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.account_id             = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.forum_id               = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.name                   = row[3] ? row[3] : "";
+			e.last_name              = row[4] ? row[4] : "";
+			e.title                  = row[5] ? row[5] : "";
+			e.suffix                 = row[6] ? row[6] : "";
+			e.zone_id                = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.y                      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.x                      = row[9] ? strtof(row[9], nullptr) : 0;
+			e.z                      = row[10] ? strtof(row[10], nullptr) : 0;
+			e.heading                = row[11] ? strtof(row[11], nullptr) : 0;
+			e.gender                 = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.race                   = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.class_                 = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.level                  = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.deity                  = row[16] ? static_cast<uint32_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.birthday               = row[17] ? static_cast<uint32_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.last_login             = row[18] ? static_cast<uint32_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.time_played            = row[19] ? static_cast<uint32_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.level2                 = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.anon                   = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.gm                     = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.face                   = row[23] ? static_cast<uint32_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.hair_color             = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.hair_style             = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.beard                  = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.beard_color            = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.eye_color_1            = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
+			e.eye_color_2            = row[29] ? static_cast<uint8_t>(strtoul(row[29], nullptr, 10)) : 0;
+			e.exp                    = row[30] ? static_cast<uint32_t>(strtoul(row[30], nullptr, 10)) : 0;
+			e.aa_points_spent        = row[31] ? static_cast<uint32_t>(strtoul(row[31], nullptr, 10)) : 0;
+			e.aa_exp                 = row[32] ? static_cast<uint32_t>(strtoul(row[32], nullptr, 10)) : 0;
+			e.aa_points              = row[33] ? static_cast<uint32_t>(strtoul(row[33], nullptr, 10)) : 0;
+			e.points                 = row[34] ? static_cast<uint32_t>(strtoul(row[34], nullptr, 10)) : 0;
+			e.cur_hp                 = row[35] ? static_cast<int32_t>(atoi(row[35])) : 0;
+			e.mana                   = row[36] ? static_cast<uint32_t>(strtoul(row[36], nullptr, 10)) : 0;
+			e.endurance              = row[37] ? static_cast<uint32_t>(strtoul(row[37], nullptr, 10)) : 0;
+			e.intoxication           = row[38] ? static_cast<uint32_t>(strtoul(row[38], nullptr, 10)) : 0;
+			e.str                    = row[39] ? static_cast<uint32_t>(strtoul(row[39], nullptr, 10)) : 0;
+			e.sta                    = row[40] ? static_cast<uint32_t>(strtoul(row[40], nullptr, 10)) : 0;
+			e.cha                    = row[41] ? static_cast<uint32_t>(strtoul(row[41], nullptr, 10)) : 0;
+			e.dex                    = row[42] ? static_cast<uint32_t>(strtoul(row[42], nullptr, 10)) : 0;
+			e.int_                   = row[43] ? static_cast<uint32_t>(strtoul(row[43], nullptr, 10)) : 0;
+			e.agi                    = row[44] ? static_cast<uint32_t>(strtoul(row[44], nullptr, 10)) : 0;
+			e.wis                    = row[45] ? static_cast<uint32_t>(strtoul(row[45], nullptr, 10)) : 0;
+			e.zone_change_count      = row[46] ? static_cast<uint32_t>(strtoul(row[46], nullptr, 10)) : 0;
+			e.hunger_level           = row[47] ? static_cast<uint32_t>(strtoul(row[47], nullptr, 10)) : 0;
+			e.thirst_level           = row[48] ? static_cast<uint32_t>(strtoul(row[48], nullptr, 10)) : 0;
+			e.pvp_status             = row[49] ? static_cast<uint8_t>(strtoul(row[49], nullptr, 10)) : 0;
+			e.air_remaining          = row[50] ? static_cast<uint32_t>(strtoul(row[50], nullptr, 10)) : 0;
+			e.autosplit_enabled      = row[51] ? static_cast<uint32_t>(strtoul(row[51], nullptr, 10)) : 0;
+			e.mailkey                = row[52] ? row[52] : "";
+			e.firstlogon             = row[53] ? static_cast<int8_t>(atoi(row[53])) : 0;
+			e.e_aa_effects           = row[54] ? static_cast<uint32_t>(strtoul(row[54], nullptr, 10)) : 0;
+			e.e_percent_to_aa        = row[55] ? static_cast<uint32_t>(strtoul(row[55], nullptr, 10)) : 0;
+			e.e_expended_aa_spent    = row[56] ? static_cast<uint32_t>(strtoul(row[56], nullptr, 10)) : 0;
+			e.boatid                 = row[57] ? static_cast<uint32_t>(strtoul(row[57], nullptr, 10)) : 0;
+			e.boatname               = row[58] ? row[58] : "";
+			e.famished               = row[59] ? static_cast<int32_t>(atoi(row[59])) : 0;
+			e.is_deleted             = row[60] ? static_cast<int8_t>(atoi(row[60])) : 0;
+			e.showhelm               = row[61] ? static_cast<int8_t>(atoi(row[61])) : 1;
+			e.fatigue                = row[62] ? static_cast<int32_t>(atoi(row[62])) : 0;
+			e.e_self_found           = row[63] ? static_cast<int8_t>(atoi(row[63])) : 0;
+			e.e_solo_only            = row[64] ? static_cast<int8_t>(atoi(row[64])) : 0;
+			e.e_hardcore             = row[65] ? static_cast<int8_t>(atoi(row[65])) : 0;
+			e.e_hardcore_death_time  = row[66] ? strtoll(row[66], nullptr, 10) : 0;
+			e.e_betabuff_gear_flag   = row[67] ? static_cast<uint8_t>(strtoul(row[67], nullptr, 10)) : 0;
+			e.e_bigger_wolves        = row[68] ? static_cast<uint8_t>(strtoul(row[68], nullptr, 10)) : 0;
+			e.e_zone_guild_id        = row[69] ? static_cast<uint32_t>(strtoul(row[69], nullptr, 10)) : 4294967295;
+			e.e_temp_last_name       = row[70] ? row[70] : "";
+			e.e_married_character_id = row[71] ? static_cast<int32_t>(atoi(row[71])) : 0;
+			e.e_char_export_flag     = row[72] ? static_cast<uint8_t>(strtoul(row[72], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -818,69 +907,79 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			CharacterData e{};
 
-			e.id                  = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.account_id          = static_cast<int32_t>(atoi(row[1]));
-			e.forum_id            = static_cast<int32_t>(atoi(row[2]));
-			e.name                = row[3] ? row[3] : "";
-			e.last_name           = row[4] ? row[4] : "";
-			e.title               = row[5] ? row[5] : "";
-			e.suffix              = row[6] ? row[6] : "";
-			e.zone_id             = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.y                   = strtof(row[8], nullptr);
-			e.x                   = strtof(row[9], nullptr);
-			e.z                   = strtof(row[10], nullptr);
-			e.heading             = strtof(row[11], nullptr);
-			e.gender              = static_cast<uint8_t>(strtoul(row[12], nullptr, 10));
-			e.race                = static_cast<uint16_t>(strtoul(row[13], nullptr, 10));
-			e.class_              = static_cast<uint8_t>(strtoul(row[14], nullptr, 10));
-			e.level               = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.deity               = static_cast<uint32_t>(strtoul(row[16], nullptr, 10));
-			e.birthday            = static_cast<uint32_t>(strtoul(row[17], nullptr, 10));
-			e.last_login          = static_cast<uint32_t>(strtoul(row[18], nullptr, 10));
-			e.time_played         = static_cast<uint32_t>(strtoul(row[19], nullptr, 10));
-			e.level2              = static_cast<uint8_t>(strtoul(row[20], nullptr, 10));
-			e.anon                = static_cast<uint8_t>(strtoul(row[21], nullptr, 10));
-			e.gm                  = static_cast<uint8_t>(strtoul(row[22], nullptr, 10));
-			e.face                = static_cast<uint32_t>(strtoul(row[23], nullptr, 10));
-			e.hair_color          = static_cast<uint8_t>(strtoul(row[24], nullptr, 10));
-			e.hair_style          = static_cast<uint8_t>(strtoul(row[25], nullptr, 10));
-			e.beard               = static_cast<uint8_t>(strtoul(row[26], nullptr, 10));
-			e.beard_color         = static_cast<uint8_t>(strtoul(row[27], nullptr, 10));
-			e.eye_color_1         = static_cast<uint8_t>(strtoul(row[28], nullptr, 10));
-			e.eye_color_2         = static_cast<uint8_t>(strtoul(row[29], nullptr, 10));
-			e.exp                 = static_cast<uint32_t>(strtoul(row[30], nullptr, 10));
-			e.aa_points_spent     = static_cast<uint32_t>(strtoul(row[31], nullptr, 10));
-			e.aa_exp              = static_cast<uint32_t>(strtoul(row[32], nullptr, 10));
-			e.aa_points           = static_cast<uint32_t>(strtoul(row[33], nullptr, 10));
-			e.points              = static_cast<uint32_t>(strtoul(row[34], nullptr, 10));
-			e.cur_hp              = static_cast<uint32_t>(strtoul(row[35], nullptr, 10));
-			e.mana                = static_cast<uint32_t>(strtoul(row[36], nullptr, 10));
-			e.intoxication        = static_cast<uint32_t>(strtoul(row[37], nullptr, 10));
-			e.str                 = static_cast<uint32_t>(strtoul(row[38], nullptr, 10));
-			e.sta                 = static_cast<uint32_t>(strtoul(row[39], nullptr, 10));
-			e.cha                 = static_cast<uint32_t>(strtoul(row[40], nullptr, 10));
-			e.dex                 = static_cast<uint32_t>(strtoul(row[41], nullptr, 10));
-			e.int_                = static_cast<uint32_t>(strtoul(row[42], nullptr, 10));
-			e.agi                 = static_cast<uint32_t>(strtoul(row[43], nullptr, 10));
-			e.wis                 = static_cast<uint32_t>(strtoul(row[44], nullptr, 10));
-			e.zone_change_count   = static_cast<uint32_t>(strtoul(row[45], nullptr, 10));
-			e.hunger_level        = static_cast<uint32_t>(strtoul(row[46], nullptr, 10));
-			e.thirst_level        = static_cast<uint32_t>(strtoul(row[47], nullptr, 10));
-			e.pvp_status          = static_cast<uint8_t>(strtoul(row[48], nullptr, 10));
-			e.air_remaining       = static_cast<uint32_t>(strtoul(row[49], nullptr, 10));
-			e.autosplit_enabled   = static_cast<uint32_t>(strtoul(row[50], nullptr, 10));
-			e.mailkey             = row[51] ? row[51] : "";
-			e.firstlogon          = static_cast<int8_t>(atoi(row[52]));
-			e.e_aa_effects        = static_cast<uint32_t>(strtoul(row[53], nullptr, 10));
-			e.e_percent_to_aa     = static_cast<uint32_t>(strtoul(row[54], nullptr, 10));
-			e.e_expended_aa_spent = static_cast<uint32_t>(strtoul(row[55], nullptr, 10));
-			e.boatid              = static_cast<uint32_t>(strtoul(row[56], nullptr, 10));
-			e.boatname            = row[57] ? row[57] : "";
-			e.is_deleted          = static_cast<int8_t>(atoi(row[58]));
-			e.showhelm            = static_cast<int8_t>(atoi(row[59]));
-			e.fatigue             = static_cast<int8_t>(atoi(row[60]));
-			e.magelo_perms        = static_cast<uint8_t>(strtoul(row[61], nullptr, 10));
-			e.zone_instance       = static_cast<int32_t>(atoi(row[62]));
+			e.id                     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.account_id             = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.forum_id               = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.name                   = row[3] ? row[3] : "";
+			e.last_name              = row[4] ? row[4] : "";
+			e.title                  = row[5] ? row[5] : "";
+			e.suffix                 = row[6] ? row[6] : "";
+			e.zone_id                = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.y                      = row[8] ? strtof(row[8], nullptr) : 0;
+			e.x                      = row[9] ? strtof(row[9], nullptr) : 0;
+			e.z                      = row[10] ? strtof(row[10], nullptr) : 0;
+			e.heading                = row[11] ? strtof(row[11], nullptr) : 0;
+			e.gender                 = row[12] ? static_cast<uint8_t>(strtoul(row[12], nullptr, 10)) : 0;
+			e.race                   = row[13] ? static_cast<uint16_t>(strtoul(row[13], nullptr, 10)) : 0;
+			e.class_                 = row[14] ? static_cast<uint8_t>(strtoul(row[14], nullptr, 10)) : 0;
+			e.level                  = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.deity                  = row[16] ? static_cast<uint32_t>(strtoul(row[16], nullptr, 10)) : 0;
+			e.birthday               = row[17] ? static_cast<uint32_t>(strtoul(row[17], nullptr, 10)) : 0;
+			e.last_login             = row[18] ? static_cast<uint32_t>(strtoul(row[18], nullptr, 10)) : 0;
+			e.time_played            = row[19] ? static_cast<uint32_t>(strtoul(row[19], nullptr, 10)) : 0;
+			e.level2                 = row[20] ? static_cast<uint8_t>(strtoul(row[20], nullptr, 10)) : 0;
+			e.anon                   = row[21] ? static_cast<uint8_t>(strtoul(row[21], nullptr, 10)) : 0;
+			e.gm                     = row[22] ? static_cast<uint8_t>(strtoul(row[22], nullptr, 10)) : 0;
+			e.face                   = row[23] ? static_cast<uint32_t>(strtoul(row[23], nullptr, 10)) : 0;
+			e.hair_color             = row[24] ? static_cast<uint8_t>(strtoul(row[24], nullptr, 10)) : 0;
+			e.hair_style             = row[25] ? static_cast<uint8_t>(strtoul(row[25], nullptr, 10)) : 0;
+			e.beard                  = row[26] ? static_cast<uint8_t>(strtoul(row[26], nullptr, 10)) : 0;
+			e.beard_color            = row[27] ? static_cast<uint8_t>(strtoul(row[27], nullptr, 10)) : 0;
+			e.eye_color_1            = row[28] ? static_cast<uint8_t>(strtoul(row[28], nullptr, 10)) : 0;
+			e.eye_color_2            = row[29] ? static_cast<uint8_t>(strtoul(row[29], nullptr, 10)) : 0;
+			e.exp                    = row[30] ? static_cast<uint32_t>(strtoul(row[30], nullptr, 10)) : 0;
+			e.aa_points_spent        = row[31] ? static_cast<uint32_t>(strtoul(row[31], nullptr, 10)) : 0;
+			e.aa_exp                 = row[32] ? static_cast<uint32_t>(strtoul(row[32], nullptr, 10)) : 0;
+			e.aa_points              = row[33] ? static_cast<uint32_t>(strtoul(row[33], nullptr, 10)) : 0;
+			e.points                 = row[34] ? static_cast<uint32_t>(strtoul(row[34], nullptr, 10)) : 0;
+			e.cur_hp                 = row[35] ? static_cast<int32_t>(atoi(row[35])) : 0;
+			e.mana                   = row[36] ? static_cast<uint32_t>(strtoul(row[36], nullptr, 10)) : 0;
+			e.endurance              = row[37] ? static_cast<uint32_t>(strtoul(row[37], nullptr, 10)) : 0;
+			e.intoxication           = row[38] ? static_cast<uint32_t>(strtoul(row[38], nullptr, 10)) : 0;
+			e.str                    = row[39] ? static_cast<uint32_t>(strtoul(row[39], nullptr, 10)) : 0;
+			e.sta                    = row[40] ? static_cast<uint32_t>(strtoul(row[40], nullptr, 10)) : 0;
+			e.cha                    = row[41] ? static_cast<uint32_t>(strtoul(row[41], nullptr, 10)) : 0;
+			e.dex                    = row[42] ? static_cast<uint32_t>(strtoul(row[42], nullptr, 10)) : 0;
+			e.int_                   = row[43] ? static_cast<uint32_t>(strtoul(row[43], nullptr, 10)) : 0;
+			e.agi                    = row[44] ? static_cast<uint32_t>(strtoul(row[44], nullptr, 10)) : 0;
+			e.wis                    = row[45] ? static_cast<uint32_t>(strtoul(row[45], nullptr, 10)) : 0;
+			e.zone_change_count      = row[46] ? static_cast<uint32_t>(strtoul(row[46], nullptr, 10)) : 0;
+			e.hunger_level           = row[47] ? static_cast<uint32_t>(strtoul(row[47], nullptr, 10)) : 0;
+			e.thirst_level           = row[48] ? static_cast<uint32_t>(strtoul(row[48], nullptr, 10)) : 0;
+			e.pvp_status             = row[49] ? static_cast<uint8_t>(strtoul(row[49], nullptr, 10)) : 0;
+			e.air_remaining          = row[50] ? static_cast<uint32_t>(strtoul(row[50], nullptr, 10)) : 0;
+			e.autosplit_enabled      = row[51] ? static_cast<uint32_t>(strtoul(row[51], nullptr, 10)) : 0;
+			e.mailkey                = row[52] ? row[52] : "";
+			e.firstlogon             = row[53] ? static_cast<int8_t>(atoi(row[53])) : 0;
+			e.e_aa_effects           = row[54] ? static_cast<uint32_t>(strtoul(row[54], nullptr, 10)) : 0;
+			e.e_percent_to_aa        = row[55] ? static_cast<uint32_t>(strtoul(row[55], nullptr, 10)) : 0;
+			e.e_expended_aa_spent    = row[56] ? static_cast<uint32_t>(strtoul(row[56], nullptr, 10)) : 0;
+			e.boatid                 = row[57] ? static_cast<uint32_t>(strtoul(row[57], nullptr, 10)) : 0;
+			e.boatname               = row[58] ? row[58] : "";
+			e.famished               = row[59] ? static_cast<int32_t>(atoi(row[59])) : 0;
+			e.is_deleted             = row[60] ? static_cast<int8_t>(atoi(row[60])) : 0;
+			e.showhelm               = row[61] ? static_cast<int8_t>(atoi(row[61])) : 1;
+			e.fatigue                = row[62] ? static_cast<int32_t>(atoi(row[62])) : 0;
+			e.e_self_found           = row[63] ? static_cast<int8_t>(atoi(row[63])) : 0;
+			e.e_solo_only            = row[64] ? static_cast<int8_t>(atoi(row[64])) : 0;
+			e.e_hardcore             = row[65] ? static_cast<int8_t>(atoi(row[65])) : 0;
+			e.e_hardcore_death_time  = row[66] ? strtoll(row[66], nullptr, 10) : 0;
+			e.e_betabuff_gear_flag   = row[67] ? static_cast<uint8_t>(strtoul(row[67], nullptr, 10)) : 0;
+			e.e_bigger_wolves        = row[68] ? static_cast<uint8_t>(strtoul(row[68], nullptr, 10)) : 0;
+			e.e_zone_guild_id        = row[69] ? static_cast<uint32_t>(strtoul(row[69], nullptr, 10)) : 4294967295;
+			e.e_temp_last_name       = row[70] ? row[70] : "";
+			e.e_married_character_id = row[71] ? static_cast<int32_t>(atoi(row[71])) : 0;
+			e.e_char_export_flag     = row[72] ? static_cast<uint8_t>(strtoul(row[72], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

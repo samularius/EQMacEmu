@@ -16,12 +16,11 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAaActionsRepository {
 public:
 	struct AaActions {
 		uint32_t aaid;
-		uint8_t  rank;
+		uint8_t  rank_;
 		uint32_t reuse_time;
 		uint32_t spell_id;
 		uint8_t  target;
@@ -43,7 +42,7 @@ public:
 	{
 		return {
 			"aaid",
-			"rank",
+			"`rank`",
 			"reuse_time",
 			"spell_id",
 			"target",
@@ -61,7 +60,7 @@ public:
 	{
 		return {
 			"aaid",
-			"rank",
+			"`rank`",
 			"reuse_time",
 			"spell_id",
 			"target",
@@ -113,7 +112,7 @@ public:
 		AaActions e{};
 
 		e.aaid              = 0;
-		e.rank              = 0;
+		e.rank_             = 0;
 		e.reuse_time        = 0;
 		e.spell_id          = 0;
 		e.target            = 0;
@@ -160,18 +159,18 @@ public:
 		if (results.RowCount() == 1) {
 			AaActions e{};
 
-			e.aaid              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank              = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.reuse_time        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.spell_id          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.target            = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.nonspell_action   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.nonspell_mana     = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.nonspell_duration = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.redux_aa          = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.redux_rate        = static_cast<int8_t>(atoi(row[9]));
-			e.redux_aa2         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.redux_rate2       = static_cast<int8_t>(atoi(row[11]));
+			e.aaid              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_             = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.reuse_time        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.spell_id          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.target            = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.nonspell_action   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.nonspell_mana     = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.nonspell_duration = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.redux_aa          = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.redux_rate        = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.redux_aa2         = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.redux_rate2       = row[11] ? static_cast<int8_t>(atoi(row[11])) : 0;
 
 			return e;
 		}
@@ -206,7 +205,7 @@ public:
 		auto columns = Columns();
 
 		v.push_back(columns[0] + " = " + std::to_string(e.aaid));
-		v.push_back(columns[1] + " = " + std::to_string(e.rank));
+		v.push_back(columns[1] + " = " + std::to_string(e.rank_));
 		v.push_back(columns[2] + " = " + std::to_string(e.reuse_time));
 		v.push_back(columns[3] + " = " + std::to_string(e.spell_id));
 		v.push_back(columns[4] + " = " + std::to_string(e.target));
@@ -239,7 +238,7 @@ public:
 		std::vector<std::string> v;
 
 		v.push_back(std::to_string(e.aaid));
-		v.push_back(std::to_string(e.rank));
+		v.push_back(std::to_string(e.rank_));
 		v.push_back(std::to_string(e.reuse_time));
 		v.push_back(std::to_string(e.spell_id));
 		v.push_back(std::to_string(e.target));
@@ -280,7 +279,7 @@ public:
 			std::vector<std::string> v;
 
 			v.push_back(std::to_string(e.aaid));
-			v.push_back(std::to_string(e.rank));
+			v.push_back(std::to_string(e.rank_));
 			v.push_back(std::to_string(e.reuse_time));
 			v.push_back(std::to_string(e.spell_id));
 			v.push_back(std::to_string(e.target));
@@ -324,18 +323,18 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AaActions e{};
 
-			e.aaid              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank              = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.reuse_time        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.spell_id          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.target            = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.nonspell_action   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.nonspell_mana     = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.nonspell_duration = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.redux_aa          = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.redux_rate        = static_cast<int8_t>(atoi(row[9]));
-			e.redux_aa2         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.redux_rate2       = static_cast<int8_t>(atoi(row[11]));
+			e.aaid              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_             = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.reuse_time        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.spell_id          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.target            = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.nonspell_action   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.nonspell_mana     = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.nonspell_duration = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.redux_aa          = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.redux_rate        = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.redux_aa2         = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.redux_rate2       = row[11] ? static_cast<int8_t>(atoi(row[11])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -360,18 +359,18 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AaActions e{};
 
-			e.aaid              = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank              = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
-			e.reuse_time        = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
-			e.spell_id          = static_cast<uint32_t>(strtoul(row[3], nullptr, 10));
-			e.target            = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.nonspell_action   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.nonspell_mana     = static_cast<uint32_t>(strtoul(row[6], nullptr, 10));
-			e.nonspell_duration = static_cast<uint32_t>(strtoul(row[7], nullptr, 10));
-			e.redux_aa          = static_cast<uint32_t>(strtoul(row[8], nullptr, 10));
-			e.redux_rate        = static_cast<int8_t>(atoi(row[9]));
-			e.redux_aa2         = static_cast<uint32_t>(strtoul(row[10], nullptr, 10));
-			e.redux_rate2       = static_cast<int8_t>(atoi(row[11]));
+			e.aaid              = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_             = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
+			e.reuse_time        = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.spell_id          = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.target            = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.nonspell_action   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.nonspell_mana     = row[6] ? static_cast<uint32_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.nonspell_duration = row[7] ? static_cast<uint32_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.redux_aa          = row[8] ? static_cast<uint32_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.redux_rate        = row[9] ? static_cast<int8_t>(atoi(row[9])) : 0;
+			e.redux_aa2         = row[10] ? static_cast<uint32_t>(strtoul(row[10], nullptr, 10)) : 0;
+			e.redux_rate2       = row[11] ? static_cast<int8_t>(atoi(row[11])) : 0;
 
 			all_entries.push_back(e);
 		}

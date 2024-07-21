@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseTrapsRepository {
 public:
 	struct Traps {
@@ -37,9 +36,13 @@ public:
 		uint32_t    respawn_time;
 		uint32_t    respawn_var;
 		int8_t      triggered_number;
-		int8_t      group;
+		int8_t      group_;
 		int8_t      despawn_when_triggered;
 		int8_t      undetectable;
+		std::string content_flags;
+		std::string content_flags_disabled;
+		float       min_expansion;
+		float       max_expansion;
 	};
 
 	static std::string PrimaryKey()
@@ -67,9 +70,13 @@ public:
 			"respawn_time",
 			"respawn_var",
 			"triggered_number",
-			"group",
+			"`group`",
 			"despawn_when_triggered",
 			"undetectable",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -93,9 +100,13 @@ public:
 			"respawn_time",
 			"respawn_var",
 			"triggered_number",
-			"group",
+			"`group`",
 			"despawn_when_triggered",
 			"undetectable",
+			"content_flags",
+			"content_flags_disabled",
+			"min_expansion",
+			"max_expansion",
 		};
 	}
 
@@ -153,9 +164,13 @@ public:
 		e.respawn_time           = 60;
 		e.respawn_var            = 0;
 		e.triggered_number       = 0;
-		e.group                  = 0;
+		e.group_                 = 0;
 		e.despawn_when_triggered = 0;
 		e.undetectable           = 0;
+		e.content_flags          = "";
+		e.content_flags_disabled = "";
+		e.min_expansion          = -1;
+		e.max_expansion          = -1;
 
 		return e;
 	}
@@ -192,26 +207,30 @@ public:
 		if (results.RowCount() == 1) {
 			Traps e{};
 
-			e.id                     = static_cast<int32_t>(atoi(row[0]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.zone                   = row[1] ? row[1] : "";
-			e.x                      = static_cast<int32_t>(atoi(row[2]));
-			e.y                      = static_cast<int32_t>(atoi(row[3]));
-			e.z                      = static_cast<int32_t>(atoi(row[4]));
-			e.chance                 = static_cast<int8_t>(atoi(row[5]));
-			e.maxzdiff               = strtof(row[6], nullptr);
-			e.radius                 = strtof(row[7], nullptr);
-			e.effect                 = static_cast<int32_t>(atoi(row[8]));
-			e.effectvalue            = static_cast<int32_t>(atoi(row[9]));
-			e.effectvalue2           = static_cast<int32_t>(atoi(row[10]));
+			e.x                      = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.y                      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.z                      = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.chance                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxzdiff               = row[6] ? strtof(row[6], nullptr) : 0;
+			e.radius                 = row[7] ? strtof(row[7], nullptr) : 0;
+			e.effect                 = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.effectvalue            = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.effectvalue2           = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
 			e.message                = row[11] ? row[11] : "";
-			e.skill                  = static_cast<int32_t>(atoi(row[12]));
-			e.level                  = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.respawn_time           = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.respawn_var            = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.triggered_number       = static_cast<int8_t>(atoi(row[16]));
-			e.group                  = static_cast<int8_t>(atoi(row[17]));
-			e.despawn_when_triggered = static_cast<int8_t>(atoi(row[18]));
-			e.undetectable           = static_cast<int8_t>(atoi(row[19]));
+			e.skill                  = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.level                  = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 1;
+			e.respawn_time           = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 60;
+			e.respawn_var            = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.triggered_number       = row[16] ? static_cast<int8_t>(atoi(row[16])) : 0;
+			e.group_                 = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.despawn_when_triggered = row[18] ? static_cast<int8_t>(atoi(row[18])) : 0;
+			e.undetectable           = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.content_flags          = row[20] ? row[20] : "";
+			e.content_flags_disabled = row[21] ? row[21] : "";
+			e.min_expansion          = row[22] ? strtof(row[22], nullptr) : -1;
+			e.max_expansion          = row[23] ? strtof(row[23], nullptr) : -1;
 
 			return e;
 		}
@@ -261,9 +280,13 @@ public:
 		v.push_back(columns[14] + " = " + std::to_string(e.respawn_time));
 		v.push_back(columns[15] + " = " + std::to_string(e.respawn_var));
 		v.push_back(columns[16] + " = " + std::to_string(e.triggered_number));
-		v.push_back(columns[17] + " = " + std::to_string(e.group));
+		v.push_back(columns[17] + " = " + std::to_string(e.group_));
 		v.push_back(columns[18] + " = " + std::to_string(e.despawn_when_triggered));
 		v.push_back(columns[19] + " = " + std::to_string(e.undetectable));
+		v.push_back(columns[20] + " = '" + Strings::Escape(e.content_flags) + "'");
+		v.push_back(columns[21] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(columns[22] + " = " + std::to_string(e.min_expansion));
+		v.push_back(columns[23] + " = " + std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -302,9 +325,13 @@ public:
 		v.push_back(std::to_string(e.respawn_time));
 		v.push_back(std::to_string(e.respawn_var));
 		v.push_back(std::to_string(e.triggered_number));
-		v.push_back(std::to_string(e.group));
+		v.push_back(std::to_string(e.group_));
 		v.push_back(std::to_string(e.despawn_when_triggered));
 		v.push_back(std::to_string(e.undetectable));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -351,9 +378,13 @@ public:
 			v.push_back(std::to_string(e.respawn_time));
 			v.push_back(std::to_string(e.respawn_var));
 			v.push_back(std::to_string(e.triggered_number));
-			v.push_back(std::to_string(e.group));
+			v.push_back(std::to_string(e.group_));
 			v.push_back(std::to_string(e.despawn_when_triggered));
 			v.push_back(std::to_string(e.undetectable));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -387,26 +418,30 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Traps e{};
 
-			e.id                     = static_cast<int32_t>(atoi(row[0]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.zone                   = row[1] ? row[1] : "";
-			e.x                      = static_cast<int32_t>(atoi(row[2]));
-			e.y                      = static_cast<int32_t>(atoi(row[3]));
-			e.z                      = static_cast<int32_t>(atoi(row[4]));
-			e.chance                 = static_cast<int8_t>(atoi(row[5]));
-			e.maxzdiff               = strtof(row[6], nullptr);
-			e.radius                 = strtof(row[7], nullptr);
-			e.effect                 = static_cast<int32_t>(atoi(row[8]));
-			e.effectvalue            = static_cast<int32_t>(atoi(row[9]));
-			e.effectvalue2           = static_cast<int32_t>(atoi(row[10]));
+			e.x                      = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.y                      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.z                      = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.chance                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxzdiff               = row[6] ? strtof(row[6], nullptr) : 0;
+			e.radius                 = row[7] ? strtof(row[7], nullptr) : 0;
+			e.effect                 = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.effectvalue            = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.effectvalue2           = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
 			e.message                = row[11] ? row[11] : "";
-			e.skill                  = static_cast<int32_t>(atoi(row[12]));
-			e.level                  = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.respawn_time           = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.respawn_var            = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.triggered_number       = static_cast<int8_t>(atoi(row[16]));
-			e.group                  = static_cast<int8_t>(atoi(row[17]));
-			e.despawn_when_triggered = static_cast<int8_t>(atoi(row[18]));
-			e.undetectable           = static_cast<int8_t>(atoi(row[19]));
+			e.skill                  = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.level                  = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 1;
+			e.respawn_time           = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 60;
+			e.respawn_var            = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.triggered_number       = row[16] ? static_cast<int8_t>(atoi(row[16])) : 0;
+			e.group_                 = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.despawn_when_triggered = row[18] ? static_cast<int8_t>(atoi(row[18])) : 0;
+			e.undetectable           = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.content_flags          = row[20] ? row[20] : "";
+			e.content_flags_disabled = row[21] ? row[21] : "";
+			e.min_expansion          = row[22] ? strtof(row[22], nullptr) : -1;
+			e.max_expansion          = row[23] ? strtof(row[23], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}
@@ -431,26 +466,30 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Traps e{};
 
-			e.id                     = static_cast<int32_t>(atoi(row[0]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.zone                   = row[1] ? row[1] : "";
-			e.x                      = static_cast<int32_t>(atoi(row[2]));
-			e.y                      = static_cast<int32_t>(atoi(row[3]));
-			e.z                      = static_cast<int32_t>(atoi(row[4]));
-			e.chance                 = static_cast<int8_t>(atoi(row[5]));
-			e.maxzdiff               = strtof(row[6], nullptr);
-			e.radius                 = strtof(row[7], nullptr);
-			e.effect                 = static_cast<int32_t>(atoi(row[8]));
-			e.effectvalue            = static_cast<int32_t>(atoi(row[9]));
-			e.effectvalue2           = static_cast<int32_t>(atoi(row[10]));
+			e.x                      = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.y                      = row[3] ? static_cast<int32_t>(atoi(row[3])) : 0;
+			e.z                      = row[4] ? static_cast<int32_t>(atoi(row[4])) : 0;
+			e.chance                 = row[5] ? static_cast<int8_t>(atoi(row[5])) : 0;
+			e.maxzdiff               = row[6] ? strtof(row[6], nullptr) : 0;
+			e.radius                 = row[7] ? strtof(row[7], nullptr) : 0;
+			e.effect                 = row[8] ? static_cast<int32_t>(atoi(row[8])) : 0;
+			e.effectvalue            = row[9] ? static_cast<int32_t>(atoi(row[9])) : 0;
+			e.effectvalue2           = row[10] ? static_cast<int32_t>(atoi(row[10])) : 0;
 			e.message                = row[11] ? row[11] : "";
-			e.skill                  = static_cast<int32_t>(atoi(row[12]));
-			e.level                  = static_cast<uint32_t>(strtoul(row[13], nullptr, 10));
-			e.respawn_time           = static_cast<uint32_t>(strtoul(row[14], nullptr, 10));
-			e.respawn_var            = static_cast<uint32_t>(strtoul(row[15], nullptr, 10));
-			e.triggered_number       = static_cast<int8_t>(atoi(row[16]));
-			e.group                  = static_cast<int8_t>(atoi(row[17]));
-			e.despawn_when_triggered = static_cast<int8_t>(atoi(row[18]));
-			e.undetectable           = static_cast<int8_t>(atoi(row[19]));
+			e.skill                  = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.level                  = row[13] ? static_cast<uint32_t>(strtoul(row[13], nullptr, 10)) : 1;
+			e.respawn_time           = row[14] ? static_cast<uint32_t>(strtoul(row[14], nullptr, 10)) : 60;
+			e.respawn_var            = row[15] ? static_cast<uint32_t>(strtoul(row[15], nullptr, 10)) : 0;
+			e.triggered_number       = row[16] ? static_cast<int8_t>(atoi(row[16])) : 0;
+			e.group_                 = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.despawn_when_triggered = row[18] ? static_cast<int8_t>(atoi(row[18])) : 0;
+			e.undetectable           = row[19] ? static_cast<int8_t>(atoi(row[19])) : 0;
+			e.content_flags          = row[20] ? row[20] : "";
+			e.content_flags_disabled = row[21] ? row[21] : "";
+			e.min_expansion          = row[22] ? strtof(row[22], nullptr) : -1;
+			e.max_expansion          = row[23] ? strtof(row[23], nullptr) : -1;
 
 			all_entries.push_back(e);
 		}

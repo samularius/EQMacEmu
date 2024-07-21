@@ -16,15 +16,16 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseForageRepository {
 public:
 	struct Forage {
-		int32_t id;
-		int32_t zoneid;
-		int32_t Itemid;
-		int16_t level;
-		int16_t chance;
+		int32_t     id;
+		int32_t     zoneid;
+		int32_t     Itemid;
+		int16_t     level;
+		int16_t     chance;
+		std::string content_flags;
+		std::string content_flags_disabled;
 	};
 
 	static std::string PrimaryKey()
@@ -40,6 +41,8 @@ public:
 			"Itemid",
 			"level",
 			"chance",
+			"content_flags",
+			"content_flags_disabled",
 		};
 	}
 
@@ -51,6 +54,8 @@ public:
 			"Itemid",
 			"level",
 			"chance",
+			"content_flags",
+			"content_flags_disabled",
 		};
 	}
 
@@ -91,11 +96,13 @@ public:
 	{
 		Forage e{};
 
-		e.id     = 0;
-		e.zoneid = 0;
-		e.Itemid = 0;
-		e.level  = 0;
-		e.chance = 0;
+		e.id                     = 0;
+		e.zoneid                 = 0;
+		e.Itemid                 = 0;
+		e.level                  = 0;
+		e.chance                 = 0;
+		e.content_flags          = "";
+		e.content_flags_disabled = "";
 
 		return e;
 	}
@@ -132,11 +139,13 @@ public:
 		if (results.RowCount() == 1) {
 			Forage e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneid = static_cast<int32_t>(atoi(row[1]));
-			e.Itemid = static_cast<int32_t>(atoi(row[2]));
-			e.level  = static_cast<int16_t>(atoi(row[3]));
-			e.chance = static_cast<int16_t>(atoi(row[4]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneid                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.Itemid                 = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.level                  = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.chance                 = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.content_flags          = row[5] ? row[5] : "";
+			e.content_flags_disabled = row[6] ? row[6] : "";
 
 			return e;
 		}
@@ -174,6 +183,8 @@ public:
 		v.push_back(columns[2] + " = " + std::to_string(e.Itemid));
 		v.push_back(columns[3] + " = " + std::to_string(e.level));
 		v.push_back(columns[4] + " = " + std::to_string(e.chance));
+		v.push_back(columns[5] + " = '" + Strings::Escape(e.content_flags) + "'");
+		v.push_back(columns[6] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -200,6 +211,8 @@ public:
 		v.push_back(std::to_string(e.Itemid));
 		v.push_back(std::to_string(e.level));
 		v.push_back(std::to_string(e.chance));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -234,6 +247,8 @@ public:
 			v.push_back(std::to_string(e.Itemid));
 			v.push_back(std::to_string(e.level));
 			v.push_back(std::to_string(e.chance));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -267,11 +282,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Forage e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneid = static_cast<int32_t>(atoi(row[1]));
-			e.Itemid = static_cast<int32_t>(atoi(row[2]));
-			e.level  = static_cast<int16_t>(atoi(row[3]));
-			e.chance = static_cast<int16_t>(atoi(row[4]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneid                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.Itemid                 = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.level                  = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.chance                 = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.content_flags          = row[5] ? row[5] : "";
+			e.content_flags_disabled = row[6] ? row[6] : "";
 
 			all_entries.push_back(e);
 		}
@@ -296,11 +313,13 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			Forage e{};
 
-			e.id     = static_cast<int32_t>(atoi(row[0]));
-			e.zoneid = static_cast<int32_t>(atoi(row[1]));
-			e.Itemid = static_cast<int32_t>(atoi(row[2]));
-			e.level  = static_cast<int16_t>(atoi(row[3]));
-			e.chance = static_cast<int16_t>(atoi(row[4]));
+			e.id                     = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
+			e.zoneid                 = row[1] ? static_cast<int32_t>(atoi(row[1])) : 0;
+			e.Itemid                 = row[2] ? static_cast<int32_t>(atoi(row[2])) : 0;
+			e.level                  = row[3] ? static_cast<int16_t>(atoi(row[3])) : 0;
+			e.chance                 = row[4] ? static_cast<int16_t>(atoi(row[4])) : 0;
+			e.content_flags          = row[5] ? row[5] : "";
+			e.content_flags_disabled = row[6] ? row[6] : "";
 
 			all_entries.push_back(e);
 		}

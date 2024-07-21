@@ -16,12 +16,11 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseGuildRanksRepository {
 public:
 	struct GuildRanks {
 		uint32_t    guild_id;
-		uint8_t     rank;
+		uint8_t     rank_;
 		std::string title;
 		uint8_t     can_hear;
 		uint8_t     can_speak;
@@ -42,7 +41,7 @@ public:
 	{
 		return {
 			"guild_id",
-			"rank",
+			"`rank`",
 			"title",
 			"can_hear",
 			"can_speak",
@@ -59,7 +58,7 @@ public:
 	{
 		return {
 			"guild_id",
-			"rank",
+			"`rank`",
 			"title",
 			"can_hear",
 			"can_speak",
@@ -110,7 +109,7 @@ public:
 		GuildRanks e{};
 
 		e.guild_id     = 0;
-		e.rank         = 0;
+		e.rank_        = 0;
 		e.title        = "";
 		e.can_hear     = 0;
 		e.can_speak    = 0;
@@ -156,17 +155,17 @@ public:
 		if (results.RowCount() == 1) {
 			GuildRanks e{};
 
-			e.guild_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank         = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
+			e.guild_id     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_        = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.title        = row[2] ? row[2] : "";
-			e.can_hear     = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.can_speak    = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.can_invite   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.can_remove   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.can_promote  = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.can_demote   = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.can_motd     = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.can_warpeace = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
+			e.can_hear     = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.can_speak    = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.can_invite   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.can_remove   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.can_promote  = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.can_demote   = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.can_motd     = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.can_warpeace = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
 
 			return e;
 		}
@@ -201,7 +200,7 @@ public:
 		auto columns = Columns();
 
 		v.push_back(columns[0] + " = " + std::to_string(e.guild_id));
-		v.push_back(columns[1] + " = " + std::to_string(e.rank));
+		v.push_back(columns[1] + " = " + std::to_string(e.rank_));
 		v.push_back(columns[2] + " = '" + Strings::Escape(e.title) + "'");
 		v.push_back(columns[3] + " = " + std::to_string(e.can_hear));
 		v.push_back(columns[4] + " = " + std::to_string(e.can_speak));
@@ -233,7 +232,7 @@ public:
 		std::vector<std::string> v;
 
 		v.push_back(std::to_string(e.guild_id));
-		v.push_back(std::to_string(e.rank));
+		v.push_back(std::to_string(e.rank_));
 		v.push_back("'" + Strings::Escape(e.title) + "'");
 		v.push_back(std::to_string(e.can_hear));
 		v.push_back(std::to_string(e.can_speak));
@@ -273,7 +272,7 @@ public:
 			std::vector<std::string> v;
 
 			v.push_back(std::to_string(e.guild_id));
-			v.push_back(std::to_string(e.rank));
+			v.push_back(std::to_string(e.rank_));
 			v.push_back("'" + Strings::Escape(e.title) + "'");
 			v.push_back(std::to_string(e.can_hear));
 			v.push_back(std::to_string(e.can_speak));
@@ -316,17 +315,17 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			GuildRanks e{};
 
-			e.guild_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank         = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
+			e.guild_id     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_        = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.title        = row[2] ? row[2] : "";
-			e.can_hear     = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.can_speak    = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.can_invite   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.can_remove   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.can_promote  = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.can_demote   = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.can_motd     = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.can_warpeace = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
+			e.can_hear     = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.can_speak    = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.can_invite   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.can_remove   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.can_promote  = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.can_demote   = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.can_motd     = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.can_warpeace = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -351,17 +350,17 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			GuildRanks e{};
 
-			e.guild_id     = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
-			e.rank         = static_cast<uint8_t>(strtoul(row[1], nullptr, 10));
+			e.guild_id     = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
+			e.rank_        = row[1] ? static_cast<uint8_t>(strtoul(row[1], nullptr, 10)) : 0;
 			e.title        = row[2] ? row[2] : "";
-			e.can_hear     = static_cast<uint8_t>(strtoul(row[3], nullptr, 10));
-			e.can_speak    = static_cast<uint8_t>(strtoul(row[4], nullptr, 10));
-			e.can_invite   = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.can_remove   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.can_promote  = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.can_demote   = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.can_motd     = static_cast<uint8_t>(strtoul(row[9], nullptr, 10));
-			e.can_warpeace = static_cast<uint8_t>(strtoul(row[10], nullptr, 10));
+			e.can_hear     = row[3] ? static_cast<uint8_t>(strtoul(row[3], nullptr, 10)) : 0;
+			e.can_speak    = row[4] ? static_cast<uint8_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.can_invite   = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.can_remove   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.can_promote  = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.can_demote   = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.can_motd     = row[9] ? static_cast<uint8_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.can_warpeace = row[10] ? static_cast<uint8_t>(strtoul(row[10], nullptr, 10)) : 0;
 
 			all_entries.push_back(e);
 		}

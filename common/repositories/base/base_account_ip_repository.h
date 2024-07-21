@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseAccountIpRepository {
 public:
 	struct AccountIp {
@@ -128,10 +127,10 @@ public:
 		if (results.RowCount() == 1) {
 			AccountIp e{};
 
-			e.accid    = static_cast<int32_t>(atoi(row[0]));
+			e.accid    = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.ip       = row[1] ? row[1] : "";
-			e.count    = static_cast<int32_t>(atoi(row[2]));
-			e.lastused = row[3] ? row[3] : "";
+			e.count    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 1;
+			e.lastused = row[3] ? row[3] : std::time(nullptr);
 
 			return e;
 		}
@@ -260,10 +259,10 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AccountIp e{};
 
-			e.accid    = static_cast<int32_t>(atoi(row[0]));
+			e.accid    = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.ip       = row[1] ? row[1] : "";
-			e.count    = static_cast<int32_t>(atoi(row[2]));
-			e.lastused = row[3] ? row[3] : "";
+			e.count    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 1;
+			e.lastused = row[3] ? row[3] : std::time(nullptr);
 
 			all_entries.push_back(e);
 		}
@@ -288,10 +287,10 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			AccountIp e{};
 
-			e.accid    = static_cast<int32_t>(atoi(row[0]));
+			e.accid    = row[0] ? static_cast<int32_t>(atoi(row[0])) : 0;
 			e.ip       = row[1] ? row[1] : "";
-			e.count    = static_cast<int32_t>(atoi(row[2]));
-			e.lastused = row[3] ? row[3] : "";
+			e.count    = row[2] ? static_cast<int32_t>(atoi(row[2])) : 1;
+			e.lastused = row[3] ? row[3] : std::time(nullptr);
 
 			all_entries.push_back(e);
 		}

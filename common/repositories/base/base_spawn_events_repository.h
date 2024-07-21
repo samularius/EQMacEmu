@@ -16,7 +16,6 @@
 #include "../../strings.h"
 #include <ctime>
 
-
 class BaseSpawnEventsRepository {
 public:
 	struct SpawnEvents {
@@ -168,20 +167,20 @@ public:
 		if (results.RowCount() == 1) {
 			SpawnEvents e{};
 
-			e.id          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.cond_id     = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
+			e.cond_id     = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
 			e.name        = row[3] ? row[3] : "";
-			e.period      = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.next_minute = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.next_hour   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.next_day    = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.next_month  = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.next_year   = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.enabled     = static_cast<int8_t>(atoi(row[10]));
-			e.action      = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.argument    = static_cast<int32_t>(atoi(row[12]));
-			e.strict      = static_cast<int8_t>(atoi(row[13]));
+			e.period      = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.next_minute = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.next_hour   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.next_day    = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.next_month  = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.next_year   = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.enabled     = row[10] ? static_cast<int8_t>(atoi(row[10])) : 1;
+			e.action      = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.argument    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.strict      = row[13] ? static_cast<int8_t>(atoi(row[13])) : 0;
 
 			return e;
 		}
@@ -339,20 +338,20 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			SpawnEvents e{};
 
-			e.id          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.cond_id     = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
+			e.cond_id     = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
 			e.name        = row[3] ? row[3] : "";
-			e.period      = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.next_minute = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.next_hour   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.next_day    = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.next_month  = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.next_year   = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.enabled     = static_cast<int8_t>(atoi(row[10]));
-			e.action      = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.argument    = static_cast<int32_t>(atoi(row[12]));
-			e.strict      = static_cast<int8_t>(atoi(row[13]));
+			e.period      = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.next_minute = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.next_hour   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.next_day    = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.next_month  = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.next_year   = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.enabled     = row[10] ? static_cast<int8_t>(atoi(row[10])) : 1;
+			e.action      = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.argument    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.strict      = row[13] ? static_cast<int8_t>(atoi(row[13])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -377,20 +376,20 @@ public:
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			SpawnEvents e{};
 
-			e.id          = static_cast<uint32_t>(strtoul(row[0], nullptr, 10));
+			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.cond_id     = static_cast<uint32_t>(strtoul(row[2], nullptr, 10));
+			e.cond_id     = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
 			e.name        = row[3] ? row[3] : "";
-			e.period      = static_cast<uint32_t>(strtoul(row[4], nullptr, 10));
-			e.next_minute = static_cast<uint8_t>(strtoul(row[5], nullptr, 10));
-			e.next_hour   = static_cast<uint8_t>(strtoul(row[6], nullptr, 10));
-			e.next_day    = static_cast<uint8_t>(strtoul(row[7], nullptr, 10));
-			e.next_month  = static_cast<uint8_t>(strtoul(row[8], nullptr, 10));
-			e.next_year   = static_cast<uint32_t>(strtoul(row[9], nullptr, 10));
-			e.enabled     = static_cast<int8_t>(atoi(row[10]));
-			e.action      = static_cast<uint8_t>(strtoul(row[11], nullptr, 10));
-			e.argument    = static_cast<int32_t>(atoi(row[12]));
-			e.strict      = static_cast<int8_t>(atoi(row[13]));
+			e.period      = row[4] ? static_cast<uint32_t>(strtoul(row[4], nullptr, 10)) : 0;
+			e.next_minute = row[5] ? static_cast<uint8_t>(strtoul(row[5], nullptr, 10)) : 0;
+			e.next_hour   = row[6] ? static_cast<uint8_t>(strtoul(row[6], nullptr, 10)) : 0;
+			e.next_day    = row[7] ? static_cast<uint8_t>(strtoul(row[7], nullptr, 10)) : 0;
+			e.next_month  = row[8] ? static_cast<uint8_t>(strtoul(row[8], nullptr, 10)) : 0;
+			e.next_year   = row[9] ? static_cast<uint32_t>(strtoul(row[9], nullptr, 10)) : 0;
+			e.enabled     = row[10] ? static_cast<int8_t>(atoi(row[10])) : 1;
+			e.action      = row[11] ? static_cast<uint8_t>(strtoul(row[11], nullptr, 10)) : 0;
+			e.argument    = row[12] ? static_cast<int32_t>(atoi(row[12])) : 0;
+			e.strict      = row[13] ? static_cast<int8_t>(atoi(row[13])) : 0;
 
 			all_entries.push_back(e);
 		}

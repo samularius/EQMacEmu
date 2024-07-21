@@ -170,9 +170,10 @@
 #define ServerOP_ReloadWorld 0x4009
 #define ServerOP_ReloadLogs 0x4010
 #define ServerOP_QuakeImminent 0x4011
-#define ServerOP_QuakeRequest 0x4012
-#define ServerOP_QuakeEnded 0x4013
-
+#define ServerOP_UpdateSchedulerEvents 0x4012
+#define ServerOP_ReloadContentFlags 0x4013
+#define ServerOP_QuakeRequest 0x4014
+#define ServerOP_QuakeEnded 0x4015
 /* Query Server OP Codes */
 #define ServerOP_QSPlayerLogItemDeletes				0x5013
 #define ServerOP_QSPlayerLogItemMoves				0x5014
