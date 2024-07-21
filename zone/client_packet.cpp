@@ -8049,14 +8049,6 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 				continue;
 			}
 
-			bool expansion_enabled = RuleR(World, CurrentExpansion) >= ml.min_expansion && RuleR(World, CurrentExpansion) < ml.max_expansion;
-			bool expansion_all = ml.min_expansion == ExpansionEras::AllEQEras && ml.max_expansion == ExpansionEras::AllEQEras;
-
-			if (!expansion_enabled && !expansion_all)
-			{
-				continue;
-			}
-
 			const EQ::ItemData* item = database.GetItem(ml.item);
 			if (!item)
 				continue;
