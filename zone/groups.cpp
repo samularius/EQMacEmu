@@ -901,7 +901,7 @@ void Group::VerifyGroup()
 		SetLeader(nullptr);
 	}
 
-	std::string leaderName = results2.begin[0] ? results2.begin[0] : "";
+	std::string leaderName = results2.begin()[0] ? results2.begin()[0] : "";
 
 	//it should be safe to use GetClientByName, but Group is trying
 	//to be generic, so we'll go for general Mob
