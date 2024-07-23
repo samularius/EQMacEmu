@@ -28,8 +28,15 @@
 
 class Database;
 
+struct ContentFlags {
+	float       min_expansion;
+	float       max_expansion;
+	std::string content_flags;
+	std::string content_flags_disabled;
+};
+
 namespace Expansion {
-	static const float EXPANSION_ALL = -1.0;
+	static const int EXPANSION_ALL = -1.0f;
 	static const int EXPANSION_FILTER_MAX = 99;
 
 	enum ExpansionNumber {

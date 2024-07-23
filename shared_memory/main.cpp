@@ -27,23 +27,25 @@
 #include "../common/rulesys.h"
 #include "../common/eqemu_exception.h"
 #include "../common/strings.h"
+#include "../common/path_manager.h"
 #include "items.h"
 #include "npc_faction.h"
-#include "loot.h"
 #include "skill_caps.h"
 #include "spells.h"
-#include "base_data.h"
 #include "../common/content/world_content_service.h"
 
 EQEmuLogSys LogSys;
 WorldContentService content_service;
+PathManager path;
 
 int main(int argc, char **argv) {
 	RegisterExecutablePlatform(ExePlatformSharedMemory);
 	LogSys.LoadLogSettingsDefaults();
 	set_exception_handler();
 
-	Log(Logs::General, Logs::Status, "Shared Memory Loader Program");
+	path.LoadPaths();
+
+	LogInfo("Shared Memory Loader Program");
 	if(!EQEmuConfig::LoadConfig()) {
 		LogError("Unable to load configuration file.");
 		return 1;
@@ -52,7 +54,7 @@ int main(int argc, char **argv) {
 	auto Config = EQEmuConfig::get();
 
 	SharedDatabase database;
-	Log(Logs::General, Logs::Status, "Connecting to database...");
+	LogInfo("Connecting to database...");
 	if(!database.Connect(Config->DatabaseHost.c_str(), Config->DatabaseUsername.c_str(),
 		Config->DatabasePassword.c_str(), Config->DatabaseDB.c_str(), Config->DatabasePort)) {
 		LogError("Unable to connect to the database, cannot continue without a database connection");
@@ -60,6 +62,7 @@ int main(int argc, char **argv) {
 	}
 
 	LogSys.SetDatabase(&database)
+		->SetLogPath(path.GetLogPath())
 		->LoadLogDatabaseSettings()
 		->StartFileLogs();
 
@@ -69,7 +72,7 @@ int main(int argc, char **argv) {
 	std::string db_hotfix_name;
 	if (database.GetVariable("hotfix_name", db_hotfix_name)) {
 		if (!db_hotfix_name.empty() && strcasecmp("hotfix_", db_hotfix_name.c_str()) == 0) {
-			Log(Logs::General, Logs::Status, "Current hotfix in variables is the default %s, clearing out variable", db_hotfix_name.c_str());
+			LogInfo("Current hotfix in variables is the default {}, clearing out variable", db_hotfix_name.c_str());
 			std::string query = StringFormat("UPDATE `variables` SET `value`='' WHERE (`varname`='hotfix_name')");
 			database.QueryDatabase(query);
 		}
@@ -111,20 +114,11 @@ int main(int argc, char **argv) {
 	bool load_all = true;
 	bool load_items = false;
 	bool load_factions = false;
-	bool load_loot = false;
 	bool load_skill_caps = false;
 	bool load_spells = false;
-	bool load_bd = false;
 	if(argc > 1) {
 		for(int i = 1; i < argc; ++i) {
 			switch(argv[i][0]) {	
-			case 'b':
-				if(strcasecmp("base_data", argv[i]) == 0) {
-					load_bd = true;
-					load_all = false;
-				}
-				break;
-	
 			case 'i':
 				if(strcasecmp("items", argv[i]) == 0) {
 					load_items = true;
@@ -135,13 +129,6 @@ int main(int argc, char **argv) {
 			case 'f':
 				if(strcasecmp("factions", argv[i]) == 0) {
 					load_factions = true;
-					load_all = false;
-				}
-				break;
-	
-			case 'l':
-				if(strcasecmp("loot", argv[i]) == 0) {
-					load_loot = true;
 					load_all = false;
 				}
 				break;
@@ -172,11 +159,11 @@ int main(int argc, char **argv) {
 	}
 
 	if(hotfix_name.length() > 0) {
-		Log(Logs::General, Logs::Status, "Writing data for hotfix '%s'", hotfix_name.c_str());
+		LogInfo("Writing data for hotfix [{}]", hotfix_name.c_str());
 	}
 	
 	if(load_all || load_items) {
-		Log(Logs::General, Logs::Status, "Loading items...");
+		LogInfo("Loading items...");
 		try {
 			LoadItems(&database, hotfix_name);
 		} catch(std::exception &ex) {
@@ -186,7 +173,7 @@ int main(int argc, char **argv) {
 	}
 	
 	if(load_all || load_factions) {
-		Log(Logs::General, Logs::Status, "Loading factions...");
+		LogInfo("Loading factions...");
 		try {
 			LoadFactions(&database, hotfix_name);
 		} catch(std::exception &ex) {
@@ -195,18 +182,8 @@ int main(int argc, char **argv) {
 		}
 	}
 	
-	if(load_all || load_loot) {
-		Log(Logs::General, Logs::Status, "Loading loot...");
-		try {
-			LoadLoot(&database, hotfix_name);
-		} catch(std::exception &ex) {
-			LogError("{}", ex.what());
-			return 1;
-		}
-	}
-	
 	if(load_all || load_skill_caps) {
-		Log(Logs::General, Logs::Status, "Loading skill caps...");
+		LogInfo("Loading skill caps...");
 		try {
 			LoadSkillCaps(&database, hotfix_name);
 		} catch(std::exception &ex) {
@@ -216,19 +193,9 @@ int main(int argc, char **argv) {
 	}
 	
 	if(load_all || load_spells) {
-		Log(Logs::General, Logs::Status, "Loading spells...");
+		LogInfo("Loading spells...");
 		try {
 			LoadSpells(&database, hotfix_name);
-		} catch(std::exception &ex) {
-			LogError("{}", ex.what());
-			return 1;
-		}
-	}
-	
-	if(load_all || load_bd) {
-		Log(Logs::General, Logs::Status, "Loading base data...");
-		try {
-			LoadBaseData(&database, hotfix_name);
 		} catch(std::exception &ex) {
 			LogError("{}", ex.what());
 			return 1;

@@ -97,7 +97,7 @@ bool LoginServer::Process() {
 	ServerPacket *pack = 0;
 	while((pack = tcpc->PopPacket()))
 	{
-		Log(Logs::Detail, Logs::WorldServer,"Recevied ServerPacket from LS OpCode 0x%04x",pack->opcode);
+		LogNetcode("Received ServerPacket from LS OpCode {:#04x}", pack->opcode);
 
 		switch(pack->opcode) {
 			case 0:
@@ -155,17 +155,12 @@ bool LoginServer::Process() {
 					if (!mule && RuleI(World, MaxClientsPerIP) >= 0 && !client_list.CheckIPLimit(id, utwr->ip, status))
 						utwrs->response = -5;
 				}
+				
 				if (utwrs->response == 1)
 				{
 					// ip limit checks
 					if (mule && RuleI(World, MaxMulesPerIP) >= 0 && !client_list.CheckMuleLimit(id, utwr->ip, status))
 						utwrs->response = -5;
-				}
-				if (utwrs->response == 1)
-				{
-					// forum account checks
-					if (RuleI(World, MaxClientsPerForumName) >= 0 && strlen(utwr->forum_name) > 0 && !mule && !client_list.CheckForumNameLimit(id, std::string(utwr->forum_name), status))
-						utwrs->response = -6;
 				}
 
 				utwrs->worldid = utwr->worldid;
@@ -176,7 +171,7 @@ bool LoginServer::Process() {
 			case ServerOP_LSClientAuth: {
 				ServerLSClientAuth* slsca = (ServerLSClientAuth*) pack->pBuffer;
 
-				client_list.CLEAdd(slsca->lsaccount_id, slsca->name, slsca->forum_name, slsca->key, slsca->worldadmin, slsca->ip, slsca->local, slsca->version);
+				client_list.CLEAdd(slsca->lsaccount_id, slsca->name, slsca->key, slsca->worldadmin, slsca->ip, slsca->local, slsca->version);
 				break;
 			}
 			case ServerOP_LSFatalError: {
@@ -226,10 +221,10 @@ bool LoginServer::Process() {
 bool LoginServer::InitLoginServer() {
 	if(Connected() == false) {
 		if(ConnectReady()) {
-			Log(Logs::Detail, Logs::WorldServer, "Connecting to login server: %s:%d",LoginServerAddress,LoginServerPort);
+			LogInfo("Connecting to login server: [{0}:{1}]",LoginServerAddress,LoginServerPort);
 			Connect();
 		} else {
-			Log(Logs::Detail, Logs::WorldServer, "Not connected but not ready to connect, this is bad: %s:%d",
+			LogInfo("Not connected but not ready to connect, this is bad: [{0}:{1}]",
 			LoginServerAddress, LoginServerPort);
 			database.LSDisconnect();
 		}
@@ -241,19 +236,19 @@ bool LoginServer::Connect() {
 
 	char errbuf[TCPConnection_ErrorBufferSize];
 	if ((LoginServerIP = ResolveIP(LoginServerAddress, errbuf)) == 0) {
-		Log(Logs::Detail, Logs::WorldServer, "Unable to resolve '%s' to an IP.",LoginServerAddress);
+		LogInfo("Unable to resolve [{}] to an IP", LoginServerAddress);
 		database.LSDisconnect();
 		return false;
 	}
 
 	if (LoginServerIP == 0 || LoginServerPort == 0) {
-		Log(Logs::Detail, Logs::WorldServer, "Connect info incomplete, cannot connect: %s:%d",LoginServerAddress,LoginServerPort);
+		LogInfo("Connect info incomplete, cannot connect: [{0}:{1}]",LoginServerAddress,LoginServerPort);
 		database.LSDisconnect();
 		return false;
 	}
 
 	if (tcpc->ConnectIP(LoginServerIP, LoginServerPort, errbuf)) {
-		Log(Logs::Detail, Logs::WorldServer, "Connected to Loginserver: %s:%d",LoginServerAddress,LoginServerPort);
+		LogInfo("Connected to Loginserver: [{0}:{1}]",LoginServerAddress,LoginServerPort);
 		database.LSConnected(LoginServerPort);
 		SendNewInfo();
 		SendStatus();
@@ -261,7 +256,7 @@ bool LoginServer::Connect() {
 		return true;
 	}
 	else {
-		Log(Logs::Detail, Logs::WorldServer, "Could not connect to login server: %s:%d %s",LoginServerAddress,LoginServerPort,errbuf);
+		LogInfo("Could not connect to login server: [{0}]:[{1}] {2}",LoginServerAddress,LoginServerPort,errbuf);
 		database.LSDisconnect();
 		return false;
 	}

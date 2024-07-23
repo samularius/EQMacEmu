@@ -129,11 +129,11 @@ void Trap::Trigger(Mob* trigger)
 		case trapTypeDebuff:
 			if(message.empty())
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s triggers a trap!",trigger->GetName());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s triggers a trap!",trigger->GetName());
 			}
 			else
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s",message.c_str());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s",message.c_str());
 			}
 			if(hiddenTrigger){
 				hiddenTrigger->SpellFinished(effectvalue, trigger, EQ::spells::CastingSlot::Item, 0, -1, spells[effectvalue].ResistDiff);
@@ -142,11 +142,11 @@ void Trap::Trigger(Mob* trigger)
 		case trapTypeAlarm:
 			if (message.empty())
 			{
-				entity_list.MessageClose(trigger,false,effectvalue,CC_Default,"A loud alarm rings out through the air...");
+				entity_list.MessageClose(trigger,false,effectvalue,Chat::White,"A loud alarm rings out through the air...");
 			}
 			else
 			{
-				entity_list.MessageClose(trigger,false,effectvalue,CC_Default,"%s",message.c_str());
+				entity_list.MessageClose(trigger,false,effectvalue,Chat::White,"%s",message.c_str());
 			}
 
 			entity_list.SendAlarm(this,trigger,effectvalue2);
@@ -154,11 +154,11 @@ void Trap::Trigger(Mob* trigger)
 		case trapTypeMysticSpawn:
 			if (message.empty())
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"The air shimmers...");
+				entity_list.MessageClose(trigger,false,100,Chat::White,"The air shimmers...");
 			}
 			else
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s",message.c_str());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s",message.c_str());
 			}
 
 			for (i = 0; i < effectvalue2; i++)
@@ -167,7 +167,7 @@ void Trap::Trigger(Mob* trigger)
 				{
 					auto randomOffset = glm::vec4(zone->random.Int(-5, 5),zone->random.Int(-5, 5),zone->random.Int(-5, 5), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
-					auto new_npc = new NPC(tmp, nullptr, spawnPosition, EQ::constants::GravityBehavior::Water);
+					auto new_npc = new NPC(tmp, nullptr, spawnPosition, GravityBehavior::Water);
 					new_npc->AddLootTable();
 					if (new_npc->DropsGlobalLoot()) {
 						new_npc->CheckGlobalLootTables();
@@ -180,11 +180,11 @@ void Trap::Trigger(Mob* trigger)
 		case trapTypeBanditSpawn:
 			if (message.empty())
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"A bandit leaps out from behind a tree!");
+				entity_list.MessageClose(trigger,false,100,Chat::White,"A bandit leaps out from behind a tree!");
 			}
 			else
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s",message.c_str());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s",message.c_str());
 			}
 
 			for (i = 0; i < effectvalue2; i++)
@@ -193,7 +193,7 @@ void Trap::Trigger(Mob* trigger)
 				{
 					auto randomOffset = glm::vec4(zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
-					auto new_npc = new NPC(tmp, nullptr, spawnPosition, EQ::constants::GravityBehavior::Water);
+					auto new_npc = new NPC(tmp, nullptr, spawnPosition, GravityBehavior::Water);
 					new_npc->AddLootTable();
 					if (new_npc->DropsGlobalLoot()) {
 						new_npc->CheckGlobalLootTables();
@@ -206,11 +206,11 @@ void Trap::Trigger(Mob* trigger)
 		case trapTypeDamage:
 			if (message.empty())
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s triggers a trap!",trigger->GetName());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s triggers a trap!",trigger->GetName());
 			}
 			else
 			{
-				entity_list.MessageClose(trigger,false,100,CC_Default,"%s",message.c_str());
+				entity_list.MessageClose(trigger,false,100,Chat::White,"%s",message.c_str());
 			}
 			if(trigger && trigger->IsClient())
 			{
@@ -380,13 +380,13 @@ void EntityList::GetTrapInfo(Client* client)
 		if (cur->IsTrap())
 		{
 			bool isset = (cur->chkarea_timer.Enabled() && !cur->reset_timer.Enabled());
-			client->Message(CC_Default, " Trap: (%d) found at %0.2f,%0.2f,%0.2f. Times Triggered: %d Is Active: %d Group: %d Message: %s", cur->trap_id, cur->m_Position.x, cur->m_Position.y, cur->m_Position.z, cur->times_triggered, isset, cur->group, cur->message.c_str());
+			client->Message(Chat::White, " Trap: (%d) found at %0.2f,%0.2f,%0.2f. Times Triggered: %d Is Active: %d Group: %d Message: %s", cur->trap_id, cur->m_Position.x, cur->m_Position.y, cur->m_Position.z, cur->times_triggered, isset, cur->group, cur->message.c_str());
 			++count;
 		}
 		++it;
 	}
 
-	client->Message(CC_Default, "%d traps found.", count);
+	client->Message(Chat::White, "%d traps found.", count);
 }
 
 void EntityList::ClearTrapPointers()
@@ -479,7 +479,7 @@ void Trap::CreateHiddenTrigger()
 	make_npc->d_melee_texture2 = 0;
 	make_npc->level = level;
 	strcpy(make_npc->special_abilities, "19,1^20,1^24,1^25,1");
-	NPC* npca = new NPC(make_npc, nullptr, glm::vec4(m_Position, 0.0f), EQ::constants::GravityBehavior::Water);
+	NPC* npca = new NPC(make_npc, nullptr, glm::vec4(m_Position, 0.0f), GravityBehavior::Water);
 	entity_list.AddNPC(npca);
 
 	hiddenTrigger = npca;

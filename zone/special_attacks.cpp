@@ -155,7 +155,7 @@ void Mob::TryBashKickStun(Mob* defender, uint8 skill)
 		{
 			if (stun_resist && zone->random.Roll(stun_resist))
 			{
-				defender->Message_StringID(MT_DefaultText, AVOID_STUN);
+				defender->Message_StringID(Chat::DefaultText, AVOID_STUN);
 				Log(Logs::Detail, Logs::Combat, "Stun Resisted. %d chance.", stun_resist);
 			}
 			else
@@ -206,10 +206,13 @@ void Mob::TryBashKickStun(Mob* defender, uint8 skill)
 
 void Mob::DoBash(Mob* defender)
 {
-	if (!defender)
+	if (!defender) {
 		defender = GetTarget();
-	if (defender == this || !defender)
+	}
+
+	if (defender == this || !defender) {
 		return;
+	}
 
 	uint16 skill_level = GetSkill(EQ::skills::SkillBash);
 	bool is_trained = skill_level > 0 && skill_level < 253;
@@ -217,38 +220,36 @@ void Mob::DoBash(Mob* defender)
 	int hate = base;
 	bool shieldBash = false;
 
-	if (is_trained && IsClient() && (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN || GetClass() == CLERIC))
-	{
+	if (is_trained && IsClient() && (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN || GetClass() == CLERIC)) {
 		CastToClient()->CheckIncreaseSkill(EQ::skills::SkillBash, GetTarget(), zone->skill_difficulty[EQ::skills::SkillBash].difficulty);
 
 		EQ::ItemInstance* item = nullptr;
 		item = CastToClient()->GetInv().GetItem(EQ::invslot::slotSecondary);
 
-		if (item)
-		{
-			if (item->GetItem()->ItemType == EQ::item::ItemTypeShield)
-			{
+		if (item) {
+			if (item->GetItem()->ItemType == EQ::item::ItemTypeShield) {
 				shieldBash = true;
 				int cap = base + GetLevel() / 5 + 2;
 				base += item->GetItem()->AC;
-				if (base > cap)
+				if (base > cap) {
 					base = cap;
+				}
 				hate = base;
 			}
 
 			const EQ::ItemData *itm = item->GetItem();
-			int32 fbMult = GetFuriousBash(itm->Focus.Effect);
-			if (fbMult)
-			{
-				fbMult = zone->random.Int(1, fbMult);
-				hate = base * (100 + fbMult) / 100;
+			int32 fbash = GetFuriousBash(itm->Focus.Effect);
+			if (fbash && content_service.IsTheShadowsOfLuclinEnabled()) { // Disable Focus Effect until Luclin
+				fbash = zone->random.Int(1, fbash);
+				hate = base * (100 + fbash) / 100;
 			}
 		}
 	}
 
 	int minDmg = 1;
-	if (defender->IsImmuneToMelee(this, shieldBash? EQ::invslot::slotSecondary : EQ::invslot::slotPrimary))
+	if (defender->IsImmuneToMelee(this, shieldBash ? EQ::invslot::slotSecondary : EQ::invslot::slotPrimary)) {
 		minDmg = DMG_INVUL;
+	}
 
 	DoSpecialAttackDamage(defender, EQ::skills::SkillBash, base, minDmg, hate, DoAnimation::Slam);
 }
@@ -330,7 +331,7 @@ void Client::DoBackstab(Mob* defender)
 	EQ::ItemInstance *wpn = GetInv().GetItem(EQ::invslot::slotPrimary);
 	if (!wpn || (wpn->GetItem()->ItemType != EQ::item::ItemType1HPiercing))
 	{
-		Message_StringID(CC_Red, BACKSTAB_WEAPON);
+		Message_StringID(Chat::Red, BACKSTAB_WEAPON);
 		return;
 	}
 
@@ -382,7 +383,7 @@ void Client::DoBackstab(Mob* defender)
 	if (assassinateDmg)
 	{
 		minHit = assassinateDmg;
-		entity_list.MessageClose_StringID(this, false, 200, MT_CritMelee, ASSASSINATES, GetName());
+		entity_list.MessageClose_StringID(this, false, 200, Chat::MeleeCrit, ASSASSINATES, GetName());
 	}
 
 	for (int i = 0; i < stabs; i++)
@@ -672,12 +673,12 @@ void Client::RangedAttack(Mob* other) {
 
 	if (!RangeWeapon || !RangeWeapon->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ranged weapon (%d) in slot %d", GetItemIDAt(EQ::invslot::slotRange), EQ::invslot::slotRange);
-		Message(CC_Default, "Error: Rangeweapon: GetItem(%i)==0, you have no bow!", GetItemIDAt(EQ::invslot::slotRange));
+		Message(Chat::White, "Error: Rangeweapon: GetItem(%i)==0, you have no bow!", GetItemIDAt(EQ::invslot::slotRange));
 		return;
 	}
 	if (!Ammo || !Ammo->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ammo item (%d) in slot %d", GetItemIDAt(EQ::invslot::slotAmmo), EQ::invslot::slotAmmo);
-		Message(CC_Default, "Error: Ammo: GetItem(%i)==0, you have no ammo!", GetItemIDAt(EQ::invslot::slotAmmo));
+		Message(Chat::White, "Error: Ammo: GetItem(%i)==0, you have no ammo!", GetItemIDAt(EQ::invslot::slotAmmo));
 		return;
 	}
 
@@ -688,12 +689,12 @@ void Client::RangedAttack(Mob* other) {
 
 	if(RangeItem->ItemType != EQ::item::ItemTypeBow) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ranged item is not a bow. type %d.", RangeItem->ItemType);
-		Message(CC_Default, "Error: Rangeweapon: Item %d is not a bow.", RangeWeapon->GetID());
+		Message(Chat::White, "Error: Rangeweapon: Item %d is not a bow.", RangeWeapon->GetID());
 		return;
 	}
 	if(AmmoItem->ItemType != EQ::item::ItemTypeArrow) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ammo item is not an arrow. type %d.", AmmoItem->ItemType);
-		Message(CC_Default, "Error: Ammo: type %d != %d, you have the wrong type of ammo!", AmmoItem->ItemType, EQ::item::ItemTypeArrow);
+		Message(Chat::White, "Error: Ammo: type %d != %d, you have the wrong type of ammo!", AmmoItem->ItemType, EQ::item::ItemTypeArrow);
 		return;
 	}
 
@@ -782,7 +783,7 @@ void Client::RangedAttack(Mob* other) {
 			Log(Logs::Detail, Logs::Combat, "Ranged attack out of range... client should catch this. (%f > %f).\n", dist, range);
 			if (oor_count > oor_threshold)
 			{
-				Message_StringID(CC_Red, TARGET_OUT_OF_RANGE);//Client enforces range and sends the message, this is a backup just incase.
+				Message_StringID(Chat::Red, TARGET_OUT_OF_RANGE);//Client enforces range and sends the message, this is a backup just incase.
 				return;
 			}
 		}
@@ -879,14 +880,14 @@ void Mob::DoArcheryAttackDmg(Mob* other)
 			// allow the shot if fired parallel to the wall; deny if fired perpendicular
 			if (xy_angle > 0.4f)
 			{
-				Log(Logs::Moderate, Logs::Combat, "Poofing arrow; %s is against a wall(1)  xy_angle: %0.4f", other->GetName(), xy_angle);
+				Log(Logs::Detail, Logs::Combat, "Poofing arrow; %s is against a wall(1)  xy_angle: %0.4f", other->GetName(), xy_angle);
 				return;
 			}
 
 			xy_angle = fabs(-other->CastToNPC()->GetWallAngle2(vector_x, vector_y));
 			if (xy_angle > 0.4f)
 			{
-				Log(Logs::Moderate, Logs::Combat, "Poofing arrow; %s is against a wall(2)  xy_angle: %0.4f", other->GetName(), xy_angle);
+				Log(Logs::Detail, Logs::Combat, "Poofing arrow; %s is against a wall(2)  xy_angle: %0.4f", other->GetName(), xy_angle);
 				return;
 			}
 		}
@@ -894,7 +895,7 @@ void Mob::DoArcheryAttackDmg(Mob* other)
 
 	if (other->IsNPC() && RuleB(AlKabor, BlockProjectileCorners) && other->CastToNPC()->IsCornered() && (z_angle > 0.85f || z_angle < -0.85f))
 	{
-		Log(Logs::Moderate, Logs::Combat, "Poofing arrow; %s is cornered.  z_angle: %0.2f", other->GetName(), z_angle);
+		Log(Logs::Detail, Logs::Combat, "Poofing arrow; %s is cornered.  z_angle: %0.2f", other->GetName(), z_angle);
 		return;
 	}
 	
@@ -1094,7 +1095,7 @@ void NPC::RangedAttack(Mob* other)
 	CommonBreakInvisible();
 
 	if (ammo && GetSpecialAbility(SPECATK_RANGED_ATK) == 3)	{
-		ServerLootItem_Struct* sitem = GetItem(EQ::invslot::slotAmmo);
+		LootItem* sitem = GetItem(EQ::invslot::slotAmmo);
 		RemoveItem(sitem, 1);
 	}
 }
@@ -1107,7 +1108,7 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 	if((!CanDoubleAttack && (attack_timer.Enabled() && !attack_timer.Check(false)) || (ranged_timer.Enabled() && !ranged_timer.Check()))) {
 		Log(Logs::Detail, Logs::Combat, "Throwing attack canceled. Timer not up. Attack %d, ranged %d", attack_timer.GetRemainingTime(), ranged_timer.GetRemainingTime());
 		// The server and client timers are not exact matches currently, so this would spam too often if enabled
-		//Message(CC_Default, "Error: Timer not up. Attack %d, ranged %d", attack_timer.GetRemainingTime(), ranged_timer.GetRemainingTime());
+		//Message(Chat::White, "Error: Timer not up. Attack %d, ranged %d", attack_timer.GetRemainingTime(), ranged_timer.GetRemainingTime());
 		return;
 	}
 
@@ -1116,7 +1117,7 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 
 	if (!RangeWeapon || !RangeWeapon->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ranged weapon (%d) in slot %d", GetItemIDAt(EQ::invslot::slotRange), EQ::invslot::slotRange);
-		//Message(CC_Default, "Error: Rangeweapon: GetItem(%i)==0, you have nothing to throw!", GetItemIDAt(SlotRange));
+		//Message(Chat::White, "Error: Rangeweapon: GetItem(%i)==0, you have nothing to throw!", GetItemIDAt(SlotRange));
 		return;
 	}
 
@@ -1125,7 +1126,7 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 	const EQ::ItemData* item = RangeWeapon->GetItem();
 	if(item->ItemType != EQ::item::ItemTypeLargeThrowing && item->ItemType != EQ::item::ItemTypeSmallThrowing) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ranged item %d is not a throwing weapon. type %d.", item->ItemType);
-		//Message(CC_Default, "Error: Rangeweapon: GetItem(%i)==0, you have nothing useful to throw!", GetItemIDAt(SlotRange));
+		//Message(Chat::White, "Error: Rangeweapon: GetItem(%i)==0, you have nothing useful to throw!", GetItemIDAt(SlotRange));
 		return;
 	}
 
@@ -1147,7 +1148,7 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 	float dist = DistanceSquaredNoZ(m_Position, GetTarget()->GetPosition());
 	if(dist > range) {
 		Log(Logs::Detail, Logs::Combat, "Throwing attack out of range... client should catch this. (%f > %f).\n", dist, range);
-		Message_StringID(CC_Red,TARGET_OUT_OF_RANGE);//Client enforces range and sends the message, this is a backup just incase.
+		Message_StringID(Chat::Red,TARGET_OUT_OF_RANGE);//Client enforces range and sends the message, this is a backup just incase.
 		return;
 	}
 	else if(dist < (RuleI(Combat, MinRangedAttackDist)*RuleI(Combat, MinRangedAttackDist))){
@@ -1413,7 +1414,7 @@ void NPC::DoClassAttacks(Mob *target)
 
 		if (zone->random.Roll(tauntChance))
 		{
-			this->GetOwner()->Message_StringID(MT_PetResponse, PET_TAUNTING);
+			this->GetOwner()->Message_StringID(Chat::PetResponse, PET_TAUNTING);
 			Taunt(target->CastToNPC(), false);
 		}
 	}
@@ -1590,7 +1591,7 @@ void Mob::Taunt(NPC* who, bool always_succeed, int32 overhate)
 
 	//Support for how taunt worked pre 2000 on LIVE - Can not taunt NPC over your level.
 	if (((RuleB(Combat, TauntOverLevel) == false) && (levelDifference < 0)) || who->GetSpecialAbility(IMMUNE_TAUNT)){
-		//Message_StringID(CC_User_SpellFailure,FAILED_TAUNT);
+		//Message_StringID(Chat::SpellFailure,FAILED_TAUNT);
 		return;
 	}
 
@@ -1669,11 +1670,11 @@ void Mob::Taunt(NPC* who, bool always_succeed, int32 overhate)
 			who->Say_StringID(SUCCESSFUL_TAUNT,GetCleanName());
 	}
 //	else{
-	//	Message_StringID(CC_User_SpellFailure,FAILED_TAUNT);
+	//	Message_StringID(Chat::SpellFailure,FAILED_TAUNT);
 //	}
 
 	//else
-	//	Message_StringID(CC_User_SpellFailure,FAILED_TAUNT);
+	//	Message_StringID(Chat::SpellFailure,FAILED_TAUNT);
 }
 
 
@@ -1718,7 +1719,7 @@ void Mob::InstillDoubt(Mob *who, int stage)
 
 			if (!IsFacingMob(instillTarget))
 			{
-				Message_StringID(MT_TooFarAway, CANT_HIT_THEM);
+				Message_StringID(Chat::TooFarAway, CANT_HIT_THEM);
 				return;
 			}
 
@@ -1740,7 +1741,7 @@ void Mob::InstillDoubt(Mob *who, int stage)
 		{
 			// skill check failure
 
-			Message_StringID(CC_Blue, NOT_SCARING);
+			Message_StringID(Chat::LightBlue, NOT_SCARING);
 			instillDoubtTargetID = 0;
 		}
 	}

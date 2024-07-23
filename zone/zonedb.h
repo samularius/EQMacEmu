@@ -1,6 +1,8 @@
 #ifndef ZONEDB_H_
 #define ZONEDB_H_
 
+#include <unordered_set>
+
 #include "../common/shareddb.h"
 #include "../common/eq_packet_structs.h"
 #include "position.h"
@@ -111,7 +113,7 @@ struct DBnpcspells_Struct {
 	uint32  idle_no_sp_recast_min;
 	uint32  idle_no_sp_recast_max;
 	uint8	idle_beneficial_chance;
-	DBnpcspells_entries_Struct entries[0];
+	std::vector<DBnpcspells_entries_Struct> entries;
 };
 
 struct DBnpcspellseffects_Struct {
@@ -141,6 +143,40 @@ struct PetRecord {
 	uint8 petnaming;		// How to name the pet (Warder, pet, random name, familiar, ...)
 	bool monsterflag;	// flag for if a random monster appearance should get picked
 	uint32 equipmentset;	// default equipment for the pet
+};
+
+struct CharacterCorpseEntry 
+{
+	uint32	crc;
+	bool	locked;
+	uint32	itemcount;
+	uint32	exp;
+	uint32	gmexp;
+	float	size;
+	uint8	level;
+	uint32	race;
+	uint8	gender;
+	uint8	class_;
+	uint8	deity;
+	uint8	texture;
+	uint8	helmtexture;
+	uint32	copper;
+	uint32	silver;
+	uint32	gold;
+	uint32	plat;
+	EQ::TintProfile item_tint;
+	uint8 haircolor;
+	uint8 beardcolor;
+	uint8 eyecolor1;
+	uint8 eyecolor2;
+	uint8 hairstyle;
+	uint8 face;
+	uint8 beard;
+	uint8 killedby;
+	bool  rezzable;
+	uint32	rez_time;
+	uint32 time_of_death;
+	LootItem items[0];
 };
 
 // Actual pet info for a client.
@@ -184,7 +220,7 @@ namespace NPCSpawnTypes {
 }
 
 class ZoneDatabase : public SharedDatabase {
-	typedef std::list<ServerLootItem_Struct*> ItemList;
+	typedef std::list<LootItem*> ItemList;
 public:
 	ZoneDatabase();
 	ZoneDatabase(const char* host, const char* user, const char* passwd, const char* database,uint32 port);
@@ -266,7 +302,7 @@ public:
 	bool		DeleteItemOffCharacterCorpse(uint32 db_id, uint32 equip_slot, uint32 item_id);
 	uint32		GetCharacterCorpseItemCount(uint32 corpse_id);
 	bool		LoadCharacterCorpseRezData(uint32 corpse_id, uint32 *exp, uint32 *gmexp, bool *rezzable, bool *is_rezzed);
-	bool		LoadCharacterCorpseData(uint32 corpse_id, PlayerCorpse_Struct* pcs);
+	bool		LoadCharacterCorpseData(uint32 corpse_id, CharacterCorpseEntry* corpse);
 	Corpse*		LoadCharacterCorpse(uint32 player_corpse_id);
 	Corpse*		SummonBuriedCharacterCorpses(uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
 	Corpse*		SummonCharacterCorpse(uint32 corpse_id, uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
@@ -283,10 +319,10 @@ public:
 	uint32		SendCharacterCorpseToGraveyard(uint32 dbid, uint32 zoneid, uint32 zone_guild_id, const glm::vec4& position);
 	uint32		CreateGraveyardRecord(uint32 graveyard_zoneid, const glm::vec4& position);
 	uint32		AddGraveyardIDToZone(uint32 zone_id, uint32 graveyard_id);
-	uint32		SaveCharacterCorpse(uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, PlayerCorpse_Struct* dbpc, const glm::vec4& position);
-	bool		SaveCharacterCorpseBackup(uint32 corpse_id, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, PlayerCorpse_Struct* dbpc, const glm::vec4& position);
-	uint32		UpdateCharacterCorpse(uint32 dbid, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, PlayerCorpse_Struct* dbpc, const glm::vec4& position, bool rezzed = false);
-	bool		UpdateCharacterCorpseBackup(uint32 dbid, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, PlayerCorpse_Struct* dbpc, const glm::vec4& position, bool rezzed = false);
+	uint32		SaveCharacterCorpse(uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, CharacterCorpseEntry* corpse, const glm::vec4& position);
+	bool		SaveCharacterCorpseBackup(uint32 corpse_id, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, CharacterCorpseEntry* corpse, const glm::vec4& position);
+	uint32		UpdateCharacterCorpse(uint32 dbid, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, CharacterCorpseEntry* corpse, const glm::vec4& position, bool rezzed = false);
+	bool		UpdateCharacterCorpseBackup(uint32 dbid, uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, CharacterCorpseEntry* corpse, const glm::vec4& position, bool rezzed = false);
 	uint32		GetFirstCorpseID(uint32 char_id);
 	uint32		GetCharacterCorpseCount(uint32 char_id);
 	uint32		GetCharacterCorpseID(uint32 char_id, uint8 corpse);
@@ -308,15 +344,16 @@ public:
 	bool		SeeIllusion(int32 faction_id);
 	int16		MinFactionCap(int32 faction_id);
 	int16		MaxFactionCap(int32 faction_id);
+	inline uint32 GetMaxFaction() { return max_faction; }
 
 	/* AAs */
-	bool	LoadAAActions();
-	bool	LoadAAEffects();
+	bool	LoadAlternateAdvancementActions();
+	bool	LoadAlternateAdvancementEffects();
 	SendAA_Struct*	GetAASkillVars(uint32 skill_id);
 	uint8	GetTotalAALevels(uint32 skill_id);
 	uint32	GetMacToEmuAA(uint8 eqmacid);
 	uint32	CountAAs();
-	void	LoadAAs(SendAA_Struct **load);
+	void	LoadAlternateAdvancement(SendAA_Struct **load);
 	uint32 CountAAEffects();
 
 	/* Zone related */
@@ -365,13 +402,13 @@ public:
 	uint32		UpdateNPCTypeAppearance(Client *client, NPC* spawn);
 	bool		GetPetEntry(const char *pet_type, PetRecord *into);
 	bool		GetPoweredPetEntry(const char *pet_type, int16 petpower, PetRecord *into);
-	void		AddLootTableToNPC(NPC* npc, uint32 loottable_id, ItemList* itemlist, uint32* copper, uint32* silver, uint32* gold, uint32* plat);
-	void		AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* itemlist, uint8 droplimit, uint8 mindrop);
+	void		AddLootTableToNPC(NPC* npc, uint32 loottable_id, LootItems* itemlist, uint32* copper, uint32* silver, uint32* gold, uint32* plat);
+	void		AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, LootItems* itemlist, uint8 droplimit, uint8 mindrop);
 	uint32		GetMaxNPCSpellsID();
 	uint32		GetMaxNPCSpellsEffectsID();
 	void LoadGlobalLoot();
 
-	DBnpcspells_Struct*				GetNPCSpells(uint32 iDBSpellsID);
+	DBnpcspells_Struct*				GetNPCSpells(uint32 npc_spells_id);
 	DBnpcspellseffects_Struct*		GetNPCSpellsEffects(uint32 iDBSpellsEffectsID);
 	const NPCType*					LoadNPCTypesData(uint32 id, bool bulk_load = false);
 
@@ -446,7 +483,6 @@ public:
 		* REALLY HAS NO BETTER SECTION
 	*/
 	bool	logevents(const char* accountname,uint32 accountid,uint8 status,const char* charname,const char* target, const char* descriptiontype, const char* description,int event_nid);
-	void	GetEventLogs(const char* name,char* target,uint32 account_id=0,uint8 eventid=0,char* detail=0,char* timestamp=0, CharacterEventLog_Struct* cel=0);
 	uint32	GetKarma(uint32 acct_id);
 	void	UpdateKarma(uint32 acct_id, uint32 amount);
 	int16  GetTimerFromSkill(EQ::skills::SkillType skillid);
@@ -457,12 +493,11 @@ protected:
 
 	uint32				max_faction;
 	Faction**			faction_array;
-	uint32 npc_spells_maxid;
 	uint32 npc_spellseffects_maxid;
-	DBnpcspells_Struct** npc_spells_cache;
-	bool*				npc_spells_loadtried;
-	DBnpcspellseffects_Struct** npc_spellseffects_cache;
-	bool*				npc_spellseffects_loadtried;
+	std::unordered_map<uint32, DBnpcspells_Struct> npc_spells_cache;
+	std::unordered_set<uint32> npc_spells_loadtried;
+	DBnpcspellseffects_Struct **npc_spellseffects_cache;
+	bool *npc_spellseffects_loadtried;
 	uint8 door_isopen_array[255];
 };
 

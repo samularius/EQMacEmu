@@ -1,0 +1,6 @@
+!Makefile
+base/Maps
+base/quests
+base/db/*
+!base/db/local
+!base/expansion/Makefile

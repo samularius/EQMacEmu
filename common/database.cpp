@@ -66,11 +66,11 @@ bool Database::Connect(const char* host, const char* user, const char* passwd, c
 	uint32 errnum= 0;
 	char errbuf[MYSQL_ERRMSG_SIZE];
 	if (!Open(host, user, passwd, database, port, &errnum, errbuf)) {
-		LogError("[MySQL] Failed to connect to database: Error: [{}] ", errbuf); 
+		LogError("Failed to connect to database: Error: [{}] ", errbuf); 
 		return false; 
 	}
 	else {
-		LogInfo("[MySQL] Using database [{}] at [{}] : [{}] ", database, host, port);
+		LogInfo("Using database [{}] at [{}] : [{}] ", database, host, port);
 		return true;
 	}
 }
@@ -130,7 +130,7 @@ uint32 Database::CheckLogin(const char* name, const char* password, int16* oStat
 bool Database::CheckBannedIPs(std::string login_ip)
 {
 	auto query = fmt::format(
-		"SELECT ip_address FROM Banned_IPs WHERE ip_address= '{}'", 
+		"SELECT ip_address FROM banned_ips WHERE ip_address= '{}'", 
 		login_ip
 	);
 
@@ -146,7 +146,7 @@ bool Database::CheckBannedIPs(std::string login_ip)
 
 bool Database::AddBannedIP(std::string banned_ip, std::string notes) {
 	auto query = fmt::format(
-		"INSERT into Banned_IPs SET ip_address= '{}', notes = '{}'", 
+		"INSERT into banned_ips SET ip_address= '{}', notes = '{}'", 
 		Strings::Escape(banned_ip),
 		Strings::Escape(notes)
 	);
@@ -781,7 +781,7 @@ bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, EQ::I
 	if(zname == nullptr) {
 		/* Zone not in the DB, something to prevent crash... */
 		strn0cpy(zone, "bazaar", 49);
-		pp->zone_id = bazaar;
+		pp->zone_id = Zones::BAZAAR;
 	}
 	else{ strn0cpy(zone, zname, 49); }
 
@@ -1015,6 +1015,8 @@ bool Database::LoadVariables() {
 		std::transform(std::begin(key), std::end(key), std::begin(key), ::tolower); // keys are lower case, DB doesn't have to be
 		varcache.Add(key, value);
 	}
+
+	LogInfo("Loaded [{}] variable(s)", Strings::Commify(std::to_string(results.RowCount())));
 
 	return true;
 }
@@ -1471,6 +1473,15 @@ void Database::GetAccountFromID(uint32 id, char* oAccountName, int16* oStatus, i
 
 void Database::ClearMerchantTemp(){
 	QueryDatabase("DELETE FROM merchantlist_temp");
+}
+
+void Database::ClearSayLink() {
+	std::string query = StringFormat("DELETE FROM saylink");
+	auto results = QueryDatabase(query);
+
+	if (results.Success()) {
+		QueryDatabase("ALTER TABLE saylink AUTO_INCREMENT = 32770");
+	}
 }
 
 bool Database::UpdateName(const char* oldname, const char* newname) { 
@@ -2193,6 +2204,15 @@ void Database::ClearRaidDetails(uint32 rid) {
 
 	if (!results.Success())
 		std::cout << "Unable to clear raid details: " << results.ErrorMessage() << std::endl;
+}
+
+void Database::PurgeAllDeletedDataBuckets() {
+	std::string query = StringFormat(
+		"DELETE FROM `data_buckets` WHERE (`expires` < %lld AND `expires` > 0)",
+		(long long)std::time(nullptr)
+	);
+
+	QueryDatabase(query);
 }
 
 // returns 0 on error or no raid for that character, or

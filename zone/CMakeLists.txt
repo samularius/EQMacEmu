@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 SET(zone_sources
 	aa.cpp
@@ -13,6 +13,7 @@ SET(zone_sources
 	client_process.cpp
 	command.cpp
 	corpse.cpp
+	data_bucket.cpp
 	doors.cpp
 	effects.cpp
 	encounter.cpp
@@ -27,7 +28,7 @@ SET(zone_sources
 	hate_list.cpp
 	horse.cpp
 	inventory.cpp
-	loottables.cpp
+	loot.cpp
 	lua_bit.cpp
 	lua_corpse.cpp
 	lua_client.cpp
@@ -50,17 +51,6 @@ SET(zone_sources
 	lua_raid.cpp
 	lua_spawn.cpp
 	lua_spell.cpp
-	entity.cpp
-	exp.cpp
-	fearpath.cpp
-	forage.cpp
-	groups.cpp
-	guild.cpp
-	guild_mgr.cpp
-	hate_list.cpp
-	horse.cpp
-	inventory.cpp
-	loottables.cpp
 	main.cpp
 	map.cpp
 	mob.cpp
@@ -112,6 +102,7 @@ SET(zone_headers
 	command.h
 	common.h
 	corpse.h
+	data_bucket.h
 	doors.h
 	encounter.h
 	entity.h

@@ -22,10 +22,12 @@
 #include <vector>
 #include <cstdarg>
 #include <tuple>
+#include <type_traits>
+
+#include <fmt/format.h>
 
 #ifndef _WIN32
  // this doesn't appear to affect linux-based systems..need feedback for _WIN64
-#include <fmt/format.h>
 #endif
 
 #ifdef _WINDOWS
@@ -55,6 +57,12 @@ public:
 	static std::string &RTrim(std::string &str, const std::string &chars = "\t\n\v\f\r ");
 	static std::string &Trim(std::string &str, const std::string &chars = "\t\n\v\f\r ");
 	static std::string Commify(const std::string &number);
+	static std::string Commify(uint16 number) { return Strings::Commify(std::to_string(number)); };
+	static std::string Commify(uint32 number) { return Strings::Commify(std::to_string(number)); };
+	static std::string Commify(uint64 number) { return Strings::Commify(std::to_string(number)); };
+	static std::string Commify(int16 number) { return Strings::Commify(std::to_string(number)); };
+	static std::string Commify(int32 number) { return Strings::Commify(std::to_string(number)); };
+	static std::string Commify(int64 number) { return Strings::Commify(std::to_string(number)); };
 	static std::string ConvertToDigit(int n, std::string suffix);
 	static std::string Escape(const std::string &s);
 	static std::string EscapePair(const char *src, size_t sz);

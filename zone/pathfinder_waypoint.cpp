@@ -472,7 +472,7 @@ void PathfinderWaypoint::DebugCommand(Client *c, const Seperator *sep)
 {
 	if(sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help"))
 	{
-		c->Message(CC_Yellow, "This zone is using path nodes from the .path file.");
+		c->Message(Chat::Yellow, "This zone is using path nodes from the .path file.");
 		c->Message(0, "Syntax: #path shownodes: Spawns a npc to represent every npc node.");
 		c->Message(0, "#path reload: Reload the path file.");
 		c->Message(0, "#path info: Gives information about node info (requires shownode target).");
@@ -833,7 +833,7 @@ void PathfinderWaypoint::ShowNode(const Node &n)
 	strcpy(npc_type->special_abilities, "19,1^20,1^24,1^35,1");
 
 	auto position = glm::vec4(n.v.x, n.v.y, n.v.z, 0.0f);
-	auto npc = new NPC(npc_type, nullptr, position, EQ::constants::Flying);
+	auto npc = new NPC(npc_type, nullptr, position, GravityBehavior::Flying);
 
 	entity_list.AddNPC(npc, true, true);
 }
@@ -855,7 +855,7 @@ int PathfinderWaypoint::FindNearestPathNode(glm::vec3 Position)
 
 	float CandidateNodeRangeZ = RuleR(Pathing, CandidateNodeRangeZ);
 
-	if (zone->GetZoneID() == kedge || (zone->GetZoneID() == powater && Position.z < 0.0f) || (zone->HasWaterMap() && zone->watermap->InLiquid(Position)))
+	if (zone->GetZoneID() == Zones::KEDGE || (zone->GetZoneID() == Zones::POWATER && Position.z < 0.0f) || (zone->HasWaterMap() && zone->watermap->InLiquid(Position)))
 		CandidateNodeRangeZ = 100.0f;
 
 	int ClosestPathNodeToStart = -1;

@@ -97,10 +97,9 @@ RULE_CATEGORY_END()
 RULE_CATEGORY( World )
 RULE_INT ( World, ZoneAutobootTimeoutMS, 60000, "")
 RULE_INT ( World, ClientKeepaliveTimeoutMS, 65000, "")
-RULE_BOOL ( World, UseBannedIPsTable, false, "Toggle whether or not to check incoming client connections against the Banned_IPs table. Set this value to false to disable this feature.")
 RULE_INT ( World, MaxClientsPerIP, -1, "Maximum number of clients allowed to connect per IP address if account status is < AddMaxClientsStatus. Default value: -1 (feature disabled)")
 RULE_INT(  World, MaxMulesPerIP, -1, "Maximum number of mules allowed to connect per IP address if account status is < AddMaxClientsStatus. Default value: -1 (feature disabled)")
-RULE_INT( World, MaxClientsPerForumName, -1, "Maximum number of clients allowed to connect per forum name if account status is < AddMaxClientsStatus. Default value: -1 (feature disabled)")
+RULE_BOOL ( World, UseBannedIPsTable, false, "Toggle whether or not to check incoming client connections against the banned_ips table. Set this value to false to disable this feature.")
 RULE_INT ( World, ExemptMaxClientsStatus, -1, "Exempt accounts from the MaxClientsPerIP and AddMaxClientsStatus rules, if their status is >= this value. Default value: -1 (feature disabled)")
 RULE_INT ( World, AddMaxClientsPerIP, -1, "Maximum number of clients allowed to connect per IP address if account status is < ExemptMaxClientsStatus. Default value: -1 (feature disabled)")
 RULE_INT ( World, AddMaxClientsStatus, -1, "Accounts with status >= this rule will be allowed to use the amount of accounts defined in the AddMaxClientsPerIP. Default value: -1 (feature disabled)")
@@ -123,6 +122,7 @@ RULE_BOOL(World, DontBootDynamics, false, "If true, dynamic zones will not boot 
 RULE_REAL(World, CurrentExpansion, 6.0, "")
 RULE_INT(World, WorldClientLinkdeadMS, 45000, "the time before a client times out as stale from world. 45s default.")
 RULE_INT(World, ClientTimeoutStaleAmount, 3, "")
+RULE_BOOL(World, EnableDevTools, true, "Enable or Disable the Developer Tools globally (Most of the time you want this enabled)")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Zone )
@@ -155,6 +155,7 @@ RULE_BOOL ( Zone, EnableNexusPortals, false, "")
 RULE_INT ( Zone, NexusTimer, 900000, "Nexus timer in ms. Defaults to 15 minutes.")
 RULE_INT ( Zone, NexusScionTimer, 900000, "Nexus timer in ms. Defaults to 15 minutes.")
 RULE_BOOL ( Zone, EnableNexusPortalsOnExpansion, true, "Nexus enables When Luclin is the current expansion")
+RULE_INT(Zone, GlobalLootMultiplier, 1, "Sets Global Loot drop multiplier for database based drops, useful for double, triple loot etc")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( AlKabor )
@@ -162,7 +163,6 @@ RULE_BOOL( AlKabor, AllowPetPull, false, "Allow Green Pet Pull (AK behavior is t
 RULE_BOOL( AlKabor, AllowTickSplit, false, "AK behavior is true")
 RULE_BOOL ( AlKabor, StripBuffsOnLowHP, true, "AK behavior is true")
 RULE_BOOL ( AlKabor, OutOfRangeGroupXPBonus, false, "AK behavior is true. When true, players out of range of the kill will still count towards the group bonus. (They will not receive XP.)  This enables the exploit that allowed a soloing player to recieve the entire 2.6x group bonus")
-
 RULE_BOOL(AlKabor, ClassicGroupEXPBonuses, false, "AK behavior is false.  If true, use the Clsasic to 1 month into Velious era group exp bonus. (2% for 2 members, up to 10% for 6 members)  This was the case from Launch until to Jan 2001 on PC.  False will use the Velious double bonus rules if enabled, or the post June 2003 bonus of 10% per additional member up to 80% if both Velious and Classic rules are disabled.")
 RULE_BOOL ( AlKabor, VeliousGroupEXPBonuses, false, "AK behavior is false.  If true, use the Velious to mid PoP era group exp bonus. (2% for 2 members, up to 20% for 6 members)  This was the case from Jan 2001 to June 2003 on PC.  (prior to that was a 6 man bonus of 10%)  False will use the post June 2003 bonus of 20% per aditional member up to 80%")
 RULE_BOOL ( AlKabor, GroupEXPBonuses, false, "AK behavior is true. When true, the broken 4-6 member group bonuses will be used.  Note: ClassicGroupEXPBonuses must be false for this to work")
@@ -191,8 +191,6 @@ RULE_BOOL (AlKabor, ReducedMonkAC, true, "AK behavior is true.  Monks had a low 
 RULE_BOOL (AlKabor, BlockProjectileCorners, true, "AK behavior is true.  If an NPC was in a corner, arrows and bolts would not hit them.")
 RULE_BOOL (AlKabor, BlockProjectileWalls, true, "AK behavior is true.  If an NPC was walled, then arrows and bolts had to be fired from an angle parallel to the wall in order to hit them. (if this is true, corners will also block)")
 RULE_BOOL (AlKabor, GreenmistHack, true, "Greenmist recourse didn't work on AK.  The spell data is messed up so it's not properly fixable without modifying the client.  This enables a partial workaround that is not AKurate but provides some benefit to players using this weapon.")
-
-
 RULE_BOOL(AlKabor, EnableMobLevelModifier, true, "AK behavior is true.  If true, enable the September 4 & 6 2002 patch exp modifications that granted a large experience bonus to kills within +/-5 levels of the player for level 51+ players")
 RULE_BOOL(AlKabor, EnableEraItemRules, false, "AK behavior is false. If true, disable item data in the era they did not exist in.")
 RULE_BOOL(AlKabor, EnableLuclinHarmonyResistOverride, true, "AK behavior is true. If true, enable the late Luclin Harmony resist override.")
@@ -278,7 +276,6 @@ RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000, "")
 RULE_BOOL(Quarm, EnableQuestBasedXPLimit, true, "Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.") // Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.
 RULE_INT(Quarm, QuestBasedXPLimitLevel, 51, "For Kunark. Adjust for POP Launch.")
 RULE_CATEGORY_END()
-
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
 RULE_BOOL ( Map, FixPathingZWhenLoading, true, "increases zone boot times a bit to reduce hopping.")
@@ -350,6 +347,7 @@ RULE_BOOL ( Spells, SwarmPetTargetLock, false, "Use old method of swarm pets tar
 RULE_INT ( Spells, SpellRecoveryTimer, 3500, "Begins when a cast is complete, and is checked after the next spell finishes casting. If not expired, the new spell is interrupted. Clickies are exempt.")
 RULE_BOOL ( Spells, JamFestAAOnlyAffectsBard, true, "Bard Jam Fest AA only worked on bards themselves but was changed after AK's era.  Changing this to false will put the client stats out of sync with the server.")
 RULE_BOOL ( Spells, ReducePacifyDuration, false, "AK and the eqmac client have 60 tick Pacify (spell 45) duration.  This rule reduces the duration to 7 ticks without desyncing the cast bar and focus effects for custom servers that want this.")
+RULE_BOOL(Spells, ShowDotDmgMessages, false, "Enables LoY-era DoT damage messages. Disabled by default since this didn't exist on Al'Kabor.")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Combat )
@@ -445,7 +443,7 @@ RULE_BOOL ( EventLog, SkipCommonPacketLogging, true, " Doesn't log OP_MobHealth 
 RULE_CATEGORY_END()
 
 RULE_CATEGORY ( AA )
-RULE_INT ( AA, ExpPerPoint, 18750000, "Amount of exp per AA", " ")
+RULE_INT ( AA, ExpPerPoint, 18750000, "Amount of exp per AA")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Console )
@@ -516,6 +514,10 @@ RULE_CATEGORY_END()
 
 RULE_CATEGORY(Petitions)
 RULE_BOOL(Petitions, PetitionSystemActive, false, "Activates bug reporting")
+RULE_CATEGORY_END()
+
+RULE_CATEGORY(Logging)
+RULE_BOOL(Logging, PrintFileFunctionAndLine, true, "Ex: [World Server] [net.cpp::main:309] Loading variables...")
 RULE_CATEGORY_END()
 
 #undef RULE_CATEGORY

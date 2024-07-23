@@ -35,9 +35,9 @@ public:
 	void AddLootTable(int id);
 	void RemoveItem(int item_id);
 	void RemoveItem(int item_id, int slot);
-	void ClearItemList();
-	void AddCash(int copper, int silver, int gold, int platinum);
-	void RemoveCash();
+	void ClearLootItems();
+	void AddLootCash(int copper, int silver, int gold, int platinum);
+	void RemoveLootCash();
 	int CountLoot();
 	int GetLoottableID();
 	uint32 GetCopper();
@@ -145,6 +145,8 @@ public:
 	void SetBaseHP(uint32 new_hp);
 	void SetSpawnPoint(float x, float y, float z, float h);
 	void SetClass(int classNum);
+	void SetMaxDamage(uint32 new_max_damage);
+	void SetMinDamage(uint32 new_min_damage);
 };
 
 #endif

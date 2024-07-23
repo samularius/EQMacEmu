@@ -26,7 +26,10 @@
 #include "position.h"
 #include "water_map.h"
 #include "aa.h"
+#include "../common/light_source.h"
 #include "../common/emu_constants.h"
+
+#include <any>
 #include <set>
 #include <vector>
 #include <memory>
@@ -343,6 +346,7 @@ public:
 	virtual inline uint16 GetBaseRace() const { return base_race; }
 	virtual inline uint8 GetBaseGender() const { return base_gender; }
 	virtual inline uint16 GetDeity() const { return deity; }
+	virtual uint32 GetDeityBit() { return Deity::GetBitmask(deity); }
 	inline uint16 GetRace() const { return race; }
 	virtual uint32 GetRaceStringID();
 	virtual uint32 GetClassStringID();
@@ -450,6 +454,7 @@ public:
 	inline const float GetTarVZ() const { return m_TargetV.z; }
 	inline const float GetTarVector() const { return tar_vector; }
 	inline const uint8 GetTarNDX() const { return tar_ndx; }
+	inline const GravityBehavior GetFlyMode() const { return flymode; }
 	bool IsBoat() const;
 
 	//Group
@@ -493,7 +498,7 @@ public:
 	bool Spawned() { return spawned; };
 	void SendPosition(bool everyone = false, bool ackreq = false);
 	void SendRealPosition();
-	void SetFlyMode(uint8 flymode);
+	void SetFlyMode(GravityBehavior flymode);
 	void Teleport(const glm::vec3& pos);
 	void Teleport(const glm::vec4& pos);
 	void SetAnimation(int8 anim) { animation = anim; } // For Eye of Zomm. It's a NPC, but uses PC position updates.
@@ -546,6 +551,12 @@ public:
 
 	//Quest
 	inline bool GetQglobal() const { return qglobal; }
+	void DeleteBucket(std::string bucket_name);
+	std::string GetBucket(std::string bucket_name);
+	std::string GetBucketExpires(std::string bucket_name);
+	std::string GetBucketKey();
+	std::string GetBucketRemaining(std::string bucket_name);
+	void SetBucket(std::string bucket_name, std::string bucket_value, std::string expiration = "");
 
 	//Other Packet
 	void CreateDespawnPacket(EQApplicationPacket* app, bool Decay);
@@ -559,6 +570,8 @@ public:
 	//Util
 	static uint32 RandomTimer(int min, int max);
 	static uint8 GetDefaultGender(uint16 in_race, uint8 in_gender = 0xFF);
+	static bool IsPlayerClass(uint16 in_class);
+	static bool IsPlayerRace(uint16 in_race);
 	uint16 GetSkillByItemType(int ItemType);
 	uint8 GetItemTypeBySkill(EQ::skills::SkillType skill);
 	virtual void MakePet(uint16 spell_id, const char* pettype, const char *petname = nullptr);
@@ -838,6 +851,7 @@ public:
 	void				FixZInWater();
 	float				GetFixedZ(const glm::vec3& destination, float z_find_offset = 5.0f);
 	virtual int			GetStuckBehavior() const { return 0; }
+	virtual				EQ::InventoryProfile &GetInv() { return m_inv; }
 	float				FindGroundZ(float new_x, float new_y, float z_offset = 0.0);
 	float				FindDestGroundZ(glm::vec3 dest, float z_find_offset = 0.0);
 
@@ -933,8 +947,8 @@ public:
 	void TarGlobal(const char *varname, const char *value, const char *duration, int npcid, int charid, int zoneid);
 	void DelGlobal(const char *varname);
 
-	inline void SetEmoteID(uint16 emote) { emoteid = emote; }
-	inline uint16 GetEmoteID() { return emoteid; }
+	inline void SetEmoteID(uint32 emote) { emoteid = emote; }
+	inline uint32 GetEmoteID() { return emoteid; }
 	inline void SetCombatHPRegen(uint32 regen) { combat_hp_regen = regen; }
 	inline uint16 GetCombatHPRegen() { return combat_hp_regen; }
 	inline void SetCombatManaRegen(uint32 regen) { combat_mana_regen = regen; }
@@ -979,8 +993,6 @@ public:
 	void SetGMSpellException(uint8 value) { casting_gm_override = value; };
 	bool PermaRooted() { return permarooted; }
 	bool PacifyImmune;
-	int GetFlyMode() { return flymode; }
-
 
 protected:
 	void CommonDamage(Mob* other, int32 &damage, const uint16 spell_id, const  EQ::skills::SkillType  attack_skill, bool &avoidable, const int8 buffslot, const bool iBuffTic);
@@ -1123,7 +1135,7 @@ protected:
 	char orig_name[64];
 	char clean_name[64];
 	char clean_name_spaces[64];
-	char lastname[64];
+	char lastname[32];
 
 	glm::vec4 m_Delta;
 
@@ -1293,13 +1305,11 @@ protected:
 	float tar_vector;
 	float test_vector;
 
-
-
-	int flymode;
+	GravityBehavior flymode;
 	bool m_targetable;
 	int QGVarDuration(const char *fmt);
 	void InsertQuestGlobal(int charid, int npcid, int zoneid, const char *name, const char *value, int expdate);
-	uint16 emoteid;
+	uint32 emoteid;
 	uint32 combat_hp_regen;
 	uint32 combat_mana_regen;
 
@@ -1313,6 +1323,9 @@ protected:
 	Timer instillDoubtStageTimer;
 
 private:
+
+	EQ::InventoryProfile m_inv;
+
 	void _StopSong(); //this is not what you think it is
 	int int_runspeed;
 	int int_walkspeed;

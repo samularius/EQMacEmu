@@ -3,6 +3,7 @@
 
 #include "../common/eq_packet_structs.h"
 #include "../common/linked_list.h"
+#include "../common/json/json.h"
 #include "../common/timer.h"
 #include "../common/rulesys.h"
 #include "../common/servertalk.h"
@@ -60,14 +61,13 @@ public:
 	ClientListEntry* RemoveCLEByAccountID(uint32 accountID);
 	bool	CheckIPLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry* cle = nullptr);
 	bool	CheckMuleLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry * cle = nullptr);
-	bool	CheckForumNameLimit(uint32 iAccID, std::string forum_name, uint16 admin, ClientListEntry *cle = nullptr);
 	bool	CheckAccountActive(uint32 iAccID, ClientListEntry* cle = nullptr);
 	void	GetCLEIP(uint32 iIP);
 	void	DisconnectByIP(uint32 iIP);
 	bool	EnforceSessionLimit(uint32 iLSAccountID);
 	void	CLCheckStale();
 	void	CLEKeepAlive(uint32 numupdates, uint32* wid);
-	void	CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin = 0, uint32 ip = 0, uint8 local=0, uint8 version=0);
+	void	CLEAdd(uint32 iLSID, const char* iLoginName, const char* iLoginKey, int16 iWorldAdmin = 0, uint32 ip = 0, uint8 local=0, uint8 version=0);
 	void	UpdateClientGuild(uint32 char_id, uint32 guild_id);
 	bool	ActiveConnection(uint32 iAccID);
 	bool	ActiveConnection(uint32 iAccID, uint32 iCharID);
@@ -75,6 +75,8 @@ public:
 	int GetClientCount();
 	void GetClients(const char *zone_name, std::vector<ClientListEntry *> &into);
 	bool WhoAllFilter(ClientListEntry* client, Who_All_Struct* whom, int16 admin, int whomlen);
+
+	void GetClientList(Json::Value &response);
 
 protected:
 	inline uint32 GetNextCLEID() { return NextCLEID++; }

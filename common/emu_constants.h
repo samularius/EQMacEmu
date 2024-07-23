@@ -143,7 +143,7 @@ namespace EQ
 
 		const size_t SAY_LINK_OPENER_SIZE = 1;
 		using Mac::constants::SAY_LINK_BODY_SIZE;
-		const size_t SAY_LINK_TEXT_SIZE = 200;
+		const size_t SAY_LINK_TEXT_SIZE = 400;
 		const size_t SAY_LINK_CLOSER_SIZE = 1;
 		const size_t SAY_LINK_MAXIMUM_SIZE = (SAY_LINK_OPENER_SIZE + SAY_LINK_BODY_SIZE + SAY_LINK_TEXT_SIZE + SAY_LINK_CLOSER_SIZE);
 
@@ -160,6 +160,26 @@ namespace EQ
 			Crouching,
 			Laying,
 			Looting
+		};
+
+		enum EmoteEventTypes : uint8 {
+			LeaveCombat,
+			EnterCombat,
+			OnDeath,
+			AfterDeath,
+			Hailed,
+			KilledPC,
+			KilledNPC,
+			OnSpawn,
+			OnDespawn,
+			Killed
+		};
+
+		enum EmoteTypes : uint8 {
+			Say,
+			Emote,
+			Shout,
+			Proximity
 		};
 
 		extern const std::map<int, std::string>& GetLanguageMap();
@@ -184,6 +204,11 @@ namespace EQ
 		extern const std::map<uint32, std::string> &GetAppearanceTypeMap();
 		std::string GetAppearanceTypeName(uint32 animation_type);
 
+		extern const std::map<uint8, std::string> &GetEmoteEventTypeMap();
+		std::string GetEmoteEventTypeName(uint8 emote_event_type);
+
+		extern const std::map<uint8, std::string> &GetEmoteTypeMap();
+		std::string GetEmoteTypeName(uint8 emote_type);
 	}
 
 

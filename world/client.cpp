@@ -16,6 +16,8 @@
 #include "../common/strings.h"
 #include "../common/emu_versions.h"
 #include "../common/random.h"
+#include "../common/data_verification.h"
+#include "../common/opcodemgr.h"
 
 #include "client.h"
 #include "worlddb.h"
@@ -133,12 +135,12 @@ void Client::SendLogServer()
 void Client::SendEnterWorld(std::string name)
 {
 	char char_name[64] = { 0 };
-	if (pZoning && database.GetLiveChar(GetAccountID(), char_name)) {
+	if (is_player_zoning && database.GetLiveChar(GetAccountID(), char_name)) {
 		if(database.GetAccountIDByChar(char_name) != GetAccountID()) {
 			eqs->Close();
 			return;
 		} else {
-			Log(Logs::Detail, Logs::WorldServer,"Telling client to continue session.");
+			LogInfo("Telling client to continue session.");
 		}
 	}
 
@@ -186,21 +188,21 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 		return false;
 	}
 
-	LoginInfo_Struct *li=(LoginInfo_Struct *)app->pBuffer;
+	auto *login_info = (LoginInfo_Struct *)app->pBuffer;
 
 	// Quagmire - max len for name is 18, pass 15
 	char name[19] = {0};
 	char password[16] = {0};
-	strn0cpy(name, (char*)li->login_info,18);
-	strn0cpy(password, (char*)&(li->login_info[strlen(name)+1]), 15);
+	strn0cpy(name, (char*)login_info->login_info,18);
+	strn0cpy(password, (char*)&(login_info->login_info[strlen(name)+1]), 15);
 
 	if (strlen(password) <= 1) {
 		// TODO: Find out how to tell the client wrong username/password
-		Log(Logs::Detail, Logs::WorldServer,"Login without a password");
+		LogInfo("Login without a password");
 		return false;
 	}
 
-	pZoning=(li->zoning==1);
+	is_player_zoning = (login_info->zoning==1);
 
 #ifdef IPBASED_AUTH_HACK
 	struct in_addr tmpip;
@@ -216,7 +218,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 #ifdef IPBASED_AUTH_HACK
 	if ((cle = zoneserver_list.CheckAuth(inet_ntoa(tmpip), password)))
 #else
-	if (loginserverlist.Connected() == false && !pZoning) {
+	if (loginserverlist.Connected() == false && !is_player_zoning) {
 		Log(Logs::Detail, Logs::WorldServer,"Error: Login server login while not connected to login server.");
 		return false;
 	}
@@ -239,7 +241,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 			// EQMac PC Windows client is 2, passed from the loginserver.  This is world, it detects MacOSX Intel (4) and PPC (8) clients here.
 			if( cle->GetMacClientVersion() != EQ::versions::ClientVersion::MacPC )
 			{
-				cle->SetMacClientVersion(li->macversion);
+				cle->SetMacClientVersion(login_info->macversion);
 			}
 			m_ClientVersionBit = cle->GetMacClientVersion();
 		}
@@ -249,7 +251,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 		}
 
 		Log(Logs::Detail, Logs::WorldServer, "ClientVersionBit is: %i", m_ClientVersionBit);
-		Log(Logs::Detail, Logs::WorldServer,"Logged in. Mode=%s",pZoning ? "(Zoning)" : "(CharSel)");
+		Log(Logs::Detail, Logs::WorldServer,"Logged in. Mode=%s", is_player_zoning ? "(Zoning)" : "(CharSel)");
 		Log(Logs::Detail, Logs::WorldServer, "LS Account #%d", cle->LSID());
 
 		const WorldConfig *Config=WorldConfig::get();
@@ -269,8 +271,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 
 		SendLogServer();
 		SendApproveWorld();
-
-		if (pZoning)
+		if (is_player_zoning)
 		{
 			uint32 tmpaccid = 0;
 			uint64 tmpdeathtime = 0;
@@ -287,7 +288,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 			SendEnterWorld(cle->name());
 		}
 
-		if (!pZoning) {
+		if (!is_player_zoning) {
 			SendEnterWorld(cle->name());
 			SendExpansionInfo();
 			SendCharInfo();
@@ -309,65 +310,77 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 
 bool Client::HandleNameApprovalPacket(const EQApplicationPacket *app)
 {
-	if(app->Size() != sizeof(NameApproval_Struct))
-	{
+	if(app->Size() != sizeof(NameApproval_Struct)) {
 		Log(Logs::General, Logs::Error, "Wrong size: HandleNameApprovalPacket, size=%i, expected %i", app->size, sizeof(NameApproval_Struct));
 		return false;
 	}
 
 	if (GetAccountID() == 0) {
-		Log(Logs::Detail, Logs::WorldServer,"Name approval request with no logged in account");
+		LogInfo("Name approval request with no logged in account");
 		return false;
 	}
 
-	NameApproval_Struct *na = (NameApproval_Struct *)app->pBuffer;
+	auto na = (NameApproval_Struct *)app->pBuffer;
 
-	strncpy(char_name, na->name, 64);
-	uint16 race = na->race;
-	uint16 class_ = na->class_;
+	strncpy(char_name, na->name, sizeof(char_name));
 
-	Log(Logs::Detail, Logs::WorldServer, "Name approval request. Name=%s, race=%s, class=%s", char_name, GetRaceIDName(race), GetClassIDName(class_));
+	const uint16 length   = strlen(na->name);
+	const uint16 race_id  = na->race;
+	const uint16 class_id = na->class_;
+
+	if (!IsPlayerRace(race_id)) {
+		LogInfo("Invalid Race ID.");
+		return false;
+	}
+
+	if (!EQ::ValueWithin(class_id, WARRIOR, BEASTLORD)) {
+		LogInfo("Invalid Class ID.");
+		return false;
+	}
+
+	LogInfo(
+		"char_name [{}] race_id [{}] class_id [{}]",
+		char_name, 
+		GetRaceIDName(race_id), 
+		GetClassIDName(class_id)
+	);
 
 	auto outapp = new EQApplicationPacket(OP_ApproveName, sizeof(NameApprovalReply_Struct));
 	NameApprovalReply_Struct* nr = (NameApprovalReply_Struct *)outapp->pBuffer;
+	
+	bool is_valid = true;
 
-	auto length = snprintf(char_name, 64, "%s", (char*)app->pBuffer);
-	bool valid = true;
-	/* Name must be between 4 and 15 characters long, packet forged if this is true */
-	if (length < 4 || length > 15) {
-		valid = false;
+	if (!EQ::ValueWithin(length, 4, 15)) { /* Name must be between 4 and 15 characters long, packet forged if this is true */
+		is_valid = false;
 	}
-	/* Name must begin with an upper-case letter, can be sent with some tricking of the client */
-	else if (islower(char_name[0])) {
-		valid = false;
+	else if (islower(char_name[0])) { /* Name must begin with an upper-case letter, can be sent with some tricking of the client */
+		is_valid = false;
 	}
-	/* Name must not have any spaces, packet forged if this is true */
-	else if (strstr(char_name, " ")) {
-		valid = false;
+	else if (strstr(char_name, " ")) { /* Name must not have any spaces, packet forged if this is true */
+		is_valid = false;
 	}
-	/* I would like to do this later, since it's likely more expensive, but oh well */
-	else if (!database.CheckNameFilter(char_name)) {
-		valid = false;
+	else if (!database.CheckNameFilter(char_name)) { /* I would like to do this later, since it's likely more expensive, but oh well */
+		is_valid = false;
 	}
-	else {
-		/* Name must not not contain any uppercase letters, can be sent with some tricking of the client */
+	else { /* Name must not contain any uppercase letters, can be sent with some tricking of the client */
 		for (int i = 1; i < length; ++i) {
 			if (isupper(char_name[i])) {
-				valid = false;
+				is_valid = false;
 				break;
 			}
 		}
 	}
 
-	/* Still not invalid, let's see if it's taken */
-	if (valid) {
-		valid = database.ReserveName(GetAccountID(), char_name);
+	if (is_valid) { /* Still not invalid, let's see if it's taken */
+		is_valid = database.ReserveName(GetAccountID(), char_name);
 	}
-	nr->approval = valid? 1 : 0;
+
+	nr->approval = is_valid ? 1 : 0;
+
 	QueuePacket(outapp);
 	safe_delete(outapp);
 
-	if (!valid)
+	if (!is_valid)
 		memset(char_name, 0, sizeof(char_name));
 
 	return true;
@@ -529,7 +542,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 		Log(Logs::Detail, Logs::WorldServer, "Zone not found in database zone_id=%i, moving char to bazaar character:%s", zoneID, char_name);
 	}
 
-	if (!pZoning) {
+	if (!is_player_zoning) {
 		// we need to fix groups here.
 		// if they are in a group, it is because they have not timed out.
 		// server will allow someone logging right back in to pass through
@@ -628,7 +641,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 			}
 		}
 	}
-	if (!pZoning)
+	if (!is_player_zoning)
 	{
 		auto outapp = new EQApplicationPacket(OP_MOTD);
 		std::string tmp;
@@ -776,7 +789,13 @@ bool Client::HandlePacket(const EQApplicationPacket *app) {
 
 	EmuOpcode opcode = app->GetOpcode();
 
-	Log(Logs::Detail, Logs::PacketClientServer,"Recevied EQApplicationPacket [OpCode 0x%04x]", opcode);
+	LogPacketClientServer(
+		"[{}] [{:#06x}] Size [{}] {}",
+		OpcodeManager::EmuToName(app->GetOpcode()),
+		eqs->GetOpcodeManager()->EmuToEQ(app->GetOpcode()),
+		app->Size(),
+		(LogSys.IsLogEnabled(Logs::Detail, Logs::PacketClientServer) ? DumpPacketToString(app) : "")
+	);
 
 	if (!eqs->CheckState(ESTABLISHED)) {
 		Log(Logs::Detail, Logs::WorldServer,"Client disconnected (net inactive on send)");
@@ -861,7 +880,7 @@ bool Client::HandlePacket(const EQApplicationPacket *app) {
 		}
 		default:
 		{
-			Log(Logs::Detail, Logs::PacketClientServer,"Received unknown EQApplicationPacket %04X", opcode);
+			LogNetcode("Received unknown EQApplicationPacket");
 			return true;
 		}
 	}
@@ -1085,7 +1104,7 @@ void Client::ZoneUnavail() {
 }
 
 void Client::QueuePacket(const EQApplicationPacket* app, bool ack_req) {
-	Log(Logs::Detail, Logs::PacketServerClient, "Sending EQApplicationPacket [OpCode 0x%04x]",app->GetOpcode());
+	LogNetcode("Sending EQApplicationPacket OpCode {:#04x}", app->GetOpcode());
 
 	//ack_req = true;	// It's broke right now, dont delete this line till fix it. =P
 	eqs->QueuePacket(app, ack_req);
@@ -1290,7 +1309,8 @@ bool Client::CheckCharCreateInfo(CharCreate_Struct *cc)
 				character_create_race_class_combos[i].Race == cc->race &&
 				character_create_race_class_combos[i].Deity == cc->deity &&
 				character_create_race_class_combos[i].Zone == cc->start_zone &&
-			((currentExpansions & character_create_race_class_combos[i].ExpansionRequired) == character_create_race_class_combos[i].ExpansionRequired || character_create_race_class_combos[i].ExpansionRequired == 0)) {
+			((currentExpansions & character_create_race_class_combos[i].ExpansionRequired) == character_create_race_class_combos[i].ExpansionRequired || 
+				character_create_race_class_combos[i].ExpansionRequired == 0)) {
 			class_combo = character_create_race_class_combos[i];
 			found = true;
 			break;

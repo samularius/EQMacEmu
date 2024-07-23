@@ -524,7 +524,7 @@ bool Object::HandleClick(Client* sender, const ClickObject_Struct* click_object)
 			// if there is a lore conflict - don't allow the item to be picked up
 			if(sender->CheckLoreConflict(m_inst->GetItem())) 
 			{
-				sender->Message_StringID(CC_Red, PICK_LORE);
+				sender->Message_StringID(Chat::Red, PICK_LORE);
 				auto outapp = new EQApplicationPacket(OP_ClickObject, sizeof(ClickObject_Struct));
 				ClickObject_Struct* loreitem = (ClickObject_Struct*)outapp->pBuffer;
 				loreitem->player_id = click_object->player_id;
@@ -539,7 +539,7 @@ bool Object::HandleClick(Client* sender, const ClickObject_Struct* click_object)
 					c_inst = m_inst->GetItem(i);
 					if (c_inst && sender->CheckLoreConflict(c_inst->GetItem())) {
 						// we found a lore item in container - so do not allow picking up item.
-						sender->Message_StringID(CC_Red, PICK_LORE);
+						sender->Message_StringID(Chat::Red, PICK_LORE);
 						auto outapp = new EQApplicationPacket(OP_ClickObject, sizeof(ClickObject_Struct));
 						ClickObject_Struct* loreitem = (ClickObject_Struct*)outapp->pBuffer;
 						loreitem->player_id = click_object->player_id;
@@ -551,12 +551,10 @@ bool Object::HandleClick(Client* sender, const ClickObject_Struct* click_object)
 				}
 			}
 
-			char buf[10];
-			snprintf(buf, 9, "%u", m_inst->GetItem()->ID);
-			buf[9] = '\0';
+			std::string export_string = fmt::format("{}", m_inst->GetItem()->ID);
 			std::vector<std::any> args;
 			args.push_back(m_inst);
-			parse->EventPlayer(EVENT_PLAYER_PICKUP, sender, buf, 0, &args);
+			parse->EventPlayer(EVENT_PLAYER_PICKUP, sender, export_string, 0, &args);
 
 			int charges = m_inst->GetCharges();
 			uint32 item_id = m_inst->GetItem()->ID;
