@@ -229,7 +229,7 @@ void WorldServer::Process() {
 				break;
 			ServerSpawnCondition_Struct* ssc = (ServerSpawnCondition_Struct*) pack->pBuffer;
 
-			zone->spawn_conditions.SetCondition(zone->GetShortName(), ssc->condition_id, ssc->value, true);
+			zone->spawn_conditions.SetCondition(zone->GetShortName(), zone->GetGuildID(), ssc->condition_id, ssc->value, true);
 			break;
 		}
 		case ServerOP_SpawnEvent: {

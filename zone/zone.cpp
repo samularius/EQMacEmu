@@ -1051,7 +1051,7 @@ bool Zone::Init(bool iStaticZone) {
 	zone->update_range = 1000.0f;
 
 	LogInfo("Loading spawn conditions...");
-	if(!spawn_conditions.LoadSpawnConditions(short_name)) {
+	if(!spawn_conditions.LoadSpawnConditions(short_name, GetGuildID())) {
 		LogError("Loading spawn conditions failed, continuing without them.");
 	}
 
@@ -1703,7 +1703,7 @@ void Zone::Repop() {
 	}
 
 	LogInfo("Loading spawn conditions");
-	if (!spawn_conditions.LoadSpawnConditions(short_name)) {
+	if (!spawn_conditions.LoadSpawnConditions(short_name, GetGuildID())) {
 		LogError("Loading spawn conditions failed, continuing without them");
 	}
 

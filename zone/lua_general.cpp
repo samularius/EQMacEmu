@@ -17,6 +17,7 @@
 #include "quest_parser_collection.h"
 #include "questmgr.h"
 #include "qglobals.h"
+#include "../common/guilds.h"
 #include "../common/timer.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/rulesys.h"
@@ -549,12 +550,12 @@ void lua_set_anim(int npc_type, int anim_num) {
 	quest_manager.setanim(npc_type, anim_num);
 }
 
-void lua_spawn_condition(const char *zone, int condition_id, int value) {
-	quest_manager.spawn_condition(zone, condition_id, value);
+void lua_spawn_condition(const char *zone_short_name, int condition_id, int value) {
+	quest_manager.spawn_condition(zone_short_name, zone->GetGuildID(), condition_id, value);
 }
 
-int lua_get_spawn_condition(const char *zone, int condition_id) {
-	return quest_manager.get_spawn_condition(zone, condition_id);
+int lua_get_spawn_condition(const char *zone_short_name, int condition_id) {
+	return quest_manager.get_spawn_condition(zone_short_name, zone->GetGuildID(), condition_id);
 }
 
 void lua_toggle_spawn_event(int event_id, bool enable, bool strict, bool reset) {
