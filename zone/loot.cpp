@@ -374,8 +374,7 @@ void NPC::AddLootDrop(
 	bool wearchange, 
 	bool quest, 
 	bool pet, 
-	bool force_equip,
-	uint8 min_looter_level, uint32 item_loot_lockout_timer)
+	bool force_equip)
 {
 	if (!item2) {
 		return;
@@ -755,7 +754,7 @@ void NPC::AddItem(const EQ::ItemData *item, int8 charges, bool equipitem, bool q
 	l.equip_item = static_cast<uint8>(equipitem ? 1 : 0);
 	l.item_charges = charges;
 
-	AddLootDrop(item, l, equipitem, equipitem, quest, pet, force_equip, min_looter_level, item_loot_lockout_timer);
+	AddLootDrop(item, l, equipitem, equipitem, quest, pet, force_equip);
 }
 
 void NPC::AddItem(uint32 itemid, int8 charges, bool equipitem, bool quest) {
@@ -1136,13 +1135,22 @@ bool NPC::MoveItemToGeneralInventory(LootItem* weapon)
 		return false;
 	}
 
-	uint16 weaponid = weapon->item_id;
+	uint32 weaponid = weapon->item_id;
 	int16 slot = weapon->equip_slot;
-	int8 charges = weapon->charges;
+	int8 weaponcharges = weapon->charges;
 	bool pet = weapon->pet;
 	bool quest = weapon->quest;
-	uint8 min_level = weapon->min_level;
-	uint8 max_level = weapon->max_level;
+	uint8_t weapon_min_level = weapon->min_level;
+	uint8_t weapon_max_level = weapon->max_level;
+	uint8_t weapon_min_looter_level = weapon->min_looter_level;
+	uint32_t loot_lockout_timer = weapon->item_loot_lockout_timer;
+
+	l.item_id = weaponid;
+	l.item_charges = weaponcharges;
+	l.minlevel = weapon_min_level;
+	l.maxlevel = weapon_max_level;
+	l.min_looter_level = weapon_min_looter_level;
+	l.item_loot_lockout_timer = loot_lockout_timer;
 
 	const EQ::ItemData* item = database.GetItem(weaponid);
 
@@ -1150,7 +1158,7 @@ bool NPC::MoveItemToGeneralInventory(LootItem* weapon)
 		RemoveItem(weapon);
 
 		Log(Logs::Detail, Logs::Trading, "%s is moving %d in slot %d to general inventory. quantity: %d", GetCleanName(), weaponid, slot, charges);
-		AddLootDrop(item, l, false, false, quest, pet);
+		AddLootDrop(item, l, false, false, quest, pet, false);
 
 		return true;
 	}

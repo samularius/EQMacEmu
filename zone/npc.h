@@ -224,8 +224,7 @@ public:
 		bool wearchange = false, 
 		bool quest = false, 
 		bool pet = false, 
-		bool force_equip = false,
-		uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0
+		bool force_equip = false
 	);
 
 	void	DeleteEquipment(int16 slotid);
