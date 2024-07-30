@@ -131,44 +131,9 @@ struct NPCType
 	int8	stuck_behavior;
 	int8	flymode;
 	uint32	loot_lockout;
+	uint32	instance_spawn_timer_override;
 	bool	skip_global_loot;
 	bool	rare_spawn;
-	uint32	instance_spawn_timer_override;
-};
-
-struct PlayerCorpse_Struct {
-	uint32	crc;
-	bool	locked;
-	uint32	itemcount;
-	uint32	exp;
-	uint32	gmexp;
-	float	size;
-	uint8	level;
-	uint32	race;
-	uint8	gender;
-	uint8	class_;
-	uint8	deity;
-	uint8	texture;
-	uint8	helmtexture;
-	uint32	copper;
-	uint32	silver;
-	uint32	gold;
-	uint32	plat;
-	EQ::TintProfile item_tint;
-	uint8 haircolor;
-	uint8 beardcolor;
-	uint8 eyecolor1;
-	uint8 eyecolor2;
-	uint8 hairstyle;
-	uint8 face;
-	uint8 beard;
-	uint8 killedby;
-	bool  rezzable;
-	uint32	rez_time;
-	uint32	zone_guild_id;
-	uint32 time_of_death;
-	ServerLootItem_Struct	items[0];
-	//std::list<player_lootitem::ServerLootItem_Struct*> items;
 };
 
 #pragma pack()

@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 SET(common_sources
 	base_packet.cpp
@@ -11,6 +11,7 @@ SET(common_sources
 	crc32.cpp
 	database/database_dump_service.cpp
 	database.cpp
+	deity.cpp
 	dbcore.cpp
 	emu_constants.cpp
 	emu_limits.cpp
@@ -33,10 +34,11 @@ SET(common_sources
 	extprofile.cpp
 	faction.cpp
 	fastmath.cpp
-	file_util.cpp
+	file.cpp
 	guild_base.cpp
 	inventory_profile.cpp
 	ipc_mutex.cpp
+	ip_util.cpp
 	item_data.cpp
 	item_instance.cpp
 	json_config.cpp
@@ -54,6 +56,7 @@ SET(common_sources
 	packet_dump.cpp
 	packet_dump_file.cpp
 	packet_functions.cpp
+	path_manager.cpp
 	process/process.cpp
 	proc_launcher.cpp
 	ptimer.cpp
@@ -201,7 +204,6 @@ SET(repositories
 	repositories/base/base_account_repository.h
 	repositories/base/base_account_rewards_repository.h
 	repositories/base/base_altadv_vars_repository.h
-	repositories/base/base_base_data_repository.h
 	
 	# Extended Repositories
 	repositories/bugs_repository.h
@@ -304,14 +306,12 @@ SET(repositories
 	repositories/account_repository.h
 	repositories/account_rewards_repository.h
 	repositories/altadv_vars_repository.h
-	repositories/base_data_repository.h
 	repositories/blocked_spells_repository.h
 	)
 
 SET(common_headers
 	additive_lagged_fibonacci_engine.h
 	base_packet.h
-	base_data.h
 	bodytypes.h
 	chat_oplist.h
 	classes.h
@@ -361,7 +361,7 @@ SET(common_headers
 	faction.h
 	fastmath.h
 	features.h
-	file_util.h
+	file.h
 	fixed_memory_hash_set.h
 	fixed_memory_variable_hash_set.h
 	global_define.h
@@ -369,6 +369,7 @@ SET(common_headers
 	guilds.h
 	inventory_profile.h
 	ipc_mutex.h
+	ip_util.h
 	item_data.h
 	item_fieldlist.h
 	item_instance.h
@@ -376,7 +377,7 @@ SET(common_headers
 	languages.h
 	light_source.h
 	linked_list.h
-	loottable.h
+	loot.h
 	md5.h
 	memory_buffer.h
 	memory_mapped_file.h
@@ -390,6 +391,7 @@ SET(common_headers
 	packet_dump.h
 	packet_dump_file.h
 	packet_functions.h
+	path_manager.h
 	platform.h
 	process/process.h
 	proc_launcher.h
@@ -443,6 +445,7 @@ SET(common_headers
 	SocketLib/socket_include.h
 	SocketLib/Utility.h
 	StackWalker/StackWalker.h
+	termcolor/rang.hpp
 	tinyxml/tinystr.h
 	tinyxml/tinyxml.h
 )

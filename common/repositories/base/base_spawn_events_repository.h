@@ -122,6 +122,7 @@ public:
 
 		e.id          = 0;
 		e.zone        = "";
+		e.instance_id = 4294967295;
 		e.cond_id     = 0;
 		e.name        = "";
 		e.period      = 0;
@@ -172,7 +173,7 @@ public:
 
 			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 4294967295;
 			e.cond_id     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name        = row[4] ? row[4] : "";
 			e.period      = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
@@ -347,7 +348,7 @@ public:
 
 			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 4294967295;
 			e.cond_id     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name        = row[4] ? row[4] : "";
 			e.period      = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;
@@ -386,7 +387,7 @@ public:
 
 			e.id          = row[0] ? static_cast<uint32_t>(strtoul(row[0], nullptr, 10)) : 0;
 			e.zone        = row[1] ? row[1] : "";
-			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 0;
+			e.instance_id = row[2] ? static_cast<uint32_t>(strtoul(row[2], nullptr, 10)) : 4294967295;
 			e.cond_id     = row[3] ? static_cast<uint32_t>(strtoul(row[3], nullptr, 10)) : 0;
 			e.name        = row[4] ? row[4] : "";
 			e.period      = row[5] ? static_cast<uint32_t>(strtoul(row[5], nullptr, 10)) : 0;

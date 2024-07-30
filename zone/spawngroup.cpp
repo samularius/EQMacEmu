@@ -83,7 +83,7 @@ uint32 SpawnGroup::GetNPCType(uint32& rtime, uint32 spawn2_id)
 			// We will only reach this point once per round if the spawn limit is 1, because all the spawnpoints will mass reset in Spawn2::Process() immediately following this.
 			// For spawn limits greater than 1, we will reach this point once for every spawnpoint that has expired and then they will each reset one at a time. A mass timer reset will not occur here.
 			// This is important because we may have multiple spawnpoints waiting to spawn and we need to keep track of their respective timers.
-			Log(Logs::Moderate, Logs::Spawns, "Spawngroup %d: %d spawns are waiting to spawn, and %d spawns are up. Limit of %d prevents a new NPC from spawning. NPC will spawn in %d seconds", id, waiting_to_spawn, spawned_count, group_spawn_limit, static_cast<uint32>(remaining_time / 1000));
+			Log(Logs::Detail, Logs::Spawns, "Spawngroup %d: %d spawns are waiting to spawn, and %d spawns are up. Limit of %d prevents a new NPC from spawning. NPC will spawn in %d seconds", id, waiting_to_spawn, spawned_count, group_spawn_limit, static_cast<uint32>(remaining_time / 1000));
 			rtime = group_spawn_limit == 1 ? remaining_time_id: 0;
 			return 0;
 		}
@@ -105,7 +105,7 @@ uint32 SpawnGroup::GetNPCType(uint32& rtime, uint32 spawn2_id)
 				}
 			}
 
-			Log(Logs::Moderate, Logs::Spawns, "Spawngroup %d: %d has passed limit checks.", id, spawn2_id);
+			Log(Logs::Detail, Logs::Spawns, "Spawngroup %d: %d has passed limit checks.", id, spawn2_id);
 		}
 	}
 
@@ -236,11 +236,11 @@ bool ZoneDatabase::LoadSpawnGroups(const char* zone_name, SpawnGroupList* spawn_
 			atoi(row[0]), 
 			row[1],
 			atoi(row[2]),
-			atof(row[3]),
-			atof(row[4]),
-			atof(row[5]),
-			atof(row[6]),
-			atof(row[7]),
+			(float)atof(row[3]),
+			(float)atof(row[4]),
+			(float)atof(row[5]),
+			(float)atof(row[6]),
+			atoi(row[7]),
 			atoi(row[8]),
 			atoi(row[9]),
 			atoi(row[10]),
@@ -317,7 +317,7 @@ bool ZoneDatabase::LoadSpawnGroupsByID(int spawngroupid, SpawnGroupList* spawn_g
     }
 
     for (auto row = results.begin(); row != results.end(); ++row) {
-        auto newSpawnGroup = std::make_unique<SpawnGroup>(atoi(row[0]), row[1], atoi(row[2]), atof(row[3]), atof(row[4]), atof(row[5]), atof(row[6]), atof(row[7]), atoi(row[8]), atoi(row[9]), atoi(row[10]), atoi(row[11]));
+        auto newSpawnGroup = std::make_unique<SpawnGroup>(atoi(row[0]), row[1], atoi(row[2]), (float)atof(row[3]), (float)atof(row[4]), (float)atof(row[5]), (float)atof(row[6]), atoi(row[7]), atoi(row[8]), atoi(row[9]), atoi(row[10]), atoi(row[11]));
         spawn_group_list->AddSpawnGroup(newSpawnGroup);
     }
 

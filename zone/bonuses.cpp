@@ -16,6 +16,7 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 #include "../common/classes.h"
+#include "../common/content/world_content_service.h"
 #include "../common/global_define.h"
 #include "../common/item_instance.h"
 #include "../common/rulesys.h"
@@ -185,27 +186,24 @@ void Client::CalcItemBonuses(StatBonuses* newbon) {
 }
 
 void Client::AddItemBonuses(const EQ::ItemInstance *inst, StatBonuses* newbon) {
-	if(!inst || !inst->IsType(EQ::item::ItemClassCommon))
-	{
+	if(!inst || !inst->IsType(EQ::item::ItemClassCommon)) {
 		return;
 	}
 
 	const EQ::ItemData *item = inst->GetItem();
 
-	if(!inst->IsEquipable(GetBaseRace(),GetClass()))
-	{
-		if(item->ItemType != EQ::item::ItemTypeFood && item->ItemType != EQ::item::ItemTypeDrink)
+	if(!inst->IsEquipable(GetBaseRace(),GetClass())) {
+		if (item->ItemType != EQ::item::ItemTypeFood && item->ItemType != EQ::item::ItemTypeDrink) {
 			return;
+		}
 	}
 
 	// The client always applies bonuses if the item is equipped, so skip this check for devels who deleved themselves in testing.
-	if(GetLevel() < item->ReqLevel && Admin() < 80)
-	{
+	if(GetLevel() < item->ReqLevel && Admin() < 80) {
 		return;
 	}
 
-	if(GetLevel() >= item->RecLevel)
-	{
+	if(GetLevel() >= item->RecLevel) {
 		newbon->AC += item->AC;
 		newbon->HP += item->HP;
 		newbon->Mana += item->Mana;
@@ -223,8 +221,7 @@ void Client::AddItemBonuses(const EQ::ItemInstance *inst, StatBonuses* newbon) {
 		newbon->PR += (item->PR);
 		newbon->DR += (item->DR);
 	}
-	else
-	{
+	else {
 		int lvl = GetLevel();
 		int reclvl = item->RecLevel;
 
@@ -252,17 +249,11 @@ void Client::AddItemBonuses(const EQ::ItemInstance *inst, StatBonuses* newbon) {
 		ApplySpellsBonuses(item->Worn.Effect ? item->Worn.Effect : item->Proc.Effect, item->Worn.Level > 0 ? item->Worn.Level : GetLevel(), newbon, 0, true);
 	}
 
-	if (item->Focus.Effect>0 && (item->Focus.Type == EQ::item::ItemEffectFocus)) { // focus effects
-		if (RuleB(AlKabor, EnableEraItemRules)) {
-			//Disable Focus Effects before we enter Luclin.
-			if (RuleR(World, CurrentExpansion) >= (float)ExpansionEras::LuclinEQEra) {
-				ApplySpellsBonuses(item->Focus.Effect, GetLevel(), newbon, 0, true);
-			}
-		}
+	if (item->Focus.Effect>0 && (item->Focus.Type == EQ::item::ItemEffectFocus) && content_service.IsTheShadowsOfLuclinEnabled()) { // focus effects
+		ApplySpellsBonuses(item->Focus.Effect, GetLevel(), newbon, 0, true);
 	}
 
-	switch(item->BardType)
-	{
+	switch(item->BardType) {
 	case 51: /* All (e.g. Singing Short Sword) */
 		{
 			if(item->BardValue > newbon->singingMod)
@@ -1106,7 +1097,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses* ne
 				}
 				else
 				{
-					Log(Logs::Moderate, Logs::Spells, "Cannot apply SE_ChangeFrenzyRad bonus on %s, Mob is immune to Pacify.", GetName());
+					Log(Logs::Detail, Logs::Spells, "Cannot apply SE_ChangeFrenzyRad bonus on %s, Mob is immune to Pacify.", GetName());
 				}
 				break;
 			}
@@ -1123,7 +1114,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses* ne
 				}
 				else
 				{
-					Log(Logs::Moderate, Logs::Spells, "Cannot apply SE_Harmony bonus on %s, Mob is immune to Pacify.", GetName());
+					Log(Logs::Detail, Logs::Spells, "Cannot apply SE_Harmony bonus on %s, Mob is immune to Pacify.", GetName());
 				}
 				break;
 			}

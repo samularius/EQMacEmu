@@ -78,13 +78,15 @@ private:
 	char	char_name[64];
 	uint32	zoneID;
 	uint32	zoneGuildID;
-	bool	pZoning;
+	bool	is_player_zoning;
 	Timer	autobootup_timeout;
 	uint32	pwaitingforbootup;
 
 	EQ::versions::ClientVersion m_ClientVersion;
 	uint32 m_ClientVersionBit;
 	bool OPCharCreate(char *name, CharCreate_Struct *cc);
+
+	bool CheckCharCreateInfo(CharCreate_Struct *cc);
 
 	void SetClassStartingSkills( PlayerProfile_Struct *pp );
 	void SetRaceStartingSkills( PlayerProfile_Struct *pp );
@@ -106,7 +108,6 @@ private:
 	bool HandleEnterWorldPacket(const EQApplicationPacket *app);
 	bool HandleDeleteCharacterPacket(const EQApplicationPacket *app);
 	bool HandleChecksumPacket(const EQApplicationPacket *app);
-	bool CheckCharCreateInfo(CharCreate_Struct *cc);
 
 	EQStreamInterface* const eqs;
 

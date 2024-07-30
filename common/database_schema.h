@@ -94,7 +94,6 @@ namespace DatabaseSchema {
 			"aa_actions",
 			"aa_effects",
 			"altadv_vars",
-			"base_data",
 			"blocked_spells",
 			"books",
 			"char_create_combinations",
@@ -164,7 +163,7 @@ namespace DatabaseSchema {
 	static std::vector<std::string> GetServerTables()
 	{
 		return {
-			"Banned_IPs",
+			"banned_ips",
 			"chatchannels",
 			"command_settings",
 			"content_flags",

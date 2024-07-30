@@ -30,7 +30,7 @@ std::map<uint16, const NPCType *> Horse::horse_types;
 LinkedList<NPCType *> horses_auto_delete;
 
 Horse::Horse(Client *_owner, uint16 spell_id, const glm::vec4& position)
- : NPC(GetHorseType(spell_id), nullptr, position, EQ::constants::GravityBehavior::Water)
+ : NPC(GetHorseType(spell_id), nullptr, position, GravityBehavior::Water)
 {
 	//give the horse its proper name.
 	strn0cpy(name, _owner->GetCleanName(), 55);
@@ -117,7 +117,7 @@ const NPCType *Horse::BuildHorseType(uint16 spell_id) {
 
 void Client::SummonHorse(uint16 spell_id) {
 	if (GetHorseId() != 0) {
-		Message(CC_Red,"You already have a Horse. Get off, Fatbutt!");
+		Message(Chat::Red,"You already have a Horse. Get off, Fatbutt!");
 		return;
 	}
 	if(!Horse::IsHorseSpell(spell_id)) {

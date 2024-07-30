@@ -23,6 +23,7 @@
 #include "../common/rulesys.h"
 #include "encounter.h"
 #include "lua_encounter.h"
+#include "data_bucket.h"
 
 struct Events { };
 struct Factions { };
@@ -669,6 +670,26 @@ std::string lua_say_link(const char *phrase) {
 	return quest_manager.saylink(text, false, text);
 }
 
+std::string lua_get_data(std::string bucket_key) {
+	return DataBucket::GetData(bucket_key);
+}
+
+std::string lua_get_data_expires(std::string bucket_key) {
+	return DataBucket::GetDataExpires(bucket_key);
+}
+
+void lua_set_data(std::string bucket_key, std::string bucket_value) {
+	DataBucket::SetData(bucket_key, bucket_value);
+}
+
+void lua_set_data(std::string bucket_key, std::string bucket_value, std::string expires_at) {
+	DataBucket::SetData(bucket_key, bucket_value, expires_at);
+}
+
+bool lua_delete_data(std::string bucket_key) {
+	return DataBucket::DeleteData(bucket_key);
+}
+
 void lua_set_rule(std::string rule_name, std::string rule_value) {
 	RuleManager::Instance()->SetRule(rule_name.c_str(), rule_value.c_str());
 }
@@ -684,7 +705,7 @@ const char *lua_get_guild_name_by_id(uint32 guild_id) {
 }
 
 void lua_fly_mode(int flymode) {
-	quest_manager.FlyMode(flymode);
+	quest_manager.FlyMode(static_cast<GravityBehavior>(flymode));
 }
 
 int lua_faction_value() {
@@ -1089,14 +1110,17 @@ float lua_get_current_expansion() {
 }
 
 void lua_debug(std::string message) {
-	Log(Logs::General, Logs::QuestDebug, message.c_str());
+	LogQuestDebug(message.c_str());
 }
 
 void lua_debug(std::string message, int level) {
 	if (level < Logs::General || level > Logs::Detail)
 		return;
 
-	Log(static_cast<Logs::DebugLevel>(level), Logs::QuestDebug, message.c_str());
+	if(level == Logs::Detail)
+		LogQuestDebugDetail(message.c_str());
+	else
+		LogQuestDebug(message.c_str());
 }
 
 void lua_map_opcodes() {
@@ -1204,6 +1228,10 @@ std::string lua_get_body_type_name(uint32 bodytype_id) {
 
 std::string lua_get_consider_level_name(uint8 consider_level) {
 	return quest_manager.getconsiderlevelname(consider_level);
+}
+
+std::string lua_get_deity_name(uint32 deity_id) {
+	return quest_manager.getdeityname(deity_id);
 }
 
 #define LuaCreateNPCParse(name, c_type, default_value) do { \
@@ -1335,7 +1363,7 @@ void lua_create_npc(luabind::adl::object table, float x, float y, float z, float
 	LuaCreateNPCParse(probability, uint8, 0);
 	LuaCreateNPCParse(engage_notice, bool, false);
 	LuaCreateNPCParse(loot_lockout, uint32, false);
-	NPC* npc = new NPC(npc_type, nullptr, glm::vec4(x, y, z, heading), EQ::constants::GravityBehavior::Water);
+	NPC* npc = new NPC(npc_type, nullptr, glm::vec4(x, y, z, heading),  GravityBehavior::Water);
 	entity_list.AddNPC(npc);
 }
 
@@ -1468,6 +1496,11 @@ luabind::scope lua_register_general() {
 		luabind::def("say_link", (std::string(*)(const char*,bool,const char*))&lua_say_link),
 		luabind::def("say_link", (std::string(*)(const char*,bool))&lua_say_link),
 		luabind::def("say_link", (std::string(*)(const char*))&lua_say_link),
+		luabind::def("get_data", (std::string(*)(std::string)) &lua_get_data),
+		luabind::def("get_data_expires", (std::string(*)(std::string)) &lua_get_data_expires),
+		luabind::def("set_data", (void(*)(std::string, std::string)) &lua_set_data),
+		luabind::def("set_data", (void(*)(std::string, std::string, std::string)) &lua_set_data),
+		luabind::def("delete_data", (bool(*)(std::string)) &lua_delete_data),
 		luabind::def("set_rule", (void(*)(std::string, std::string))& lua_set_rule),
 		luabind::def("get_rule", (std::string(*)(std::string))& lua_get_rule), 
 		luabind::def("get_guild_name_by_id", &lua_get_guild_name_by_id),
@@ -1524,10 +1557,11 @@ luabind::scope lua_register_general() {
 		luabind::def("get_language_name", &lua_get_language_name),
 		luabind::def("get_body_type_name", &lua_get_body_type_name),
 		luabind::def("get_consider_level_name", &lua_get_consider_level_name),
+		luabind::def("get_deity_name", &lua_get_deity_name),	
 		/**
 		 * Expansions
 		 */
- 		luabind::def("get_current_expansion", &lua_get_current_expansion),
+		luabind::def("get_current_expansion", &lua_get_current_expansion),
 		luabind::def("is_classic_enabled", &lua_is_classic_enabled),
 		luabind::def("is_the_ruins_of_kunark_enabled", &lua_is_the_ruins_of_kunark_enabled),
 		luabind::def("is_the_scars_of_velious_enabled", &lua_is_the_scars_of_velious_enabled),

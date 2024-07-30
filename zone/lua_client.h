@@ -260,6 +260,8 @@ public:
 	void SetMarried(const char*);
 	void SetTemporaryLastName(char*);
 	bool HasTemporaryLastName();
+	bool SendGMCommand(std::string message);
+	bool SendGMCommand(std::string message, bool ignore_status);
 };
 
 #endif

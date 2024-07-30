@@ -34,7 +34,6 @@ struct ItemData;
 #include "../common/ptimer.h"
 #include "../common/emu_opcodes.h"
 #include "../common/eq_packet_structs.h"
-//#include "../common/eq_constants.h"
 #include "../common/emu_constants.h" // inv2 watch
 #include "../common/eq_stream_intf.h"
 #include "../common/eq_packet.h"
@@ -45,7 +44,7 @@ struct ItemData;
 #include "../common/inventory_profile.h"
 #include "../common/guilds.h"
 #include "../common/item_data.h"
-//#include "../common/clientversions.h"
+#include "../common/data_verification.h"
 
 #include "aa.h"
 #include "common.h"
@@ -176,9 +175,14 @@ public:
 	~Client();
 
 	bool is_client_moving;
-
+	
 	DBGrid_Struct* gm_grid;
 	std::vector<wplist> gm_grid_waypoint_list;
+	
+	bool IsDevToolsEnabled() const;
+	void SetDevToolsEnabled(bool in_dev_tools_enabled);
+
+	void SendChatLineBreak(uint16 color = Chat::White);
 
 	//abstract virtual function implementations required by base abstract class
 	virtual bool Death(Mob* killerMob, int32 damage, uint16 spell_id, EQ::skills::SkillType attack_skill, uint8 killedby = 0, bool bufftic = false);
@@ -198,7 +202,7 @@ public:
 	int GetHandToHandDamage();
 	int GetHandToHandDelay();
 	uint16 GetWeaponEffectID(int slot = EQ::invslot::slotPrimary);
-
+	
 	void PermaGender(uint32 gender);
 
 	float GetQuiverHaste();
@@ -484,6 +488,7 @@ public:
 	virtual void InitializeBuffSlots();
 	virtual void UninitializeBuffSlots();
 	void ApplyDurationFocus(uint16 spell_id, uint16 buffslot, Mob* spelltar = nullptr, int spell_level=-1);
+	bool RestictedManastoneClick(int16 zone_id);
 
 	inline const int32 GetBaseHP() const { return base_hp; }
 
@@ -707,6 +712,8 @@ public:
 	Object* GetTradeskillObject() { return m_tradeskill_object; }
 	inline PTimerList &GetPTimers() { return(p_timers); }
 
+	bool SendGMCommand(std::string message, bool ignore_status = false);
+
 	//AA Methods
 	void ResetAA();
 	void BuyAA(AA_Action* action);
@@ -764,8 +771,8 @@ public:
 	bool	SwapItem(MoveItem_Struct* move_in);
 	void	SwapItemResync(MoveItem_Struct* move_slots);
 	void	QSSwapItemAuditor(MoveItem_Struct* move_in, bool postaction_call = false);
-	void	PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, ServerLootItem_Struct** bag_item_data = 0);
-	bool	AutoPutLootInInventory(EQ::ItemInstance& inst, bool try_worn = false, bool try_cursor = true, ServerLootItem_Struct** bag_item_data = 0);
+	void	PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, LootItem** bag_item_data = 0);
+	bool	AutoPutLootInInventory(EQ::ItemInstance& inst, bool try_worn = false, bool try_cursor = true, LootItem** bag_item_data = 0);
 	bool	SummonItem(uint32 item_id, int8 quantity = -1, uint16 to_slot = EQ::invslot::slotCursor, bool force_charges = false);
 	void	DropItem(int16 slot_id);
 	void	SendLootItemInPacket(const EQ::ItemInstance* inst, int16 slot_id);
@@ -1086,6 +1093,7 @@ public:
 	void CorpseSummonOnPositionUpdate();
 
 	inline bool InstanceBootGraceTimerExpired() { return instance_boot_grace_timer.Check(); }
+	void ShowDevToolsMenu();
 
 protected:
 	friend class Mob;
@@ -1212,7 +1220,7 @@ public:
 	inline bool IsMuleInitiated() { return mule_initiated; }
 	inline void SetMuleInitiated(bool initiated) { mule_initiated = initiated; }
 private:
-
+	bool dev_tools_enabled;
 
 	PlayerProfile_Struct		m_pp;
 	ExtendedProfile_Struct		m_epp;

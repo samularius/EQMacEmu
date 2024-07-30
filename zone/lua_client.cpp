@@ -1308,6 +1308,16 @@ void Lua_Client::PermaGender(uint32 in_Gender) {
 	self->PermaGender(in_Gender);
 }
 
+bool Lua_Client::SendGMCommand(std::string message) {
+	Lua_Safe_Call_Bool();
+	return self->SendGMCommand(message);
+}
+
+bool Lua_Client::SendGMCommand(std::string message, bool ignore_status) {
+	Lua_Safe_Call_Bool();
+	return self->SendGMCommand(message, ignore_status);
+}
+
 luabind::scope lua_register_client() {
 	return luabind::class_<Lua_Client, Lua_Mob>("Client")
 		.def(luabind::constructor<>())
@@ -1541,7 +1551,10 @@ luabind::scope lua_register_client() {
 		.def("SetMarried", (void(Lua_Client::*)(const char*))&Lua_Client::SetMarried)
 		.def("SetTemporaryLastName", (void(Lua_Client::*)(const char*))&Lua_Client::SetTemporaryLastName)
 		.def("HasTemporaryLastName", (bool(Lua_Client::*)(void))&Lua_Client::HasTemporaryLastName)
-		.def("PermaGender", (void(Lua_Client::*)(uint32))&Lua_Client::PermaGender);
+		.def("PermaGender", (void(Lua_Client::*)(uint32))&Lua_Client::PermaGender)
+		.def("ScribeSpells", (uint16(Lua_Client::*)(uint8, uint8))& Lua_Client::ScribeSpells)
+		.def("SendGMCommand", (bool(Lua_Client:: *)(std::string)) &Lua_Client::SendGMCommand)
+		.def("SendGMCommand", (bool(Lua_Client:: *)(std::string, bool)) &Lua_Client::SendGMCommand);
 }
 
 luabind::scope lua_register_inventory_where() {

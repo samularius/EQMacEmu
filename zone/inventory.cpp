@@ -163,7 +163,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 
 	// make sure the item exists
 	if(item == nullptr) {
-		Message(CC_Red, "Item %u does not exist.", item_id);
+		Message(Chat::Red, "Item %u does not exist.", item_id);
 		Log(Logs::Detail, Logs::Inventory, "Player %s on account %s attempted to create an item with an invalid id.\n(Item: %u)\n",
 			GetName(), account_name, item_id);
 
@@ -173,9 +173,9 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 	else if(CheckLoreConflict(item)) {
 		// DuplicateLoreMessage(item_id);
 		if(item->Lore[0] == '#')
-			Message(CC_Red, "You already have an artifact item in your inventory.");
+			Message(Chat::Red, "You already have an artifact item in your inventory.");
 		else
-			Message(CC_Red, "You already have a lore %s (%i) in your inventory.", item->Name, item_id);
+			Message(Chat::Red, "You already have a lore %s (%i) in your inventory.", item->Name, item_id);
 
 		return false;
 	}
@@ -186,7 +186,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 
 	// check to make sure we are a GM if the item is GM-only
 	else if(item->GMFlag == -1 && this->Admin() < RuleI(GM, MinStatusToUseGMItem)) {
-		Message(CC_Red, "You are not a GM or do not have the status to summon this item.");
+		Message(Chat::Red, "You are not a GM or do not have the status to summon this item.");
 		Log(Logs::Detail, Logs::Inventory, "Player %s on account %s attempted to create a GM-only item with a status of %i.\n(Item: %u, GMFlag: %u)\n",
 			GetName(), account_name, this->Admin(), item->ID, item->GMFlag);
 
@@ -232,7 +232,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 	EQ::ItemInstance* inst = database.CreateItem(item, quantity);
 
 	if(inst == nullptr) {
-		Message(CC_Red, "An unknown server error has occurred and your item was not created.");
+		Message(Chat::Red, "An unknown server error has occurred and your item was not created.");
 		// this goes to logfile since this is a major error
 		Log(Logs::General, Logs::Error, "Player %s on account %s encountered an unknown item creation error.\n(Item: %u)\n",
 			GetName(), account_name, item->ID);
@@ -245,7 +245,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 		uint32 slottest = 22; // can't change '22' just yet...
 
 		if(!(slots & ((uint32)1 << slottest))) {
-			Message(CC_Default, "This item is not equipable at slot %u - moving to cursor.", to_slot);
+			Message(Chat::White, "This item is not equipable at slot %u - moving to cursor.", to_slot);
 			Log(Logs::Detail, Logs::Inventory, "Player %s on account %s attempted to equip an item unusable in slot %u - moved to cursor.\n(Item: %u)\n",
 				GetName(), account_name, to_slot, item->ID);
 
@@ -359,7 +359,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 	if (zone && zone->GetGuildID() != GUILD_NONE)
 	{
 		auto broken_string = fmt::format("You cannot drop items in the ground. item {} (qty {} ).This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst_in->GetID(), inst_in->GetCharges());
-		Message(CC_Red, broken_string.c_str());
+		Message(Chat::Red, broken_string.c_str());
 		if (RuleB(QueryServ, PlayerLogItemDesyncs))
 		{
 			QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID());
@@ -369,7 +369,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 
 	if (!inst_in) {
 		// Item doesn't exist in inventory!
-		Message(CC_Red, "Error: Item not found");
+		Message(Chat::Red, "Error: Item not found");
 		return;
 	}
 
@@ -377,10 +377,10 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 	EQ::ItemInstance *inst = new EQ::ItemInstance(*inst_in);
 	if (inst->GetItem()->NoDrop == 0)
 	{
-		Message(CC_Red, "This item is NODROP. Deleting.");
+		Message(Chat::Red, "This item is NODROP. Deleting.");
 		auto msg = fmt::format("Dropped item is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst->GetCharges(), inst->GetItem()->Name);
 		QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
-		Message(CC_Red, msg.c_str());
+		Message(Chat::Red, msg.c_str());
 		if (inst->IsType(EQ::item::ItemClassBag))
 		{
 			for (uint8 sub_slot = EQ::invbag::SLOT_BEGIN; (sub_slot <= EQ::invbag::SLOT_END); ++sub_slot)
@@ -390,7 +390,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 				{
 					msg = fmt::format("Dropped bag was NODROP. Deleting contents. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
 					QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
-					Message(CC_Red, msg.c_str());
+					Message(Chat::Red, msg.c_str());
 				}
 			}
 		}
@@ -405,7 +405,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 			if (bag_inst && bag_inst->GetItem()->NoDrop == 0)
 			{
 				auto msg = fmt::format("Dropped bag contains item that is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
-				Message(CC_Red, msg.c_str());
+				Message(Chat::Red, msg.c_str());
 				inst->DeleteItem(sub_slot);
 			}
 		}
@@ -430,7 +430,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 
 	if (message)
 	{
-		Message_StringID(CC_Yellow, DROPPED_ITEM);
+		Message_StringID(Chat::Yellow, DROPPED_ITEM);
 	}
 
 	// Package as zone object
@@ -733,7 +733,7 @@ void Client::DeleteItemInInventory(int16 slot_id, int8 quantity, bool client_upd
 bool Client::PushItemOnCursor(const EQ::ItemInstance& inst, bool client_update)
 {
 	if(inst.GetItem()->GMFlag == -1 && this->Admin() < RuleI(GM, MinStatusToUseGMItem)) {
-		Message(CC_Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
+		Message(Chat::Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
 		Log(Logs::Detail, Logs::Inventory, "Player %s on account %s attempted to create a GM-only item with a status of %i.\n(Item: %u, GMFlag: %u)\n",
 			GetName(), account_name, this->Admin(), inst.GetID(), inst.GetItem()->GMFlag);
 
@@ -756,7 +756,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 	const EQ::ItemData* item = database.GetItem(inst->GetID());
 	if (item && CheckLoreConflict(item))
 	{
-		Message_StringID(CC_Default, DUP_LORE);
+		Message_StringID(Chat::White, DUP_LORE);
 		return false;
 	}
 
@@ -774,7 +774,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 				auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 				Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 				if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-				Message(CC_Red, broken_string.c_str());
+				Message(Chat::Red, broken_string.c_str());
 				Log(Logs::General, Logs::Inventory, "Saving item %d to the cursor queue failed.", inst->GetID());
 			}
 			return false;
@@ -802,7 +802,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 					auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 					Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 					if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-					Message(CC_Red, broken_string.c_str());
+					Message(Chat::Red, broken_string.c_str());
 					return false;
 				}
 			}
@@ -817,7 +817,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 				auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 				Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 				if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-				Message(CC_Red, broken_string.c_str());
+				Message(Chat::Red, broken_string.c_str());
 			}
 			return false;
 		}
@@ -830,7 +830,7 @@ bool Client::PutItemInInventory(int16 slot_id, const EQ::ItemInstance& inst, boo
 	Log(Logs::Detail, Logs::Inventory, "Putting item %s (%d) into slot %d", inst.GetItem()->Name, inst.GetItem()->ID, slot_id);
 
 	if(inst.GetItem()->GMFlag == -1 && this->Admin() < RuleI(GM, MinStatusToUseGMItem)) {
-		Message(CC_Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
+		Message(Chat::Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
 		Log(Logs::Detail, Logs::Inventory, "Player %s on account %s attempted to create a GM-only item with a status of %i.\n(Item: %u, GMFlag: %u)\n",
 			GetName(), account_name, this->Admin(), inst.GetID(), inst.GetItem()->GMFlag);
 
@@ -856,7 +856,7 @@ bool Client::PutItemInInventory(int16 slot_id, const EQ::ItemInstance& inst, boo
 	CalcBonuses();
 }
 
-void Client::PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, ServerLootItem_Struct** bag_item_data)
+void Client::PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, LootItem** bag_item_data)
 {
 	Log(Logs::Detail, Logs::Inventory, "Putting loot item %s (%d) into slot %d", inst.GetItem()->Name, inst.GetItem()->ID, slot_id);
 	m_inv.PutItem(slot_id, inst);
@@ -1035,7 +1035,7 @@ int16 Client::GetStackSlot(EQ::ItemInstance* item, bool try_worn, bool try_curso
 // Locate an available space in inventory to place an item
 // and then put the item there
 // The change will be saved to the database
-bool Client::AutoPutLootInInventory(EQ::ItemInstance& inst, bool try_worn, bool try_cursor, ServerLootItem_Struct** bag_item_data)
+bool Client::AutoPutLootInInventory(EQ::ItemInstance& inst, bool try_worn, bool try_cursor, LootItem** bag_item_data)
 {
 	// #1: Try to auto equip
 	if (try_worn && inst.IsEquipable(GetBaseRace(), GetClass()) && inst.GetItem()->ReqLevel<=level)
@@ -1304,7 +1304,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 			(srcitemid && src_inst && src_inst->GetItem()->BagType == EQ::item::BagTypeTradersSatchel) ||
 			(dstitemid && dst_inst && dst_inst->GetItem()->BagType == EQ::item::BagTypeTradersSatchel)) {
 			this->Trader_EndTrader();
-			this->Message(CC_Red,"You cannot move your Trader Satchels, or items inside them, while Trading.");
+			this->Message(Chat::Red,"You cannot move your Trader Satchels, or items inside them, while Trading.");
 		}
 	}
 
@@ -1345,7 +1345,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 	{
 		if(src_inst->GetItem()->GMFlag == -1 && this->Admin() < RuleI(GM, MinStatusToUseGMItem)) 
 		{
-			Message(CC_Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
+			Message(Chat::Red, "You are not a GM or do not have the status to this item. Please relog to avoid a desync.");
 			sprintf(error, "Player %s on account %s attempted to create a GM-only item with a status of %i.\n(Item: %u, GMFlag: %u)\n",
 				GetName(), account_name, this->Admin(), src_inst->GetID(), src_inst->GetItem()->GMFlag);
 			Log(Logs::General, Logs::Inventory, error);
@@ -1385,7 +1385,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 					safe_delete(outapp);
 
 					m_tradeskill_object->PutItem(EQ::InventoryProfile::CalcBagIdx(src_slot_id), inst);
-					Message_StringID(CC_Default, DUP_LORE);
+					Message_StringID(Chat::White, DUP_LORE);
 					safe_delete(inst);
 
 					return true;
@@ -1486,7 +1486,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 			Log(Logs::Detail, Logs::Inventory, "Trade item move from slot %d to slot %d (trade with %s)", src_slot_id, dst_slot_id, with->GetName());
 			// Fill Trade list with items from cursor
 			if (!m_inv[EQ::invslot::slotCursor]) {
-				Message(CC_Red, "Error: Cursor item not located on server!");
+				Message(Chat::Red, "Error: Cursor item not located on server!");
 				std::string error = "Error: Cursor item not located on server!";
 				Log(Logs::General, Logs::Inventory, error.c_str());
 				if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), error.c_str(), GetZoneID()); }
@@ -1748,7 +1748,7 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 
 	bool resync = false;
 	Log(Logs::Detail, Logs::Inventory, "Inventory desynchronization. (charname: %s, source: %i, destination: %i)", GetName(), move_slots->from_slot, move_slots->to_slot);
-	Message(CC_Yellow, "Inventory Desynchronization detected: Resending slot data...");
+	Message(Chat::Yellow, "Inventory Desynchronization detected: Resending slot data...");
 
 	if((move_slots->from_slot >= EQ::invslot::EQUIPMENT_BEGIN && move_slots->from_slot <= EQ::invbag::CURSOR_BAG_END)) {
 		int16 resync_slot = (EQ::InventoryProfile::CalcSlotId(move_slots->from_slot) == INVALID_INDEX) ? move_slots->from_slot : EQ::InventoryProfile::CalcSlotId(move_slots->from_slot);
@@ -1771,10 +1771,10 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 				safe_delete(outapp);
 			}
 			safe_delete(token_inst);
-			Message(CC_LightGreen, "Source slot %i resynchronized.", move_slots->from_slot);
+			Message(Chat::Lime, "Source slot %i resynchronized.", move_slots->from_slot);
 			resync = true;
 		}
-		else { Message(CC_Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
+		else { Message(Chat::Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
 	}
 	else {
 		int16 resync_slot = (EQ::InventoryProfile::CalcSlotId(move_slots->from_slot) == INVALID_INDEX) ? move_slots->from_slot : EQ::InventoryProfile::CalcSlotId(move_slots->from_slot);
@@ -1787,12 +1787,12 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 				SendItemPacket(resync_slot, m_inv[resync_slot], ItemPacketTrade);
 
 				safe_delete(token_inst);
-				Message(CC_LightGreen, "Source slot %i resynchronized.", move_slots->from_slot);
+				Message(Chat::Lime, "Source slot %i resynchronized.", move_slots->from_slot);
 				resync = true;
 			}
-			else { Message(CC_Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
+			else { Message(Chat::Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
 		}
-		else { Message(CC_Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
+		else { Message(Chat::Red, "Could not resynchronize source slot %i.", move_slots->from_slot); }
 	}
 
 	if((move_slots->to_slot >= EQ::invslot::EQUIPMENT_BEGIN && move_slots->to_slot <= EQ::invbag::CURSOR_BAG_END)) {
@@ -1815,10 +1815,10 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 				safe_delete(outapp);
 			}
 			safe_delete(token_inst);
-			Message(CC_LightGreen, "Destination slot %i resynchronized.", move_slots->to_slot);
+			Message(Chat::Lime, "Destination slot %i resynchronized.", move_slots->to_slot);
 			resync = true;
 		}
-		else { Message(CC_Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
+		else { Message(Chat::Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
 	}
 	else {
 		int16 resync_slot = (EQ::InventoryProfile::CalcSlotId(move_slots->to_slot) == INVALID_INDEX) ? move_slots->to_slot : EQ::InventoryProfile::CalcSlotId(move_slots->to_slot);
@@ -1831,12 +1831,12 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 				SendItemPacket(resync_slot, m_inv[resync_slot], ItemPacketTrade);
 
 				safe_delete(token_inst);
-				Message(CC_LightGreen, "Destination slot %i resynchronized.", move_slots->to_slot);
+				Message(Chat::Lime, "Destination slot %i resynchronized.", move_slots->to_slot);
 				resync = true;
 			}
-			else { Message(CC_Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
+			else { Message(Chat::Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
 		}
-		else { Message(CC_Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
+		else { Message(Chat::Red, "Could not resynchronize destination slot %i.", move_slots->to_slot); }
 	}
 
 	if(resync)
@@ -1847,7 +1847,7 @@ void Client::SwapItemResync(MoveItem_Struct* move_slots) {
 
 	if (Admin() < 10)
 	{
-		Message(CC_Red, "Disconnecting to avoid item loss, please relog.");
+		Message(Chat::Red, "Disconnecting to avoid item loss, please relog.");
 		Kick();
 	}
 }
@@ -2522,9 +2522,9 @@ bool Client::InterrogateInventory(Client* requester, bool log, bool silent, bool
 		InterrogateInventory_(false, requester, instmap_itr->first, INVALID_INDEX, instmap_itr->second, nullptr, log, silent, error, 0);
 
 	if (error) {
-		Message(CC_Red, "An error has been discovered in your inventory!");
-		Message(CC_Red, "Do not log out, zone or re-arrange items until this");
-		Message(CC_Red, "issue has been resolved or item loss may occur!");
+		Message(Chat::Red, "An error has been discovered in your inventory!");
+		Message(Chat::Red, "Do not log out, zone or re-arrange items until this");
+		Message(Chat::Red, "issue has been resolved or item loss may occur!");
 
 		if (allowtrip)
 			TripInterrogateInvState();

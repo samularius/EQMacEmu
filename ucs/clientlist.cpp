@@ -22,11 +22,15 @@
 #include "../common/eqemu_logsys.h"
 #include "../common/races.h"
 #include "../common/classes.h"
+#include "../common/misc_functions.h"
+#include "../common/path_manager.h"
 
+#include "ucsconfig.h"
 #include "clientlist.h"
 #include "database.h"
 #include "chatchannel.h"
 
+#include "../common/eqemu_config.h"
 #include "../common/eq_stream_factory.h"
 #include "../common/emu_tcp_connection.h"
 #include "../common/emu_tcp_server.h"
@@ -149,7 +153,7 @@ static void ProcessCommandBuddy(Client *c, std::string Buddy) {
 
 static void ProcessCommandIgnore(Client *c, std::string Ignoree) {
 
-	LogInfo("Received ignore command with parameters %s", Ignoree.c_str());
+	LogInfo("Received ignore command with parameters {}", Ignoree.c_str());
 	c->GeneralChannelMessage("Ignore list modified");
 
 	uint8 SubAction = 0;
@@ -195,24 +199,28 @@ Clientlist::Clientlist(int ChatPort) {
 
 	ChatOpMgr = new RegularOpcodeManager;
 
-	if(!ChatOpMgr->LoadOpcodes("chat_opcodes.conf"))
+	const ucsconfig *Config = ucsconfig::get();
+
+	std::string opcodes_file = fmt::format("{}/{}", path.GetServerPath(), Config->ChatOpCodesFile);
+
+	LogInfo("Loading [{}]", opcodes_file);
+	if (!ChatOpMgr->LoadOpcodes(opcodes_file.c_str())) {
 		exit(1);
+	}
 
 	if (chatsf->Open()) {
-		LogF(Logs::Detail, Logs::LoginServer, "Client (UDP) Chat listener started on port [{0}].", ChatPort);
+		LogInfoDetail("Client (UDP) Chat listener started on port [{0}].", ChatPort);
 	}
 	else {
-		LogF(Logs::Detail, Logs::UCSServer,"Failed to start client (UDP) listener (port [{0}]-4i)", ChatPort);
+		LogInfoDetail("Failed to start client (UDP) listener (port [{0}]-4i)", ChatPort);
 
 		exit(1);
 	}
 }
 
-Client::Client(std::shared_ptr<EQStream> eqs) {
+Client::Client(std::shared_ptr<EQStreamInterface> eqs) {
 
 	ClientStream = eqs;
-	if(ClientStream != nullptr)
-		ClientStream->PutInUse();
 
 	Announce = false;
 
@@ -300,7 +308,7 @@ void Clientlist::CLClearStaleConnections()
 }
 
 void Clientlist::CheckForStaleConnectionsAll() {
-	LogDebug("Checking for stale connections");
+	LogInfo("Checking for stale connections");
 
 	auto it = ClientChatConnections.begin();
 	while (it != ClientChatConnections.end()) {
@@ -328,7 +336,7 @@ void Clientlist::CheckForStaleConnections(Client *c) {
 
 void Clientlist::Process()
 {
-	std::shared_ptr<EQStream> eqs;
+	std::shared_ptr<EQStreamInterface> eqs;
 
 	// Pop sets PutInUse() for the stream.
 	while ((eqs = chatsf->Pop())) {
@@ -362,16 +370,12 @@ void Clientlist::Process()
 			++it;
 			continue;
 		}
-		if ((*it)->ClientStream->CheckClosed()) {
+		if ((*it)->ClientStream->CheckState(CLOSED)) {
 			//(*it)->ClientStream->ReleaseFromUse();
 			(*it)->ClientStream = nullptr;
 			(*it)->SetStale();
 			++it;
 			continue;
-		}
-		else {
-			// this keeps stream open while we are using it.
-			(*it)->ClientStream->PutInUse();
 		}
 
 		EQApplicationPacket *app = nullptr;
@@ -380,6 +384,14 @@ void Clientlist::Process()
 
 		while (KeyValid && !(*it)->GetForceDisconnect() && (app = (*it)->ClientStream->PopPacket())) {
 			EmuOpcode opcode = app->GetOpcode();
+
+			LogPacketClientServer(
+				"[{}] [{:#06x}] Size [{}] {}",
+				OpcodeManager::EmuToName(app->GetOpcode()),
+				(*it)->ClientStream->GetOpcodeManager()->EmuToEQ(app->GetOpcode()),
+				app->Size(),
+				(LogSys.IsLogEnabled(Logs::Detail, Logs::PacketClientServer) ? DumpPacketToString(app) : "")
+			);
 
 			switch (opcode) {
 			case OP_ChatLogin: {
@@ -442,7 +454,7 @@ void Clientlist::Process()
 			}
 
 			default: {
-				LogInfo("Unhandled chat opcode {:08x}", opcode);
+				LogInfo("Unhandled chat opcode {:#06x}", opcode);
 				break;
 			}
 			}
@@ -625,7 +637,8 @@ void Client::AddCharacter(int CharID, const char *CharacterName, int Level, int 
 }
 
 void Client::SendKeepAlive() {
-	QueuePacket(new EQApplicationPacket(OP_SessionReady, 0));
+	EQApplicationPacket outapp(OP_SessionReady, 0);
+	QueuePacket(&outapp);
 }
 
 void Client::SendChatlist() {

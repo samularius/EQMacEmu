@@ -73,9 +73,9 @@ struct Duel_Struct
 
 struct DuelResponse_Struct
 {
-	uint32 target_id;
-	uint32 entity_id;
-	uint32 unknown;
+	uint16 duel_initiator;
+	uint16 duel_target;
+	uint16 unknown;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2583,20 +2583,6 @@ struct CorpseDrag_Struct
 /*152*/
 };
 
-struct ServerLootItem_Struct {
-	uint32	item_id;	  // uint32	item_id;
-	int16	equip_slot;	  // int16	equip_slot;
-	int8	charges;	  // int8	charges; 
-	uint16	lootslot;	  // uint16	lootslot;
-	uint8	min_level;		  // 
-	uint8	max_level;		  // 
-	uint8	quest;
-	uint8	pet;
-	bool	forced;
-	uint8	min_looter_level;
-	uint32	item_loot_lockout_timer;
-};
-
 struct Checksum_Struct {
 	uint64 checksum;
 	uint8  data[2048];
@@ -2738,8 +2724,6 @@ struct CharacterConsent
 	uint32 corpse_id;
 	std::string consenter;
 };
-
-typedef std::list<ServerLootItem_Struct*> ItemList;
 
 struct ResetSkill_Struct
 {

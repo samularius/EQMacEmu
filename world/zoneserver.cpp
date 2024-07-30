@@ -192,10 +192,10 @@ bool ZoneServer::Process() {
 		ucs_connected = UCSLink.Connected();
 		if (was_connected != ucs_connected) {
 			if (was_connected) {
-				this->SendEmoteMessage(0, 0, AccountStatus::Player, CC_User_ChatChannel, "The Universal Chat service is temporarily unavailable. You will be notified when it is restored.");
+				this->SendEmoteMessage(0, 0, AccountStatus::Player, Chat::ChatChannel, "The Universal Chat service is temporarily unavailable. You will be notified when it is restored.");
 			}
 			else {
-				this->SendEmoteMessage(0, 0, AccountStatus::Player, CC_User_ChatChannel, "The Universal Chat service has been restored.  You must zone to re-join channels.");
+				this->SendEmoteMessage(0, 0, AccountStatus::Player, Chat::ChatChannel, "The Universal Chat service has been restored.  You must zone to re-join channels.");
 			}
 		}
 	}
@@ -603,7 +603,7 @@ bool ZoneServer::Process() {
 						Console* con = 0;
 						con = console_list.FindByAccountName(&scm->deliverto[1]);
 						if (((!con) || (!con->SendChannelMessage(scm))) && (scm->chan_num == ChatChannel_Tell && scm->queued == 0))
-							zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, CC_Default, fmt::format(" {} is not online at this time ", scm->to).c_str());
+							zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, Chat::White, fmt::format(" {} is not online at this time ", scm->to).c_str());
 						break;
 					}
 
@@ -655,7 +655,7 @@ bool ZoneServer::Process() {
 					}
 					else if (cle->Server() == 0) {
 						if (scm->chan_num == ChatChannel_Tell)
-							zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, CC_Default, fmt::format(" {} is not contactable at this time'", scm->to).c_str());
+							zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, Chat::Default, fmt::format(" {} is not contactable at this time'", scm->to).c_str());
 					}
 					else
 					{
@@ -664,7 +664,7 @@ bool ZoneServer::Process() {
 							if (cle && sender && sender->Revoked() && cle->Admin() <= 0)
 							{
 								if (scm->chan_num == ChatChannel_Tell)
-									zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, CC_Default, "You are server muted, and aren't able to send a message to anyone but a CSR.");
+									zoneserver_list.SendEmoteMessage(scm->from, 0, AccountStatus::Player, Chat::Default, "You are server muted, and aren't able to send a message to anyone but a CSR.");
 								break;
 							}
 						}
@@ -835,10 +835,10 @@ bool ZoneServer::Process() {
 				else if (s->zoneid != 0)
 					zs = zoneserver_list.FindByName(database.GetZoneName(s->zoneid));
 				else
-					zoneserver_list.SendEmoteMessage(s->adminname, 0, AccountStatus::Player, CC_Default, "Error: SOP_ZoneShutdown: neither ID nor name specified");
+					zoneserver_list.SendEmoteMessage(s->adminname, 0, AccountStatus::Player, Chat::White, "Error: SOP_ZoneShutdown: neither ID nor name specified");
 
 				if (zs == 0)
-					zoneserver_list.SendEmoteMessage(s->adminname, 0, AccountStatus::Player, CC_Default, "Error: SOP_ZoneShutdown: zoneserver not found");
+					zoneserver_list.SendEmoteMessage(s->adminname, 0, AccountStatus::Player, Chat::White, "Error: SOP_ZoneShutdown: zoneserver not found");
 				else
 					zs->SendPacket(pack);
 				break;
@@ -1095,9 +1095,9 @@ bool ZoneServer::Process() {
 				ClientListEntry* cle = client_list.FindCharacter(gmg->gotoname);
 				if (cle != 0) {
 					if (cle->Server() == 0)
-						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, CC_Red, fmt::format("Error: Cannot identify {}'s zoneserver.", gmg->gotoname).c_str());
+						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, Chat::Red, fmt::format("Error: Cannot identify {}'s zoneserver.", gmg->gotoname).c_str());
 					else if (cle->Anon() == 1 && cle->Admin() > gmg->admin) // no snooping for anon GMs
-						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, CC_Red, fmt::format("Error: {} not found", gmg->gotoname).c_str());
+						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, Chat::Red, fmt::format("Error: {} not found", gmg->gotoname).c_str());
 					else
 					{
 						gmg->guildinstanceid = cle->GetZoneGuildID();
@@ -1105,7 +1105,7 @@ bool ZoneServer::Process() {
 					}
 				}
 				else {
-					this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, CC_Red, fmt::format("Error: {} not found", gmg->gotoname).c_str());
+					this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, Chat::Red, fmt::format("Error: {} not found", gmg->gotoname).c_str());
 				}
 				break;
 			}
@@ -1121,10 +1121,10 @@ bool ZoneServer::Process() {
 					WorldConfig::UnlockWorld();
 				if (loginserverlist.Connected()) {
 					loginserverlist.SendStatus();
-					SendEmoteMessage(l->character_name, 0, AccountStatus::Player, CC_Yellow, fmt::format("World {}.", l->is_locked ? "locked" : "unlocked").c_str());
+					SendEmoteMessage(l->character_name, 0, AccountStatus::Player, Chat::Yellow, fmt::format("World {}.", l->is_locked ? "locked" : "unlocked").c_str());
 				}
 				else {
-					SendEmoteMessage(l->character_name, 0, AccountStatus::Player, CC_Yellow, fmt::format("World {}, but login server not connected.", l->is_locked ? "locked" : "unlocked").c_str());
+					SendEmoteMessage(l->character_name, 0, AccountStatus::Player, Chat::Yellow, fmt::format("World {}, but login server not connected.", l->is_locked ? "locked" : "unlocked").c_str());
 				}
 				break;
 								}
@@ -1207,15 +1207,15 @@ bool ZoneServer::Process() {
 						break;
 					case ServerLockType::Lock:
 						if (zoneserver_list.SetLockedZone(lock_zone->zoneID, true))
-							zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::QuestTroupe, CC_Yellow, fmt::format("Zone locked: {} ", database.GetZoneName(lock_zone->zoneID)).c_str());
+							zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::QuestTroupe, Chat::Yellow, fmt::format("Zone locked: {} ", database.GetZoneName(lock_zone->zoneID)).c_str());
 						else
-							this->SendEmoteMessageRaw(lock_zone->adminname, 0, AccountStatus::Player, CC_Default, "Failed to change lock");
+							this->SendEmoteMessageRaw(lock_zone->adminname, 0, AccountStatus::Player, Chat::White, "Failed to change lock");
 						break;
 					case ServerLockType::Unlock:
 						if (zoneserver_list.SetLockedZone(lock_zone->zoneID, false))
-							zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::QuestTroupe, CC_Yellow, fmt::format("Zone unlocked: {} ", database.GetZoneName(lock_zone->zoneID)).c_str());
+							zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::QuestTroupe, Chat::Yellow, fmt::format("Zone unlocked: {} ", database.GetZoneName(lock_zone->zoneID)).c_str());
 						else
-							this->SendEmoteMessageRaw(lock_zone->adminname, 0, AccountStatus::Player, CC_Default, "Failed to change lock");
+							this->SendEmoteMessageRaw(lock_zone->adminname, 0, AccountStatus::Player, Chat::White, "Failed to change lock");
 						break;
 				}
 				break;
@@ -1641,6 +1641,11 @@ void ZoneServer::SendGroupIDs() {
 	zoneserver_list.NextGroupIDs(sgi->start, sgi->end);
 	SendPacket(pack);
 	delete pack;
+}
+
+void ZoneServer::SendKeepAlive() {
+	ServerPacket pack(ServerOP_KeepAlive, 0);
+	SendPacket(&pack);
 }
 
 void ZoneServer::ChangeWID(uint32 iCharID, uint32 iWID) {

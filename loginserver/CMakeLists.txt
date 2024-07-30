@@ -1,9 +1,8 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 SET(eqlogin_sources
 	client.cpp
 	client_manager.cpp
-	config.cpp
 	database.cpp
 	eq_crypto.cpp
 	main.cpp
@@ -14,11 +13,10 @@ SET(eqlogin_sources
 SET(eqlogin_headers
 	client.h
 	client_manager.h
-	config.h
 	database.h
 	eq_crypto.h
 	login_server.h
-	login_structures.h
+	login_types.h
 	options.h
 	server_manager.h
 	world_server.h

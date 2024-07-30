@@ -92,19 +92,27 @@ void Console::Die() {
 }
 
 bool Console::SendChannelMessage(const ServerChannelMessage_Struct* scm) {
-	if (!pAcceptMessages)
+	if (!pAcceptMessages) {
 		return false;
+	}
+
 	switch (scm->chan_num) {
-		if(RuleB(Chat, ServerWideAuction)){
-			case ChatChannel_Auction: {
+		case ChatChannel_Auction: {
+			if(RuleB(Chat, ServerWideAuction)){
 				SendMessage(1, "%s auctions, '%s'", scm->from, scm->message);
 				break;
 			}
+			else {
+				return false;
+			}
 		}
-		if(RuleB(Chat, ServerWideOOC)){
-			case ChatChannel_OOC: {
+		case ChatChannel_OOC: {
+			if (RuleB(Chat, ServerWideOOC)) {
 				SendMessage(1, "%s says ooc, '%s'", scm->from, scm->message);
 				break;
+			} 
+			else {
+				return false;
 			}
 		}
 		case ChatChannel_Broadcast: {
@@ -330,7 +338,7 @@ void ConsoleList::KillAll() {
 
 void ConsoleList::SendConsoleWho(WorldTCPConnection* connection, const char* to, int16 admin)
 {
-	fmt::memory_buffer out;
+	std::vector<char> out;
 
 	LinkedListIterator<Console*> iterator(list);
 	iterator.Reset();
@@ -340,24 +348,23 @@ void ConsoleList::SendConsoleWho(WorldTCPConnection* connection, const char* to,
 	while(iterator.MoreElements()) {
 		in.s_addr = iterator.GetData()->GetIP();
 		if (admin >= iterator.GetData()->Admin())
-			fmt::format_to(out, "  Console: {} : {} AccID: {} AccName: {} ", inet_ntoa(in), iterator.GetData()->GetPort(), iterator.GetData()->AccountID(), iterator.GetData()->AccountName());
+			fmt::format_to(std::back_inserter(out), "  Console: {} : {} AccID: {} AccName: {} ", inet_ntoa(in), iterator.GetData()->GetPort(), iterator.GetData()->AccountID(), iterator.GetData()->AccountName());
 		else
-			fmt::format_to(out, "  Console: AccID: {} AccName: {} ", iterator.GetData()->AccountID(), iterator.GetData()->AccountName());
+			fmt::format_to(std::back_inserter(out), "  Console: AccID: {} AccName: {} ", iterator.GetData()->AccountID(), iterator.GetData()->AccountName());
 		if (out.size() >= 3584) {
-			auto output = fmt::to_string(out);
-			connection->SendEmoteMessageRaw(to, 0, AccountStatus::Player, CC_NPCQuestSay, output.c_str());
+			connection->SendEmoteMessageRaw(to, 0, AccountStatus::Player, Chat::NPCQuestSay, out.data());
 			out.clear();
 		}
 		else {
 			if (connection->IsConsole())
-				fmt::format_to(out, "\r\n");
+				fmt::format_to(std::back_inserter(out), "\r\n");
 			else
-				fmt::format_to(out, "\n");
+				fmt::format_to(std::back_inserter(out), "\n");
 		}
 		x++;
 		iterator.Advance();
 	}
-	fmt::format_to(out, " {} consoles connected", x);
+	fmt::format_to(std::back_inserter(out), " {} consoles connected", x);
 }
 
 void ConsoleList::SendChannelMessage(const ServerChannelMessage_Struct* scm) {
@@ -418,7 +425,7 @@ void Console::ProcessCommand(const char* command) {
 			}
 			strcpy(paccountname, command);
 			state = CONSOLE_STATE_PASSWORD;
-			SendMessage(CC_Default, "Password: ");
+			SendMessage(Chat::White, "Password: ");
 			tcpc->SetEcho(false);
 			break;
 		}
@@ -775,8 +782,8 @@ void Console::ProcessCommand(const char* command) {
 					zoneserver_list.WorldShutDown(0, 0);
 				}
 				else if(strcasecmp(sep.arg[1], "disable") == 0) {
-        			SendEmoteMessage(0, 0, AccountStatus::Player,CC_Yellow, "[SYSTEM] World shutdown has been aborted.");
-					zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player,CC_Yellow, "[SYSTEM] World shutdown has been aborted.");
+        			SendEmoteMessage(0, 0, AccountStatus::Player,Chat::Yellow, "[SYSTEM] World shutdown has been aborted.");
+					zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player,Chat::Yellow, "[SYSTEM] World shutdown has been aborted.");
         			zoneserver_list.shutdowntimer->Disable();
 			        zoneserver_list.reminder->Disable();
 				}
@@ -888,6 +895,6 @@ void Console::ProcessCommand(const char* command) {
 
 void Console::SendPrompt() {
 	if (tcpc->GetEcho())
-		SendMessage(CC_Default, "%s> ", paccountname);
+		SendMessage(Chat::White, "%s> ", paccountname);
 }
 

@@ -22,23 +22,19 @@
 #include "../common/eqemu_logsys.h"
 #include "../common/global_define.h"
 #include <iostream>
-#include <stdio.h>
-#include <zlib.h>
-#include <limits.h>
 
 #ifdef _WINDOWS
-	#include <winsock2.h>
-	#include <windows.h>
-	#define snprintf	_snprintf
-	#define strncasecmp	_strnicmp
-	#define strcasecmp	_stricmp
+#define snprintf	_snprintf
+#define strncasecmp	_strnicmp
+#define strcasecmp	_stricmp
 #else
-	#include <pthread.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <unistd.h>
+#include <pthread.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 #endif
 
+#include "../common/data_verification.h"
 #include "../common/rulesys.h"
 #include "../common/skills.h"
 #include "../common/spdat.h"
@@ -53,8 +49,6 @@
 #include "worldserver.h"
 #include "zone.h"
 #include "zonedb.h"
-
-#include <limits.h>
 
 extern QueryServ* QServ;
 extern Zone* zone;
@@ -203,7 +197,7 @@ bool Client::Process() {
 
 		if (underwater_timer.Check())
 		{
-			if ((IsUnderWater() || GetZoneID() == thegrey) && 
+			if ((IsUnderWater() || GetZoneID() == Zones::THEGREY) && 
 				!spellbonuses.WaterBreathing && !aabonuses.WaterBreathing && !itembonuses.WaterBreathing)
 			{
 				if (m_pp.air_remaining > 0)
@@ -245,7 +239,7 @@ bool Client::Process() {
 			if (!song_target || !ApplyNextBardPulse(bardsong, song_target, bardsong_slot))
 			{
 				if (interrupt_message > 0)
-					InterruptSpell(interrupt_message, CC_User_SpellFailure, bardsong);
+					InterruptSpell(interrupt_message, Chat::SpellFailure, bardsong);
 				else
 					InterruptSpell();
 			}
@@ -346,11 +340,11 @@ bool Client::Process() {
 
 			if (!CombatRange(auto_attack_target))
 			{
-				Message_StringID(MT_TooFarAway,TARGET_TOO_FAR);
+				Message_StringID(Chat::TooFarAway,TARGET_TOO_FAR);
 			}
 			else if (auto_attack_target == this)
 			{
-				Message_StringID(MT_TooFarAway,TRY_ATTACKING_SOMEONE);
+				Message_StringID(Chat::TooFarAway,TRY_ATTACKING_SOMEONE);
 			}
 			else if (los_status && los_status_facing)
 			{
@@ -372,7 +366,7 @@ bool Client::Process() {
 						{
 							if (zone->random.Int(0, 99) < aabonuses.FlurryChance)
 							{
-								Message_StringID(CC_Yellow, YOU_FLURRY);
+								Message_StringID(Chat::Yellow, YOU_FLURRY);
 								Attack(auto_attack_target, EQ::invslot::slotPrimary);
 
 								if (zone->random.Roll(10))							// flurry is usually only +1 swings
@@ -488,7 +482,7 @@ bool Client::Process() {
 			disc_ability_timer.Disable();
 			if (active_disc_spell && IsValidSpell(active_disc_spell))
 			{
-				this->Message(MT_Disciplines, "%s", spells[active_disc_spell].spell_fades);
+				this->Message(Chat::Disciplines, "%s", spells[active_disc_spell].spell_fades);
 			}
 			FadeDisc();
 
@@ -539,7 +533,7 @@ bool Client::Process() {
 		}
 
 		// Right now, only veeshan has floor teleports. If more are discovered, create a method to determine which zones need the timer.
-		if (GetZoneID() == veeshan && !door_check_timer.Enabled())
+		if (GetZoneID() == Zones::VEESHAN && !door_check_timer.Enabled())
 		{
 			door_check_timer.Start();
 		}
@@ -634,7 +628,7 @@ bool Client::Process() {
 			{
 				if (!zoning)
 				{
-					entity_list.MessageGroup(this,true,CC_Yellow,"%s logged out.",GetName());
+					entity_list.MessageGroup(this,true,Chat::Yellow,"%s logged out.",GetName());
 					mygroup->DelMember(this);
 				}
 				else
@@ -1202,9 +1196,9 @@ void Client::MerchantWelcome(int merchant_id, int npcid)
 		sprintf(handy_id, "%i", greet_id);
 
 		if (greet_id != MERCHANT_GREETING)
-			Message_StringID(CC_Default, GENERIC_STRINGID_SAY, merch->GetCleanName(), handy_id, this->GetName(), handyitem->Name);
+			Message_StringID(Chat::White, GENERIC_STRINGID_SAY, merch->GetCleanName(), handy_id, this->GetName(), handyitem->Name);
 		else
-			Message_StringID(CC_Default, GENERIC_STRINGID_SAY, merch->GetCleanName(), handy_id, this->GetName());
+			Message_StringID(Chat::White, GENERIC_STRINGID_SAY, merch->GetCleanName(), handy_id, this->GetName());
 	}
 }
 
@@ -1213,7 +1207,7 @@ void Client::OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 G
 	if(PendingRezzXP < 0 || PendingRezzZoneID == 0) {
 		// pendingrezexp is set to -1 if we are not expecting an OP_RezzAnswer
 		Log(Logs::Detail, Logs::Spells, "Unexpected OP_RezzAnswer. Ignoring it.");
-		Message(CC_Red, "You have already been resurrected.\n");
+		Message(Chat::Red, "You have already been resurrected.\n");
 		return;
 	}
 
@@ -1268,7 +1262,7 @@ void Client::OPTGB(const EQApplicationPacket *app)
 
 	uint32 tgb_flag = *(uint32 *)app->pBuffer;
 	if(tgb_flag == 2)
-		Message_StringID(CC_Default, TGB() ? TGB_ON : TGB_OFF);
+		Message_StringID(Chat::White, TGB() ? TGB_ON : TGB_OFF);
 	else
 		tgb = tgb_flag;
 }
@@ -1286,7 +1280,7 @@ void Client::OPMemorizeSpell(const EQApplicationPacket* app)
 
 	if(!IsValidSpell(memspell->spell_id))
 	{
-		Message(CC_Red, "Unexpected error: spell id out of range");
+		Message(Chat::Red, "Unexpected error: spell id out of range");
 		return;
 	}
 
@@ -1297,8 +1291,8 @@ void Client::OPMemorizeSpell(const EQApplicationPacket* app)
 	)
 	{
 		char val1[20]={0};
-		Message_StringID(CC_Red,SPELL_LEVEL_TO_LOW,ConvertArray(spells[memspell->spell_id].classes[GetClass()-1],val1),spells[memspell->spell_id].name);
-		//Message(CC_Red, "Unexpected error: Class cant use this spell at your level!");
+		Message_StringID(Chat::Red,SPELL_LEVEL_TO_LOW,ConvertArray(spells[memspell->spell_id].classes[GetClass()-1],val1),spells[memspell->spell_id].name);
+		//Message(Chat::Red, "Unexpected error: Class cant use this spell at your level!");
 		return;
 	}
 
@@ -1317,12 +1311,12 @@ void Client::OPMemorizeSpell(const EQApplicationPacket* app)
 					DeleteItemInInventory(EQ::invslot::slotCursor, 0, true);
 				}
 				else {
-					Message_StringID(MT_Spells, ABORTED_SCRIBING_SPELL);
+					Message_StringID(Chat::Spells, ABORTED_SCRIBING_SPELL);
 					SendSpellBarEnable(0); // if we don't send this, the client locks up
 				}
 			}
 			else {
-				Message_StringID(MT_Spells, ABORTED_SCRIBING_SPELL);
+				Message_StringID(Chat::Spells, ABORTED_SCRIBING_SPELL);
 				SendSpellBarEnable(0);
 			}
 			break;
@@ -1631,8 +1625,8 @@ void Client::OPMoveCoin(const EQApplicationPacket* app)
 			with->trade->state = Trading;
 
 		Client* recipient = trader->CastToClient();
-		recipient->Message(CC_Yellow, "%s adds some coins to the trade.", GetName());
-		recipient->Message(CC_Yellow, "The total trade is: %i PP, %i GP, %i SP, %i CP",
+		recipient->Message(Chat::Yellow, "%s adds some coins to the trade.", GetName());
+		recipient->Message(Chat::Yellow, "The total trade is: %i PP, %i GP, %i SP, %i CP",
 			trade->pp, trade->gp,
 			trade->sp, trade->cp
 		);
@@ -1866,7 +1860,7 @@ void Client::OPGMTrainSkill(const EQApplicationPacket *app)
 			case EQ::skills::SkillJewelryMaking:
 			case EQ::skills::SkillPottery:
 				if(skilllevel >= RuleI(Skills, MaxTrainTradeskills)) {
-					Message_StringID(CC_Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
+					Message_StringID(Chat::Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
 					SetSkill(skill, skilllevel, true);
 					return;
 				}
@@ -1877,7 +1871,7 @@ void Client::OPGMTrainSkill(const EQApplicationPacket *app)
 			case EQ::skills::SkillSpecializeDivination:
 			case EQ::skills::SkillSpecializeEvocation:
 				if(skilllevel >= RuleI(Skills, MaxTrainSpecializations)) {
-					Message_StringID(CC_Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
+					Message_StringID(Chat::Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
 					SetSkill(skill, skilllevel, true);
 					return;
 				}
@@ -1889,7 +1883,7 @@ void Client::OPGMTrainSkill(const EQApplicationPacket *app)
 			if (skilllevel >= MaxSkillValue)
 			{
 				// Don't allow training over max skill level
-				Message_StringID(CC_Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
+				Message_StringID(Chat::Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
 				SetSkill(skill, skilllevel, true);
 				return;
 			}
@@ -1900,7 +1894,7 @@ void Client::OPGMTrainSkill(const EQApplicationPacket *app)
 				if (skilllevel >= MaxSpecSkill)
 				{
 					// Restrict specialization training to follow the rules
-					Message_StringID(CC_Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
+					Message_StringID(Chat::Red, MORE_SKILLED_THAN_I, pTrainer->GetCleanName());
 					SetSkill(skill, skilllevel, true);
 					return;
 				}
@@ -1949,12 +1943,12 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 				//If #hideme is on, prevent being summoned by a lower GM.
 				if(st->CastToClient()->GetAnon() == 1 && st->CastToClient()->Admin() > this->Admin())
 				{
-					Message(CC_Red, "You cannot summon a GM with a higher status than you.");
+					Message(Chat::Red, "You cannot summon a GM with a higher status than you.");
 					return;
 				}
 			}
 
-			Message(CC_Default, "Local: Summoning %s to %f, %f, %f", gms->charname, (float)gms->x, (float)gms->y, (float)gms->z);
+			Message(Chat::White, "Local: Summoning %s to %f, %f, %f", gms->charname, (float)gms->x, (float)gms->y, (float)gms->z);
 			if (st->IsClient() && (st->CastToClient()->GetAnon() != 1 || this->Admin() >= st->CastToClient()->Admin()))
 				st->CastToClient()->MovePC(zone->GetZoneID(), (float)gms->x, (float)gms->y, (float)gms->z, this->GetHeading(), true);
 			else
@@ -1965,7 +1959,7 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 			uint8 tmp = gms->charname[strlen(gms->charname)-1];
 			if (!worldserver.Connected())
 			{
-				Message(CC_Default, "Error: World server disconnected");
+				Message(Chat::White, "Error: World server disconnected");
 			}
 			else if (tmp < '0' || tmp > '9') // dont send to world if it's not a player's name
 			{

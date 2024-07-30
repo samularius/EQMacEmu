@@ -56,3 +56,5 @@ bin/
 /x64
 /client_files/**/CMakeFiles/
 *.bak
+/utils/TaskMaster/.vs/
+/utils/TaskMaster/Debug/

@@ -201,7 +201,7 @@ void QuestManager::summonitem(uint32 itemid, int16 charges) {
 
 void QuestManager::write(const char *file, const char *str) {
 	FILE * pFile;
-	pFile = fopen (file, "a");
+	pFile = fopen (fmt::format("{}/{}", path.GetServerPath(), file).c_str(), "a");
 	if(!pFile)
 		return;
 	fprintf(pFile, "%s\n", str);
@@ -221,7 +221,7 @@ Mob* QuestManager::spawn2(int npc_type, int grid, int unused, const glm::vec4& p
 		strcpy(tmp->name, name);
 	}
 
-	auto npc = new NPC(tmp, nullptr, position, EQ::constants::GravityBehavior::Water);
+	auto npc = new NPC(tmp, nullptr, position, GravityBehavior::Water);
 	if (name)
 		strcpy(tmp->name, tmp_name);
 
@@ -247,7 +247,7 @@ Mob* QuestManager::unique_spawn(int npc_type, int grid, int unused, const glm::v
 	const NPCType* tmp = 0;
 	if (tmp = database.LoadNPCTypesData(npc_type))
 	{
-		auto npc = new NPC(tmp, nullptr, position, EQ::constants::GravityBehavior::Water);
+		auto npc = new NPC(tmp, nullptr, position, GravityBehavior::Water);
 		npc->AddLootTable();
 		if (npc->DropsGlobalLoot()) {
 			npc->CheckGlobalLootTables();
@@ -326,7 +326,7 @@ Mob* QuestManager::spawn_from_spawn2(uint32 spawn2_id)
         auto position = glm::vec4(found_spawn->GetX(), found_spawn->GetY(), found_spawn->GetZ(), found_spawn->GetHeading());
 
 		position.w = FixHeading(position.w);
-	auto npc = new NPC(tmp, found_spawn, position, EQ::constants::GravityBehavior::Water);
+	auto npc = new NPC(tmp, found_spawn, position, GravityBehavior::Water);
 
 	found_spawn->SetNPCPointer(npc);
 	npc->AddLootTable();
@@ -754,7 +754,7 @@ void QuestManager::shout2(const char *str) {
 		return;
 	}
 	else {
-		worldserver.SendEmoteMessage(0, 0, AccountStatus::Player, CC_Red, fmt::format(" {} shouts, '{}'", owner->GetCleanName(), str).c_str());
+		worldserver.SendEmoteMessage(0, 0, AccountStatus::Player, Chat::Red, fmt::format(" {} shouts, '{}'", owner->GetCleanName(), str).c_str());
 	}
 }
 
@@ -895,13 +895,13 @@ void QuestManager::changedeity(int deity_id) {
 		if(initiator->IsClient())
 		{
 			initiator->SetDeity(deity_id);
-			initiator->Message(CC_Yellow,"Your Deity has been changed/set to: %i", deity_id);
+			initiator->Message(Chat::Yellow,"Your Deity has been changed/set to: %i", deity_id);
 			initiator->Save(1);
 			initiator->Kick();
 		}
 		else
 		{
-			initiator->Message(CC_Yellow,"Error changing Deity");
+			initiator->Message(Chat::Yellow,"Error changing Deity");
 		}
 	}
 }
@@ -971,11 +971,11 @@ void QuestManager::surname(const char *name) {
 		if(initiator->IsClient())
 		{
 			initiator->ChangeLastName(name);
-			initiator->Message(CC_Yellow,"Your surname has been changed/set to: %s", name);
+			initiator->Message(Chat::Yellow,"Your surname has been changed/set to: %s", name);
 		}
 		else
 		{
-			initiator->Message(CC_Yellow,"Error changing/setting surname");
+			initiator->Message(Chat::Yellow,"Error changing/setting surname");
 		}
 	}
 }
@@ -1026,7 +1026,7 @@ void QuestManager::givecash(uint32 copper, uint32 silver, uint32 gold, uint32 pl
 		}
 
 		if (initiator) {
-			initiator->Message_StringID(CC_Green, YOU_RECEIVE_AS_SPLIT, Strings::Money(platinum, gold, silver, copper).c_str());
+			initiator->Message_StringID(Chat::Green, YOU_RECEIVE_AS_SPLIT, Strings::Money(platinum, gold, silver, copper).c_str());
 		}
 	}
 }
@@ -1245,7 +1245,7 @@ void QuestManager::itemlink(int item_id) {
 		linker.SetLinkType(EQ::saylink::SayLinkItemData);
 		linker.SetItemData(item);
 
-		initiator->Message(CC_Default, "%s tells you, %s", owner->GetCleanName(), linker.GenerateLink().c_str());
+		initiator->Message(Chat::White, "%s tells you, %s", owner->GetCleanName(), linker.GenerateLink().c_str());
 	}
 }
 
@@ -1566,7 +1566,7 @@ void QuestManager::respawn(int npcTypeID, int grid) {
 	const NPCType* npcType = nullptr;
 	if ((npcType = database.LoadNPCTypesData(npcTypeID)))
 	{
-		owner = new NPC(npcType, nullptr, owner->GetPosition(), EQ::constants::GravityBehavior::Water);
+		owner = new NPC(npcType, nullptr, owner->GetPosition(), GravityBehavior::Water);
 		owner->CastToNPC()->AddLootTable();
 		if (owner->CastToNPC()->DropsGlobalLoot()) {
 			owner->CastToNPC()->CheckGlobalLootTables();
@@ -1953,7 +1953,7 @@ void QuestManager::clearspawntimers() {
 }
 
 void QuestManager::ze(int type, const char *str) {
-	entity_list.Message(CC_Default, type, str);
+	entity_list.Message(Chat::White, type, str);
 }
 
 void QuestManager::we(int type, const char *str) {
@@ -2204,22 +2204,19 @@ bool QuestManager::IsRunning()
 	return owner->IsRunning();
 }
 
-void QuestManager::FlyMode(uint8 flymode)
+void QuestManager::FlyMode(GravityBehavior flymode)
 {
 	QuestManagerCurrentQuestVars();
 	if(initiator)
 	{
-		if (flymode >= 0 && flymode < 3) {
-			initiator->SendAppearancePacket(AppearanceType::FlyMode, flymode);
-			return;
-		}
+
+		initiator->SendAppearancePacket(AppearanceType::FlyMode, static_cast<int>(flymode));
+		initiator->SetFlyMode(flymode);
 	}
-	if(owner)
+	else if(owner)
 	{
-		if (flymode >= 0 && flymode < 3) {
-			owner->SendAppearancePacket(AppearanceType::FlyMode, flymode);
-			return;
-		}
+		owner->SendAppearancePacket(AppearanceType::FlyMode, static_cast<int>(flymode));
+		owner->SetFlyMode(flymode);
 	}
 }
 
@@ -2395,10 +2392,6 @@ void QuestManager::SendDebug(const char* message, int level)
 	{
 		Log(Logs::General, Logs::QuestDebug, message);
 	}
-	else if (level == Logs::Moderate)
-	{
-		Log(Logs::Moderate, Logs::QuestDebug, message);
-	}
 	else if (level == Logs::Detail)
 	{
 		Log(Logs::Detail, Logs::QuestDebug, message);
@@ -2481,4 +2474,8 @@ std::string QuestManager::GetEncounter() const {
 
 float QuestManager::GetCurrentExpansion() const {
 	return RuleR(World, CurrentExpansion);
+}
+
+std::string QuestManager::getdeityname(uint32 deity_id) {
+	return Deity::GetName(deity_id);
 }

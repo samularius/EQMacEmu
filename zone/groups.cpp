@@ -102,7 +102,7 @@ void Group::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinu
 	}
 
 	if (share && splitter && splitter->IsSelfFound()) {
-		splitter->Message(CC_Red, "The /split function is not allowed in a self found group.");
+		splitter->Message(Chat::Red, "The /split function is not allowed in a self found group.");
 		return;
 	}
 
@@ -153,13 +153,13 @@ void Group::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinu
 
 			// the group member other than the character doing the /split only gets this message "(splitter) shares the money with the group"
 			if (share && member_client != splitter) {
-				member_client->Message_StringID(CC_Green, SHARE_MONEY, splitter->GetCleanName());
+				member_client->Message_StringID(Chat::Green, SHARE_MONEY, splitter->GetCleanName());
 			}
 
 			// Check if there are any coins to add to the player's purse.
 			if (receive_copper || receive_silver || receive_gold || receive_platinum) {
 				member_client->AddMoneyToPP(receive_copper, receive_silver, receive_gold, receive_platinum, true);
-				member_client->Message_StringID(CC_Green, YOU_RECEIVE_AS_SPLIT, Strings::Money(receive_platinum, receive_gold, receive_silver, receive_copper).c_str());
+				member_client->Message_StringID(Chat::Green, YOU_RECEIVE_AS_SPLIT, Strings::Money(receive_platinum, receive_gold, receive_silver, receive_copper).c_str());
 			}
 
 			if (RuleB(QueryServ, PlayerLogMoneyTransactions))
@@ -185,7 +185,7 @@ bool Group::AddMember(Mob* newmember, const char *NewMemberName, uint32 Characte
 	if (GroupCount() >= MAX_GROUP_MEMBERS) //Sanity check for merging groups together.
 	{
 		if (newmember)
-			newmember->Message_StringID(CC_Default, GROUP_IS_FULL);
+			newmember->Message_StringID(Chat::White, GROUP_IS_FULL);
 		return false;
 	}
 
@@ -358,8 +358,8 @@ void Group::SendHPPacketsFrom(Mob *member)
 
 //updates a group member's client pointer when they zone in
 //if the group was in the zone already
-bool Group::UpdatePlayer(Mob* update){
-
+bool Group::UpdatePlayer(Mob* update)
+{
 	VerifyGroup();
 
 	uint32 i=0;
@@ -589,7 +589,7 @@ void Group::CastGroupSpell(Mob* caster, uint16 spell_id, bool isrecourse, int re
 	if(!caster)
 		return;
 
-	Log(Logs::Moderate, Logs::Spells, "%s is casting spell %d on group %d", caster->GetName(), spell_id, GetID());
+	Log(Logs::Detail, Logs::Spells, "%s is casting spell %d on group %d", caster->GetName(), spell_id, GetID());
 
 	castspell = true;
 	range = caster->GetAOERange(spell_id);
@@ -722,6 +722,8 @@ void Group::DisbandGroup(bool alt_msg, uint32 msg) {
 		members[i] = nullptr;
 		membername[i][0] = '\0';
 	}
+
+	SetLeader(nullptr);
 
 	uint32 group_id = GetID();
 
@@ -884,6 +886,35 @@ void Group::VerifyGroup()
 	*/
 
 	uint32 i;
+
+
+	std::string query2 = StringFormat("SELECT leadername FROM group_leaders WHERE groupid = %lu", (unsigned long)GetID());
+	auto results2 = database.QueryDatabase(query2);
+	if (!results2.Success())
+	{
+		Log(Logs::General, Logs::Error, "Error getting group leader for group %lu: %s", (unsigned long)GetID(), results2.ErrorMessage().c_str());
+		SetLeader(nullptr);
+	}
+
+	if (results2.RowCount() == 0) {
+		Log(Logs::General, Logs::Error, "Error getting group leader for group %lu: %s", (unsigned long)GetID(), results2.ErrorMessage().c_str());
+		SetLeader(nullptr);
+	}
+
+	std::string leaderName = results2.begin()[0] ? results2.begin()[0] : "";
+
+	//it should be safe to use GetClientByName, but Group is trying
+	//to be generic, so we'll go for general Mob
+	if (leaderName.size() > 0)
+	{
+		Mob *ourLeader = entity_list.GetMob(leaderName.c_str());
+		if (ourLeader == nullptr)
+		{	//they aren't here anymore...
+			Log(Logs::General, Logs::Group, "Leader of group %lu named '%s' has left the zone and failed verification..", (unsigned long)GetID(), leaderName.c_str());
+			SetLeader(nullptr);
+		}
+	}
+
 	for (i = 0; i < MAX_GROUP_MEMBERS; i++) 
 	{
 		if (membername[i][0] == '\0') 
@@ -1068,11 +1099,11 @@ void Group::BalanceHP(int32 penalty, float range, Mob* caster, int32 limit)
 
 				if (new_hp > old_hp)
 				{
-					members[gi]->Message_StringID(CC_User_Spells, DIV_ARB_TAKE);
-					members[gi]->Message_StringID(CC_User_Spells, YOU_HEALED, itoa(new_hp - old_hp));
+					members[gi]->Message_StringID(Chat::Spells, DIV_ARB_TAKE);
+					members[gi]->Message_StringID(Chat::Spells, YOU_HEALED, itoa(new_hp - old_hp));
 				}
 				else
-					members[gi]->Message_StringID(CC_User_Spells, DIV_ARB_GIVE);
+					members[gi]->Message_StringID(Chat::Spells, DIV_ARB_GIVE);
 
 				members[gi]->SetHP(new_hp);
 				members[gi]->SendHPUpdate();

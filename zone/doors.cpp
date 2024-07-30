@@ -219,10 +219,10 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			if ((zone->random.Int(0, 49) + uskill) >= (zone->random.Int(0, 49) + 1)) {
 				Log(Logs::General, Logs::Traps, "Door Trap %d is disarmed.", door_id);
 				success = SKILLUP_SUCCESS;
-				sender->Message_StringID(MT_Skills, DISARMED_TRAP);
+				sender->Message_StringID(Chat::Skills, DISARMED_TRAP);
 				move_door_packet->action = DOOR_RESET_TRAP;
 			} else {
-				sender->Message_StringID(MT_Skills, FAILED_DISARM_TRAP);
+				sender->Message_StringID(Chat::Skills, FAILED_DISARM_TRAP);
 				sender->CommonBreakInvisible();
 			}
 
@@ -325,7 +325,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 
 			if (!player_raid)
 			{
-				sender->Message(CC_Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
+				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
@@ -334,7 +334,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 
 			if (!player_raid->CanRaidEngageRaidTarget(player_raid->GetLeaderGuildID()))
 			{
-				sender->Message(CC_Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.", 
+				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
@@ -473,7 +473,7 @@ bool Doors::DoorKeyCheck(Client* sender, uint32& key)
 		// a key is required or the door is locked but can be picked or both
 		if (sender->GetGM()) {
 			// GM can always open locks
-			sender->Message_StringID(CC_Blue, DOORS_GM);
+			sender->Message_StringID(Chat::LightBlue, DOORS_GM);
 			return true;
 		} else if (player_key) {	// they have something they are trying to open it with
 			if (required_key_item && (required_key_item == player_key) || alternate_key_item && (alternate_key_item == player_key)) {
@@ -503,18 +503,18 @@ bool Doors::DoorKeyCheck(Client* sender, uint32& key)
 						if (!IsDoorOpen()) {
 							sender->CheckIncreaseSkill(EQ::skills::SkillPickLock, nullptr, zone->skill_difficulty[EQ::skills::SkillPickLock].difficulty);
 						}
-						sender->Message_StringID(CC_Blue, DOORS_SUCCESSFUL_PICK);
+						sender->Message_StringID(Chat::LightBlue, DOORS_SUCCESSFUL_PICK);
 						return true;
 					} else {
-						sender->Message_StringID(CC_Blue, DOORS_INSUFFICIENT_SKILL);
+						sender->Message_StringID(Chat::LightBlue, DOORS_INSUFFICIENT_SKILL);
 						return false;
 					}
 				} else {
-					sender->Message_StringID(CC_Blue, DOORS_NO_PICK);
+					sender->Message_StringID(Chat::LightBlue, DOORS_NO_PICK);
 					return false;
 				}
 			} else {
-				sender->Message_StringID(CC_Blue, DOORS_CANT_PICK);
+				sender->Message_StringID(Chat::LightBlue, DOORS_CANT_PICK);
 				return false;
 			}
 		} else {	// locked door and nothing to open it with
@@ -530,7 +530,7 @@ bool Doors::DoorKeyCheck(Client* sender, uint32& key)
 				key = key_ring;
 				return true;
 			} else {
-				sender->Message_StringID(CC_Blue, DOORS_LOCKED);
+				sender->Message_StringID(Chat::LightBlue, DOORS_LOCKED);
 				return false;
 			}
 		}
@@ -836,4 +836,19 @@ bool Doors::HasDestinationZone() const
 bool Doors::IsDestinationZoneSame() const
 {
 	return m_same_destination_zone;
+}
+
+float Doors::GetX()
+{
+	return m_position.x;
+}
+
+float Doors::GetY()
+{
+	return m_position.y;
+}
+
+float Doors::GetZ()
+{
+	return m_position.z;
 }

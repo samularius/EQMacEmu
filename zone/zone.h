@@ -27,6 +27,10 @@
 #include "zonedb.h"
 #include "../common/repositories/grid_repository.h"
 #include "../common/repositories/grid_entries_repository.h"
+#include "../common/repositories/loottable_repository.h"
+#include "../common/repositories/loottable_entries_repository.h"
+#include "../common/repositories/lootdrop_repository.h"
+#include "../common/repositories/lootdrop_entries_repository.h"
 #include "qglobals.h"
 #include "spawn2.h"
 #include "spawngroup.h"
@@ -128,11 +132,11 @@ public:
 	inline const uint32& graveyard_id()	{ return pgraveyard_id; }
 	inline const uint16& graveyard_timer() { return pgraveyard_timer;  }
 	inline const uint32& GetMaxClients() { return pMaxClients; }
-
+	
 	inline const bool IsReducedSpawnTimersZone() { return reducedspawntimers;  }
 	inline const bool IsTrivialLootCodeEnabled() { return trivial_loot_code; }
 	inline bool IsReducedSpawnTimersEnabled();
-	void	LoadAAs();
+	void	LoadAlternateAdvancement();
 	int		GetTotalAAs() { return totalAAs; }
 	SendAA_Struct*	GetAABySequence(uint32 seq) { return aas[seq]; }
 	SendAA_Struct*	FindAA(uint32 id, bool searchParent);
@@ -287,7 +291,7 @@ public:
 	uint32	numzonepoints;
 	float	update_range;
 
-	std::vector<NPC_Emote_Struct*> NPCEmoteList;
+	std::vector<NPC_Emote_Struct*> npc_emote_list;
 	LinkedList<KeyRing_Data_Struct*> KeyRingDataList;
 
 	void LoadTickItems();
@@ -298,7 +302,6 @@ public:
 	void ApplyRandomLoc(uint32 zoneid, float& x, float& y);
 
 	bool CanClientEngage(Client * initiator, Mob * target);
-	
 	inline std::vector<int> GetGlobalLootTables(NPC *mob) const { return m_global_loot.GetGlobalLootTables(mob); }
 	inline void AddGlobalLootEntry(GlobalLootEntry &in) { return m_global_loot.AddEntry(in); }
 	inline void ShowZoneGlobalLoot(Client *to) { m_global_loot.ShowZoneGlobalLoot(to); }
@@ -307,23 +310,48 @@ public:
 	// random object that provides random values for the zone
 	EQ::Random random;
 
-	static void GMSayHookCallBackProcess(uint16 log_category, std::string message){
+	static void GMSayHookCallBackProcess(uint16 log_category, const char *func, std::string message) {
+		// we don't want to loop up with chat messages
+		if (message.find("OP_SpecialMesg") != std::string::npos) {
+			return;
+		}
+
 		/* Cut messages down to 2600 max to prevent client crash */
-		if (!message.empty())
+		if (!message.empty()) {
 			message = message.substr(0, 2600);
+		}
 
 		/* Replace Occurrences of % or MessageStatus will crash */
 		Strings::Replace(message, std::string("%"), std::string("."));
 
 		if (message.find("\n") != std::string::npos){
 			auto message_split = Strings::Split(message, '\n');
-			entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "%s", message_split[0].c_str());
+			entity_list.MessageStatus(
+				0,
+				AccountStatus::QuestTroupe,
+				LogSys.GetGMSayColorFromCategory(log_category),
+				message_split[0].c_str()
+			);
+
 			for (size_t iter = 1; iter < message_split.size(); ++iter) {
-				entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "--- %s", message_split[iter].c_str());
+				entity_list.MessageStatus(
+					0,
+					AccountStatus::QuestTroupe,
+					LogSys.GetGMSayColorFromCategory(log_category),
+					fmt::format(
+						"--- {}",
+						message_split[iter]
+					).c_str()
+				);
 			}
 		}
 		else{
-			entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "%s", message.c_str());
+			entity_list.MessageStatus(
+				0,
+				AccountStatus::QuestTroupe,
+				LogSys.GetGMSayColorFromCategory(log_category),
+				fmt::format("[{}] [{}] {}", Logs::LogCategoryName[log_category], func, message).c_str()
+			);
 		}
 	}
 
@@ -336,6 +364,16 @@ public:
 	bool	velious_active;	
 
 	bool	HasCharmedNPC;
+
+	// loot
+	void LoadLootTable(const uint32 loottable_id);
+	void LoadLootTables(const std::vector<uint32> in_loottable_ids);
+	void ClearLootTables();
+	void ReloadLootTables();
+	LoottableRepository::Loottable *GetLootTable(const uint32 loottable_id);
+	std::vector<LoottableEntriesRepository::LoottableEntries> GetLootTableEntries(const uint32 loottable_id) const;
+	LootdropRepository::Lootdrop GetLootdrop(const uint32 lootdrop_id) const;
+	std::vector<LootdropEntriesRepository::LootdropEntries> GetLootdropEntries(const uint32 lootdrop_id) const;
 
 private:
 	uint32	zoneid;
@@ -396,6 +434,12 @@ private:
 	MobMovementManager* mMovementManager;
 
 	GlobalLootManager m_global_loot;
+
+	// loot
+	std::vector<LoottableRepository::Loottable>               m_loottables = {};
+	std::vector<LoottableEntriesRepository::LoottableEntries> m_loottable_entries = {};
+	std::vector<LootdropRepository::Lootdrop>                 m_lootdrops = {};
+	std::vector<LootdropEntriesRepository::LootdropEntries>   m_lootdrop_entries = {};
 };
 
 #endif

@@ -30,8 +30,6 @@ public:
 	*/
 	Options() :
 		allow_unregistered(true),
-		dump_in_packets(false),
-		dump_out_packets(false),
 		encryption_mode(5),
 		local_network("127.0.0.1"),
 		network_ip("127.0.0.1"),
@@ -49,26 +47,6 @@ public:
 	* Returns the value of allow_unregistered.
 	*/
 	inline bool IsUnregisteredAllowed() const { return allow_unregistered; }
-
-	/**
-	* Sets dump_in_packets.
-	*/
-	inline void DumpInPackets(bool b) { dump_in_packets = b; }
-
-	/**
-	* Returns the value of dump_in_packets.
-	*/
-	inline bool IsDumpInPacketsOn() const { return dump_in_packets; }
-
-	/**
-	* Sets dump_out_packets.
-	*/
-	inline void DumpOutPackets(bool b) { dump_out_packets = b; }
-
-	/**
-	* Returns the value of dump_out_packets.
-	*/
-	inline bool IsDumpOutPacketsOn() const { return dump_out_packets; }
 
 	/**
 	* Sets encryption_mode.
@@ -171,8 +149,6 @@ public:
 
 private:
 	bool allow_unregistered;
-	bool dump_in_packets;
-	bool dump_out_packets;
 	bool reject_duplicate_servers;
 	bool allow_token_login;
 	bool allow_password_login;

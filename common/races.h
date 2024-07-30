@@ -480,6 +480,7 @@ const char* GetPlayerRaceName(uint32 player_race_value);
 const char* GetGenderName(uint32 gender_id);
 const bool IsFlyingCreatureRace(const uint16 race_id);
 
+bool IsPlayerRace(uint16 race_id);
 uint32 GetPlayerRaceBit(uint16 race_id);
 uint32 GetPlayerRaceValue(uint16 race_id);
 

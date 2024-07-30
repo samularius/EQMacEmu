@@ -25,22 +25,25 @@
 #include "../../common/rulesys.h"
 #include "../../common/strings.h"
 #include "../../common/content/world_content_service.h"
+#include "../../common/path_manager.h"
 
 EQEmuLogSys LogSys;
 WorldContentService content_service;
+PathManager path;
 
 void ImportSpells(SharedDatabase *db);
 void ImportSkillCaps(SharedDatabase *db);
-void ImportBaseData(SharedDatabase *db);
 
 int main(int argc, char **argv) {
 	RegisterExecutablePlatform(ExePlatformClientImport);
 	LogSys.LoadLogSettingsDefaults();
 	set_exception_handler();
 
-	Log(Logs::General, Logs::Status, "Client Files Import Utility");
+	path.LoadPaths();
+
+	LogInfo("Client Files Import Utility");
 	if(!EQEmuConfig::LoadConfig()) {
-		Log(Logs::General, Logs::Error, "Unable to load configuration file.");
+		LogError("Unable to load configuration file");
 		return 1;
 	}
 
@@ -56,12 +59,12 @@ int main(int argc, char **argv) {
 	}
 
 	LogSys.SetDatabase(&database)
+		->SetLogPath(path.GetLogPath())
 		->LoadLogDatabaseSettings()
 		->StartFileLogs();
 
 	ImportSpells(&database);
 	ImportSkillCaps(&database);
-	ImportBaseData(&database);
 
 	LogSys.CloseFileLogs();
 	
@@ -99,9 +102,10 @@ bool IsStringField(int i) {
 
 void ImportSpells(SharedDatabase *db) {
 	Log(Logs::General, Logs::Status, "Importing Spells...");
-	FILE *f = fopen("import/spells_us.txt", "r");
+	std::string file = fmt::format("{}/import/spells_us.txt", path.GetServerPath());
+	FILE *f = fopen(file.c_str(), "r");
 	if(!f) {
-		Log(Logs::General, Logs::Error, "Unable to open import/spells_us.txt to read, skipping.");
+		LogError("Unable to open {} to read, skipping.", file);
 		return;
 	}
 
@@ -188,9 +192,10 @@ void ImportSpells(SharedDatabase *db) {
 void ImportSkillCaps(SharedDatabase *db) {
 	Log(Logs::General, Logs::Status, "Importing Skill Caps...");
 
-	FILE *f = fopen("import/SkillCaps.txt", "r");
+	std::string file = fmt::format("{}/import/SkillCaps.txt", path.GetServerPath());
+	FILE *f = fopen(file.c_str(), "r");
 	if(!f) {
-		Log(Logs::General, Logs::Error, "Unable to open import/SkillCaps.txt to read, skipping.");
+		LogError("Unable to open {} to read, skipping.", file);
 		return;
 	}
 
@@ -221,47 +226,3 @@ void ImportSkillCaps(SharedDatabase *db) {
 	fclose(f);
 }
 
-void ImportBaseData(SharedDatabase *db) {
-	Log(Logs::General, Logs::Status, "Importing Base Data...");
-
-	FILE *f = fopen("import/BaseData.txt", "r");
-	if(!f) {
-		Log(Logs::General, Logs::Error, "Unable to open import/BaseData.txt to read, skipping.");
-		return;
-	}
-
-	std::string delete_sql = "DELETE FROM base_data";
-	db->QueryDatabase(delete_sql);
-
-	char buffer[2048];
-	while(fgets(buffer, 2048, f)) {
-		auto split = Strings::Split(buffer, '^');
-
-		if(split.size() < 10) {
-			continue;
-		}
-
-		std::string sql;
-		int level, class_id;
-		double hp, mana, end, unk1, unk2, hp_fac, mana_fac, end_fac;
-
-		level = atoi(split[0].c_str());
-		class_id = atoi(split[1].c_str());
-		hp = atof(split[2].c_str());
-		mana = atof(split[3].c_str());
-		end = atof(split[4].c_str());
-		unk1 = atof(split[5].c_str());
-		unk2 = atof(split[6].c_str());
-		hp_fac = atof(split[7].c_str());
-		mana_fac = atof(split[8].c_str());
-		end_fac = atof(split[9].c_str());
-
-		sql = StringFormat("INSERT INTO base_data(level, class, hp, mana, end, unk1, unk2, hp_fac, "
-			"mana_fac, end_fac) VALUES(%d, %d, %f, %f, %f, %f, %f, %f, %f, %f)",
-			level, class_id, hp, mana, end, unk1, unk2, hp_fac, mana_fac, end_fac);
-
-		db->QueryDatabase(sql);
-	}
-
-	fclose(f);
-}

@@ -34,7 +34,7 @@ extern ZSList zoneserver_list;
 extern ClientList		client_list;
 extern volatile bool RunLoops;
 
-ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version, int8 revoked)
+ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version, int8 revoked)
 : id(in_id)
 {
 	ClearVars(true);
@@ -45,7 +45,6 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin, 0, &pmule);
 	strn0cpy(plsname, iLoginName, sizeof(plsname));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
-	strn0cpy(pForumName, iForumName, sizeof(pForumName));
 	pworldadmin = iWorldAdmin;
 	plocal=(local==1);
 	pversion = version;
@@ -58,7 +57,6 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList
 	ClearVars(true);
 	incremented_player_count = false;
 	pIP = 0;
-	pForumName[0] = 0;
 	pLSID = scl->LSAccountID;
 	strn0cpy(plsname, scl->name, sizeof(plsname));
 	strn0cpy(plskey, scl->lskey, sizeof(plskey));
@@ -386,7 +384,7 @@ bool ClientListEntry::CheckAuth(uint32 iLSID, const char* iKey) {
 	return false;
 }
 
-bool ClientListEntry::CheckAuth(const char* iName, MD5& iMD5Password) {
+bool ClientListEntry::CheckAuth(const char* iName, const MD5& iMD5Password) {
 	if (LSAccountID() == 0 && strcmp(paccountname, iName) == 0 && pMD5Pass == iMD5Password)
 		return true;
 	return false;

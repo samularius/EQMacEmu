@@ -17,6 +17,7 @@
 */
 
 #include "../common/races.h"
+#include "data_verification.h"
 
 const char* GetRaceIDName(uint16 race_id)
 {
@@ -1368,4 +1369,12 @@ const bool IsFlyingCreatureRace(const uint16 race_id) {
 		default:
 			return false;
 	}
+}
+
+bool IsPlayerRace(uint16 race_id) {
+	return (
+		EQ::ValueWithin(race_id, HUMAN, GNOME) ||
+		race_id == IKSAR ||
+		race_id == VAHSHIR
+		);
 }

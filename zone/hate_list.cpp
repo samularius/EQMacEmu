@@ -277,7 +277,7 @@ void HateList::HandleFTEEngage(Client* client) {
 			if (!guild_string.empty())
 			{
 				aggroTime = Timer::GetCurrentTime();
-				//entity_list.Message(CC_Default, 15, "%s of <%s> engages %s!", client->GetCleanName(), guild_string.c_str(), owner->GetCleanName());
+				//entity_list.Message(Chat::Default, 15, "%s of <%s> engages %s!", client->GetCleanName(), guild_string.c_str(), owner->GetCleanName());
 				owner->CastToNPC()->guild_fte = client->GuildID();
 				QServ->QSFirstToEngageEvent(client->CharacterID(), guild_string, owner->GetCleanName(), true);
 			}
@@ -298,7 +298,7 @@ void HateList::HandleFTEDisengage()
 				if (!owner->CastToNPC()->IsGuildInFTELockout(owner->CastToNPC()->guild_fte))
 				{
 					owner->CastToNPC()->InsertGuildFTELockout(owner->CastToNPC()->guild_fte);
-					//entity_list.Message(CC_Default, 15, "%s is no longer engaged with %s!", owner->GetCleanName(), guild_string.c_str());
+					//entity_list.Message(Chat::Default, 15, "%s is no longer engaged with %s!", owner->GetCleanName(), guild_string.c_str());
 					QServ->QSFirstToEngageEvent(0, "", owner->GetCleanName(), false);
 				}
 			}
@@ -969,7 +969,7 @@ void HateList::Add(Mob *ent, int32 in_hate, int32 in_dam, bool bFrenzy, bool iAd
 		}
 		p->hate += in_hate;
 		p->bFrenzy = bFrenzy;
-		Log(Logs::Moderate, Logs::Aggro, "%s is adding %d damage and %d hate to %s hatelist.", ent->GetName(), in_dam, in_hate, owner->GetName());
+		Log(Logs::Detail, Logs::Aggro, "%s is adding %d damage and %d hate to %s hatelist.", ent->GetName(), in_dam, in_hate, owner->GetName());
 	}
 	else if (iAddIfNotExist)
 	{
@@ -1006,7 +1006,7 @@ void HateList::Add(Mob *ent, int32 in_hate, int32 in_dam, bool bFrenzy, bool iAd
 		p->bFrenzy = bFrenzy;
 		list.push_back(p);
 		parse->EventNPC(EVENT_HATE_LIST, owner->CastToNPC(), ent, "1", 0);
-		Log(Logs::Moderate, Logs::Aggro, "%s is creating %d damage and %d hate on %s hatelist.", ent->GetName(), in_dam, in_hate, owner->GetName());
+		Log(Logs::Detail, Logs::Aggro, "%s is creating %d damage and %d hate on %s hatelist.", ent->GetName(), in_dam, in_hate, owner->GetName());
 	}
 	if (owner->IsNPC())
 	{
@@ -1720,15 +1720,15 @@ void HateList::PrintToClient(Client *c)
 	if (IsEmpty())
 	{
 		if (aggroTime == 0xFFFFFFFF)
-			c->Message(CC_Default, "Hatelist is empty. (never aggroed)");
+			c->Message(Chat::White, "Hatelist is empty. (never aggroed)");
 		else
 		{
 			aggroTime /= 1000;
-			c->Message(CC_Default, "Hatelist is empty. (last aggro %u hrs %u mins %u sec ago)", aggroTime / (60 * 60), (aggroTime / 60) % 60, aggroTime % 60);
+			c->Message(Chat::White, "Hatelist is empty. (last aggro %u hrs %u mins %u sec ago)", aggroTime / (60 * 60), (aggroTime / 60) % 60, aggroTime % 60);
 		}
 
 		if (owner->IsClient())
-			c->Message(CC_Default, "NPCs targeting this client: %u", entity_list.GetTopHateCount(owner));
+			c->Message(Chat::White, "NPCs targeting this client: %u", entity_list.GetTopHateCount(owner));
 
 		return;
 	}
@@ -1758,7 +1758,7 @@ void HateList::PrintToClient(Client *c)
 		else
 			buffer2[0] = '\0';
 
-		c->Message(CC_Default, "- name: %s (%s), timer: %i, damage: %d%s, hate: %d%s",
+		c->Message(Chat::White, "- name: %s (%s), timer: %i, damage: %d%s, hate: %d%s",
 			(e->ent && e->ent->GetName()) ? e->ent->GetName() : "(null)",
 			GetClassIDName(e->ent->GetClass(), 1),
 			timer, e->damage, buffer, e->hate, buffer2);
@@ -1771,7 +1771,7 @@ void HateList::PrintToClient(Client *c)
 		int entityID;
 		Mob *mob;
 
-		c->Message(CC_Default, " --- Rampage list top 10 (size: %i) ---", owner->GetRampageListSize());
+		c->Message(Chat::White, " --- Rampage list top 10 (size: %i) ---", owner->GetRampageListSize());
 
 		for (int slot = 0; slot < owner->GetRampageListSize(); slot++)
 		{
@@ -1782,12 +1782,12 @@ void HateList::PrintToClient(Client *c)
 			
 			if (entityID < 0)
 			{
-				c->Message(CC_Default, " [%i] error: invalid slot", slot + 1);
+				c->Message(Chat::White, " [%i] error: invalid slot", slot + 1);
 				continue;
 			}
 			if (entityID == 0)
 			{
-				c->Message(CC_Default, " [%i] <empty>", slot + 1);
+				c->Message(Chat::White, " [%i] <empty>", slot + 1);
 				continue;
 			}
 
@@ -1801,7 +1801,7 @@ void HateList::PrintToClient(Client *c)
 				else
 					buffer2[0] = '\0';
 
-				c->Message(CC_Default, " [%i] %s (%s)%s Dist: %i", 
+				c->Message(Chat::White, " [%i] %s (%s)%s Dist: %i", 
 					slot + 1,
 					mob->GetCleanName(),
 					GetClassIDName(mob->GetClass(), 1),
@@ -1811,12 +1811,12 @@ void HateList::PrintToClient(Client *c)
 			}
 			else
 			{
-				c->Message(CC_Default, " [%i] error: invalid entity ID (%i)", slot + 1, entityID);
+				c->Message(Chat::White, " [%i] error: invalid entity ID (%i)", slot + 1, entityID);
 			}
 		}
 	}
 	aggroTime /= 1000;
-	c->Message(CC_Default, "Time aggro: %u hrs %u mins %u sec%s", aggroTime / (60 * 60), (aggroTime / 60) % 60, aggroTime % 60,
+	c->Message(Chat::White, "Time aggro: %u hrs %u mins %u sec%s", aggroTime / (60 * 60), (aggroTime / 60) % 60, aggroTime % 60,
 		IsIgnoringAllHaters() ? " (ignoring all haters)" : "");
 }
 
