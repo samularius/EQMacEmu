@@ -25,6 +25,8 @@ public:
 		e.max_expansion = -1;
 		e.min_looter_level = 0;
 		e.item_loot_lockout_timer = 0;
+		e.content_flags = "";
+		e.content_flags_disabled = "";
 		return e;
 	}
 
