@@ -841,13 +841,9 @@
 } while (0)
 
 #define LogQuestDebug(message, ...) do {\
-    if (LogSys.log_settings(Logs::General, Logs::QuestDebug))\
-        OutF(LogSys, Logs::General, Logs::QuestDebug, __FILE__, __func__, __LINE__, message, ##__VA_ARGS__);\
 } while (0)
 
 #define LogQuestDebugDetail(message, ...) do {\
-    if (LogSys.log_settings(Logs::Detail, Logs::QuestDebug))\
-        OutF(LogSys, Logs::Detail, Logs::QuestDebug, __FILE__, __func__, __LINE__, message, ##__VA_ARGS__);\
 } while (0)
 
 #define LogLoginserver(message, ...) do {\
