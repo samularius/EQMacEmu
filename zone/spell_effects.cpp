@@ -596,7 +596,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (CastToNPC()->HasEngageNotice())
 					{
 						if (caster)
-							caster->Message(CC_Red, "That creature is too powerful for your charm.");
+							caster->Message(Chat::Red, "That creature is too powerful for your charm.");
 						break;
 					}
 				}
@@ -1004,7 +1004,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (CastToNPC()->HasEngageNotice())
 					{
 						if (caster)
-							caster->Message(CC_Red, "That creature is too powerful for your magic.");
+							caster->Message(Chat::Red, "That creature is too powerful for your magic.");
 						break;
 					}
 				}
@@ -1166,7 +1166,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 						if (CastToNPC()->HasEngageNotice())
 						{
 							if (caster)
-								caster->Message(CC_Red, "You can't seem to send this target home... they're already there.");
+								caster->Message(Chat::Red, "You can't seem to send this target home... they're already there.");
 							break;
 						}
 					}
@@ -1314,7 +1314,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (CastToNPC()->HasEngageNotice())
 					{
 						if(caster)
-						caster->Message(CC_Red, "You can't seem to wipe the mind of this target...");
+						caster->Message(Chat::Red, "You can't seem to wipe the mind of this target...");
 						break;
 					}
 				}

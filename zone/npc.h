@@ -224,12 +224,12 @@ public:
 		bool wearchange = false, 
 		bool quest = false, 
 		bool pet = false, 
-		bool force_equip = false
+		bool force_equip = false,
+		uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0
 	);
 
 	void	DeleteEquipment(int16 slotid);
 	virtual void UpdateEquipmentLight();
-	inline bool DropsGlobalLoot() const { return !skip_global_loot; }
 	uint32	GetEquipment(uint8 material_slot) const;	// returns item id
 	int32	GetEquipmentMaterial(uint8 material_slot) const;
 

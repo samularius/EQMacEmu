@@ -325,7 +325,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 
 			if (!player_raid)
 			{
-				sender->Message(CC_Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
+				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
@@ -334,7 +334,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 
 			if (!player_raid->CanRaidEngageRaidTarget(player_raid->GetLeaderGuildID()))
 			{
-				sender->Message(CC_Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.", 
+				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
 					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));

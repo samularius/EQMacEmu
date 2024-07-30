@@ -1111,13 +1111,13 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 
 			if (temporarily_allowed_itr == temporarily_allowed_looters.end() && c->IsLootLockedOutOfNPC(npctype_id))
 			{
-				c->Message(CC_Red, "You were locked out of this creature on its death, and are not eligible to loot.");
+				c->Message(Chat::Red, "You were locked out of this creature on its death, and are not eligible to loot.");
 				return false;
 			}
 		}
 
 		if (denied_looters.find(playername) != denied_looters.end()) {
-			c->Message(CC_Red, "You are not allowed to loot this NPC as you are locked out of the creature in question.");
+			c->Message(Chat::Red, "You are not allowed to loot this NPC as you are locked out of the creature in question.");
 			return false;
 		}
 
@@ -1139,7 +1139,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 							{
 								if (allowed_looters.find(raid->members[x].membername) != allowed_looters.end())
 								{
-									c->Message(CC_Cyan, "Adding you to the looter list of this corpse. You are in a raid with another eligible member of the raid.");
+									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid with another eligible member of the raid.");
 									AddLooter(c);
 									break;
 								}
@@ -1157,7 +1157,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 							{
 								if (allowed_looters.find(raid->members[x].membername) != allowed_looters.end())
 								{
-									c->Message(CC_Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're a group or raid leader.");
+									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're a group or raid leader.");
 									AddLooter(c);
 									break;
 								}
@@ -1173,7 +1173,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 						{
 							if (allowed_looters.find(raid->members[x].membername) != allowed_looters.end())
 							{
-								c->Message(CC_Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're the new raid leader.");
+								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're the new raid leader.");
 								AddLooter(c);
 								break;
 							}
@@ -1188,7 +1188,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 						{
 							if (allowed_looters.find(raid->members[x].membername) != allowed_looters.end())
 							{
-								c->Message(CC_Cyan, "Adding you to the looter list of this corpse. You are in a raid and the loot is set to free-for-all.");
+								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and the loot is set to free-for-all.");
 								AddLooter(c);
 								break;
 							}
@@ -1221,7 +1221,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 		}
 	}
 	if (c && c->HasRaid()) {
-		c->Message(CC_Red, "[DEBUG] You are in a raid, but cannot loot this corpse.");
+		c->Message(Chat::Red, "[DEBUG] You are in a raid, but cannot loot this corpse.");
 	}
 	return false;
 }
@@ -1356,7 +1356,7 @@ void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* a
 
 	// Added 12/08. Started compressing loot struct on live.
 	if(player_corpse_depop) {
-		client->Message(CC_Red, "[DEBUG] This corpse is being depooped!");
+		client->Message(Chat::Red, "[DEBUG] This corpse is being depooped!");
 		SendEndLootErrorPacket(client);
 		return;
 	}
@@ -1377,7 +1377,7 @@ void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* a
 	if (zone && zone->IsTrivialLootCodeEnabled() && !IsPlayerCorpse() && client && client->GetLevelCon(GetLevel()) == CON_GREEN)
 	{
 		SendLootReqErrorPacket(client, 0);
-		client->Message(CC_Red, "Trivial Loot Code is enabled in this zone. You are unable to loot any NPC that is considered green to you.");
+		client->Message(Chat::Red, "Trivial Loot Code is enabled in this zone. You are unable to loot any NPC that is considered green to you.");
 		return;
 	}
 
@@ -1403,7 +1403,7 @@ void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* a
 	if (this->being_looted_by != 0xFFFFFFFF && this->being_looted_by != client->GetID() && !contains_legacy_item) {
 		SendLootReqErrorPacket(client, 0);
 		Loot_Request_Type = 0;
-		client->Message(CC_Red, "[DEBUG] This corpse is being looted already by %i.", being_looted_by);
+		client->Message(Chat::Red, "[DEBUG] This corpse is being looted already by %i.", being_looted_by);
 	}
 	else if (IsPlayerCorpse() && char_id == client->CharacterID()) {
 		Loot_Request_Type = 2;
@@ -2319,7 +2319,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 				Client* c = mclient && mclient->IsClient() ? mclient->CastToClient() : nullptr;
 				if (kg->membername[i][0]) { // If Group Member is Active
 
-					std::list<ServerLootItem_Struct*> itemlist;
+					std::list<LootItem*> itemlist;
 
 					auto playerItr = records.find(kg->membername[i]);
 
@@ -2359,7 +2359,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 						message += ".";
 
 						if (mclient && mclient->IsClient())
-							mclient->CastToClient()->Message(CC_Yellow, message.c_str());
+							mclient->CastToClient()->Message(Chat::Yellow, message.c_str());
 						else
 						{
 
@@ -2368,7 +2368,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 							uint32 message_len2 = strlen(message.c_str()) + 1;
 							auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 							CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-							CZSC->Type = CC_Yellow;
+							CZSC->Type = Chat::Yellow;
 							strn0cpy(CZSC->CharName, kg->membername[i], 64);
 							strn0cpy(CZSC->Message, message.c_str(), 512);
 							worldserver.SendPacket(pack);
@@ -2391,7 +2391,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 					else
 					{
 						if (mclient && mclient->IsClient())
-							mclient->CastToClient()->Message(CC_Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
+							mclient->CastToClient()->Message(Chat::Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
 						else
 						{
 							std::string message = "You were locked out of ";
@@ -2403,7 +2403,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 							uint32 message_len2 = strlen(message.c_str()) + 1;
 							auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 							CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-							CZSC->Type = CC_Yellow;
+							CZSC->Type = Chat::Yellow;
 							strn0cpy(CZSC->CharName, kg->membername[i], 64);
 							strn0cpy(CZSC->Message, message.c_str(), 512);
 							worldserver.SendPacket(pack);
@@ -2467,7 +2467,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 							message += ".";
 
 							if (mclient && mclient->IsClient())
-								mclient->CastToClient()->Message(CC_Yellow, message.c_str());
+								mclient->CastToClient()->Message(Chat::Yellow, message.c_str());
 							else
 							{
 
@@ -2476,7 +2476,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 								uint32 message_len2 = strlen(message.c_str()) + 1;
 								auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 								CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-								CZSC->Type = CC_Yellow;
+								CZSC->Type = Chat::Yellow;
 								strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
 								strn0cpy(CZSC->Message, message.c_str(), 512);
 								worldserver.SendPacket(pack);
@@ -2501,7 +2501,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 						else
 						{
 							if (mclient && mclient->IsClient())
-								mclient->CastToClient()->Message(CC_Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
+								mclient->CastToClient()->Message(Chat::Yellow, "You were locked out of %s and receive no loot.", in_npc->GetCleanName());
 							else
 							{
 								std::string message = "You were locked out of ";
@@ -2512,7 +2512,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 								uint32 message_len2 = strlen(message.c_str()) + 1;
 								auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 								CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-								CZSC->Type = CC_Yellow;
+								CZSC->Type = Chat::Yellow;
 								strn0cpy(CZSC->CharName, kr->members[i].membername, 64);
 								strn0cpy(CZSC->Message, message.c_str(), 512);
 								worldserver.SendPacket(pack);
@@ -2528,7 +2528,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 		}
 		else if (give_exp_client)
 		{
-			std::list<ServerLootItem_Struct*> itemlist;
+			std::list<LootItem*> itemlist;
 			auto playerItr = records.find(give_exp_client->GetCleanName());
 
 			if (playerItr != records.end())
@@ -2569,7 +2569,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 					}
 
 					if (give_exp_client)
-						give_exp_client->Message(CC_Yellow, message.c_str());
+						give_exp_client->Message(Chat::Yellow, message.c_str());
 
 					//if they're not in zone, this will be loaded once they are.
 					database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
@@ -2588,7 +2588,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 				}
 				else
 				{
-					give_exp_client->Message(CC_Yellow, "You were locked out of %s and receive no standard loot.", in_npc->GetCleanName());
+					give_exp_client->Message(Chat::Yellow, "You were locked out of %s and receive no standard loot.", in_npc->GetCleanName());
 					DenyPlayerLoot(give_exp_client->GetCleanName());
 					records.erase(playerItr);
 
@@ -2619,7 +2619,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 			message += ".";
 			Client* c = entity_list.GetClientByCharID(record.second.character_id);
 			if (c && c->IsClient())
-				c->CastToClient()->Message(CC_Yellow, message.c_str());
+				c->CastToClient()->Message(Chat::Yellow, message.c_str());
 			else
 			{
 
@@ -2628,7 +2628,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 				uint32 message_len2 = strlen(message.c_str()) + 1;
 				auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 				CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-				CZSC->Type = CC_Yellow;
+				CZSC->Type = Chat::Yellow;
 				strn0cpy(CZSC->CharName, record.second.character_name, 64);
 				strn0cpy(CZSC->Message, message.c_str(), 512);
 				worldserver.SendPacket(pack);
@@ -2672,7 +2672,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 			uint32 message_len2 = strlen(message.c_str()) + 1;
 			auto pack = new ServerPacket(ServerOP_CZMessagePlayer, sizeof(CZMessagePlayer_Struct) + message_len + message_len2);
 			CZMessagePlayer_Struct* CZSC = (CZMessagePlayer_Struct*)pack->pBuffer;
-			CZSC->Type = CC_Yellow;
+			CZSC->Type = Chat::Yellow;
 			strn0cpy(CZSC->CharName, appendedCharName.c_str(), 64);
 			strn0cpy(CZSC->Message, message.c_str(), 512);
 			worldserver.SendPacket(pack);
@@ -2725,7 +2725,7 @@ void Corpse::AddPlayerLockout(Client* c)
 		message += Strings::SecondsToTime(loot_lockout_timer).c_str();
 		message += ".";
 
-		c->CastToClient()->Message(CC_Yellow, message.c_str());
+		c->CastToClient()->Message(Chat::Yellow, message.c_str());
 
 		//if they're not in zone, this will be loaded once they are.
 		database.SaveCharacterLootLockout(c->CharacterID(), lootLockout.expirydate, npctype_id, GetCleanNPCName().c_str());

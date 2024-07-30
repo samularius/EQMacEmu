@@ -2198,21 +2198,25 @@ void NPC::IdleDeath(Mob* killerMob)
 
 void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 {
+	Client* clientKiller = nullptr;
+
 	if (killer != 0)
 	{
 		if (killer->IsPlayerOwned())
 			killer = killer->GetOwner();
 
 		if (killer->IsClient() && !killer->CastToClient()->GetGM())
+		{
 			this->CheckMinMaxLevel(killer);
+			clientKiller = killer->CastToClient();
+		}
 	}
 	uint32 emoteid = this->GetEmoteID();
 	bool is_client_pet = false;
 	if (GetOwner() && GetOwner()->IsClient())
 		is_client_pet = true;
 
-	auto corpse = new Corpse(this, &m_loot_items, GetNPCTypeID(), &NPCTypedata, 
-
+	auto corpse = new Corpse(this, &m_loot_items, GetNPCTypeID(),
 		level > 54 ? RuleI(NPC, MajorNPCCorpseDecayTimeMS) : RuleI(NPC, MinorNPCCorpseDecayTimeMS),
 		is_client_pet);
 	corpse_bool = true;
@@ -2602,7 +2606,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 			{
 				if (lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 				{
-					other->CastToClient()->Message(CC_Red, "You were locked out of %s. Sending you out.", GetCleanName() );
+					other->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName() );
 					other->CastToClient()->BootFromGuildInstance();
 				}
 			}
@@ -2681,7 +2685,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 					memcpy(&record.lockout, &lootLockoutItr->second, sizeof(LootLockout));
 					if (zone && zone->GetGuildID() != GUILD_NONE && lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 					{
-						petowner->CastToClient()->Message(CC_Red, "You were locked out of %s. Sending you out.", GetCleanName());
+						petowner->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName());
 						petowner->CastToClient()->BootFromGuildInstance();
 					}
 				}
@@ -3300,7 +3304,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			Log(Logs::Detail, Logs::Combat, "Breaking mez due to attack.");
 			BuffFadeByEffect(SE_Mez);
 			if(IsNPC())
-				entity_list.MessageClose(this, true, RuleI(Range, SpellMessages), CC_User_SpellWornOff, "%s is no longer mezzed. (%s - %s)", GetCleanName(), attacker->GetCleanName(), spell_id != SPELL_UNKNOWN ? GetSpellName(spell_id) : "melee" );
+				entity_list.MessageClose(this, true, RuleI(Range, SpellMessages), Chat::SpellWornOff, "%s is no longer mezzed. (%s - %s)", GetCleanName(), attacker->GetCleanName(), spell_id != SPELL_UNKNOWN ? GetSpellName(spell_id) : "melee" );
 		}
 
 		if(spell_id != SPELL_UNKNOWN && !iBuffTic) {

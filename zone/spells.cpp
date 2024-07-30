@@ -265,7 +265,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		{
 			if (spell_target_npc->GetSpecialAbility(IMMUNE_MAGIC) && spell_target_npc->GetSpecialAbility(IMMUNE_AGGRO))
 			{
-				InterruptSpell(CANNOT_AFFECT_NPC, CC_User_SpellFailure, spell_id, true, false);
+				InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, true, false);
 				return false;
 			}
 		}
@@ -673,8 +673,8 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 				}
 				if (is_failed_cast)
 				{
-					Message(CC_User_SpellFailure, fail_message);
-					InterruptSpell(CANNOT_AFFECT_PC, CC_User_SpellFailure, spell_id, false, false);
+					Message(Chat::SpellFailure, fail_message);
+					InterruptSpell(CANNOT_AFFECT_PC, Chat::SpellFailure, spell_id, false, false);
 					return false;
 				}
 			}
@@ -3598,7 +3598,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 		if (GetClass() == MERCHANT || GetClass() == BANKER || GetClass() >= WARRIORGM && GetClass() <= BEASTLORDGM)
 		{
 			Log(Logs::Detail, Logs::Spells, "We are immune to Charm spells. (Banker, Merchant, Guildmaster)");
-			caster->Message_StringID(CC_User_SpellFailure, CANNOT_CHARM);
+			caster->Message_StringID(Chat::SpellFailure, CANNOT_CHARM);
 			ResistSpell(caster, spell_id, isProc);
 			return true;
 		}
@@ -3932,7 +3932,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 
 	resist_chance += resist_modifier;
 
-	if (use_classic_resists && caster->IsNPC() && caster->GetLevel() > 24 && zone->GetZoneID() != sirens
+	if (use_classic_resists && caster->IsNPC() && caster->GetLevel() > 24 && zone->GetZoneID() != Zones::SIRENS
 		&& (caster->GetClass() == ENCHANTER || caster->GetClass() == ENCHANTERGM) )
 	{
 		if (GetLevel() < resist_chance)

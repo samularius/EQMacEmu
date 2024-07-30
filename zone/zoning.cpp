@@ -1270,7 +1270,7 @@ bool Client::CanBeInZone(uint32 zoneid, uint32 guild_id)
 		if (Admin() < minStatusToIgnoreZoneFlags && IsMule() && target_zone_id != Zones::ECOMMONS)
 		{
 			Log(Logs::Detail, Logs::Character, "[CLIENT] Character is a mule and cannot leave EC before Luclin!");
-			Message(CC_Red, "Trader accounts may not leave EC before Luclin!");
+			Message(Chat::Red, "Trader accounts may not leave EC before Luclin!");
 			return(false);
 		}
 	} 

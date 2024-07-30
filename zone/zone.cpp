@@ -1378,7 +1378,7 @@ bool Zone::Process() {
 		bool should_broadcast_notif = zone->ResetEngageNotificationTargets((RuleI(Quarm, QuakeMaxVariance) * 2) * 1000, true); // if we reset at least one, this is true
 		if (should_broadcast_notif)
 		{
-			entity_list.Message(CC_Default, CC_Yellow, "The quake has concluded. Rules 9.x and 10.x will once again apply where relevant.");
+			entity_list.Message(Chat::Default, Chat::Yellow, "The quake has concluded. Rules 9.x and 10.x will once again apply where relevant.");
 		}
 		entity_list.TogglePVPForQuake();
 		EndQuake_Timer->Disable();

@@ -359,7 +359,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 	if (zone && zone->GetGuildID() != GUILD_NONE)
 	{
 		auto broken_string = fmt::format("You cannot drop items in the ground. item {} (qty {} ).This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst_in->GetID(), inst_in->GetCharges());
-		Message(CC_Red, broken_string.c_str());
+		Message(Chat::Red, broken_string.c_str());
 		if (RuleB(QueryServ, PlayerLogItemDesyncs))
 		{
 			QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID());
@@ -377,7 +377,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 	EQ::ItemInstance *inst = new EQ::ItemInstance(*inst_in);
 	if (inst->GetItem()->NoDrop == 0)
 	{
-		Message(CC_Red, "This item is NODROP. Deleting.");
+		Message(Chat::Red, "This item is NODROP. Deleting.");
 		auto msg = fmt::format("Dropped item is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst->GetCharges(), inst->GetItem()->Name);
 		QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
 		Message(Chat::Red, msg.c_str());
@@ -774,7 +774,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 				auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 				Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 				if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-				Message(CC_Red, broken_string.c_str());
+				Message(Chat::Red, broken_string.c_str());
 				Log(Logs::General, Logs::Inventory, "Saving item %d to the cursor queue failed.", inst->GetID());
 			}
 			return false;
@@ -802,7 +802,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 					auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 					Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 					if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-					Message(CC_Red, broken_string.c_str());
+					Message(Chat::Red, broken_string.c_str());
 					return false;
 				}
 			}
@@ -817,7 +817,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 				auto broken_string = fmt::format("Cursor queue full or item {} (qty {} ) is a duplicate. This item is eligible for reimbursement.", inst->GetID(), inst->GetCharges());
 				Log(Logs::General, Logs::Inventory, "Cursor queue has too many items or item %d (qty %d ) is a duplicate. It will be deleted.", inst->GetID(), inst->GetCharges());
 				if (RuleB(QueryServ, PlayerLogItemDesyncs)) { QServ->QSItemDesyncs(CharacterID(), broken_string.c_str(), GetZoneID()); }
-				Message(CC_Red, broken_string.c_str());
+				Message(Chat::Red, broken_string.c_str());
 			}
 			return false;
 		}

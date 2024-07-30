@@ -374,7 +374,8 @@ void NPC::AddLootDrop(
 	bool wearchange, 
 	bool quest, 
 	bool pet, 
-	bool force_equip) 
+	bool force_equip,
+	uint8 min_looter_level, uint32 item_loot_lockout_timer)
 {
 	if (!item2) {
 		return;
@@ -424,6 +425,8 @@ void NPC::AddLootDrop(
 	item->equip_slot = EQ::invslot::slotGeneral1; //Set default slot to general inventory. NPCs can have multiple items in the same slot.
 	item->pet = pet;
 	item->forced = false;
+	item->item_loot_lockout_timer = loot_drop.item_loot_lockout_timer;
+	item->min_looter_level = loot_drop.min_looter_level;
 
 	// unsure if required to equip, YOLO for now
 	if (item2->ItemType == EQ::item::ItemTypeBow) {
@@ -745,14 +748,14 @@ void NPC::AddLootDrop(
 	safe_delete(inst);
 }
 
-void NPC::AddItem(const EQ::ItemData *item, int8 charges, bool equipitem, bool quest)
+void NPC::AddItem(const EQ::ItemData *item, int8 charges, bool equipitem, bool quest, bool pet, bool force_equip, uint8 min_looter_level, uint32 item_loot_lockout_timer)
 {
 	auto l = LootdropEntriesRepository::NewNpcEntity();
 
 	l.equip_item = static_cast<uint8>(equipitem ? 1 : 0);
 	l.item_charges = charges;
 
-	AddLootDrop(item, l, equipitem, equipitem, quest);
+	AddLootDrop(item, l, equipitem, equipitem, quest, pet, force_equip, min_looter_level, item_loot_lockout_timer);
 }
 
 void NPC::AddItem(uint32 itemid, int8 charges, bool equipitem, bool quest) {

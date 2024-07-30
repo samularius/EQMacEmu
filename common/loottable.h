@@ -18,24 +18,4 @@
 
 #ifndef _EQEMU_LOOTTABLE_H
 #define _EQEMU_LOOTTABLE_H
-
-#include "types.h"
-
-#pragma pack(1)
-
-struct LootItem {
-	uint32  item_id;
-	int16   equip_slot;
-	int8    charges;
-	uint16  lootslot;
-	uint8   min_level;
-	uint8   max_level;
-	uint8   quest;
-	uint8   pet;
-	bool    forced;
-};
-
-typedef std::list<LootItem*> LootItems;
-#pragma pack()
-
 #endif

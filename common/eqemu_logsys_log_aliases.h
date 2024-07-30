@@ -841,12 +841,12 @@
 } while (0)
 
 #define LogQuestDebug(message, ...) do {\
-    if (LogSys.IsLogEnabled(Logs::General, Logs::QuestDebug))\
+    if (LogSys.log_settings(Logs::General, Logs::QuestDebug))\
         OutF(LogSys, Logs::General, Logs::QuestDebug, __FILE__, __func__, __LINE__, message, ##__VA_ARGS__);\
 } while (0)
 
 #define LogQuestDebugDetail(message, ...) do {\
-    if (LogSys.IsLogEnabled(Logs::Detail, Logs::QuestDebug))\
+    if (LogSys.log_settings(Logs::Detail, Logs::QuestDebug))\
         OutF(LogSys, Logs::Detail, Logs::QuestDebug, __FILE__, __func__, __LINE__, message, ##__VA_ARGS__);\
 } while (0)
 
@@ -964,7 +964,7 @@
 #define LogQuestErrorsDetail(message, ...) do {\
 } while (0)
 	
-#define LogScheduler (message, ...) do {\
+#define LogScheduler(message, ...) do {\
 } while (0)
 
 #define LogSchedulerDetail(message, ...) do {\

@@ -1695,7 +1695,8 @@ void WorldServer::Process() {
 			}
 			break;
 		}
-		case ServerOP_UpdateSchedulerEvents : {
+		case ServerOP_UpdateSchedulerEvents: {
+
 			LogScheduler("Received signal from world to update");
 			if (m_zone_scheduler) {
 				m_zone_scheduler->LoadScheduledEvents();
@@ -1905,7 +1906,7 @@ void WorldServer::Process() {
 					should_broadcast_notif = zone->ResetEngageNotificationTargets((RuleI(Quarm, QuakeRepopDelay)) * 1000); // if we reset at least one, this is true
 					if (should_broadcast_notif)
 					{
-						entity_list.Message(CC_Default, CC_Yellow, "Raid targets in this zone will repop! Rule 9.x and Rule 10.x have been suspended temporarily in this zone because of its ruleset, also listed in the /motd.");
+						entity_list.Message(Chat::Default, Chat::Yellow, "Raid targets in this zone will repop! Rule 9.x and Rule 10.x have been suspended temporarily in this zone because of its ruleset, also listed in the /motd.");
 						entity_list.EvacAllPlayers();
 					}
 				}

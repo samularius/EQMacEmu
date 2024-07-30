@@ -5,7 +5,7 @@
 #include <string>
 #include "types.h"
 
-struct ServerLootItem_Struct {
+struct LootItem {
 	uint32	item_id;	  // uint32	item_id;
 	int16	equip_slot;	  // int16	equip_slot;
 	int8	charges;	  // int8	charges; 
@@ -19,6 +19,6 @@ struct ServerLootItem_Struct {
 	uint32	item_loot_lockout_timer;
 };
 
-typedef std::list<LootItem*> LootItems;
+typedef std::list<LootItem* > LootItems;
 
 #endif
