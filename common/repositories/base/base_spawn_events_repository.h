@@ -21,7 +21,7 @@ public:
 	struct SpawnEvents {
 		uint32_t    id;
 		std::string zone;
-		uint32_t    instance_id;
+		uint32_t	instance_id;
 		uint32_t    cond_id;
 		std::string name;
 		uint32_t    period;

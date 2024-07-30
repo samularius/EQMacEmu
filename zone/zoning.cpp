@@ -730,6 +730,9 @@ void Client::ZonePC(uint32 zoneID, uint32 zoneGuildID, float x, float y, float z
 
 		zone_mode = zm;
 
+		Log(Logs::Detail, Logs::EQMac, "Client::ZonePC GetName(%s) pZoneName(%s) zm(%i) zonesummon_id(%i) zoneID(%i) zonesummon_guildid(%i) zoneGuildID(%i) zonesummon_ignorerestrictions(%i) ignorerestrictions(%i) zone->GetZoneID(%i) zone->GetGuildID(%i)",
+										GetName(), pZoneName, zm, zonesummon_id, zoneID, zonesummon_guildid, zoneGuildID, zonesummon_ignorerestrictions, ignorerestrictions, zone->GetZoneID(), zone->GetGuildID());
+
 		if(zm == ZoneSolicited || zm == ZoneToSafeCoords) {
 			Log(Logs::Detail, Logs::EQMac, "Zoning packet about to be sent (ZS/ZTS). We are headed to zone: %i, at %f, %f, %f", zoneID, x, y, z);
 			auto outapp = new EQApplicationPacket(OP_RequestClientZoneChange, sizeof(RequestClientZoneChange_Struct));
@@ -799,7 +802,7 @@ void Client::ZonePC(uint32 zoneID, uint32 zoneGuildID, float x, float y, float z
 			zonesummon_id = zoneID;
 			zonesummon_guildid = zoneGuildID;
 
-			Log(Logs::Detail, Logs::EQMac, "Zoning packet about to be sent (GTB). We are headed to zone: %i, at %f, %f, %f", zoneID, x, y, z);
+			Log(Logs::Detail, Logs::EQMac, "Zoning packet about to be sent (GTB). We are headed to zone: %i (%i), at %f, %f, %f", zoneID, zoneGuildID, x, y, z);
 			if(zoneID == GetZoneID() && zoneGuildID == zone->GetGuildID()) {
 				//Not doing inter-zone for same zone gates. Client is supposed to handle these, based on PP info it is fed.
 				//properly handle proximities
