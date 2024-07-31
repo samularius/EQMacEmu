@@ -1157,7 +1157,7 @@ bool NPC::MoveItemToGeneralInventory(LootItem* weapon)
 	if (item) {
 		RemoveItem(weapon);
 
-		Log(Logs::Detail, Logs::Trading, "%s is moving %d in slot %d to general inventory. quantity: %d", GetCleanName(), weaponid, slot, charges);
+		Log(Logs::Detail, Logs::Trading, "%s is moving %d in slot %d to general inventory. quantity: %d", GetCleanName(), weaponid, slot, weaponcharges);
 		AddLootDrop(item, l, false, false, quest, pet, false);
 
 		return true;
