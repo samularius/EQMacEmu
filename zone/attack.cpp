@@ -1995,7 +1995,7 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 	bool is_majority_killer_dmg = (float)ssf_player_damage > (float)GetMaxHP() * 0.45f;
 
 	if(killer)
-		LogDeathDetail("%s Before credit. solo_fte_credit = %i, ds damage: %i, is_majority_ds_damage %i, solo damage %i, is_majority_killer_dmg %i", killer->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
+		LogDeathDetail("{} Before credit. solo_fte_credit = {}, ds damage: {}, is_majority_ds_damage {}, solo damage {}, is_majority_killer_dmg {}", killer->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
 
 	if (killer && killer->IsClient())
 	{
@@ -2013,7 +2013,7 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 
 				if (!is_solo_only && !is_self_found)
 				{
-					LogDeathDetail("%s will receive XP credit.", give_exp_client->GetName());
+					LogDeathDetail("{} will receive XP credit.", give_exp_client->GetName());
 
 					// We hand out XP here.
 					GiveExp(give_exp_client, xp);
@@ -2030,18 +2030,18 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 						// If Ds damage is from the group, it's okay to give xp - 
 						if (!is_majority_ds_damage && is_majority_killer_dmg)
 						{
-							LogDeathDetail("%s will receive XP credit. solo_fte_credit = %i, ds damage: %i, is_majority_ds_damage %i, solo damage %i, is_majority_killer_dmg %i", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
+							LogDeathDetail("{} will receive XP credit. solo_fte_credit = {}, ds damage: {}, is_majority_ds_damage {}, solo damage {}, is_majority_killer_dmg {}", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
 							// We hand out XP here.
 							GiveExp(give_exp_client, xp);
 						}
 						else
 						{
-							LogDeathDetail("%s will not receive XP credit (failed killer damage or ds damage check). solo_fte_credit = %i, ds damage: %i, is_majority_ds_damage %i, solo damage %i, is_majority_killer_dmg %i", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
+							LogDeathDetail("{} will not receive XP credit (failed killer damage or ds damage check). solo_fte_credit = {}, ds damage: {}, is_majority_ds_damage {}, solo damage {}, is_majority_killer_dmg {}", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
 						}
 					}
 					else
 					{
-						LogDeathDetail("%s will not receive XP credit. failed characterid/groupid/raidid check. solo_fte_credit = %i, ds damage: %i, is_majority_ds_damage %i, solo damage %i, is_majority_killer_dmg %i", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
+						LogDeathDetail("{} will not receive XP credit. failed characterid/groupid/raidid check. solo_fte_credit = {}, ds damage: {}, is_majority_ds_damage {}, solo damage {}, is_majority_killer_dmg {}", give_exp_client->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
 					}
 				}
 			}
