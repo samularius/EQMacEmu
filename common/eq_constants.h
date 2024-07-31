@@ -656,6 +656,9 @@ enum ExpansionEras : int
 	PostPlanesEra = 5
 };
 
+static constexpr float AllEQErasFloat = -1.0f;
+static constexpr float ClassicEQEraFloat = 0.0f;
+
 static const uint32 MAX_SPELL_DB_ID_VAL = 65535;
 
 enum ChatChannelNames : uint16

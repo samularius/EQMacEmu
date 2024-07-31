@@ -317,7 +317,7 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 	}
 
 	// Expansion checks and routing
-	if ((content_service.GetCurrentExpansion() >= Expansion::Classic && !GetGM())) {
+	if ((content_service.GetCurrentExpansion() >= ClassicEQEraFloat && !GetGM())) {
 		bool meets_zone_expansion_check = false;
 
 		auto zones = ZoneRepository::GetWhere(
@@ -344,7 +344,7 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 		}
 	}
 
-	if (content_service.GetCurrentExpansion() >= Expansion::Classic && GetGM()) {
+	if (content_service.GetCurrentExpansion() >= ClassicEQEraFloat && GetGM()) {
 		LogInfo("[{}] Bypassing Expansion zone checks because GM status is set", GetCleanName());
 	}
 

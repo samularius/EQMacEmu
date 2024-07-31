@@ -805,7 +805,7 @@ const EQ::ItemData* SharedDatabase::GetItem(uint32 id)
 		if (returned_item != nullptr)
 		{
 			bool expansion_enabled = RuleR(World, CurrentExpansion) >= returned_item->min_expansion && RuleR(World, CurrentExpansion) < returned_item->max_expansion;
-			bool expansion_all = returned_item->min_expansion == ExpansionEras::AllEQEras && returned_item->max_expansion == ExpansionEras::AllEQEras;
+			bool expansion_all = returned_item->min_expansion == AllEQErasFloat && returned_item->max_expansion == AllEQErasFloat;
 			if (expansion_enabled || expansion_all)
 			{
 				return returned_item;
@@ -833,7 +833,7 @@ const EQ::ItemData* SharedDatabase::IterateItems(uint32* id)
 			if (returned_item != nullptr)
 			{
 				bool expansion_enabled = RuleR(World, CurrentExpansion) >= returned_item->min_expansion && RuleR(World, CurrentExpansion) < returned_item->max_expansion;
-				bool expansion_all = returned_item->min_expansion == ExpansionEras::AllEQEras && returned_item->max_expansion == ExpansionEras::AllEQEras;
+				bool expansion_all = returned_item->min_expansion == AllEQErasFloat && returned_item->max_expansion == AllEQErasFloat;
 				if (expansion_enabled || expansion_all)
 				{
 					++(*id);
