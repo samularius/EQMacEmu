@@ -1110,17 +1110,20 @@ float lua_get_current_expansion() {
 }
 
 void lua_debug(std::string message) {
-	LogQuestDebug((const char*)message.c_str());
+	const char* messageChar = message.c_str();
+	LogQuestDebug("%s", messageChar);
 }
 
 void lua_debug(std::string message, int level) {
 	if (level < Logs::General || level > Logs::Detail)
 		return;
 
+	const char* messageChar = message.c_str();
+
 	if(level == Logs::Detail)
-		LogQuestDebugDetail((const char*)message.c_str());
+		LogQuestDebugDetail("%s", messageChar);
 	else
-		LogQuestDebug((const char*)message.c_str());
+		LogQuestDebug("%s", messageChar);
 }
 
 void lua_map_opcodes() {
