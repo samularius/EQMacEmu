@@ -1129,7 +1129,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 	}
 	case ChatChannel_Say: { /* Say */
 		if(message[0] == COMMAND_CHAR) {
-			if (command_dispatch(this, message, false) == -2) {
+			if (command_dispatch(this, message) == -2) {
 				if(parse->PlayerHasQuestSub(EVENT_COMMAND)) {
 					int i = parse->EventPlayer(EVENT_COMMAND, this, message, 0);
 					if(i == 0 && !RuleB(Chat, SuppressCommandErrors)) {
@@ -7039,5 +7039,5 @@ void Client::PermaGender(uint32 gender)
 }
 
 bool Client::SendGMCommand(std::string message, bool ignore_status) {
-	return command_dispatch(this, message, ignore_status) >= 0 ? true : false;
+	return command_dispatch(this, message.c_str()) >= 0 ? true : false;
 }
