@@ -2548,14 +2548,14 @@ void command_worldshutdown(Client *c, const Seperator *sep){
 			) {
 			int time_minutes = (time / 60);
 			worldserver.SendEmoteMessage(0, AccountStatus::Player,
-				Chat::Default,
+				Chat::System,
 				fmt::format(
 					"[SYSTEM] World will be shutting down in {} minutes.",
 					time_minutes
 				).c_str()
 			);
 			c->Message(
-				Chat::Default,
+				Chat::System,
 				fmt::format(
 					"World will be shutting down in {} minutes, notifying every {} seconds",
 					time_minutes,

@@ -75,7 +75,7 @@ typedef enum EmuAppearance {
 namespace Chat {
 	const uint16 White       = 0;
 	const uint16 DimGray     = 1;
-	const uint16 Default     = 1;
+	const uint16 Default     = 0;
 	const uint16 Green       = 2;
 	const uint16 BrightBlue  = 3;
 	const uint16 LightBlue   = 4;

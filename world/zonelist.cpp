@@ -699,7 +699,7 @@ void ZSList::GetZoneIDList(std::vector<uint32> &zones) {
 void ZSList::WorldShutDown(uint32 time, uint32 interval)
 {
 	if( time > 0 ) {
-		SendEmoteMessage(0, 0, AccountStatus::Player, Chat::Yellow, fmt::format("[SYSTEM] World will be shutting down in {} minutes.", (time / 60)).c_str());
+		SendEmoteMessage(0, 0, AccountStatus::Player, Chat::System, fmt::format("[SYSTEM] World will be shutting down in {} minutes.", (time / 60)).c_str());
 
 		time *= 1000;
 		interval *= 1000;
