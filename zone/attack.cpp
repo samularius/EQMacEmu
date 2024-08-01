@@ -3377,9 +3377,12 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	{ /* Else it is a buff tic - DoT DMG messages were implemented on live in LoY era */
 		if (RuleB(Spells, ShowDotDmgMessages) && IsValidSpell(spell_id) && damage > 0 && attacker)
 		{
-			if (attacker->IsClient()) {
-				attacker->Message_StringID(Chat::SpellWornOff, YOUR_HIT_DOT, GetCleanName(), itoa(damage),
-					spells[spell_id].name);
+			if (damage > 0 && spell_id != SPELL_UNKNOWN)
+			{
+				if (attacker && attacker->IsClient() && attacker != this)
+				{
+					attacker->Message_StringID(Chat::SpellWornOff, YOUR_HIT_DOT, GetCleanName(), itoa(damage), spells[spell_id].name);
+				}
 			}
 		}
 	}
