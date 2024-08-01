@@ -896,22 +896,25 @@ void Group::VerifyGroup()
 		SetLeader(nullptr);
 	}
 
-	if (results2.RowCount() == 0) {
+	if (results2.RowCount() == 0) 
+	{
 		Log(Logs::General, Logs::Error, "Error getting group leader for group %lu: %s", (unsigned long)GetID(), results2.ErrorMessage().c_str());
 		SetLeader(nullptr);
 	}
-
-	std::string leaderName = results2.begin()[0] ? results2.begin()[0] : "";
-
-	//it should be safe to use GetClientByName, but Group is trying
-	//to be generic, so we'll go for general Mob
-	if (leaderName.size() > 0)
+	if (results2.RowCount() != 0 && results2.Success())
 	{
-		Mob *ourLeader = entity_list.GetMob(leaderName.c_str());
-		if (ourLeader == nullptr)
-		{	//they aren't here anymore...
-			Log(Logs::General, Logs::Group, "Leader of group %lu named '%s' has left the zone and failed verification..", (unsigned long)GetID(), leaderName.c_str());
-			SetLeader(nullptr);
+		std::string leaderName = results2.begin()[0] ? results2.begin()[0] : "";
+
+		//it should be safe to use GetClientByName, but Group is trying
+		//to be generic, so we'll go for general Mob
+		if (leaderName.size() > 0)
+		{
+			Mob* ourLeader = entity_list.GetMob(leaderName.c_str());
+			if (ourLeader == nullptr)
+			{	//they aren't here anymore...
+				Log(Logs::General, Logs::Group, "Leader of group %lu named '%s' has left the zone and failed verification..", (unsigned long)GetID(), leaderName.c_str());
+				SetLeader(nullptr);
+			}
 		}
 	}
 
