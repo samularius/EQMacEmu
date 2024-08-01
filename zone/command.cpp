@@ -192,6 +192,7 @@ int command_init(void)
 		command_add("deletegraveyard", "[zone name] - Deletes the graveyard for the specified zone.", AccountStatus::GMImpossible, command_deletegraveyard) ||
 		command_add("depop", "- Depop your NPC target.", AccountStatus::GMLeadAdmin, command_depop) ||
 		command_add("depopzone", "- Depop the zone.", AccountStatus::GMAreas, command_depopzone) ||
+		command_add("devtools", "Manages devtools", AccountStatus::QuestTroupe, command_devtools) ||
 		command_add("disablerecipe", "[recipe_id] - Disables a recipe using the recipe id.", AccountStatus::GMImpossible, command_disablerecipe) ||
 		command_add("distance", "- Reports the distance between you and your target.", AccountStatus::Steward, command_distance) ||
 		command_add("d1", "[type] [spell] [damage] - Send an OP_Action packet with the specified values.", AccountStatus::GMImpossible, command_d1) ||
@@ -345,6 +346,7 @@ int command_init(void)
 		command_add("randomfeatures", "- Temporarily randomizes the Facial Features of your target.", AccountStatus::GMCoder, command_randomfeatures) ||
 		command_add("refreshgroup", "- Refreshes Group.", AccountStatus::EQSupport, command_refreshgroup) ||
 		command_add("reloadallrules", "Executes a reload of all rules.", AccountStatus::GMCoder, command_reloadallrules) ||
+		command_add("reloadcontentflags", "Executes a reload of all expansion and content flags", AccountStatus::QuestTroupe, command_reloadcontentflags) ||
 		command_add("reloademote", "Reloads NPC Emotes.", AccountStatus::GMCoder, command_reloademote) ||
 		command_add("reloadlevelmods", nullptr, AccountStatus::Max, command_reloadlevelmods) ||
 		command_add("reloadmerchants", "Reloads NPC merchant list.", AccountStatus::Max, command_reloadmerchants) ||
