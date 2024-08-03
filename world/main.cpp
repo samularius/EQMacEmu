@@ -248,11 +248,11 @@ int main(int argc, char** argv) {
 	LogSys.LoadLogSettingsDefaults();
 	set_exception_handler();
 
-	path.LoadPaths();
-
 	if (argc > 1) {
 		WorldserverCLI::CommandHandler(argc, argv);
 	}
+
+	path.LoadPaths();
 
 	LoadServerConfig();
 
