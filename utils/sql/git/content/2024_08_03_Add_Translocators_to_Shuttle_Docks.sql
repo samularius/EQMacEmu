@@ -11,10 +11,10 @@ INSERT INTO npc_types VALUES
 ,0,0,0,100,0,0,0,0,0,100,100,0,0,0,0,0,0,0,0,0,0,0,0,600,0,0,0,100,0,0,0,-1,0,0,0,0);
 
 INSERT INTO spawngroup VALUES
-(4501057,"butcher-Translocator_Gethia000",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
-(4501058,"timorous-Translocator_Deela000",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
-(4501059,"timorous-Translocator_Jorbin000",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
-(4501060,"oasis-Translocator_Tradil000",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0);
+(4501057,"butcher-Translocator_Gethia",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
+(4501058,"timorous-Translocator_Deela",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
+(4501059,"timorous-Translocator_Jorbin",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0),
+(4501060,"oasis-Translocator_Tradil",0,0,0,0,0,45000,15000,0,100,0,1200,0,0,0);
 
 INSERT INTO spawnentry VALUES
 (4501057,1501018,100,0,0,-1,-1,NULL,NULL),
