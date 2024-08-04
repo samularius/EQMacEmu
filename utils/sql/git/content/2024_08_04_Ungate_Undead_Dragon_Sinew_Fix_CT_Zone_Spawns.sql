@@ -33,3 +33,7 @@ UPDATE spawnentry SET chance = 91 WHERE spawngroupID = 448100 AND npcID = 48026;
 /* Restore a_stone_golem(48024) spawn chance to 90% (was 90) in cazicthule */
 UPDATE spawnentry SET chance = 2 WHERE spawngroupID = 448089;
 UPDATE spawnentry SET chance = 90 WHERE spawngroupID = 448089 AND npcID = 48024;
+
+/* Ungate Stoneleer Emerald Plume(12755) off a_stoneleer_cockatrice */
+UPDATE lootdrop_entries SET min_expansion = -1, max_expansion = -1 WHERE lootdrop_id = 109330 AND item_id = 12755;
+UPDATE lootdrop_entries SET min_expansion = -1, max_expansion = -1 WHERE lootdrop_id = 108182 AND item_id = 12755;
