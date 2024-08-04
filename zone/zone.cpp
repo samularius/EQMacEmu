@@ -1213,6 +1213,7 @@ void Zone::ReloadStaticData() {
 
 	content_service.SetExpansionContext()->ReloadContentFlags();
 
+	ReloadLootTables();
 
 	LogInfo("Zone Static Data Reloaded.");
 }
