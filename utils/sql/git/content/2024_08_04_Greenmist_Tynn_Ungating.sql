@@ -2,6 +2,8 @@
 UPDATE spawn2 SET min_expansion=1, max_expansion=99 WHERE id=328412 AND spawngroupID = 104062;
 -- Greenmist - Rile's Shattered Blade
 UPDATE ground_spawns SET min_expansion=1, max_expansion=99 WHERE id=66 AND item = 3888;
+-- Greenmist - Libarian Zimor - Cabilis East
+UPDATE spawn2 SET min_expansion=1, max_expansion=99 WHERE id=326697 AND spawngroupID = 106061;
 
 -- Tynn Shackle - A Tome Keeper - Kaesora
 UPDATE spawn2 SET min_expansion=1, max_expansion=99 WHERE id=338172 AND spawngroupID = 88047;
