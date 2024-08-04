@@ -881,7 +881,32 @@ void Group::SplitExp(uint32 exp, Mob* killed_mob)
 	if (RuleB(AlKabor, OutOfRangeGroupXPBonus))
 		members = gs.membercount;
 
-	if (RuleB(AlKabor, ClassicGroupEXPBonuses))
+	if (RuleB(Quarm, BonusGroupEXPOverride))
+	{
+		// group bonus from Launch (Classic) until Jan 2001 (Velious, 1 Month In).
+		switch (members)
+		{
+		case 2:
+			groupmod = RuleR(Quarm, BonusGroupEXP2MemberOverride);
+			break;
+		case 3:
+			groupmod = RuleR(Quarm, BonusGroupEXP3MemberOverride);
+			break;
+		case 4:
+			groupmod = RuleR(Quarm, BonusGroupEXP4MemberOverride);
+			break;
+		case 5:
+			groupmod = RuleR(Quarm, BonusGroupEXP5MemberOverride);
+			break;
+		case 6:
+			groupmod = RuleR(Quarm, BonusGroupEXP6MemberOverride);
+			break;
+		case 7:
+			groupmod = RuleR(Quarm, BonusGroupEXP7MemberOverride);
+			break;
+		}
+	}
+	else if (RuleB(AlKabor, ClassicGroupEXPBonuses))
 	{
 		// group bonus from Launch (Classic) until Jan 2001 (Velious, 1 Month In).
 		switch (members)

@@ -176,22 +176,22 @@ RULE_BOOL ( AlKabor, AllowPriceIncWhileBrowsing, true, "AK behavior is true. If 
 RULE_INT ( AlKabor, LevelCorpsesAlwaysSpawn, 55, "AK behavior is 55. The level NPC corpses will not poof even if a NPC was top hate/final blow.")
 RULE_BOOL( AlKabor, NPCsSendHPUpdatesPerTic, false, "AK behavior is true. NPCs will only send HP updates every tic or when targeted instead of real time.")
 RULE_BOOL( AlKabor, NoMaxWhoGuild, true, "AK behavior is false. If true, /who all guild# will return without a limit.")
-RULE_BOOL( AlKabor, ServerExpBonus, true, "AK behavior is true.  This grants a multiplicative 20% experience bonus that was unique to AK")
-RULE_REAL( AlKabor, LightBlueExpMod, 100.0, "Make sure they are all 100.0 for accurate experience gains.  Exp scaling by level is handled in the exp routines")
-RULE_REAL( AlKabor, BlueExpMod, 100.0, "")
-RULE_REAL( AlKabor, WhiteExpMod, 100.0, "")
-RULE_REAL( AlKabor, YellowExpMod, 100.0, "")
-RULE_REAL( AlKabor, RedExpMod, 100.0, "")
-RULE_BOOL (AlKabor, RememberAir, true, "AK behavior is true. If zoning from one underwater area to another, remember air_remaining value. If false, it's set to 100.")
-RULE_BOOL (AlKabor, ClickyHateExploit, false, "AK behavior is true. When true, it allows Invis Vs Animals clicky items to generate massive hate.")
-RULE_BOOL (AlKabor, InvulnHateReduction, false, "DA spells seemed to have reduced hate on AK by an unknown amount; if true this will halve the hate")
-RULE_BOOL (AlKabor, ReduceAEExp, true, "AK behavior is true.  Reduce the amount of experience gained when NPC is killed with a PBAoE spell.  Applies to NPCs around level 35 to 55")
-RULE_BOOL (AlKabor, RaceEffectsAASplit, true, "AK behavior is true.  If true then race exp penalties (and bonus in case of halfling) will modify AA Exp ONLY when AA Exp is under 100%")
-RULE_BOOL (AlKabor, NoDropRemoveTradeskill, true, "AK behavior is true.  If true then no drop items will be delete if container is closed.  If false, it will not delete for the original player only.")
-RULE_BOOL (AlKabor, ReducedMonkAC, true, "AK behavior is true.  Monks had a low AC softcap from October 16 2002 to April 8 2003 which made them squishy.  Sony partially unnerfed them in April 03.")
-RULE_BOOL (AlKabor, BlockProjectileCorners, true, "AK behavior is true.  If an NPC was in a corner, arrows and bolts would not hit them.")
-RULE_BOOL (AlKabor, BlockProjectileWalls, true, "AK behavior is true.  If an NPC was walled, then arrows and bolts had to be fired from an angle parallel to the wall in order to hit them. (if this is true, corners will also block)")
-RULE_BOOL (AlKabor, GreenmistHack, true, "Greenmist recourse didn't work on AK.  The spell data is messed up so it's not properly fixable without modifying the client.  This enables a partial workaround that is not AKurate but provides some benefit to players using this weapon.")
+RULE_BOOL(AlKabor, ServerExpBonus, true, "AK behavior is true.  This grants a multiplicative 20% experience bonus that was unique to AK")
+RULE_REAL(AlKabor, LightBlueExpMod, 100.0, "Make sure they are all 100.0 for accurate experience gains.  Exp scaling by level is handled in the exp routines")
+RULE_REAL(AlKabor, BlueExpMod, 100.0, "")
+RULE_REAL(AlKabor, WhiteExpMod, 100.0, "")
+RULE_REAL(AlKabor, YellowExpMod, 100.0, "")
+RULE_REAL(AlKabor, RedExpMod, 100.0, "")
+RULE_BOOL(AlKabor, RememberAir, true, "AK behavior is true. If zoning from one underwater area to another, remember air_remaining value. If false, it's set to 100.")
+RULE_BOOL(AlKabor, ClickyHateExploit, false, "AK behavior is true. When true, it allows Invis Vs Animals clicky items to generate massive hate.")
+RULE_BOOL(AlKabor, InvulnHateReduction, false, "DA spells seemed to have reduced hate on AK by an unknown amount; if true this will halve the hate")
+RULE_BOOL(AlKabor, ReduceAEExp, true, "AK behavior is true.  Reduce the amount of experience gained when NPC is killed with a PBAoE spell.  Applies to NPCs around level 35 to 55")
+RULE_BOOL(AlKabor, RaceEffectsAASplit, true, "AK behavior is true.  If true then race exp penalties (and bonus in case of halfling) will modify AA Exp ONLY when AA Exp is under 100%")
+RULE_BOOL(AlKabor, NoDropRemoveTradeskill, true, "AK behavior is true.  If true then no drop items will be delete if container is closed.  If false, it will not delete for the original player only.")
+RULE_BOOL(AlKabor, ReducedMonkAC, true, "AK behavior is true.  Monks had a low AC softcap from October 16 2002 to April 8 2003 which made them squishy.  Sony partially unnerfed them in April 03.")
+RULE_BOOL(AlKabor, BlockProjectileCorners, true, "AK behavior is true.  If an NPC was in a corner, arrows and bolts would not hit them.")
+RULE_BOOL(AlKabor, BlockProjectileWalls, true, "AK behavior is true.  If an NPC was walled, then arrows and bolts had to be fired from an angle parallel to the wall in order to hit them. (if this is true, corners will also block)")
+RULE_BOOL(AlKabor, GreenmistHack, true, "Greenmist recourse didn't work on AK.  The spell data is messed up so it's not properly fixable without modifying the client.  This enables a partial workaround that is not AKurate but provides some benefit to players using this weapon.")
 RULE_BOOL(AlKabor, EnableMobLevelModifier, true, "AK behavior is true.  If true, enable the September 4 & 6 2002 patch exp modifications that granted a large experience bonus to kills within +/-5 levels of the player for level 51+ players")
 RULE_BOOL(AlKabor, EnableEraItemRules, false, "AK behavior is false. If true, disable item data in the era they did not exist in.")
 RULE_BOOL(AlKabor, EnableLuclinHarmonyResistOverride, true, "AK behavior is true. If true, enable the late Luclin Harmony resist override.")
@@ -276,6 +276,13 @@ RULE_BOOL(Quarm, InstanceAlwaysHasMinimumSpawnTime, true, "")
 RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000, "")
 RULE_BOOL(Quarm, EnableQuestBasedXPLimit, true, "Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.") // Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.
 RULE_INT(Quarm, QuestBasedXPLimitLevel, 51, "For Kunark. Adjust for POP Launch.")
+RULE_BOOL(Quarm, BonusGroupEXPOverride, false, "Quarm's custom group EXP bonus override. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP2MemberOverride, 1.02, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP3MemberOverride, 1.06, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP4MemberOverride, 1.10, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP5MemberOverride, 1.14, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP6MemberOverride, 1.20, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_REAL(Quarm, BonusGroupEXP7MemberOverride, 1.24, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
