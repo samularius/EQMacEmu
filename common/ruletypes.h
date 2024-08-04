@@ -276,13 +276,13 @@ RULE_BOOL(Quarm, InstanceAlwaysHasMinimumSpawnTime, true, "")
 RULE_INT(Quarm, InstanceMinimumSpawnTime, 64800000, "")
 RULE_BOOL(Quarm, EnableQuestBasedXPLimit, true, "Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.") // Whether or not to enable the Quest XP killswitch. Use on major content launches to avoid abuse.
 RULE_INT(Quarm, QuestBasedXPLimitLevel, 51, "For Kunark. Adjust for POP Launch.")
-RULE_BOOL(Quarm, BonusGroupEXPOverride, false, "Quarm's custom group EXP bonus override. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP2MemberOverride, 1.02, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP3MemberOverride, 1.06, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP4MemberOverride, 1.10, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP5MemberOverride, 1.14, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP6MemberOverride, 1.20, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
-RULE_REAL(Quarm, BonusGroupEXP7MemberOverride, 1.24, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.");
+RULE_BOOL(Quarm, BonusGroupEXPOverride, false, "Quarm's custom group EXP bonus override. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP2MemberOverride, 1.02, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP3MemberOverride, 1.06, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP4MemberOverride, 1.10, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP5MemberOverride, 1.14, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP6MemberOverride, 1.20, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
+RULE_REAL(Quarm, BonusGroupEXP7MemberOverride, 1.24, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
