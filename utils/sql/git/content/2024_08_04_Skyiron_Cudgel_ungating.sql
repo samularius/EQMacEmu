@@ -44,6 +44,6 @@ UPDATE lootdrop_entries SET min_expansion=1, max_expansion=99 WHERE lootdrop_id=
 UPDATE lootdrop_entries SET min_expansion=1, max_expansion=99 WHERE lootdrop_id=105641 AND item_id=12761;
 
 -- Sponge Mushroom - Nurga
-UPDATE forage SET min_expansion=1, max_expansion=99 WHERE id=458 AND itemid=12635
+UPDATE forage SET min_expansion=1, max_expansion=99 WHERE id=458 AND itemid=12635;
 -- Gorge Moss - Gorge of King Xorbb
-UPDATE forage SET min_expansion=1, max_expansion=99 WHERE id=457 AND itemid=14916
+UPDATE forage SET min_expansion=1, max_expansion=99 WHERE id=457 AND itemid=14916;
