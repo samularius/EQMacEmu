@@ -9,3 +9,6 @@ UPDATE lootdrop_entries SET min_expansion = 1 WHERE lootdrop_id = 116306 AND ite
 
 -- Ungate an_Iksar_tomb_raider(94003)
 UPDATE spawnentry SET min_expansion = 1 WHERE spawngroupID = 222874 AND npcID = 94003;
+
+-- Ungate Marthor(82048) spawngroupID(82048) Whistling Fists questline
+UPDATE spawn2 SET min_expansion = 1 WHERE id = 326819;
