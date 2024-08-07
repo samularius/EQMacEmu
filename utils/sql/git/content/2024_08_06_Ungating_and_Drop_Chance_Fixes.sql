@@ -15,3 +15,15 @@ UPDATE spawn2 SET min_expansion = 1 WHERE id = 326819;
 
 -- Ungate Hierophant Granix(106114) in East Cabilis 
 UPDATE spawn2 SET min_expansion = -1, max_expansion = -1 WHERE id = 326750;
+
+-- Ungate Gandan_Tailfist(105154) spawngroupID(105154) Whistling Fists questline
+UPDATE spawn2 SET min_expansion = 1 WHERE id = 364252;
+
+-- Ungate Annaelia_Wylassi(47154) spawngroupID(47154) Whistling Fists questline
+UPDATE spawn2 SET min_expansion = 1 WHERE id = 331498;
+
+-- Ungate a_fallen_monk(89102) spawngroupID(89102) Whistling Fists questline
+UPDATE spawn2 SET min_expansion = 1 WHERE id = 349307;
+
+-- Ungate Crusader_Vragor(95106) spawngroupID(95106) Whistling Fists questline
+UPDATE spawn2 SET min_expansion = 1 WHERE id = 356807;
