@@ -610,7 +610,7 @@ void WorldServer::Process() {
 				// The Rezz request has arrived in the zone the player to be rezzed is currently in,
 				// so we send the request to their client which will bring up the confirmation box.
 				Client* client = entity_list.GetClientByName(srs->rez.your_name);
-				if (client)
+				if (client && client->CharacterID() == srs->corpse_character_id)
 				{
 					if(client->IsRezzPending())
 					{
@@ -2049,7 +2049,7 @@ bool WorldServer::SendEmoteMessage(const char* to, uint32 to_guilddbid, int16 to
 	return ret;
 }
 
-bool WorldServer::RezzPlayer(EQApplicationPacket* rpack, uint32 rezzexp, uint32 dbid, uint16 opcode)
+bool WorldServer::RezzPlayer(EQApplicationPacket* rpack, uint32 rezzexp, uint32 dbid, uint32 char_id, uint16 opcode)
 {
 	Log(Logs::Detail, Logs::Spells, "WorldServer::RezzPlayer rezzexp is %i (0 is normal for RezzComplete", rezzexp);
 	auto pack = new ServerPacket(ServerOP_RezzPlayer, sizeof(RezzPlayer_Struct));
@@ -2058,6 +2058,7 @@ bool WorldServer::RezzPlayer(EQApplicationPacket* rpack, uint32 rezzexp, uint32 
 	sem->rez = *(Resurrect_Struct*) rpack->pBuffer;
 	sem->exp = rezzexp;
 	sem->dbid = dbid;
+	sem->corpse_character_id = char_id;
 	sem->corpse_zone_id = zone->GetZoneID();
 	sem->corpse_zone_guild_id = zone->GetGuildID();
 	bool ret = SendPacket(pack);
