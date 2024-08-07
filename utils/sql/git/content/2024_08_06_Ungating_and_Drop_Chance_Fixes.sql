@@ -12,3 +12,6 @@ UPDATE spawnentry SET min_expansion = 1 WHERE spawngroupID = 222874 AND npcID = 
 
 -- Ungate Marthor(82048) spawngroupID(82048) Whistling Fists questline
 UPDATE spawn2 SET min_expansion = 1 WHERE id = 326819;
+
+-- Ungate Hierophant Granix(106114) in East Cabilis 
+UPDATE spawn2 SET min_expansion = -1, max_expansion = -1 WHERE id = 326750;
