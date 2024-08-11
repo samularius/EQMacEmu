@@ -882,6 +882,10 @@ void Zone::LoadZoneDoors(std::string zone)
 	for (const auto &entry : door_entries)
 	{
 		auto newdoor = new Doors(entry);
+		
+		if (GetGuildID() == GUILD_NONE && newdoor->IsInstanceOnly()) 
+			continue;
+			
 		entity_list.AddDoor(newdoor);
 		LogInfo("Door added to entity list, db id: [{}], door_id: [{}]", entry.id, entry.doorid);
 	}
