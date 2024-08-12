@@ -5158,7 +5158,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 		int32 returns = 20;
 
 		if (!content_service.IsThePlanesOfPowerEnabled()) {
-			return 12;
+			returns = 12;
 			if (playerClass == CLERIC || playerClass == DRUID || playerClass == SHAMAN || playerClass == WIZARD || playerClass == MAGICIAN || playerClass == ENCHANTER || playerClass == NECROMANCER) {
 				overcap = 0; // melee only until PoP
 			}
