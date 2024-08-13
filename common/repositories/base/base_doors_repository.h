@@ -48,7 +48,7 @@ public:
 		int8_t      islift;
 		int32_t     close_time;
 		int8_t      can_open;
-		int8_t		instance_only;
+		int8_t      instance_only;
 		float       min_expansion;
 		float       max_expansion;
 		int8_t      guild_zone_door;
@@ -209,7 +209,7 @@ public:
 		e.islift                 = 0;
 		e.close_time             = 5;
 		e.can_open               = 1;
-		e.instance_only			 = 0;
+		e.instance_only          = 0;
 		e.min_expansion          = -1;
 		e.max_expansion          = -1;
 		e.guild_zone_door        = 0;
@@ -280,7 +280,7 @@ public:
 			e.islift                 = row[26] ? static_cast<int8_t>(atoi(row[26])) : 0;
 			e.close_time             = row[27] ? static_cast<int32_t>(atoi(row[27])) : 5;
 			e.can_open               = row[28] ? static_cast<int8_t>(atoi(row[28])) : 1;
-			e.instance_only			 = row[29] ? static_cast<int8_t>(atoi(row[29])) : 0;
+			e.instance_only          = row[29] ? static_cast<int8_t>(atoi(row[29])) : 0;
 			e.min_expansion          = row[30] ? strtof(row[30], nullptr) : -1;
 			e.max_expansion          = row[31] ? strtof(row[31], nullptr) : -1;
 			e.guild_zone_door        = row[32] ? static_cast<int8_t>(atoi(row[32])) : 0;
@@ -535,7 +535,7 @@ public:
 			e.islift                 = row[26] ? static_cast<int8_t>(atoi(row[26])) : 0;
 			e.close_time             = row[27] ? static_cast<int32_t>(atoi(row[27])) : 5;
 			e.can_open               = row[28] ? static_cast<int8_t>(atoi(row[28])) : 1;
-			e.instance_only			 = row[29] ? static_cast<int8_t>(atoi(row[29])) : 0;
+			e.instance_only          = row[29] ? static_cast<int8_t>(atoi(row[29])) : 0;
 			e.min_expansion          = row[30] ? strtof(row[30], nullptr) : -1;
 			e.max_expansion          = row[31] ? strtof(row[31], nullptr) : -1;
 			e.guild_zone_door        = row[32] ? static_cast<int8_t>(atoi(row[32])) : 0;
