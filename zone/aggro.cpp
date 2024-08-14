@@ -1210,7 +1210,7 @@ bool Mob::IsBeneficialAllowed(Mob *target)
 
 				if (c2->IsSelfFound() == true)
 				{
-					bool can_get_experience = c1->IsInLevelRange(c2->GetLevel2());
+					bool can_get_experience = c1->IsInLevelRange(c2->GetLevel2()) && c2->IsInLevelRange(c1->GetLevel2());
 					bool compatible = c1->IsSelfFound() == c2->IsSelfFound();
 					if (!compatible || compatible && !can_get_experience)
 						return false;
