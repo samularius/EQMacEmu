@@ -81,6 +81,7 @@ Doors::Doors(const DoorsRepository::Doors &door) :
 	is_lift             = door.islift;
 	close_time          = door.close_time;
 	can_open            = door.can_open;
+	instance_only       = door.instance_only;
 	client_version_mask = door.client_version_mask;
 	guild_zone_door = door.guild_zone_door;
 
