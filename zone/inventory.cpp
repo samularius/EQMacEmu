@@ -358,7 +358,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 
 	if (zone && zone->GetGuildID() != GUILD_NONE)
 	{
-		auto broken_string = fmt::format("You cannot drop items in the ground. item {} (qty {} ).This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst_in->GetID(), inst_in->GetCharges());
+		auto broken_string = fmt::format("You cannot drop items in the ground. item {} (qty {} ).This item is eligible for reimbursement via petition at a cost of 1500 platinum per item.", inst_in->GetID(), inst_in->GetCharges());
 		Message(Chat::Red, broken_string.c_str());
 		if (RuleB(QueryServ, PlayerLogItemDesyncs))
 		{
@@ -378,7 +378,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 	if (inst->GetItem()->NoDrop == 0)
 	{
 		Message(Chat::Red, "This item is NODROP. Deleting.");
-		auto msg = fmt::format("Dropped item is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", inst->GetCharges(), inst->GetItem()->Name);
+		auto msg = fmt::format("Dropped item is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 1500 platinum per item.", inst->GetCharges(), inst->GetItem()->Name);
 		QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
 		Message(Chat::Red, msg.c_str());
 		if (inst->IsType(EQ::item::ItemClassBag))
@@ -388,7 +388,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 				const EQ::ItemInstance *bag_inst = inst->GetItem(sub_slot);
 				if (bag_inst)
 				{
-					msg = fmt::format("Dropped bag was NODROP. Deleting contents. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
+					msg = fmt::format("Dropped bag was NODROP. Deleting contents. ({} {}) This item is eligible for reimbursement via petition at a cost of 1500 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
 					QServ->QSItemDesyncs(CharacterID(), msg.c_str(), GetZoneID());
 					Message(Chat::Red, msg.c_str());
 				}
@@ -404,7 +404,7 @@ void Client::CreateGroundObject(const EQ::ItemInstance* inst_in, glm::vec4 coord
 			const EQ::ItemInstance *bag_inst = inst->GetItem(sub_slot);
 			if (bag_inst && bag_inst->GetItem()->NoDrop == 0)
 			{
-				auto msg = fmt::format("Dropped bag contains item that is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 100 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
+				auto msg = fmt::format("Dropped bag contains item that is NODROP. Deleting. ({} {}) This item is eligible for reimbursement via petition at a cost of 1500 platinum per item.", bag_inst->GetCharges(), bag_inst->GetItem()->Name);
 				Message(Chat::Red, msg.c_str());
 				inst->DeleteItem(sub_slot);
 			}
