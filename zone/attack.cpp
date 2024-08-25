@@ -2270,6 +2270,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 				if (r) {
 					r->VerifyRaid();
 					float raidHighestLevel = r->GetHighestLevel2();
+					corpse->SetInitialAllowedLooters(this->sf_fte_list);
 					int i = 0;
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 					{

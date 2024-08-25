@@ -6712,6 +6712,17 @@ bool Client::IsLootLockedOutOfNPC(uint32 npctype_id)
 	return false;
 };
 
+std::string Client::GetSSFLooterName() {
+	std::string appendedCharName = GetCleanName();
+	if (IsSelfFound())
+		appendedCharName += "-SF";
+
+	if (IsSoloOnly())
+		appendedCharName += "-Solo";
+
+	return appendedCharName;
+}
+
 std::vector<int> Client::GetMemmedSpells() {
 	std::vector<int> memmed_spells;
 	for (int index = 0; index < EQ::spells::SPELL_GEM_COUNT; index++) {

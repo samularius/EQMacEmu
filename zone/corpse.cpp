@@ -1078,22 +1078,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 	Client* c = entity_list.GetClientByName(playername.c_str());
 	if (c && c->IsSelfFound() || c && c->IsSoloOnly())
 	{
-		auto ssf_looter_name = [](Client* c)
-		{
-			if (c == nullptr)
-				return std::string();
-
-			std::string appendedCharName = c->GetCleanName();
-			if (c->IsSelfFound())
-				appendedCharName += "-SF";
-
-			if (c->IsSoloOnly())
-				appendedCharName += "-Solo";
-
-			return appendedCharName;
-		};
-
-		std::string appendedCharName = ssf_looter_name(c);
+		std::string appendedCharName = c->GetSSFLooterName();
 		auto temporarily_allowed_itr = temporarily_allowed_looters.find(appendedCharName);
 
 		if (temporarily_allowed_itr == temporarily_allowed_looters.end() && c->IsLootLockedOutOfNPC(npctype_id) && npctype_id != 0)
@@ -1112,8 +1097,7 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 		}
 		else
 		{
-			// TODO: Need to check whether player was in fte list
-			if (allowed_looters.find(appendedCharName) == allowed_looters.end())
+			if (allowed_looters.find(appendedCharName) == allowed_looters.end() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
 			{
 				Raid* raid = c->GetRaid();
 				if (raid->GetLootType() == 3) // Looter / Raid Leader loot
@@ -1122,9 +1106,9 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 					{
 						for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 						{
-							if (raid->members[x].membername[0])
+							if (raid->members[x].member)
 							{
-								if (allowed_looters.find(ssf_looter_name(raid->members[x].member)) != allowed_looters.end())
+								if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
 								{
 									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid with another eligible member of the raid.");
 									AllowPlayerLoot(appendedCharName);
@@ -1140,9 +1124,9 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 					{
 						for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 						{
-							if (raid->members[x].membername[0])
+							if (raid->members[x].member)
 							{
-								if (allowed_looters.find(ssf_looter_name(raid->members[x].member)) != allowed_looters.end())
+								if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
 								{
 									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're a group or raid leader.");
 									AllowPlayerLoot(appendedCharName);
@@ -1156,9 +1140,9 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 				{
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 					{
-						if (raid->members[x].membername[0])
+						if (raid->members[x].member)
 						{
-							if (allowed_looters.find(ssf_looter_name(raid->members[x].member)) != allowed_looters.end())
+							if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
 							{
 								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're the new raid leader.");
 								AllowPlayerLoot(appendedCharName);
@@ -1171,9 +1155,9 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 				{
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 					{
-						if (raid->members[x].membername[0])
+						if (raid->members[x].member)
 						{
-							if (allowed_looters.find(ssf_looter_name(raid->members[x].member)) != allowed_looters.end())
+							if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
 							{
 								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and the loot is set to free-for-all.");
 								AllowPlayerLoot(appendedCharName);
