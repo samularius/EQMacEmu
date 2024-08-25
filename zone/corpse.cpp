@@ -952,7 +952,6 @@ bool Corpse::Process() {
 
 	if (corpse_delay_timer.Check()) {
 		allowed_looters.clear();
-		initial_allowed_looters.clear();
 		corpse_delay_timer.Disable();
 		return true;
 	}
