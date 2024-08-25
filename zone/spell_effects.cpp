@@ -1015,10 +1015,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 			case SE_SummonItem:
 			{
 				if (IsClient() && spell.base[i] > 0) {
-					// we already have this item on the cursor - so stop sending it here.  Client will just delete it.
-					int16 inv_slot_id = CastToClient()->GetInv().HasItem(spell.base[i], 1, invWhereCursor);
-					if (inv_slot_id != INVALID_INDEX) {
-						break;
+					if (!RuleB(Quarm, CursorAllowDuplicateItems)) {
+						// we already have this item on the cursor - so stop sending it here.  Client will just delete it.
+						int16 inv_slot_id = CastToClient()->GetInv().HasItem(spell.base[i], 1, invWhereCursor);
+						if (inv_slot_id != INVALID_INDEX) {
+							break;
+						}
 					}
 				}
 				const EQ::ItemData *item = database.GetItem(spell.base[i]);

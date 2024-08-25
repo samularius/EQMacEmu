@@ -199,6 +199,7 @@ RULE_BOOL(AlKabor, EnableLatePlanesHarmonyNerf, true, "AK behavior is true. If t
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Quarm)
+RULE_BOOL(Quarm, CursorAllowDuplicateItems, true, "Allows duplicate item IDs to stack on the cursor.  Set to false to emulate very early clients.")
 RULE_BOOL(Quarm, EnableQuakes, true, "Quarm default is true. If false, disable the auto-quake system.")
 RULE_BOOL(Quarm, EnableQuakeDowntimeRecovery, false, "24 Hour")
 RULE_INT(Quarm, QuakeMinVariance, 604800, "7 Days")
