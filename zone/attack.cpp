@@ -2244,7 +2244,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 			bool is_majority_ds_damage = (float)ds_damage > (float)GetMaxHP() * 0.45f;
 			bool is_majority_killer_dmg = (float)ssf_player_damage > (float)GetMaxHP() * 0.45f;
 
-			if (is_solo_fte_charid)
+			if (is_solo_fte_charid && !is_raid_solo_fte_credit && !is_group_solo_fte_credit)
 			{
 				corpse->AllowPlayerLoot(killer);
 			}
