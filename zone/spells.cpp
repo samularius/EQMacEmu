@@ -175,6 +175,25 @@ void NPC::SpellProcess()
 	}
 }
 
+namespace {
+	bool IsWhitelistedBeneficialSpellForSelfFound(uint16 spell_id, Client *caster, Client *target)
+	{
+		if (caster == nullptr || !caster->IsSelfFound())
+			return false;
+
+		if (target == nullptr || !target->IsSelfFound() || target->IsSoloOnly())
+			return false;
+
+		if (IsEffectInSpell(spell_id, SE_Teleport))
+			return true;
+
+		if (IsEffectInSpell(spell_id, SE_BindAffinity))
+			return true;
+
+		return false;
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // functions related to begin/finish casting, fizzling etc
 //
@@ -664,7 +683,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 						is_failed_cast = true;
 						fail_message = SELF_FOUND_ERROR;
 					}
-					else if(compatible && !can_get_experience)
+					else if(compatible && !can_get_experience && !IsWhitelistedBeneficialSpellForSelfFound(spell_id, caster, spell_target->CastToClient()))
 					{
 						// if the spell_target can not get EXP while grouped with the caster, don't allow the caster to buff
 						is_failed_cast = true;
@@ -2923,7 +2942,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 
 				}
 
-				if(!IsBeneficialAllowed(spelltar) ||
+				if(!IsBeneficialAllowed(spelltar) && !IsWhitelistedBeneficialSpellForSelfFound(spell_id, pClient, pClientTarget) ||
 					(IsGroupOnlySpell(spell_id) &&
 						!(
 							(pBasicGroup && ((pBasicGroup == pBasicGroupTarget) || (pBasicGroup == pBasicGroupTargetPet))) || //Basic Group
