@@ -2948,6 +2948,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 							(pBasicGroup && ((pBasicGroup == pBasicGroupTarget) || (pBasicGroup == pBasicGroupTargetPet))) || //Basic Group
 
 							((nGroup > 0) && ((nGroup == nGroupTarget) || (nGroup == nGroupTargetPet))) || //Raid group
+							(pRaid && ((pRaid == pRaidTarget) || (pRaid == pRaidTargetPet)) && !IsBuffSpell(spell_id)) || //Raid. Buffs don't sync client-side
 
 							(spelltar == GetPet()) //should be able to cast grp spells on self and pet despite grped status.
 						)
