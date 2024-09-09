@@ -1097,7 +1097,16 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 		}
 		else
 		{
-			if (allowed_looters.find(appendedCharName) == allowed_looters.end() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
+			if (allowed_looters.empty() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
+			{
+				// Clearing allowed_looters is the mechanism by which a corpse is opened
+				// to FFA looting. For SF players, the corpse is only unlocked for those
+				// players who were present at the moment of FTE in an eligible raid,
+				// which is indicated by being in initial_allowed_looters.
+				c->Message(Chat::Cyan, "You were in an eligible raid that was first to engage, so you are allowed to loot.");
+				return true;
+			}
+			else if (allowed_looters.find(appendedCharName) == allowed_looters.end() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
 			{
 				Raid* raid = c->GetRaid();
 				if (raid->GetLootType() == 3) // Looter / Raid Leader loot
