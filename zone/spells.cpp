@@ -652,6 +652,14 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 			return false;
 		}
 
+		// Interrupt summon item spells cast onto non-pet npcs
+		if(spells[spell_id].targettype == ST_Target && IsEffectInSpell(spell_id, SE_SummonItem) &&
+				spell_target && (!spell_target->IsPet() && !spell_target->IsClient()))
+		{
+			InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, false, false);
+			return false;
+		}
+
 		// Interrupt spell casts that are targetting self found or solo if they're not allowed
 		// Already know caster is a client from the first check in this function
 		if(spell_target && spell_target->IsClient())					
