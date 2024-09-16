@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <iomanip>
 #include <stdlib.h>
+#include <unordered_set>
+
 #include "../common/version.h"
 
 #ifdef _WINDOWS
