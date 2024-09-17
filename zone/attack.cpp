@@ -2241,7 +2241,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 			Raid* raid = entity_list.GetRaidByClient(killer->CastToClient());
 			bool is_raid_solo_fte_credit = raid ? raid->GetID() == CastToNPC()->solo_raid_fte : false;
 			bool is_group_solo_fte_credit = group ? group->GetID() == CastToNPC()->solo_group_fte : false;
-			bool is_majority_ds_damage = (float)ds_damage > (float)GetMaxHP() * 0.45f;
+			bool is_majority_ds_damage = (float)ds_damage - (float)ssf_ds_damage > (float)GetMaxHP() * 0.45f;
 			bool is_majority_killer_dmg = (float)ssf_player_damage > (float)GetMaxHP() * 0.45f;
 
 			if (is_solo_fte_charid && !is_raid_solo_fte_credit && !is_group_solo_fte_credit)
