@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include <atomic>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "op_codes.h"
 
@@ -49,9 +50,9 @@ void EQStreamFactory::Close()
 		ReaderThread.join();
 	}
 
-	if (WriterNewThread.joinable()) {
-		WriterNewThread.join();
-	}
+	//if (WriterNewThread.joinable()) {
+	//	WriterNewThread.join();
+	//}
 
 	if (WriterOldThread.joinable()) {
 		WriterOldThread.join();
@@ -123,7 +124,7 @@ bool EQStreamFactory::Open()
 #endif
 
 	ReaderThread = std::thread(&EQStreamFactory::ReaderLoop, this);
-	WriterNewThread = std::thread(&EQStreamFactory::WriterLoopNew, this);
+	//WriterNewThread = std::thread(&EQStreamFactory::WriterLoopNew, this);
 	WriterOldThread = std::thread(&EQStreamFactory::WriterLoopOld, this);
 	return true;
 }
@@ -236,12 +237,12 @@ void EQStreamFactory::ReaderLoop()
 				std::unique_lock<std::mutex> old_streams_lock(MOldStreams, std::defer_lock);
 				std::lock(streams_lock, old_streams_lock); //lock both mutexes (in order to avoid deadlock)
 
-				stream_iter = Streams.find(streamKey);
+				//stream_iter = Streams.find(streamKey);
 				oldstream_iter = OldStreams.find(streamKey);
-				bool hasNewStream = stream_iter != Streams.end();
+				//bool hasNewStream = stream_iter != Streams.end();
 				bool hasOldStream = oldstream_iter != OldStreams.end();
 
-				if (hasNewStream == false && hasOldStream == false) {
+				if (/*hasNewStream == false && */ hasOldStream == false) {
 	/*				if (buffer[1] == OP_SessionRequest) {
 						RecvBuffer data = RecvBuffer(true, length, buffer, streamKey, from);
 						ProcessLoopNew(data, stream_iter);
@@ -266,7 +267,7 @@ void EQStreamFactory::ReaderLoop()
 				}
 			}
 
-			std::this_thread::sleep_for(std::chrono::microseconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
 }
@@ -536,6 +537,6 @@ void EQStreamFactory::WriterLoopOld() {
 			WriterWorkOld.wait(writer_work_lock);
 		}
 
-		std::this_thread::sleep_for(std::chrono::microseconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
