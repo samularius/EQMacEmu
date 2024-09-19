@@ -444,6 +444,11 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		target_id = GetID();
 	}
 
+	if(target_id == 0 && spell.targettype == ST_Target && IsEffectInSpell(spell_id, SE_SummonItem)) {
+		Log(Logs::Detail, Logs::Spells, "SE_SummonItem spell %d auto-targeted the caster.", spell_id);
+		target_id = GetID();
+	}
+
 	if(cast_time <= -1) {
 		// save the non-reduced cast time to use in the packet
 		cast_time = orgcasttime = spell.cast_time;
