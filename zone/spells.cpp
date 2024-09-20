@@ -277,7 +277,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	}
 
 	//prevent immune from aggro and spells npcs from being casted on.
-	if (IsClient() && spell_target && spell_target->IsNPC())
+	if (IsClient() && spell_target && spell_target->IsNPC() && spells[spell_id].targettype != ST_Self && !IsGroupSpell(spell_id))
 	{
 		NPC* spell_target_npc = spell_target->CastToNPC();
 		if (spell_target_npc)
