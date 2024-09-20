@@ -1383,7 +1383,7 @@ bool get_ruleb(int rule) {
 }
 
 bool get_rules(int rule) {
-	return RuleManager::Instance()->GetBoolRule((RuleManager::StringType)rule);
+	return RuleManager::Instance()->GetStringRule((RuleManager::StringType)rule);
 }
 
 luabind::scope lua_register_general() {
