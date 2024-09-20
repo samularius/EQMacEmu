@@ -1382,7 +1382,7 @@ bool get_ruleb(int rule) {
 	return RuleManager::Instance()->GetBoolRule((RuleManager::BoolType)rule);
 }
 
-bool get_rules(int rule) {
+std::string get_rules(int rule) {
 	return RuleManager::Instance()->GetStringRule((RuleManager::StringType)rule);
 }
 
