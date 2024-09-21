@@ -2400,41 +2400,42 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
 		
 		if(!spellTimerOverrideList.empty()) 
-		{
-			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s", spellTimerOverrideList.c_str());
-			
+		{	
 			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
 				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
 				if (spellIdTimerOverrideProp.size() != 2) 
 				{
 					continue;
 				}
-				int spellIdOverride = std::stoul(spellIdTimerOverrideProp[0]);
+				
+				std::string spellOverrideKey   = spellIdTimerOverrideProp[0];
+				std::string spellOverrideValue = spellIdTimerOverrideProp[1];
+
+				int spellIdOverride = Strings::IsNumber(spellOverrideKey) ? std::stoul(spellOverrideKey) : 0;
 				
 				// This override did not match the spell being cast
-				if (spell_id != spellIdOverride)
+				if (spell_id != spellIdOverride && spellOverrideKey != "*")
 				{
 					continue;
 				}
 				
-				std::string spellTimerString = spellIdTimerOverrideProp[1];
-				std::string checkMultiplier  = Strings::Replace(spellTimerString, "x", "");
-				float spellTimerValue        = std::stof(checkMultiplier);
+				std::string checkMultiplier = Strings::Replace(spellOverrideValue, "x", "");
+				float spellTimerValue       = std::stof(checkMultiplier);
 						
 				// We didn't detect a multiplier, it was a set timer
-				if (checkMultiplier == spellTimerString)
+				if (checkMultiplier == spellOverrideValue)
 				{
 					res = static_cast<int>(spellTimerValue);
-					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d set:%d", spellIdOverride, res);
 				}
 				// We have a multipler instead
 				else 
 				{
 					res = static_cast<int>(res * spellTimerValue);
-					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d multiply:%0.2f, res:%d", spellIdOverride, spellTimerValue, res);
 				}
 				
-				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, value:%s, res:%d", spellIdOverride, spellTimerString.c_str(), res);
+				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, key:%s, value:%s, res:%d", spellIdOverride, spellOverrideKey.c_str(), spellOverrideValue.c_str(), res);
+				
+				break;
 			}
 		}
 		
