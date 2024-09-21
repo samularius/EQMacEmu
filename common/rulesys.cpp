@@ -158,7 +158,7 @@ bool RuleManager::SetRule(const std::string &rule_name, const std::string &rule_
 		LogRules("Set rule [{}] to value [{}]", rule_name, m_RuleBoolValues[index] == 1 ? "true" : "false");
 		break;
 	case StringRule:
-		m_RuleStringValues[index] = rule_value.c_str();
+		m_RuleStringValues[index] = rule_value;
 		LogRules("Set rule [{}] to value [{}]", rule_name, m_RuleStringValues[index]);
 		break;	
 	}
