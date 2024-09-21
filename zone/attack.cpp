@@ -1093,7 +1093,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 			*/
 
 			// this spell mitigation part is from a client decompile
-			if (IsValidSpell(spell_id) && spells[spell_id].goodEffect == 0)
+			if (IsValidSpell(spell_id) && (spells[spell_id].goodEffect == 0 || IsLichSpell(spell_id)))
 			{
 				int caster_class = other->GetClass();
 				float mitigation;
