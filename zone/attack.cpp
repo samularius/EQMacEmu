@@ -1136,7 +1136,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 				
 				// Reintroduce spell dampening for self, but only for lich spells at the correct value.
 				if (other == this)
-					mitigation = 1;
+					mitigation = 1f;
 					if (RuleB(Quarm, LichDamageMitigation) && IsLichSpell(spell_id))
 						mitigation = 0.68000001f;
 				}
