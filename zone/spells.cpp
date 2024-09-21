@@ -2424,17 +2424,17 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 				// We didn't detect a multiplier, it was a set timer
 				if (checkMultiplier == spellTimerString)
 				{
-					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d set:%i", spellTimerOverrideList,spellTimerValue);
+					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d set:%i", spellIdOverride, spellTimerValue);
 					res = static_cast<int>(spellTimerValue);
 				}
 				// We have a multipler instead
 				else 
 				{
-					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d multiply:%0.2f", spellTimerOverrideList,spellTimerValue);
+					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d multiply:%0.2f", spellIdOverride, spellTimerValue);
 					res = static_cast<int>(res * spellTimerValue);
 				}
 				
-				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, value:%s, res:%d", spell_id, spellTimerString, res);
+				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, value:%s, res:%d", spellIdOverride, spellTimerString, res);
 			}
 		}
 		
