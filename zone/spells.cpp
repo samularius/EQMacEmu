@@ -2398,10 +2398,11 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
 	{
 		std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
+		int testInt = RuleI(Quarm, QuakeRepopDelay);
 		
 		if(!spellTimerOverrideList.empty()) 
 		{
-			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s", spellTimerOverrideList);
+			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s (%d)", spellTimerOverrideList, testInt);
 			
 			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
 				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
