@@ -1142,6 +1142,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 					{
 						mitigation = 0.68000001f;
 						Log(Logs::Detail, Logs::Spells, "%s is getting %d lich mitigation for %s in slot %d. Was %d damage", GetName(), mitigation, GetSpellName(spell_id), slot, damage);
+					}
 				}
 				
 				damage = (int32)((double)damage * mitigation);
