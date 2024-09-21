@@ -2398,11 +2398,10 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
 	{
 		std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
-		int testInt = RuleI(Quarm, QuakeRepopDelay);
 		
 		if(!spellTimerOverrideList.empty()) 
 		{
-			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s (%d)", spellTimerOverrideList, testInt);
+			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s", spellTimerOverrideList);
 			
 			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
 				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
@@ -2425,11 +2424,13 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 				// We didn't detect a multiplier, it was a set timer
 				if (checkMultiplier == spellTimerString)
 				{
+					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d set:%i", spellTimerOverrideList,spellTimerValue);
 					res = static_cast<int>(spellTimerValue);
 				}
 				// We have a multipler instead
 				else 
 				{
+					Log(Logs::Detail, Logs::Spells, "Spell Overrides for spell_id:%d multiply:%0.2f", spellTimerOverrideList,spellTimerValue);
 					res = static_cast<int>(res * spellTimerValue);
 				}
 				
