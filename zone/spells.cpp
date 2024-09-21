@@ -2401,15 +2401,24 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		
 		if(!spellTimerOverrideList.empty()) 
 		{
-			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList,',')) {
-				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride,':');
+			Log(Logs::Detail, Logs::Spells, "Spell Overrides Detected: %s", spellTimerOverrideList);
+			
+			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
+				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
 				if (spellIdTimerOverrideProp.size() != 2) 
 				{
 					continue;
 				}
-				int spellIdOverride          = std::stoul(spellIdTimerOverrideProp[0]);
+				int spellIdOverride = std::stoul(spellIdTimerOverrideProp[0]);
+				
+				// This override did not match the spell being cast
+				if (spell_id != spellIdOverride)
+				{
+					continue;
+				}
+				
 				std::string spellTimerString = spellIdTimerOverrideProp[1];
-				std::string checkMultiplier  = Strings::Replace(spellTimerString,"x","");
+				std::string checkMultiplier  = Strings::Replace(spellTimerString, "x", "");
 				float spellTimerValue        = std::stof(checkMultiplier);
 						
 				// We didn't detect a multiplier, it was a set timer
@@ -2422,6 +2431,8 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 				{
 					res = static_cast<int>(res * spellTimerValue);
 				}
+				
+				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, value:%s, res:%d", spell_id, spellTimerString, res);
 			}
 		}
 		
