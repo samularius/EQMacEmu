@@ -2397,6 +2397,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
 	{
+		// Override List, if set, will look like - ID:TIC,ID:TIC,ID:MULTx,...,*:MULTx
 		std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
 		
 		if(!spellTimerOverrideList.empty()) 
@@ -2410,6 +2411,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 				
 				std::string spellOverrideKey   = spellIdTimerOverrideProp[0];
 				std::string spellOverrideValue = spellIdTimerOverrideProp[1];
+				std::string checkMultiplier    = Strings::Replace(spellOverrideValue, "x", "");
 
 				int spellIdOverride = Strings::IsNumber(spellOverrideKey) ? std::stoul(spellOverrideKey) : 0;
 				
@@ -2418,11 +2420,14 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 				{
 					continue;
 				}
+				// If we aren't a float/integer then this is not a valid override
+				if (!Strings::IsFloat(checkMultiplier)) {
+					continue;
+				}
 				
-				std::string checkMultiplier = Strings::Replace(spellOverrideValue, "x", "");
-				float spellTimerValue       = std::stof(checkMultiplier);
+				float spellTimerValue = std::stof(checkMultiplier);
 						
-				// We didn't detect a multiplier, it was a set timer
+				// We didn't detect a multiplier, it was an exact timer
 				if (checkMultiplier == spellOverrideValue)
 				{
 					res = static_cast<int>(spellTimerValue);
@@ -2433,8 +2438,10 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 					res = static_cast<int>(res * spellTimerValue);
 				}
 				
-				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, key:%s, value:%s, res:%d", spellIdOverride, spellOverrideKey.c_str(), spellOverrideValue.c_str(), res);
+				Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, matched:%s, value:%s, res:%d", spell_id, spellOverrideKey.c_str(), spellOverrideValue.c_str(), res);
 				
+				// If we get a match, there's no need to continue through the list.
+				// This means the wildcard '*' must be at the end of the list so that specific spells can be applied prior
 				break;
 			}
 		}
