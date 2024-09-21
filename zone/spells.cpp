@@ -2397,6 +2397,34 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
 	{
+		std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
+		
+		if(!spellTimerOverrideList.empty()) 
+		{
+			for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList,',')) {
+				auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride,':');
+				if (spellIdTimerOverrideProp.size() != 2) 
+				{
+					continue;
+				}
+				int spellIdOverride          = std::stoul(spellIdTimerOverrideProp[0]);
+				std::string spellTimerString = spellIdTimerOverrideProp[1];
+				std::string checkMultiplier  = Strings::Replace(spellTimerString,"x","");
+				float spellTimerValue        = std::stof(checkMultiplier);
+						
+				// We didn't detect a multiplier, it was a set timer
+				if (checkMultiplier == spellTimerString)
+				{
+					res = static_cast<int>(spellTimerValue);
+				}
+				// We have a multipler instead
+				else 
+				{
+					res = static_cast<int>(res * spellTimerValue);
+				}
+			}
+		}
+		
 		int aa_bonus = 0;
 		uint8 spell_reinforcement = caster->GetAA(aaSpellCastingReinforcement);
 		if (spell_reinforcement > 0)
