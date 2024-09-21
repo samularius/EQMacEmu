@@ -1075,7 +1075,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 
 	// Reduce PVP damage. Don't do PvP mitigation if the caster is damaging themself or it's from a DS.
 	bool FromDamageShield = (attack_skill == EQ::skills::SkillAbjuration);
-	if (!FromDamageShield && other && other->IsClient() && (other != this) && damage > 0)
+	if (!FromDamageShield && other && other->IsClient() && damage > 0)
 	{
 		if (spell_id != SPELL_UNKNOWN)
 		{
@@ -1133,6 +1133,14 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 						mitigation = 0.63f;
 					}
 				}
+				
+				// Reintroduce spell dampening for self, but only for lich spells at the correct value.
+				if (other == this)
+					mitigation = 1;
+					if (RuleB(Quarm, LichDamageMitigation) && IsLichSpell(spell_id))
+						mitigation = 0.68000001f;
+				}
+				
 				damage = (int32)((double)damage * mitigation);
 				if (damage < 1)
 				{

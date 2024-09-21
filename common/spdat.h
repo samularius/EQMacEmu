@@ -639,6 +639,7 @@ extern int32 SPDAT_RECORDS;
 
 bool IsTargetableAESpell(uint16 spell_id);
 bool IsSacrificeSpell(uint16 spell_id);
+bool IsLichSpell(uint16 spell_id);
 bool IsLifetapSpell(uint16 spell_id);
 bool IsMezSpell(uint16 spell_id);
 int16 GetBaseValue(uint16 spell_id, uint16 effect);
