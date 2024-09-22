@@ -288,7 +288,10 @@ RULE_REAL(Quarm, BonusGroupEXP5MemberOverride, 1.14, "Quarm's custom group EXP b
 RULE_REAL(Quarm, BonusGroupEXP6MemberOverride, 1.20, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
 RULE_REAL(Quarm, BonusGroupEXP7MemberOverride, 1.24, "Quarm's custom group EXP bonus override for x members. For server events that directly target group bonuses.")
 RULE_INT(Quarm, MaxTimeSpentProcessingConns, 100, "")
-RULE_STRING(Quarm, SpellTimerOverrideList, "2570:4800,2510:4800,2895:4800,2528:4800,2590:4800,2629:4800,1561:4800", "Spell Timer Overrides: ID:TIC,ID:TIC,...")
+RULE_BOOL(Quarm, ClientFactionOverride, false, "Enables or disables client personal faction adjustment")
+RULE_REAL(Quarm, ClientFactionMultiplier, 2.0, "Client personal faction adjustment multiplier")
+RULE_BOOL(Quarm, SpellTimerOverride, false, "Enables or disables spell timer overrides")
+RULE_STRING(Quarm, SpellTimerOverrideList, "2570:4800,2510:4800,2895:4800,2528:4800,2590:4800,2629:4800,1561:4800", "Spell Timer Overrides: ID:TIC,ID:TIC,ID:MULTIx,...")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
