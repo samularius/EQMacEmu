@@ -671,7 +671,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 
 		// Interrupt spell casts that are targetting self found or solo if they're not allowed
 		// Already know caster is a client from the first check in this function
-		if(spell_target && spell_target->IsClient())					
+		if(spell_target && spell_target->IsClient() && spells[spell_id].targettype != ST_Self && !IsGroupSpell(spell_id))
 		{
 			// Only fail if it's beneficial - don't want to fail on detrimental for pvp purposes
 			if(IsBeneficialSpell(spell_id))
