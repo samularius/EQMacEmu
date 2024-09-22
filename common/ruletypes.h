@@ -13,6 +13,9 @@
 #ifndef RULE_BOOL
 #define RULE_BOOL(cat, rule, default_value, notes)
 #endif
+#ifndef RULE_STRING
+#define RULE_STRING(cat, rule, default_value, notes)
+#endif
 #ifndef RULE_CATEGORY_END
 #define RULE_CATEGORY_END()
 #endif
@@ -289,6 +292,7 @@ RULE_BOOL(Quarm, ClientFactionOverride, false, "Enables or disables client perso
 RULE_REAL(Quarm, ClientFactionMultiplier, 2.0, "Client personal faction adjustment multiplier")
 RULE_BOOL(Quarm, SpellTimerOverride, false, "Enables or disables spell timer overrides")
 RULE_STRING(Quarm, SpellTimerOverrideList, "", "Spell Timer Overrides: ID:TIC,ID:TIC,ID:MULTIx,...")
+RULE_BOOL(Quarm, LichDamageMitigation, false, "Quarm lich hack to make PoP era lich spell data cause the correct live era pvp mitigated damage to self.")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
@@ -539,4 +543,5 @@ RULE_CATEGORY_END()
 #undef RULE_INT
 #undef RULE_REAL
 #undef RULE_BOOL
+#undef RULE_STRING
 #undef RULE_CATEGORY_END
