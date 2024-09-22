@@ -184,7 +184,11 @@ namespace {
 		if (target == nullptr || !target->IsSelfFound() || target->IsSoloOnly())
 			return false;
 
-		if (IsEffectInSpell(spell_id, SE_Teleport))
+		if (spell_id == SPELL_WIND_OF_THE_NORTH || spell_id == SPELL_WIND_OF_THE_SOUTH ||
+				spell_id == SPELL_TISHANS_RELOCATION || spell_id == SPELL_MARKARS_RELOCATION)
+			return true;
+
+		if (IsTeleportSpell(spell_id))
 			return true;
 
 		if (IsEffectInSpell(spell_id, SE_BindAffinity))
