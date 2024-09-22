@@ -2433,6 +2433,59 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
 	{
+		// Override timers on specific or global spells
+		if (RuleB(Quarm, SpellTimerOverride))
+		{
+			// Override List, if set, will look like - ID:TIC,ID:TIC,ID:MULTx,...,*:MULTx
+			std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
+			
+			if(!spellTimerOverrideList.empty()) 
+			{	
+				for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
+					auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
+					if (spellIdTimerOverrideProp.size() != 2) 
+					{
+						continue;
+					}
+					
+					std::string spellOverrideKey   = spellIdTimerOverrideProp[0];
+					std::string spellOverrideValue = spellIdTimerOverrideProp[1];
+					std::string checkMultiplier    = Strings::Replace(spellOverrideValue, "x", "");
+
+					int spellIdOverride = Strings::IsNumber(spellOverrideKey) ? std::stoul(spellOverrideKey) : 0;
+					
+					// This override did not match the spell being cast
+					if (spell_id != spellIdOverride && spellOverrideKey != "*")
+					{
+						continue;
+					}
+					// If we aren't a float/integer then this is not a valid override
+					if (!Strings::IsFloat(checkMultiplier)) {
+						continue;
+					}
+					
+					float spellTimerValue = std::stof(checkMultiplier);
+							
+					// We didn't detect a multiplier, it was an exact timer
+					if (checkMultiplier == spellOverrideValue)
+					{
+						res = static_cast<int>(spellTimerValue);
+					}
+					// We have a multipler instead
+					else 
+					{
+						res = static_cast<int>(res * spellTimerValue);
+					}
+					
+					Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, matched:%s, value:%s, res:%d", spell_id, spellOverrideKey.c_str(), spellOverrideValue.c_str(), res);
+					
+					// If we get a match, there's no need to continue through the list.
+					// This means the global wildcard '*' must be at the end of the list so that specific spells can be applied prior
+					break;
+				}
+			}
+		}
+		
 		int aa_bonus = 0;
 		uint8 spell_reinforcement = caster->GetAA(aaSpellCastingReinforcement);
 		if (spell_reinforcement > 0)
