@@ -2523,6 +2523,12 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isClient)
 	
 	auto spellModifier = foundModifier->second;
 	
+	if ((isClient && spellModifier.client_cast != 1) ||
+	    (!isClient && spellModifier.client_cast != 0))
+	{
+		return duration;
+	}
+	
 	// We only allow exact spell IDs to set fixed duration
 	if (spellModifier.spell_match_id > 0 && spellModifier.duration > 0) 
 	{

@@ -644,8 +644,9 @@ struct SPDat_Spell_Struct
 };
 
 struct SpellModifier_Struct {
+	int       client_cast;     // Client 1 or NPC 0 
     int       spell_match_id;  // Spell ID or -1 for beneficial and -2 for detrimental
-    int       duration;    // Absolute tic duration
+    int       duration;        // Absolute tic duration
     float     tic_multiplier;  // Tic multiplier
 	int       tic_add;         // Tic count added
 };

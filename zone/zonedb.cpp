@@ -1496,6 +1496,7 @@ bool ZoneDatabase::LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spell
 {
 	std::string query = StringFormat(
 		"SELECT "
+		"client_cast, "
 		"spell_match_id, "
 		"duration, "
 		"tic_multiplier, "
@@ -1507,10 +1508,12 @@ bool ZoneDatabase::LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spell
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		SpellModifier_Struct spellModifier;
 		memset(&spellModifier, 0, sizeof(SpellModifier_Struct));
-		spellModifier.spell_match_id = atoi(row[0]);
-		spellModifier.duration = atoi(row[1]);
-		spellModifier.tic_multiplier = atof(row[2]);
-		spellModifier.tic_add = atoi(row[3]);
+		
+		spellModifier.client_cast = atoi(row[0]);
+		spellModifier.spell_match_id = atoi(row[1]);
+		spellModifier.duration = atoi(row[2]);
+		spellModifier.tic_multiplier = atof(row[3]);
+		spellModifier.tic_add = atoi(row[4]);
 		spellModifiers[spellModifier.spell_match_id] = spellModifier;
 	}
 
