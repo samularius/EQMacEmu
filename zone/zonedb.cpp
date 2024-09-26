@@ -1492,6 +1492,31 @@ bool ZoneDatabase::DeleteCharacterConsent(char grantname[64], char ownername[64]
 	}
 }
 
+bool ZoneDatabase::LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spellModifiers)
+{
+	std::string query = StringFormat(
+		"SELECT "
+		"spell_match_id, "
+		"duration, "
+		"tic_multiplier, "
+		"tic_add "
+		"FROM `spell_modifiers`");
+		
+	auto results = database.QueryDatabase(query);
+	
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		SpellModifier_Struct spellModifier;
+		memset(&spellModifier, 0, sizeof(SpellModifier_Struct));
+		spellModifier.spell_match_id = atoi(row[0]);
+		spellModifier.duration = atoi(row[1]);
+		spellModifier.tic_multiplier = atof(row[2]);
+		spellModifier.tic_add = atoi(row[3]);
+		spellModifiers[spellModifier.spell_match_id] = spellModifier;
+	}
+
+	return true;
+}
+
 /* Searches npctable for matching id, and returns the item if found,
  * or nullptr otherwise. If id passed is 0, loads all npc_types for
  * the current zone, returning the last item added.

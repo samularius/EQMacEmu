@@ -2431,90 +2431,42 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	int res = CalcBuffDuration_formula(castlevel, formula, duration);
 
-	if (caster && caster->IsClient() && IsBeneficialSpell(spell_id) && formula != DF_Permanent)
+	if (caster && formula != DF_Permanent)
 	{
-		// Override timers on specific or global spells
-		if (RuleB(Quarm, SpellTimerOverride))
-		{
-			// Override List, if set, will look like - ID:TIC,ID:TIC,ID:MULTx,...,*:MULTx
-			std::string spellTimerOverrideList = RuleS(Quarm, SpellTimerOverrideList);
-			
-			if(!spellTimerOverrideList.empty()) 
-			{	
-				for (const auto &spellIdTimerOverride : Strings::Split(spellTimerOverrideList, ',')) {
-					auto spellIdTimerOverrideProp = Strings::Split(spellIdTimerOverride, ':');
-					if (spellIdTimerOverrideProp.size() != 2) 
-					{
-						continue;
-					}
-					
-					std::string spellOverrideKey   = spellIdTimerOverrideProp[0];
-					std::string spellOverrideValue = spellIdTimerOverrideProp[1];
-					std::string checkMultiplier    = Strings::Replace(spellOverrideValue, "x", "");
-
-					int spellIdOverride = Strings::IsNumber(spellOverrideKey) ? std::stoul(spellOverrideKey) : 0;
-					
-					// This override did not match the spell being cast
-					if (spell_id != spellIdOverride && spellOverrideKey != "*")
-					{
-						continue;
-					}
-					// If we aren't a float/integer then this is not a valid override
-					if (!Strings::IsFloat(checkMultiplier)) {
-						continue;
-					}
-					
-					float spellTimerValue = std::stof(checkMultiplier);
-							
-					// We didn't detect a multiplier, it was an exact timer
-					if (checkMultiplier == spellOverrideValue)
-					{
-						res = static_cast<int>(spellTimerValue);
-					}
-					// We have a multipler instead
-					else 
-					{
-						res = static_cast<int>(res * spellTimerValue);
-					}
-					
-					Log(Logs::Detail, Logs::Spells, "Spell Override Applied! spell_id:%d, matched:%s, value:%s, res:%d", spell_id, spellOverrideKey.c_str(), spellOverrideValue.c_str(), res);
-					
-					// If we get a match, there's no need to continue through the list.
-					// This means the global wildcard '*' must be at the end of the list so that specific spells can be applied prior
-					break;
-				}
-			}
-		}
+		res = CalcBuffDuration_modification(spell_id, duration, caster->IsClient());
 		
-		int aa_bonus = 0;
-		uint8 spell_reinforcement = caster->GetAA(aaSpellCastingReinforcement);
-		if (spell_reinforcement > 0)
-		{
-			switch (spell_reinforcement)
+		if (caster->IsClient() && IsBeneficialSpell(spell_id))
+		{	
+			int aa_bonus = 0;
+			uint8 spell_reinforcement = caster->GetAA(aaSpellCastingReinforcement);
+			if (spell_reinforcement > 0)
 			{
-			case 1:
-				aa_bonus = 5;
-				break;
-			case 2:
-				aa_bonus = 15;
-				break;
-			case 3:
-				aa_bonus = 30;
-				break;
-			default:
-				aa_bonus = 0;
-				break;
-				Log(Logs::General, Logs::AA, "Spell Casting Reinforcement added %d% to the duration of buff %d", aa_bonus, spell_id);
+				switch (spell_reinforcement)
+				{
+				case 1:
+					aa_bonus = 5;
+					break;
+				case 2:
+					aa_bonus = 15;
+					break;
+				case 3:
+					aa_bonus = 30;
+					break;
+				default:
+					aa_bonus = 0;
+					break;
+					Log(Logs::General, Logs::AA, "Spell Casting Reinforcement added %d% to the duration of buff %d", aa_bonus, spell_id);
 
-			}
-			if (caster->GetAA(aaSpellCastingReinforcementMastery))
-			{
-				aa_bonus += 20;
-				Log(Logs::General, Logs::AA, "Spell Casting Reinforcement Mastery added a total %d to the duration of buff %d%", aa_bonus, spell_id);
-			}
-			int bonus = res * aa_bonus / 100;
+				}
+				if (caster->GetAA(aaSpellCastingReinforcementMastery))
+				{
+					aa_bonus += 20;
+					Log(Logs::General, Logs::AA, "Spell Casting Reinforcement Mastery added a total %d to the duration of buff %d%", aa_bonus, spell_id);
+				}
+				int bonus = res * aa_bonus / 100;
 
-			res += bonus;
+				res += bonus;
+			}
 		}
 	}
 
@@ -2527,6 +2479,71 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		spell_id, castlevel, formula, duration, res);
 
 	return(res);
+}
+
+int CalcBuffDuration_modification(int spell_id, int duration, bool isClient)
+{
+	const bool spellDetrimental = IsDetrimentalSpell(spell_id);
+	const bool spellBeneficial  = IsBeneficialSpell(spell_id);
+	
+	// Stop all spells that should never have durations modified
+	if (IsSplurtFormulaSpell(spell_id))
+	{
+		return duration;
+	}
+		
+	// Check if enabled for caster and type
+	if (
+		(isClient  && ((spellDetrimental && !RuleB(Quarm, ClientDetrimentalSpellDurationModifier)) || (spellBeneficial && !RuleB(Quarm, ClientBeneficialSpellDurationModifier)))) ||
+	    (!isClient && ((spellDetrimental && !RuleB(Quarm, NPCDetrimentalSpellDurationModifier))    || (spellBeneficial && !RuleB(Quarm, NPCBeneficialSpellDurationModifier))))
+	)  
+	{
+		return duration;
+	}
+
+	auto foundModifier = spellModifiers.find(spell_id);
+	
+	if (foundModifier == spellModifiers.end()) 
+	{
+		if (spellBeneficial)
+		{
+			foundModifier = spellModifiers.find(SpellModifierType::Beneficial);
+		}
+		else if (spellDetrimental)
+		{
+			foundModifier = spellModifiers.find(SpellModifierType::Detrimental);
+		}
+	}
+	
+	// Didn't find a match for spell or beneficial/detrimental aggregators
+	if (foundModifier == spellModifiers.end())
+	{
+		return duration;
+	}
+	
+	auto spellModifier = foundModifier->second;
+	
+	// We only allow exact spell IDs to set fixed duration
+	if (spellModifier.spell_match_id > 0 && spellModifier.duration > 0) 
+	{
+		Log(Logs::Detail, Logs::Spells, "Fixed spell duration modification applied! spell_id:%d, duration:%d", spell_id, spellModifier.duration);
+		return spellModifier.duration;
+	}
+
+	// Apply multiplier if it's set
+	if (spellModifier.tic_multiplier > 0)
+	{
+		duration = static_cast<int>(duration * spellModifier.tic_multiplier);
+	}
+	
+	if (spellModifier.tic_add > 0)
+	{
+		duration += spellModifier.tic_add;
+	}
+	
+	Log(Logs::Detail, Logs::Spells, "Variable spell duration modification applied! spell_id:%d, multiplier:%0.2f, add:%i, duration:%d", spell_id, spellModifier.tic_multiplier, spellModifier.tic_add, duration);
+
+	return duration;
 }
 
 // the generic formula calculations

@@ -290,9 +290,11 @@ RULE_REAL(Quarm, BonusGroupEXP7MemberOverride, 1.24, "Quarm's custom group EXP b
 RULE_INT(Quarm, MaxTimeSpentProcessingConns, 100, "")
 RULE_BOOL(Quarm, ClientFactionOverride, false, "Enables or disables client personal faction adjustment")
 RULE_REAL(Quarm, ClientFactionMultiplier, 2.0, "Client personal faction adjustment multiplier")
-RULE_BOOL(Quarm, SpellTimerOverride, false, "Enables or disables spell timer overrides")
-RULE_STRING(Quarm, SpellTimerOverrideList, "", "Spell Timer Overrides: ID:TIC,ID:TIC,ID:MULTIx,...")
 RULE_BOOL(Quarm, LichDamageMitigation, false, "Quarm lich hack to make PoP era lich spell data cause the correct live era pvp mitigated damage to self.")
+RULE_BOOL(Quarm, ClientBeneficialSpellDurationModifier, false, "Enables or disables duration modification for player beneficial spells")
+RULE_BOOL(Quarm, ClientDetrimentalSpellDurationModifier, false, "Enables or disables duration modification for player detrimental spells")
+RULE_BOOL(Quarm, NPCBeneficialSpellDurationModifier, false, "Enables or disables duration modification for NPC beneficial spells")
+RULE_BOOL(Quarm, NPCDetrimentalSpellDurationModifier, false, "Enables or disables duration modification for NPC detrimental spells")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
