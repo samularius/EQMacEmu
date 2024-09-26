@@ -114,6 +114,11 @@ enum RESISTTYPE
 	RESIST_DISEASE = 5
 };
 
+typedef enum {
+	Beneficial = -1,
+	Detrimental = -2
+} SpellModifierType;
+
 //Target Type IDs
 typedef enum {
 /* 01 */	ST_TargetOptional = 0x01,
@@ -638,7 +643,17 @@ struct SPDat_Spell_Struct
 			bool contains_se_currentmana;
 };
 
+struct SpellModifier_Struct {
+	int     client_cast;     // Client 1 or NPC 0 
+	int     spell_match_id;  // Spell ID or -1 for beneficial and -2 for detrimental
+	int     zone_id;         // Impact zone ID or 0 for all
+	int     tic_duration;    // Absolute tic duration
+	float   tic_multiplier;  // Tic multiplier
+	int     tic_add;         // Tic count added
+};
+
 extern const SPDat_Spell_Struct* spells;
+extern std::map<std::tuple<int,int,int>, SpellModifier_Struct> spellModifiers;
 extern int32 SPDAT_RECORDS;
 
 bool IsTargetableAESpell(uint16 spell_id);
@@ -715,6 +730,8 @@ int CanUseSpell(uint16 spellid, int classa, int level);
 int GetMinLevel(uint16 spell_id);
 int GetSpellLevel(uint16 spell_id, int classa);
 int CalcBuffDuration_formula(int level, int formula, int duration);
+int CalcBuffDuration_modification(int spell_id, int duration, bool isClient);
+bool FindSpellModifier(int isclient, int spell_id, int zone_id, SpellModifier_Struct &spellModifier);
 int32 CalculatePoisonCounters(uint16 spell_id);
 int32 CalculateDiseaseCounters(uint16 spell_id);
 int32 CalculateCurseCounters(uint16 spell_id);
