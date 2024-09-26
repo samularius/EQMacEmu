@@ -1492,12 +1492,13 @@ bool ZoneDatabase::DeleteCharacterConsent(char grantname[64], char ownername[64]
 	}
 }
 
-bool ZoneDatabase::LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spellModifiers)
+bool ZoneDatabase::LoadSpellModifiers(std::map<std::tuple<int,int,int>, SpellModifier_Struct> &spellModifiers)
 {
 	std::string query = StringFormat(
 		"SELECT "
 		"client_cast, "
 		"spell_match_id, "
+		"zone_id, "
 		"duration, "
 		"tic_multiplier, "
 		"tic_add "
@@ -1511,10 +1512,11 @@ bool ZoneDatabase::LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spell
 		
 		spellModifier.client_cast = atoi(row[0]);
 		spellModifier.spell_match_id = atoi(row[1]);
-		spellModifier.duration = atoi(row[2]);
-		spellModifier.tic_multiplier = atof(row[3]);
-		spellModifier.tic_add = atoi(row[4]);
-		spellModifiers[spellModifier.spell_match_id] = spellModifier;
+		spellModifier.zone_id = atoi(row[2]);
+		spellModifier.duration = atoi(row[3]);
+		spellModifier.tic_multiplier = atof(row[4]);
+		spellModifier.tic_add = atoi(row[5]);
+		spellModifiers[std::make_tuple(spellModifier.client_cast,spellModifier.spell_match_id,spellModifier.zone_id)] = spellModifier;
 	}
 
 	return true;

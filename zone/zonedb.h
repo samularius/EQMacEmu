@@ -453,7 +453,7 @@ public:
 	bool	LoadBlockedSpells(int32 blockedSpellsCount, ZoneSpellsBlocked* into, uint32 zoneid);
 	
 	/* Spells Modifiers */
-	bool	LoadSpellModifiers(std::map<int, SpellModifier_Struct> &spellModifiers);
+	bool	LoadSpellModifiers(std::map<std::tuple<int,int,int>, SpellModifier_Struct> &spellModifiers);
 
 	/* Traps   */
 	bool	LoadTraps(const char* zonename);

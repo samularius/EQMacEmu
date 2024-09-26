@@ -2481,7 +2481,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	return(res);
 }
 
-int CalcBuffDuration_modification(int spell_id, int duration, bool isClient)
+int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 {
 	const bool spellDetrimental = IsDetrimentalSpell(spell_id);
 	const bool spellBeneficial  = IsBeneficialSpell(spell_id);
@@ -2494,37 +2494,23 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isClient)
 		
 	// Check if enabled for caster and type
 	if (
-		(isClient  && ((spellDetrimental && !RuleB(Quarm, ClientDetrimentalSpellDurationModifier)) || (spellBeneficial && !RuleB(Quarm, ClientBeneficialSpellDurationModifier)))) ||
-	    (!isClient && ((spellDetrimental && !RuleB(Quarm, NPCDetrimentalSpellDurationModifier))    || (spellBeneficial && !RuleB(Quarm, NPCBeneficialSpellDurationModifier))))
+		(isclient  && ((spellDetrimental && !RuleB(Quarm, ClientDetrimentalSpellDurationModifier)) || (spellBeneficial && !RuleB(Quarm, ClientBeneficialSpellDurationModifier)))) ||
+	    (!isclient && ((spellDetrimental && !RuleB(Quarm, NPCDetrimentalSpellDurationModifier))    || (spellBeneficial && !RuleB(Quarm, NPCBeneficialSpellDurationModifier))))
 	)  
 	{
 		return duration;
 	}
+	
+	SpellModifier_Struct spellModifier;
 
-	auto foundModifier = spellModifiers.find(spell_id);
-	
-	if (foundModifier == spellModifiers.end()) 
-	{
-		if (spellBeneficial)
-		{
-			foundModifier = spellModifiers.find(SpellModifierType::Beneficial);
-		}
-		else if (spellDetrimental)
-		{
-			foundModifier = spellModifiers.find(SpellModifierType::Detrimental);
-		}
-	}
-	
-	// Didn't find a match for spell or beneficial/detrimental aggregators
-	if (foundModifier == spellModifiers.end())
-	{
-		return duration;
-	}
-	
-	auto spellModifier = foundModifier->second;
-	
-	if ((isClient && spellModifier.client_cast != 1) ||
-	    (!isClient && spellModifier.client_cast != 0))
+	// Ordered search through our spell modifier map, check exact spell and zone first, then fallback to aggregators
+	// If we can't match any of this then return the standard duration
+	if (!FindSpellModifier(isclient,spell_id,zone->GetZoneID(),spellModifier) || 
+	    (IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,zone->GetZoneID(),spellModifier)) ||
+		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,zone->GetZoneID(),spellModifier)) ||
+		!FindSpellModifier(isclient,spell_id,0,spellModifier) ||
+		(IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,0,spellModifier)) ||
+		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,0,spellModifier)))
 	{
 		return duration;
 	}
@@ -2550,6 +2536,19 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isClient)
 	Log(Logs::Detail, Logs::Spells, "Variable spell duration modification applied! spell_id:%d, multiplier:%0.2f, add:%i, duration:%d", spell_id, spellModifier.tic_multiplier, spellModifier.tic_add, duration);
 
 	return duration;
+}
+
+bool FindSpellModifier(int isclient, int spell_id, int zone_id, SpellModifier_Struct &spellModifier)
+{
+	auto foundModifier = spellModifiers.find(std::make_tuple(isclient,spell_id,zone_id));
+	
+	if (foundModifier != spellModifiers.end()) 
+	{
+		spellModifier = foundModifier->second;
+		return true;
+	}
+	
+	return false;
 }
 
 // the generic formula calculations
