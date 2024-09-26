@@ -1513,7 +1513,7 @@ bool ZoneDatabase::LoadSpellModifiers(std::map<std::tuple<int,int,int>, SpellMod
 		spellModifier.client_cast = atoi(row[0]);
 		spellModifier.spell_match_id = atoi(row[1]);
 		spellModifier.zone_id = atoi(row[2]);
-		spellModifier.duration = atoi(row[3]);
+		spellModifier.tic_duration = atoi(row[3]);
 		spellModifier.tic_multiplier = atof(row[4]);
 		spellModifier.tic_add = atoi(row[5]);
 		spellModifiers[std::make_tuple(spellModifier.client_cast,spellModifier.spell_match_id,spellModifier.zone_id)] = spellModifier;

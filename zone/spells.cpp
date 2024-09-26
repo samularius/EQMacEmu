@@ -2520,10 +2520,10 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 	}
 	
 	// We only allow exact spell IDs to set fixed duration
-	if (spellModifier.spell_match_id > 0 && spellModifier.duration > 0) 
+	if (spellModifier.spell_match_id > 0 && spellModifier.tic_duration > 0) 
 	{
-		Log(Logs::Detail, Logs::Spells, "Fixed spell duration modification applied! spell_id:%d, duration:%d", spell_id, spellModifier.duration);
-		return spellModifier.duration;
+		Log(Logs::Detail, Logs::Spells, "Fixed spell duration modification applied! spell_id:%d, duration:%d", spell_id, spellModifier.tic_duration);
+		return spellModifier.tic_duration;
 	}
 
 	// Apply multiplier if it's set
