@@ -2525,16 +2525,22 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 		Log(Logs::Detail, Logs::Spells, "Fixed spell duration modification applied! spell_id:%d, duration:%d", spell_id, spellModifier.tic_duration);
 		return spellModifier.tic_duration;
 	}
-
+	
 	// Apply multiplier if it's set
 	if (spellModifier.tic_multiplier > 0)
 	{
 		duration = static_cast<int>(duration * spellModifier.tic_multiplier);
 	}
 	
-	if (spellModifier.tic_add > 0)
+	if (spellModifier.tic_add != 0)
 	{
 		duration += spellModifier.tic_add;
+	}
+	
+	// If we have negative duration, just zero it out
+	if (duration < 0)
+	{
+		duration = 0;
 	}
 	
 	Log(Logs::Detail, Logs::Spells, "Variable spell duration modification applied! spell_id:%d, multiplier:%0.2f, add:%i, duration:%d", spell_id, spellModifier.tic_multiplier, spellModifier.tic_add, duration);
