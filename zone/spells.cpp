@@ -2506,12 +2506,15 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 
 	// Ordered search through our spell modifier map, check exact spell and zone first, then fallback to aggregators
 	// If we can't match any of this then return the standard duration
-	if (!FindSpellModifier(isclient,spell_id,zoneId,spellModifier) || 
-	    (IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,zoneId,spellModifier)) ||
-		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,zoneId,spellModifier)) ||
-		!FindSpellModifier(isclient,spell_id,0,spellModifier) ||
-		(IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,0,spellModifier)) ||
-		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,0,spellModifier)))
+	bool foundModifier = 
+	    (FindSpellModifier(isclient,spell_id,zoneId,spellModifier) || 
+	    (IsBeneficialSpell && FindSpellModifier(isclient,SpellModifierType::Beneficial,zoneId,spellModifier)) ||
+		(IsDetrimentalSpell && FindSpellModifier(isclient,SpellModifierType::Detrimental,zoneId,spellModifier)) ||
+		FindSpellModifier(isclient,spell_id,0,spellModifier) ||
+		(IsBeneficialSpell && FindSpellModifier(isclient,SpellModifierType::Beneficial,0,spellModifier)) ||
+		(IsDetrimentalSpell && FindSpellModifier(isclient,SpellModifierType::Detrimental,0,spellModifier)));
+		
+	if (!foundModifier) 
 	{
 		return duration;
 	}
@@ -2541,11 +2544,6 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 
 bool FindSpellModifier(int isclient, int spell_id, int zone_id, SpellModifier_Struct &spellModifier)
 {
-	if (isclient)
-	{
-		Log(Logs::Detail, Logs::Spells, "isclient(1) spell_id(%d) zone_id(%d)", spell_id, zone_id);
-	}
-	
 	auto foundModifier = spellModifiers.find(std::make_tuple(isclient,spell_id,zone_id));
 	
 	if (foundModifier != spellModifiers.end()) 
