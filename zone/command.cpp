@@ -3954,8 +3954,14 @@ void command_reloadzps(Client *c, const Seperator *sep){
 }
 
 void command_reloadspmod(Client *c, const Seperator *sep){
-	database.LoadSpellModifiers(spellModifiers);
-	c->Message(Chat::Default, "Reloading spell modifiers.");
+	if (c)
+	{
+		auto pack = new ServerPacket(ServerOP_ReloadSpellModifiers, 0);
+		worldserver.SendPacket(pack);
+		c->Message(Chat::Red, "Successfully sent the packet to world to reload spell modifiers globally.");
+		safe_delete(pack);
+
+	}
 }
 
 void command_zoneshutdown(Client *c, const Seperator *sep){
