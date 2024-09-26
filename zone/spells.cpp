@@ -2483,8 +2483,9 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 {
-	const bool spellDetrimental = IsDetrimentalSpell(spell_id);
-	const bool spellBeneficial  = IsBeneficialSpell(spell_id);
+	const bool   spellDetrimental = IsDetrimentalSpell(spell_id);
+	const bool   spellBeneficial  = IsBeneficialSpell(spell_id);
+	const uint32 zoneId           = zone->GetZoneID();
 	
 	// Stop all spells that should never have durations modified
 	if (IsSplurtFormulaSpell(spell_id))
@@ -2505,9 +2506,9 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 
 	// Ordered search through our spell modifier map, check exact spell and zone first, then fallback to aggregators
 	// If we can't match any of this then return the standard duration
-	if (!FindSpellModifier(isclient,spell_id,zone->GetZoneID(),spellModifier) || 
-	    (IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,zone->GetZoneID(),spellModifier)) ||
-		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,zone->GetZoneID(),spellModifier)) ||
+	if (!FindSpellModifier(isclient,spell_id,zoneId,spellModifier) || 
+	    (IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,zoneId,spellModifier)) ||
+		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,zoneId,spellModifier)) ||
 		!FindSpellModifier(isclient,spell_id,0,spellModifier) ||
 		(IsBeneficialSpell && !FindSpellModifier(isclient,SpellModifierType::Beneficial,0,spellModifier)) ||
 		(IsDetrimentalSpell && !FindSpellModifier(isclient,SpellModifierType::Detrimental,0,spellModifier)))
@@ -2540,6 +2541,11 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 
 bool FindSpellModifier(int isclient, int spell_id, int zone_id, SpellModifier_Struct &spellModifier)
 {
+	if (isclient)
+	{
+		Log(Logs::Detail, Logs::Spells, "isclient(1) spell_id(%d) zone_id(%d)", spell_id, zone_id);
+	}
+	
 	auto foundModifier = spellModifiers.find(std::make_tuple(isclient,spell_id,zone_id));
 	
 	if (foundModifier != spellModifiers.end()) 
