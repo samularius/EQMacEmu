@@ -109,7 +109,7 @@ ZoneEventScheduler    event_scheduler;
 WorldContentService   content_service;
 PathManager           path;
 const SPDat_Spell_Struct* spells;
-std::map<int, SpellModifier_Struct> spellModifiers;
+std::map<std::tuple<int,int,int>, SpellModifier_Struct> spellModifiers;
 int32 SPDAT_RECORDS = -1;
 const ZoneConfig *Config;
 double frame_time = 0.0;
