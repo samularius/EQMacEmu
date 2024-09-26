@@ -1499,7 +1499,7 @@ bool ZoneDatabase::LoadSpellModifiers(std::map<std::tuple<int,int,int>, SpellMod
 		"client_cast, "
 		"spell_match_id, "
 		"zone_id, "
-		"duration, "
+		"tic_duration, "
 		"tic_multiplier, "
 		"tic_add "
 		"FROM `spell_modifiers`");
