@@ -2089,9 +2089,15 @@ bool Client::CheckIncreaseSkill(EQ::skills::SkillType skillid, Mob *against_who,
 		float stat = GetSkillStat(skillid);
 		float skillup_modifier = RuleR(Skills, SkillUpModifier);
 
-		if(difficulty < 1)
+		if (RuleB(Quarm, EnableGlobalSkillupDifficultyAdjustments))
+		{
+			float global_skillup_mod = RuleR(Quarm, GlobalSkillupDifficultyAdjustment);
+			difficulty *= global_skillup_mod;
+		}
+
+		if(difficulty < 1.0f)
 			difficulty = 1.0f;
-		if(difficulty > 28)
+		if(difficulty > 28.0f)
 			difficulty = 28.0f;
 
 		float chance1 = (stat / (difficulty * success)) * skillup_modifier;
