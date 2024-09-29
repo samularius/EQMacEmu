@@ -110,13 +110,13 @@ void ClientListEntry::SetOnline(int8 iOnline) {
 
 	// this counting method, counts players connected to world.
 	if (iOnline >= CLE_Status_Online && pOnline < CLE_Status_Online) {
-		if (!mule() && !incremented_player_count || RuleB(Quarm, IncludeMulesInServerCount)) {
+		if (!incremented_player_count) {
 			incremented_player_count = true;
 			numplayers++;
 		}
 	}
 	else if (iOnline < CLE_Status_Online && pOnline >= CLE_Status_Online) {
-		if (incremented_player_count || RuleB(Quarm, IncludeMulesInServerCount)) {
+		if (incremented_player_count) {
 			incremented_player_count = false;
 			numplayers--;
 		}
@@ -203,6 +203,13 @@ void ClientListEntry::Update(ZoneServer* iZS, ServerClientList_Struct* scl, int8
 	pClientVersion = scl->ClientVersion;
 	pLD = scl->LD;
 	pbaserace = scl->baserace;
+
+	if (pmule && incremented_player_count && !RuleB(Quarm, IncludeMulesInServerCount))
+	{
+		incremented_player_count = false;
+		numplayers--;
+	}
+
 	pmule = scl->mule;
 	pAFK = scl->AFK;
 	pTrader = scl->Trader;
