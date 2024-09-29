@@ -122,6 +122,12 @@ void ClientListEntry::SetOnline(int8 iOnline) {
 		}
 	}
 
+	if (pmule && incremented_player_count && !RuleB(Quarm, IncludeMulesInServerCount))
+	{
+		incremented_player_count = false;
+		numplayers--;
+	}
+
 	// this counting method, counts players in zones.
 	//if (iOnline >= CLE_Status_Zoning && pOnline < CLE_Status_Zoning)
 	//	numplayers++;
@@ -203,12 +209,6 @@ void ClientListEntry::Update(ZoneServer* iZS, ServerClientList_Struct* scl, int8
 	pClientVersion = scl->ClientVersion;
 	pLD = scl->LD;
 	pbaserace = scl->baserace;
-
-	if (pmule && incremented_player_count && !RuleB(Quarm, IncludeMulesInServerCount))
-	{
-		incremented_player_count = false;
-		numplayers--;
-	}
 
 	pmule = scl->mule;
 	pAFK = scl->AFK;
