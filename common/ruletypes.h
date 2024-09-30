@@ -297,6 +297,8 @@ RULE_BOOL(Quarm, NPCBeneficialSpellDurationModifier, false, "Enables or disables
 RULE_BOOL(Quarm, NPCDetrimentalSpellDurationModifier, false, "Enables or disables duration modification for NPC detrimental spells")
 RULE_BOOL(Quarm, EnableGlobalSkillupDifficultyAdjustments, false, "Enables or disables skillup modifiers globally for players. Lower = Faster.")
 RULE_REAL(Quarm, GlobalSkillupDifficultyAdjustment, 1.0f, "Multiplier forEnableGlobalSkillupDifficultyAdjustments - default is 1.0f. 0.5 would be double (Lower = Faster)")
+RULE_BOOL(Quarm, EnableQuestExpMultiplier, false, "")
+RULE_REAL(Quarm, QuestExpMultiplier, 1.0, "")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
