@@ -2071,7 +2071,7 @@ bool Mob::CheckBardHateSummon(Mob* summoned) {
 	}
 
 	if (zone->GetGuildID() != GUILD_NONE)
-		return;
+		return false;
 
 	if (summoned->GetClass() != BARD || IsCharmedPet() || !summoned->IsClient() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
 		return false;
@@ -2158,7 +2158,7 @@ bool Mob::BardHateSummon(Mob* summoned) {
 		return false;
 
 	if (zone->GetGuildID() != GUILD_NONE)
-		return;
+		return false;
 
 	// now validate the timer
 	int summon_timer_duration = RuleI(Quarm, BardInstagibResummonTimerMS);
