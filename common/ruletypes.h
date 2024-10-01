@@ -299,6 +299,10 @@ RULE_BOOL(Quarm, EnableGlobalSkillupDifficultyAdjustments, false, "Enables or di
 RULE_REAL(Quarm, GlobalSkillupDifficultyAdjustment, 1.0f, "Multiplier forEnableGlobalSkillupDifficultyAdjustments - default is 1.0f. 0.5 would be double (Lower = Faster)")
 RULE_BOOL(Quarm, EnableQuestExpMultiplier, false, "")
 RULE_REAL(Quarm, QuestExpMultiplier, 1.0, "")
+RULE_BOOL(Quarm, EnableBardInstagibLimit, false)
+RULE_INT(Quarm, BardInstagibPullLimit, 16, "")
+RULE_REAL(Quarm, BardInstagibHPRatio, 95.0, "")
+RULE_INT(Quarm, BardInstagibResummonTimerMS, 6500, "")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
