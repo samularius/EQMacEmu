@@ -6,7 +6,7 @@ void command_zonebootup(Client *c, const Seperator *sep)
 {
 	if (!worldserver.Connected())
 	{
-		c->Message(Chat::White, "Error: World server disconnected");
+		c->Message(Chat::Default, "Error: World server disconnected");
 	}
 	else if (sep->arg[1][0] == 0)
 	{
@@ -15,7 +15,7 @@ void command_zonebootup(Client *c, const Seperator *sep)
 		strcpy(s->adminname, c->GetName());
 		worldserver.SendPacket(pack);
 		safe_delete(pack);
-		c->Message(Chat::White, "Zonebootup completed.");
+		c->Message(Chat::Default, "Zonebootup completed.");
 	}
 	else 
 	{
@@ -23,11 +23,11 @@ void command_zonebootup(Client *c, const Seperator *sep)
 		ServerZoneStateChange_struct* s = (ServerZoneStateChange_struct *)pack->pBuffer;
 		s->ZoneServerID = atoi(sep->arg[2]);
 		strcpy(s->adminname, c->GetName());
-		s->zoneid = ZoneID(sep->arg[1]);
+		s->zoneid = database.GetZoneID(sep->arg[1]);
 		s->makestatic = true;
 		worldserver.SendPacket(pack);
 		safe_delete(pack);
-		c->Message(Chat::White, "Zonebootup completed.");
+		c->Message(Chat::Default, "Zonebootup completed.");
 	}
 }
 

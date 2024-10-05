@@ -18,7 +18,7 @@ void command_petition(Client *c, const Seperator *sep)
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "list") == 0)
@@ -48,7 +48,7 @@ void command_petition(Client *c, const Seperator *sep)
 	{
 		if (sep->arg[2][0] == 0)
 		{
-			c->Message(Chat::White, "Usage: #petition view (petition number) Type #petition list for a list");
+			c->Message(Chat::Default, "Usage: #petition view (petition number) Type #petition list for a list");
 			return;
 		}
 		Log(Logs::Detail, Logs::Normal, "Petition viewed by %s, petition number:", c->GetName(), atoi(sep->arg[2]));
@@ -69,7 +69,7 @@ void command_petition(Client *c, const Seperator *sep)
 	{
 		if (sep->arg[2][0] == 0)
 		{
-			c->Message(Chat::White, "Usage: #petition info (petition number) Type #petition list for a list");
+			c->Message(Chat::Default, "Usage: #petition info (petition number) Type #petition list for a list");
 			return;
 		}
 
@@ -93,7 +93,7 @@ void command_petition(Client *c, const Seperator *sep)
 		{
 			if (sep->arg[2][0] == 0 || sep->arg[3][0] == 0)
 			{
-				c->Message(Chat::White, "Usage: #petition update (petition number) (Text) Make sure you contain the comments in quotes. Type #petition list for a list");
+				c->Message(Chat::Default, "Usage: #petition update (petition number) (Text) Make sure you contain the comments in quotes. Type #petition list for a list");
 				return;
 			}
 
@@ -110,7 +110,7 @@ void command_petition(Client *c, const Seperator *sep)
 			c->Message(Chat::Yellow, "%s, Updated petition comment to ( %s ) for petition: %i", c->GetName(), sep->arg[3], atoi(sep->arg[2]));
 		}
 		else
-			c->Message(Chat::White, "Your access level is not high enough to use this command.");
+			c->Message(Chat::Default, "Your access level is not high enough to use this command.");
 	}
 	else if (strcasecmp(sep->arg[1], "delete") == 0)
 	{
@@ -118,7 +118,7 @@ void command_petition(Client *c, const Seperator *sep)
 		{
 			if (sep->arg[1][0] == 0 || sep->arg[2][0] == 0 || strcasecmp(sep->arg[2], "*") == 0)
 			{
-				c->Message(Chat::White, "Usage: #petition delete (petition number) Type #petition list for a list");
+				c->Message(Chat::Default, "Usage: #petition delete (petition number) Type #petition list for a list");
 				return;
 			}
 
@@ -132,14 +132,14 @@ void command_petition(Client *c, const Seperator *sep)
 			Log(Logs::Detail, Logs::Normal, "Delete petition request from %s, petition number:", c->GetName(), atoi(sep->arg[2]));
 		}
 		else
-			c->Message(Chat::White, "Your access level is not high enough to use this command.");
+			c->Message(Chat::Default, "Your access level is not high enough to use this command.");
 	}
 	else
 	{
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 }

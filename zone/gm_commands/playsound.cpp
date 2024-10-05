@@ -8,7 +8,7 @@ void command_playsound(Client* c, const Seperator* sep)
 		soundnum = atoi(sep->arg[1]);
 		if (soundnum > 3999)
 		{
-			c->Message(Chat::White, "Sound number out of range.");
+			c->Message(Chat::Default, "Sound number out of range.");
 			return;
 		}
 	}

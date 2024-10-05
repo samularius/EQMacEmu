@@ -1379,6 +1379,7 @@ void SpawnConditionManager::SetCondition(const char *zone_short, uint32 instance
 		ServerSpawnCondition_Struct* ssc = (ServerSpawnCondition_Struct*)pack->pBuffer;
 
 		ssc->zoneID = ZoneID(zone_short);
+		ssc->zoneGuildID = zone->GetGuildID();
 		ssc->condition_id = condition_id;
 		ssc->value = new_value;
 

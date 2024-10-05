@@ -4,14 +4,14 @@ void command_spawnfix(Client *c, const Seperator *sep)
 {
 	Mob *targetMob = c->GetTarget();
 	if (!targetMob || !targetMob->IsNPC()) {
-		c->Message(Chat::White, "Error: #spawnfix: Need an NPC target.");
+		c->Message(Chat::Default, "Error: #spawnfix: Need an NPC target.");
 		return;
 	}
 
 	Spawn2* s2 = targetMob->CastToNPC()->respawn2;
 
 	if (!s2) {
-		c->Message(Chat::White, "#spawnfix FAILED -- cannot determine which spawn entry in the database this mob came from.");
+		c->Message(Chat::Default, "#spawnfix FAILED -- cannot determine which spawn entry in the database this mob came from.");
 		return;
 	}
 
@@ -24,7 +24,7 @@ void command_spawnfix(Client *c, const Seperator *sep)
 		return;
 	}
 
-    c->Message(Chat::White, "Updating coordinates successful.");
+    c->Message(Chat::Default, "Updating coordinates successful.");
     targetMob->Depop(false);
 }
 

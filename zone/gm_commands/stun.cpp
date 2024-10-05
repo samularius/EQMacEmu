@@ -4,7 +4,7 @@ void command_stun(Client *c, const Seperator *sep)
 {
 	int arguments = sep->argnum;
 	if (!arguments || !sep->IsNumber(1)) {
-		c->Message(Chat::White, "Usage: #stun [Duration]");
+		c->Message(Chat::Default, "Usage: #stun [Duration]");
 		return;
 	}
 
@@ -57,7 +57,7 @@ void command_stun(Client *c, const Seperator *sep)
 		)
 		);
 	c->Message(
-		Chat::White,
+		Chat::Default,
 		stun_message.c_str()
 	);
 }

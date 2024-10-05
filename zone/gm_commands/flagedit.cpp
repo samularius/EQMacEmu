@@ -4,13 +4,13 @@ void command_flagedit(Client *c, const Seperator *sep)
 {
 	//super-command for editing zone flags
 	if (sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help")) {
-		c->Message(Chat::White, "Syntax: #flagedit [lockzone|unlockzone|listzones|give|take].");
-		c->Message(Chat::White, "...lockzone [zone id/short] [flag name] - Set the specified flag name on the zone, locking the zone");
-		c->Message(Chat::White, "...unlockzone [zone id/short] - Removes the flag requirement from the specified zone");
-		c->Message(Chat::White, "...listzones - List all zones which require a flag, and their flag's name");
-		c->Message(Chat::White, "...give [zone id/short] - Give your target the zone flag for the specified zone.");
-		c->Message(Chat::White, "...take [zone id/short] - Take the zone flag for the specified zone away from your target");
-		c->Message(Chat::White, "...Note: use #flags to view flags on a person");
+		c->Message(Chat::Default, "Syntax: #flagedit [lockzone|unlockzone|listzones|give|take].");
+		c->Message(Chat::Default, "...lockzone [zone id/short] [flag name] - Set the specified flag name on the zone, locking the zone");
+		c->Message(Chat::Default, "...unlockzone [zone id/short] - Removes the flag requirement from the specified zone");
+		c->Message(Chat::Default, "...listzones - List all zones which require a flag, and their flag's name");
+		c->Message(Chat::Default, "...give [zone id/short] - Give your target the zone flag for the specified zone.");
+		c->Message(Chat::Default, "...take [zone id/short] - Take the zone flag for the specified zone away from your target");
+		c->Message(Chat::Default, "...Note: use #flags to view flags on a person");
 		return;
 	}
 
@@ -19,7 +19,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 		if (sep->arg[2][0] != '\0') {
 			zoneid = atoi(sep->arg[2]);
 			if (zoneid < 1) {
-				zoneid = ZoneID(sep->arg[2]);
+				zoneid = database.GetZoneID(sep->arg[2]);
 			}
 		}
 		if (zoneid < 1) {
@@ -44,7 +44,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 			return;
 		}
 
-        c->Message(Chat::Yellow, "Success! Zone %s now requires a flag, named %s", ZoneName(zoneid), flag_name);
+        c->Message(Chat::Yellow, "Success! Zone %s now requires a flag, named %s", database.GetZoneName(zoneid), flag_name);
         return;
 	}
 
@@ -53,7 +53,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 		if (sep->arg[2][0] != '\0') {
 			zoneid = atoi(sep->arg[2]);
 			if (zoneid < 1) {
-				zoneid = ZoneID(sep->arg[2]);
+				zoneid = database.GetZoneID(sep->arg[2]);
 			}
 		}
 
@@ -71,7 +71,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 			return;
 		}
 
-		c->Message(Chat::Yellow, "Success! Zone %s no longer requires a flag.", ZoneName(zoneid));
+		c->Message(Chat::Yellow, "Success! Zone %s no longer requires a flag.", database.GetZoneName(zoneid));
 		return;
 	}
 
@@ -82,9 +82,9 @@ void command_flagedit(Client *c, const Seperator *sep)
             return;
         }
 
-		c->Message(Chat::White, "Zones which require flags:");
+		c->Message(Chat::Default, "Zones which require flags:");
 		for (auto row = results.begin(); row != results.end(); ++row)
-			c->Message(Chat::White, "Zone %s (%s,%s) requires key %s", row[1], row[0], row[2], row[3]);
+			c->Message(Chat::Default, "Zone %s (%s,%s) requires key %s", row[1], row[0], row[2], row[3]);
 
 		return;
 	}
@@ -94,7 +94,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 		if (sep->arg[2][0] != '\0') {
 			zoneid = atoi(sep->arg[2]);
 			if (zoneid < 1) {
-				zoneid = ZoneID(sep->arg[2]);
+				zoneid = database.GetZoneID(sep->arg[2]);
 			}
 		}
 		if (zoneid < 1) {
@@ -117,7 +117,7 @@ void command_flagedit(Client *c, const Seperator *sep)
 		if (sep->arg[2][0] != '\0') {
 			zoneid = atoi(sep->arg[2]);
 			if (zoneid < 1) {
-				zoneid = ZoneID(sep->arg[2]);
+				zoneid = database.GetZoneID(sep->arg[2]);
 			}
 		}
 		if (zoneid < 1) {

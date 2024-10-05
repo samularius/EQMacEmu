@@ -19,10 +19,10 @@ void command_expansion(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		c->Message(Chat::White, "Usage: expansion [accountname] [expansion]");
-		c->Message(Chat::White, "Expansions: 0 - Classic 1 - Kunark 2 - Velious 4 - Luclin 8 - PoP");
-		c->Message(Chat::White, "Added them together to set which expansions the account will have.");
-		c->Message(Chat::White, "Classic cannot be disabled.");
+		c->Message(Chat::Default, "Usage: expansion [accountname] [expansion]");
+		c->Message(Chat::Default, "Expansions: 0 - Classic 1 - Kunark 2 - Velious 4 - Luclin 8 - PoP");
+		c->Message(Chat::Default, "Added them together to set which expansions the account will have.");
+		c->Message(Chat::Default, "Classic cannot be disabled.");
 	}
 }
 

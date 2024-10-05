@@ -5,7 +5,7 @@ extern WorldServer worldserver;
 void command_suspend(Client *c, const Seperator *sep)
 {
 	if ((sep->arg[1][0] == 0) || (sep->arg[2][0] == 0)) {
-		c->Message(Chat::White, "Usage: #suspend <charname> <days> (Specify 0 days to lift the suspension immediately) <message>");
+		c->Message(Chat::Default, "Usage: #suspend <charname> <days> (Specify 0 days to lift the suspension immediately) <message>");
 		return;
 	}
 
@@ -32,7 +32,7 @@ void command_suspend(Client *c, const Seperator *sep)
 		}
 
 		if (message.length() == 0) {
-			c->Message(Chat::White, "Usage: #suspend <charname> <days>(Specify 0 days to lift the suspension immediately) <message>");
+			c->Message(Chat::Default, "Usage: #suspend <charname> <days>(Specify 0 days to lift the suspension immediately) <message>");
 			return;
 		}
 	}
