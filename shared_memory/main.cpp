@@ -28,14 +28,14 @@
 #include "../common/eqemu_exception.h"
 #include "../common/strings.h"
 #include "../common/path_manager.h"
+#include "../common/zone_store.h"
 #include "items.h"
-#include "npc_faction.h"
-#include "skill_caps.h"
 #include "spells.h"
 #include "../common/content/world_content_service.h"
 
 EQEmuLogSys LogSys;
 WorldContentService content_service;
+ZoneStore zone_store;
 PathManager path;
 
 int main(int argc, char **argv) {
@@ -113,8 +113,6 @@ int main(int argc, char **argv) {
 	std::string hotfix_name = "";
 	bool load_all = true;
 	bool load_items = false;
-	bool load_factions = false;
-	bool load_skill_caps = false;
 	bool load_spells = false;
 	if(argc > 1) {
 		for(int i = 1; i < argc; ++i) {
@@ -126,18 +124,8 @@ int main(int argc, char **argv) {
 				}
 				break;
 	
-			case 'f':
-				if(strcasecmp("factions", argv[i]) == 0) {
-					load_factions = true;
-					load_all = false;
-				}
-				break;
-	
 			case 's':
-				if(strcasecmp("skill_caps", argv[i]) == 0) {
-					load_skill_caps = true;
-					load_all = false;
-				} else if(strcasecmp("spells", argv[i]) == 0) {
+				if(strcasecmp("spells", argv[i]) == 0) {
 					load_spells = true;
 					load_all = false;
 				}
@@ -166,26 +154,6 @@ int main(int argc, char **argv) {
 		LogInfo("Loading items...");
 		try {
 			LoadItems(&database, hotfix_name);
-		} catch(std::exception &ex) {
-			LogError("{}", ex.what());
-			return 1;
-		}
-	}
-	
-	if(load_all || load_factions) {
-		LogInfo("Loading factions...");
-		try {
-			LoadFactions(&database, hotfix_name);
-		} catch(std::exception &ex) {
-			LogError("{}", ex.what());
-			return 1;
-		}
-	}
-	
-	if(load_all || load_skill_caps) {
-		LogInfo("Loading skill caps...");
-		try {
-			LoadSkillCaps(&database, hotfix_name);
 		} catch(std::exception &ex) {
 			LogError("{}", ex.what());
 			return 1;

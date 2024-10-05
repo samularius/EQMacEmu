@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 SET(common_sources
 	base_packet.cpp
+	bodytypes.cpp
 	classes.cpp
 	cli/eqemu_command_handler.cpp
 	condition.cpp
@@ -59,6 +60,7 @@ SET(common_sources
 	path_manager.cpp
 	process/process.cpp
 	proc_launcher.cpp
+	profanity_manager.cpp
 	ptimer.cpp
 	races.cpp
 	rdtsc.cpp
@@ -68,6 +70,7 @@ SET(common_sources
 	sha1.cpp
 	shareddb.cpp
 	skills.cpp
+	skill_caps.cpp
 	spdat.cpp
 	strings.cpp
 	struct_strategy.cpp
@@ -81,6 +84,7 @@ SET(common_sources
 	worldconn.cpp
 	xml_parser.cpp
 	platform.cpp
+	zone_store.cpp
 	json/jsoncpp.cpp
 	patches/patches.cpp
 	patches/mac.cpp
@@ -356,7 +360,6 @@ SET(common_headers
 	eq_stream_proxy.h
 	eq_stream_type.h
 	eqtime.h
-	errmsg.h
 	extprofile.h
 	faction.h
 	fastmath.h
@@ -374,7 +377,6 @@ SET(common_headers
 	item_fieldlist.h
 	item_instance.h
 	json_config.h
-	languages.h
 	light_source.h
 	linked_list.h
 	loot.h
@@ -395,6 +397,7 @@ SET(common_headers
 	platform.h
 	process/process.h
 	proc_launcher.h
+	profanity_manager.h
 	profiler.h
 	ptimer.h
 	queue.h
@@ -410,6 +413,7 @@ SET(common_headers
 	sha1.h
 	shareddb.h
 	skills.h
+	skill_caps.h
 	spdat.h
     	strings.h
 	struct_strategy.h
@@ -426,6 +430,7 @@ SET(common_headers
 	worldconn.h
 	xml_parser.h
 	zone_numbers.h
+	zone_store.h
 	platform.h
 	json/json.h
 	json/json-forwards.h

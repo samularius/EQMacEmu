@@ -36,6 +36,9 @@ public:
 		float       max_expansion;
 		std::string content_flags;
 		std::string content_flags_disabled;
+		int8_t      is_virtual;
+		int32_t     height;
+		int32_t     width;
 	};
 
 	static std::string PrimaryKey()
@@ -63,6 +66,9 @@ public:
 			"max_expansion",
 			"content_flags",
 			"content_flags_disabled",
+			"is_virtual",
+			"height",
+			"width",
 		};
 	}
 
@@ -86,6 +92,9 @@ public:
 			"max_expansion",
 			"content_flags",
 			"content_flags_disabled",
+			"is_virtual",
+			"height",
+			"width",
 		};
 	}
 
@@ -143,6 +152,9 @@ public:
 		e.max_expansion          = -1;
 		e.content_flags          = "";
 		e.content_flags_disabled = "";
+		e.is_virtual             = 0;
+		e.height                 = 0;
+		e.width                  = 0;
 
 		return e;
 	}
@@ -196,6 +208,9 @@ public:
 			e.max_expansion          = row[14] ? strtof(row[14], nullptr) : -1;
 			e.content_flags          = row[15] ? row[15] : "";
 			e.content_flags_disabled = row[16] ? row[16] : "";
+			e.is_virtual             = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.height                 = row[18] ? static_cast<int32_t>(atoi(row[18])) : 0;
+			e.width                  = row[19] ? static_cast<int32_t>(atoi(row[19])) : 0;
 
 			return e;
 		}
@@ -245,6 +260,9 @@ public:
 		v.push_back(columns[14] + " = " + std::to_string(e.max_expansion));
 		v.push_back(columns[15] + " = '" + Strings::Escape(e.content_flags) + "'");
 		v.push_back(columns[16] + " = '" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(columns[17] + " = " + std::to_string(e.is_virtual));
+		v.push_back(columns[18] + " = " + std::to_string(e.height));
+		v.push_back(columns[19] + " = " + std::to_string(e.width));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -283,6 +301,9 @@ public:
 		v.push_back(std::to_string(e.max_expansion));
 		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
 		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(std::to_string(e.is_virtual));
+		v.push_back(std::to_string(e.height));
+		v.push_back(std::to_string(e.width));
 
 		auto results = db.QueryDatabase(
 			fmt::format(
@@ -329,6 +350,9 @@ public:
 			v.push_back(std::to_string(e.max_expansion));
 			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
 			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+			v.push_back(std::to_string(e.is_virtual));
+			v.push_back(std::to_string(e.height));
+			v.push_back(std::to_string(e.width));
 
 			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
 		}
@@ -379,6 +403,9 @@ public:
 			e.max_expansion          = row[14] ? strtof(row[14], nullptr) : -1;
 			e.content_flags          = row[15] ? row[15] : "";
 			e.content_flags_disabled = row[16] ? row[16] : "";
+			e.is_virtual             = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.height                 = row[18] ? static_cast<int32_t>(atoi(row[18])) : 0;
+			e.width                  = row[19] ? static_cast<int32_t>(atoi(row[19])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -420,6 +447,9 @@ public:
 			e.max_expansion          = row[14] ? strtof(row[14], nullptr) : -1;
 			e.content_flags          = row[15] ? row[15] : "";
 			e.content_flags_disabled = row[16] ? row[16] : "";
+			e.is_virtual             = row[17] ? static_cast<int8_t>(atoi(row[17])) : 0;
+			e.height                 = row[18] ? static_cast<int32_t>(atoi(row[18])) : 0;
+			e.width                  = row[19] ? static_cast<int32_t>(atoi(row[19])) : 0;
 
 			all_entries.push_back(e);
 		}
@@ -477,7 +507,101 @@ public:
 
 		return (results.Success() && results.begin()[0] ? strtoll(results.begin()[0], nullptr, 10) : 0);
 	}
+	
+	static std::string BaseReplace()
+	{
+		return fmt::format(
+			"REPLACE INTO {} ({}) ",
+			TableName(),
+			ColumnsRaw()
+		);
+	}
 
+	static int ReplaceOne(
+		Database& db,
+		const ZonePoints &e
+	)
+	{
+		std::vector<std::string> v;
+
+		v.push_back(std::to_string(e.id));
+		v.push_back("'" + Strings::Escape(e.zone) + "'");
+		v.push_back(std::to_string(e.number));
+		v.push_back(std::to_string(e.y));
+		v.push_back(std::to_string(e.x));
+		v.push_back(std::to_string(e.z));
+		v.push_back(std::to_string(e.heading));
+		v.push_back(std::to_string(e.target_y));
+		v.push_back(std::to_string(e.target_x));
+		v.push_back(std::to_string(e.target_z));
+		v.push_back(std::to_string(e.target_heading));
+		v.push_back(std::to_string(e.target_zone_id));
+		v.push_back(std::to_string(e.client_version_mask));
+		v.push_back(std::to_string(e.min_expansion));
+		v.push_back(std::to_string(e.max_expansion));
+		v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+		v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+		v.push_back(std::to_string(e.is_virtual));
+		v.push_back(std::to_string(e.height));
+		v.push_back(std::to_string(e.width));
+
+		auto results = db.QueryDatabase(
+			fmt::format(
+				"{} VALUES ({})",
+				BaseReplace(),
+				Strings::Implode(",", v)
+			)
+		);
+
+		return (results.Success() ? results.RowsAffected() : 0);
+	}
+
+	static int ReplaceMany(
+		Database& db,
+		const std::vector<ZonePoints> &entries
+	)
+	{
+		std::vector<std::string> insert_chunks;
+
+		for (auto &e: entries) {
+			std::vector<std::string> v;
+
+			v.push_back(std::to_string(e.id));
+			v.push_back("'" + Strings::Escape(e.zone) + "'");
+			v.push_back(std::to_string(e.number));
+			v.push_back(std::to_string(e.y));
+			v.push_back(std::to_string(e.x));
+			v.push_back(std::to_string(e.z));
+			v.push_back(std::to_string(e.heading));
+			v.push_back(std::to_string(e.target_y));
+			v.push_back(std::to_string(e.target_x));
+			v.push_back(std::to_string(e.target_z));
+			v.push_back(std::to_string(e.target_heading));
+			v.push_back(std::to_string(e.target_zone_id));
+			v.push_back(std::to_string(e.client_version_mask));
+			v.push_back(std::to_string(e.min_expansion));
+			v.push_back(std::to_string(e.max_expansion));
+			v.push_back("'" + Strings::Escape(e.content_flags) + "'");
+			v.push_back("'" + Strings::Escape(e.content_flags_disabled) + "'");
+			v.push_back(std::to_string(e.is_virtual));
+			v.push_back(std::to_string(e.height));
+			v.push_back(std::to_string(e.width));
+
+			insert_chunks.push_back("(" + Strings::Implode(",", v) + ")");
+		}
+
+		std::vector<std::string> v;
+
+		auto results = db.QueryDatabase(
+			fmt::format(
+				"{} VALUES {}",
+				BaseReplace(),
+				Strings::Implode(",", insert_chunks)
+			)
+		);
+
+		return (results.Success() ? results.RowsAffected() : 0);
+	}
 };
 
 #endif //EQEMU_BASE_ZONE_POINTS_REPOSITORY_H

@@ -127,6 +127,8 @@ RULE_REAL(World, CurrentExpansion, 6.0, "")
 RULE_INT(World, WorldClientLinkdeadMS, 45000, "the time before a client times out as stale from world. 45s default.")
 RULE_INT(World, ClientTimeoutStaleAmount, 3, "")
 RULE_BOOL(World, EnableDevTools, true, "Enable or Disable the Developer Tools globally (Most of the time you want this enabled)")
+RULE_BOOL(World, UseOldShadowKnightClassExport, true, "Disable to have Shadowknight show as Shadow Knight (live-like)")
+RULE_STRING(World, MOTD, "", "Server MOTD sent on login, change from empty to have this be used instead of variables table 'motd' value")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Zone )
@@ -160,6 +162,7 @@ RULE_INT ( Zone, NexusTimer, 900000, "Nexus timer in ms. Defaults to 15 minutes.
 RULE_INT ( Zone, NexusScionTimer, 900000, "Nexus timer in ms. Defaults to 15 minutes.")
 RULE_BOOL ( Zone, EnableNexusPortalsOnExpansion, true, "Nexus enables When Luclin is the current expansion")
 RULE_INT(Zone, GlobalLootMultiplier, 1, "Sets Global Loot drop multiplier for database based drops, useful for double, triple loot etc")
+RULE_REAL(Zone, HotZoneBonus, 0.75, "Value which is added to the experience multiplier. This also applies to AA experience.")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( AlKabor )
@@ -388,7 +391,6 @@ RULE_INT ( Combat, ClientBaseCritChance, 0, "The base crit chance for all client
 RULE_BOOL ( Combat, EnableFearPathing, true, "")
 RULE_INT ( Combat, FleeHPRatio, 20, "HP % under which an NPC starts to flee.")
 RULE_BOOL ( Combat, FleeIfNotAlone, false, "If false, mobs won't flee if other mobs are in combat with it.")
-RULE_REAL ( Combat, ArcheryHitPenalty, 0.25, "Archery has a hit penalty to try to help balance it with the plethora of long term +hit modifiers for it")
 RULE_INT ( Combat, MinRangedAttackDist, 25, "Minimum Distance to use Ranged Attacks")
 RULE_BOOL ( Combat, ArcheryBonusRequiresStationary, true, "does the 2x archery bonus chance require a stationary npc")
 RULE_REAL ( Combat, ArcheryBaseDamageBonus, 1, "% Modifier to Base Archery Damage (.5 = 50% base damage, 1 = 100%, 2 = 200%)")
@@ -548,6 +550,12 @@ RULE_CATEGORY_END()
 
 RULE_CATEGORY(Logging)
 RULE_BOOL(Logging, PrintFileFunctionAndLine, true, "Ex: [World Server] [net.cpp::main:309] Loading variables...")
+RULE_CATEGORY_END()
+
+RULE_CATEGORY(HotReload)
+RULE_BOOL(HotReload, QuestsRepopWithReload, true, "When a hot reload is triggered, the zone will repop")
+RULE_BOOL(HotReload, QuestsRepopWhenPlayersNotInCombat, true, "When a hot reload is triggered, the zone will repop when no clients are in combat")
+RULE_BOOL(HotReload, QuestsResetTimersWithReload, true, "When a hot reload is triggered, quest timers will be reset")
 RULE_CATEGORY_END()
 
 #undef RULE_CATEGORY

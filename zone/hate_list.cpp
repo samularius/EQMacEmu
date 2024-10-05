@@ -656,7 +656,7 @@ Mob* HateList::GetClosest(Mob *hater)
 			this_distance = DistanceSquaredNoZ((*iterator)->ent->GetPosition(), hater->GetPosition());
 
 			if(this_distance <= close_distance && !(*iterator)->ent->DivineAura()
-				&& (!(*iterator)->ent->IsClient() || !(*iterator)->ent->CastToClient()->IsFeigned() || owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+				&& (!(*iterator)->ent->IsClient() || !(*iterator)->ent->CastToClient()->IsFeigned() || owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 			)
 			{
 				close_distance = this_distance;
@@ -697,7 +697,7 @@ Mob* HateList::GetClosestClient(Mob *hater)
 			if (owner->GetOwner() && owner->GetOwner()->IsClient() && owner->GetPetType() != petHatelist)
 				ignoreDistance = RuleR(Pets, AttackCommandRange);
 
-			if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+			if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 			{
 				++iterator;
 				continue;
@@ -706,7 +706,7 @@ Mob* HateList::GetClosestClient(Mob *hater)
 			// ignore players farther away than distance specified in the database.
 			if (!rememberDistantMobs && ignoreDistance > 0.0f && this_distance > (ignoreDistance*ignoreDistance)
 				// exception for damaged summoning NPCs
-				&& (!owner->GetSpecialAbility(SPECATK_SUMMON) || owner->GetHPRatio() > 90.0f))
+				&& (!owner->GetSpecialAbility(SpecialAbility::Summon) || owner->GetHPRatio() > 90.0f))
 			{
 				++iterator;
 				continue;
@@ -752,7 +752,7 @@ Mob* HateList::GetClosestNPC(Mob *hater)
 			// ignore players farther away than distance specified in the database.
 			if (!rememberDistantMobs && ignoreDistance > 0.0f && this_distance > (ignoreDistance*ignoreDistance)
 				// exception for damaged summoning NPCs
-				&& (!owner->GetSpecialAbility(SPECATK_SUMMON) || owner->GetHPRatio() > 90.0f))
+				&& (!owner->GetSpecialAbility(SpecialAbility::Summon) || owner->GetHPRatio() > 90.0f))
 			{
 				++iterator;
 				continue;
@@ -1333,8 +1333,8 @@ Mob *HateList::GetTop()
 	int32 topMeleeClientHate = -1;
 	bool firstInRangeBonusApplied = false;
 	uint32 current_time = Timer::GetCurrentTime();
-	bool ownerHasProxAggro = static_cast<bool>(owner->GetSpecialAbility(PROX_AGGRO));
-	bool ownerHasProxAggro2 = static_cast<bool>(owner->GetSpecialAbility(PROX_AGGRO2));
+	bool ownerHasProxAggro = static_cast<bool>(owner->GetSpecialAbility(SpecialAbility::ProximityAggro));
+	bool ownerHasProxAggro2 = static_cast<bool>(owner->GetSpecialAbility(SpecialAbility::ProximityAggro2));
 	float ignoreDistance = 200.0f;
 	if (owner->IsNPC())
 		ignoreDistance = owner->CastToNPC()->GetIgnoreDistance();
@@ -1398,7 +1398,7 @@ Mob *HateList::GetTop()
 			++iterator;
 			continue;
 		}
-		if (cur->ent->IsClient() && cur->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+		if (cur->ent->IsClient() && cur->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 		{
 			hasFeignedHaters = true;
 			++iterator;
@@ -1509,7 +1509,7 @@ Mob *HateList::GetTop()
 	{
 		if (topMob == topClient)
 			return topClient;
-		else if (topMob && topMob->GetSpecialAbility(ALLOW_TO_TANK))
+		else if (topMob && topMob->GetSpecialAbility(SpecialAbility::AllowedToTank))
 			return topMob;
 		else
 			return topMeleeClient;
@@ -1528,7 +1528,7 @@ Mob *HateList::GetMostHate(bool includeBonus)
 		cur = (*iterator);
 		int32 bonus = 0;
 
-		if (cur->ent->IsClient() && cur->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+		if (cur->ent->IsClient() && cur->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 		{
 			++iterator;
 			continue;
@@ -1570,7 +1570,7 @@ Mob *HateList::GetRandom()
 	{
 		if (i < random)
 			++iterator;
-		else if ((*iterator)->ent->IsClient() && (*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+		else if ((*iterator)->ent->IsClient() && (*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 			++iterator;
 		else
 			return (*iterator)->ent;
@@ -1581,7 +1581,7 @@ Mob *HateList::GetRandom()
 		iterator = list.begin();
 		for (int i = 0; i < random; i++)
 		{
-			if ((*iterator)->ent->IsClient() && (*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+			if ((*iterator)->ent->IsClient() && (*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 				++iterator;
 			else
 				return (*iterator)->ent;
@@ -1604,7 +1604,7 @@ Client *HateList::GetRandomClient(int32 max_dist)
 	{
 		if (i < random || !(*iterator)->ent->IsClient())
 			++iterator;
-		else if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+		else if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 			++iterator;
 		else if (max_dist == 0 || (*iterator)->dist_squared < max_dist)
 			return (*iterator)->ent->CastToClient();
@@ -1619,7 +1619,7 @@ Client *HateList::GetRandomClient(int32 max_dist)
 		{
 			if (!(*iterator)->ent->IsClient())
 				++iterator;
-			if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+			if ((*iterator)->ent->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 				++iterator;
 			else if (max_dist == 0 || (*iterator)->dist_squared < max_dist)
 				return (*iterator)->ent->CastToClient();
@@ -1776,7 +1776,7 @@ void HateList::PrintToClient(Client *c)
 		++iterator;
 	}
 
-	if (owner->GetSpecialAbility(SPECATK_RAMPAGE))
+	if (owner->GetSpecialAbility(SpecialAbility::Rampage))
 	{
 		int entityID;
 		Mob *mob;
@@ -1804,7 +1804,7 @@ void HateList::PrintToClient(Client *c)
 			mob = entity_list.GetMob(entityID);
 			if (mob)
 			{
-				if (mob->IsClient() && mob->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+				if (mob->IsClient() && mob->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 					strcpy(buffer2, " (feigned)");
 				else if (mob == owner->GetTarget())
 					strcpy(buffer2, " (tank)");
@@ -1845,7 +1845,7 @@ int HateList::AreaRampage(Mob *caster, Mob *target, int count, int damagePct)
 	for(auto it = hated_mobs.begin(); it != hated_mobs.end() && !caster->HasDied() && targetsHit < count; ++it)
 	{
 		Mob *mob = *it;
-		if (mob == caster || mob->HasDied() || (mob->IsClient() && mob->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH)))
+		if (mob == caster || mob->HasDied() || (mob->IsClient() && mob->CastToClient()->IsFeigned() && !owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity)))
 		{
 			continue;
 		}
@@ -1982,8 +1982,8 @@ Mob* HateList::GetFirstMobInRange()
 
 	if (!closestMob || !closestMob->CombatRange(owner))
 		return nullptr;
-	bool proxAggro = owner->GetSpecialAbility(PROX_AGGRO);
-	bool proxAggro2 = owner->GetSpecialAbility(PROX_AGGRO2);
+	bool proxAggro = owner->GetSpecialAbility(SpecialAbility::ProximityAggro);
+	bool proxAggro2 = owner->GetSpecialAbility(SpecialAbility::ProximityAggro2);
 	if (!RuleB(Quarm, EnableNPCProximityAggroSystem) && owner->IsNPC() && !owner->CastToNPC()->HasEngageNotice() && proxAggro)
 			proxAggro = false;
 	if (proxAggro2)
@@ -1995,7 +1995,7 @@ Mob* HateList::GetFirstMobInRange()
 	while (iterator != list.end())
 	{
 		e = (*iterator);
-		if (owner->CombatRange(e->ent) && (!e->ent->IsClient() || !e->ent->CastToClient()->IsFeigned() || owner->GetSpecialAbility(IMMUNE_FEIGN_DEATH)))
+		if (owner->CombatRange(e->ent) && (!e->ent->IsClient() || !e->ent->CastToClient()->IsFeigned() || owner->GetSpecialAbility(SpecialAbility::FeignDeathImmunity)))
 			return e->ent;
 
 		++iterator;

@@ -97,7 +97,11 @@
 #include "../common/content/world_content_service.h"
 #include "world_event_scheduler.h"
 #include "../zone/data_bucket.h"
+#include "../common/zone_store.h"
+#include "../common/skill_caps.h"
 
+SkillCaps skill_caps;
+ZoneStore zone_store;
 TimeoutManager timeout_manager;
 EQStreamFactory eqsf(WorldStream,9000);
 EmuTCPServer tcps;
@@ -348,20 +352,17 @@ int main(int argc, char** argv) {
 	LogInfo("Purging expiring data buckets...");
 	database.PurgeAllDeletedDataBuckets();
 	LogInfo("Loading zones..");
-	database.LoadZoneNames();
-	database.LoadZoneFileNames();
+	zone_store.LoadZones(database);
 	LogInfo("Clearing groups..");
 	database.ClearGroup();
 	LogInfo("Clearing raids..");
 	database.ClearRaid();
 	database.ClearRaidDetails();
 	LogInfo("Loading items..");
-	if (!database.LoadItems(hotfix_name))
+	
+	if (!database.LoadItems(hotfix_name)) {
 		LogError("Error: Could not load item data. But ignoring");
-
-	LogInfo("Loading skill caps..");
-	if (!database.LoadSkillCaps(std::string(hotfix_name)))
-		LogError("Error: Could not load skill cap data. But ignoring");
+	}
 
 	LogInfo("Loading guilds..");
 	guild_mgr.LoadGuilds();
@@ -468,6 +469,8 @@ int main(int argc, char** argv) {
 	content_service.SetDatabase(&database)
 		->SetExpansionContext()
 		->ReloadContentFlags();
+
+	skill_caps.SetContentDatabase(&database)->LoadSkillCaps();
 
 	char errbuf[TCPConnection_ErrorBufferSize];
 	if (tcps.Open(Config->WorldTCPPort, errbuf)) {

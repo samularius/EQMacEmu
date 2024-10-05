@@ -34,6 +34,7 @@
 #include "../common/eq_stream_ident.h"
 #include "../common/patches/patches.h"
 #include "../common/rulesys.h"
+#include "../common/profanity_manager.h"
 #include "../common/misc_functions.h"
 #include "../common/strings.h"
 #include "../common/platform.h"
@@ -44,8 +45,10 @@
 #include "../common/spdat.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/event/timer.h"
+#include "../common/zone_store.h"
 #include "../common/content/world_content_service.h"
 #include "../common/repositories/content_flags_repository.h"
+#include "../common/skill_caps.h"
 
 #include "zonedb.h"
 #include "zone_config.h"
@@ -95,6 +98,7 @@ extern volatile bool is_zone_loaded;
 
 EntityList  entity_list;
 WorldServer worldserver;
+ZoneStore zone_store;
 uint32      numclients = 0;
 char        errorname[32];
 extern Zone *zone;
@@ -108,6 +112,7 @@ EQEmuLogSys           LogSys;
 ZoneEventScheduler    event_scheduler;
 WorldContentService   content_service;
 PathManager           path;
+SkillCaps             skill_caps;
 const SPDat_Spell_Struct* spells;
 std::map<std::tuple<int,int,int>, SpellModifier_Struct> spellModifiers;
 int32 SPDAT_RECORDS = -1;
@@ -266,25 +271,12 @@ int main(int argc, char** argv) {
 	}
 
 	LogInfo("Loading zone names");
-	database.LoadZoneNames();
-	database.LoadZoneFileNames();
+	zone_store.LoadZones(database);
 
 	LogInfo("Loading items");
 	if(!database.LoadItems(hotfix_name)) {
 		LogError("Loading items FAILED!");
 		LogError("Failed. But ignoring error and going on...");
-	}
-
-	LogInfo("Loading npc faction lists");
-	if(!database.LoadNPCFactionLists(hotfix_name)) {
-		LogError("Loading npcs faction lists FAILED!");
-		return 1;
-	}
-
-	LogInfo("Loading skill caps");
-	if(!database.LoadSkillCaps(std::string(hotfix_name))) {
-		LogError("Loading skill caps FAILED!");
-		return 1;
 	}
 
 	LogInfo("Loading spells");
@@ -314,6 +306,11 @@ int main(int argc, char** argv) {
 	LogInfo("Loading AA actions");
 	database.LoadAlternateAdvancementActions();
 	
+	LogInfo("Loading profanity list");
+	if (!EQ::ProfanityManager::LoadProfanityList(&database)) {
+		LogInfo("Loading profanity list FAILED!");
+	}
+
 	LogInfo("Loading commands");
 	int retval=command_init();
 	if (retval < 0) {
@@ -344,6 +341,8 @@ int main(int argc, char** argv) {
 		->SetExpansionContext()
 		->ReloadContentFlags();
 
+	skill_caps.SetContentDatabase(&database)->LoadSkillCaps();
+
 	event_scheduler.SetDatabase(&database)->LoadScheduledEvents();
 
 	parse = new QuestParserCollection();
@@ -372,9 +371,9 @@ int main(int argc, char** argv) {
 #endif
 	if (!strlen(zone_name) || !strcmp(zone_name,".")) {
 		LogInfo("Entering sleep mode");
-	} else if (!Zone::Bootup(database.GetZoneID(zone_name), true)) {
+	} else if (!Zone::Bootup(ZoneID(zone_name), true)) {
 		LogError("Zone Bootup failed :: Zone::Bootup");
-		zone = 0;
+		zone = nullptr;
 	}
 
 	//register all the patches we have avaliable with the stream identifier.
@@ -483,6 +482,13 @@ int main(int argc, char** argv) {
 				event_scheduler.Process(zone, &content_service);
 
 				if (zone) {
+					// this was put in to appease concerns about the RNG being affected by the time of day or day of week the server was started on, resulting in bad loot
+					// The idea is that as the zone processing runs, it takes variable amounts of time based on external factors like player behavior and causes this discard
+					// code to execute less or more often based on those factors.
+					// By discarding some numbers from the RNG sequence, we hope to add some amount of unpredictability and offset the 'bad loot seed' from startup.
+					if (Timer::GetCurrentTime() % 3 == 0) {
+						zone->random.Discard(Timer::GetCurrentTime() % 5 + 1); // arbitrary value but discarding more causes more slowdowns as it 'refills'
+					}
 					if (!zone->Process()) {
 						Zone::Shutdown();
 					}

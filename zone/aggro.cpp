@@ -273,7 +273,7 @@ void NPC::DescribeAggro(Client *to_who, Mob *mob, bool verbose) {
 		return;
 	}
 
-	if (GetLevel() < 18 && mob->GetLevelCon(GetLevel()) == CON_GREEN && GetBodyType() != BT_Undead && !IsAggroOnPC()) {
+	if (GetLevel() < 18 && mob->GetLevelCon(GetLevel()) == CON_GREEN && GetBodyType() != BodyType::Undead && !IsAggroOnPC()) {
 		to_who->Message(
 			Chat::White,
 			fmt::format(
@@ -318,24 +318,24 @@ void NPC::DescribeAggro(Client *to_who, Mob *mob, bool verbose) {
 			auto faction_name = database.GetFactionName(mob_faction_id);
 			bool has_entry = false;
 			for (auto faction : faction_list) {
-				if (static_cast<int>(faction->factionID) == mob_faction_id) {
+				if (static_cast<int>(faction.faction_id) == mob_faction_id) {
 					to_who->Message(
 						Chat::White,
 						fmt::format(
 							"{} has {} standing with Faction {} ({}) with their Faction Level of {}",
 							to_who->GetTargetDescription(mob),
 							(
-								faction->npc_value != 0 ?
+								faction.npc_value != 0 ?
 								(
-									faction->npc_value > 0 ?
+									faction.npc_value > 0 ?
 									"positive" :
 									"negative"
 									) :
 								"neutral"
 								),
 							faction_name,
-							faction->factionID,
-							faction->npc_value
+							faction.faction_id,
+							faction.npc_value
 						).c_str()
 					);
 					has_entry = true;
@@ -470,7 +470,7 @@ bool Mob::CheckWillAggro(Mob *mob, bool turn_mobs)
 	if
 	(
 		((GetLevel() >= 18)
-		|| (GetBodyType() == BT_Undead)
+		|| (GetBodyType() == BodyType::Undead)
 		|| (CastToNPC()->IsAggroOnPC())
 		|| (mob->IsClient() && mob->CastToClient()->IsSitting())
 		|| (oos->GetLevelCon(GetLevel()) != CON_GREEN))
@@ -601,8 +601,8 @@ bool EntityList::AICheckClientAggro(NPC* aggressor)
 	if (!aggressor)
 		return false;
 
-	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
-	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
+	bool proxAggro = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro);
+	bool proxAggro2 = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro2);
 	bool engaged = aggressor->IsEngaged();
 	bool found = false;
 
@@ -623,7 +623,7 @@ bool EntityList::AICheckClientAggro(NPC* aggressor)
 	{
 		Client *client = it->second;
 
-		if ((client->IsFeigned() && !aggressor->GetSpecialAbility(IMMUNE_FEIGN_DEATH)) || !client->InZone() || client->IsMule())
+		if ((client->IsFeigned() && !aggressor->GetSpecialAbility(SpecialAbility::FeignDeathImmunity)) || !client->InZone() || client->IsMule())
 			continue;
 
 		if (!aggressor->CheckAggro(client) && aggressor->CheckWillAggro(client))
@@ -645,8 +645,8 @@ bool EntityList::AICheckNPCAggro(NPC* aggressor)
 	if (!aggressor)
 		return false;
 
-	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
-	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
+	bool proxAggro = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro);
+	bool proxAggro2 = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro2);
 	if (!RuleB(Quarm, EnableNPCProximityAggroSystem) && !aggressor->HasEngageNotice() && proxAggro)
 		proxAggro = false;
 	if(proxAggro2)
@@ -690,8 +690,8 @@ bool EntityList::AICheckPetAggro(NPC* aggressor)
 	if (!zone->HasCharmedNPC || aggressor->IsPet())
 		return false;
 
-	bool proxAggro = aggressor->GetSpecialAbility(PROX_AGGRO);
-	bool proxAggro2 = aggressor->GetSpecialAbility(PROX_AGGRO2);
+	bool proxAggro = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro);
+	bool proxAggro2 = aggressor->GetSpecialAbility(SpecialAbility::ProximityAggro2);
 	if (proxAggro2)
 		proxAggro = true;
 	bool engaged = aggressor->IsEngaged();
@@ -841,7 +841,7 @@ void EntityList::AIYellForHelp(Mob* sender, Mob* attacker)
 		if (!npc)
 			continue;
 
-		if(npc->CheckAggro(attacker) || npc->GetSpecialAbility(IMMUNE_AGGRO))
+		if(npc->CheckAggro(attacker) || npc->GetSpecialAbility(SpecialAbility::AggroImmunity))
 			continue;
 
 		//// prevent assists if kiter has pull limit and this NPC had been deaggroed sometime within 30 seconds ago (so almost certainly from his train)
@@ -867,7 +867,7 @@ void EntityList::AIYellForHelp(Mob* sender, Mob* attacker)
 		if (
 			npc != sender
 			&& npc != attacker
-			&& npc->GetClass() != MERCHANT
+			&& npc->GetClass() != Class::Merchant
 			&& npc->GetPrimaryFaction() != 0
 			&& DistanceSquared(npc->GetPosition(), sender->GetPosition()) <= r
 			&& ((!npc->IsPet()) || (npc->IsPet() && npc->GetOwner() && !npc->GetOwner()->IsClient() && npc->GetOwner() == sender)) // If we're a pet we don't react to any calls for help if our owner is a client or if our owner was not the one calling for help.
@@ -887,10 +887,11 @@ void EntityList::AIYellForHelp(Mob* sender, Mob* attacker)
 				bool useprimfaction = false;
 				if(npc->GetPrimaryFaction() == sender->CastToNPC()->GetPrimaryFaction())
 				{
-					const NPCFactionList *cf = database.GetNPCFactionEntry(npc->GetNPCFactionID());
-					if(cf){
-						if(cf->assistprimaryfaction != 0)
+					const auto f = zone->GetNPCFaction(npc->GetNPCFactionID());
+					if(f){
+						if (!f->ignore_primary_assist) {
 							useprimfaction = true;
+						}
 					}
 				}
 
@@ -939,7 +940,7 @@ bool Mob::IsAttackAllowed(Mob *target, bool isSpellAttack, int16 spellid)
 	if(target->IsZomm())
 		return true;
 
-	if (target->GetSpecialAbility(NO_HARM_FROM_CLIENT) && (IsClient() || (IsPet() && GetOwner()->IsClient())))
+	if (target->GetSpecialAbility(SpecialAbility::HarmFromClientImmunity) && (IsClient() || (IsPet() && GetOwner()->IsClient())))
 		return false;
 
 	// Pets cant attack mezed mobs
@@ -1484,7 +1485,7 @@ bool Mob::CheckLosFN(float posX, float posY, float posZ, float mobSize, Mob* oth
 	glm::vec3 myloc(GetX(), GetY(), GetZ());
 	glm::vec3 oloc(posX, posY, posZ);
 
-	if (IsClient() && (GetRace() == DWARF || GetRace() == GNOME || GetRace() == HALFLING))
+	if (IsClient() && (GetRace() == Race::Dwarf || GetRace() == Race::Gnome || GetRace() == Race::Halfling))
 		myloc.z += 1.0f;
 
 	if(zone->zonemap == nullptr) {
@@ -1581,7 +1582,7 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 					if (IsSlowSpell(spell_id)) {
 						break;
 					}
-					nonDamageHate += standardSpellHate;
+					setStandardHate = true;
 				}
 				break;
 			}
@@ -1707,25 +1708,15 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 	}
 
 	// bard spell hate is capped very low.  this was from Live server experiments
-	if (GetClass() == BARD)
+	if (GetClass() == Class::Bard)
 	{
-		if (damage + nonDamageHate > 40)
+		if (damage > 0)
 		{
 			nonDamageHate = 0;
 		}
-		else if (nonDamageHate > 40)
+		else if (nonDamageHate > 40 && (!target || target->GetLevel() >= 20))
 		{
-			if (target)
-			{
-				if (target->GetLevel() >= 20)
-				{
-					nonDamageHate = 40;
-				}
-			}
-			else if (slevel >= 20)
-			{
-				nonDamageHate = 40;
-			}
+			nonDamageHate = 40;
 		}
 	}
 
@@ -1750,7 +1741,7 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob* target)
 	}
 
 	// spells on 'belly caster' NPCs do no hate if outside of melee range unless spell has no resist check
-	if (spells[spell_id].resisttype != RESIST_NONE && target->GetSpecialAbility(IMMUNE_CASTING_FROM_RANGE) && !CombatRange(target))
+	if (spells[spell_id].resisttype != RESIST_NONE && target->GetSpecialAbility(SpecialAbility::CastingFromRangeImmunity) && !CombatRange(target))
 		return 0;
 
 	return combinedHate;
@@ -1798,7 +1789,7 @@ int32 Mob::CheckHealAggroAmount(uint16 spell_id, Mob* target, uint32 heal_possib
 			}
 			case SE_Rune:
 			{
-				AggroAmount += CalcSpellEffectValue_formula(spells[spell_id].formula[0], spells[spell_id].base[0], spells[spell_id].max[o], slevel, spell_id) * 2;
+				AggroAmount += CalcSpellEffectValue_formula(spells[spell_id].formula[o], spells[spell_id].base[o], spells[spell_id].max[o], slevel, spell_id) * 2;
 				break;
 			}
 			case SE_HealOverTime:

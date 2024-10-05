@@ -52,7 +52,7 @@ public:
 
 	inline uint32		GetIP()				{ return ip; }
 	inline uint16		GetPort()			{ return port; }
-	inline uint32		GetZoneID()			{ return zoneID; }
+	inline uint32		GetZoneID()			{ return zone_id; }
 	inline uint32		GetZoneGuildID() { return zoneGuildID; }
 	inline uint32		WaitingForBootup()	{ return pwaitingforbootup; }
 	inline const char *	GetAccountName()	{ if (cle) { return cle->AccountName(); } return "NOCLE"; }
@@ -61,7 +61,7 @@ public:
 	inline uint32		GetWID()			{ if (cle) { return cle->GetID(); } return 0; }
 	inline uint32		GetLSID()			{ if (cle) { return cle->LSID(); } return 0; }
 	inline const char*	GetLSKey()			{ if (cle) { return cle->GetLSKey(); } return "NOKEY"; }
-	inline uint32		GetCharID()			{ return charid; }
+	inline uint32		GetCharID()			{ return char_id; }
 	inline const char*	GetCharName()		{ return char_name; }
 	inline ClientListEntry* GetCLE()		{ return cle; }
 	inline void			SetCLE(ClientListEntry* iCLE)			{ cle = iCLE; }
@@ -74,9 +74,9 @@ private:
 
 	uint32	ip;
 	uint16	port;
-	uint32	charid;
+	uint32	char_id;
 	char	char_name[64];
-	uint32	zoneID;
+	uint32	zone_id;
 	uint32	zoneGuildID;
 	bool	is_player_zoning;
 	Timer	autobootup_timeout;
@@ -97,7 +97,7 @@ private:
 	Timer	CLE_keepalive_timer;
 	Timer	connect;
 	bool firstlogin;
-	bool seencharsel;
+	bool seen_character_select;
 	bool realfirstlogin;
 
 	bool HandlePacket(const EQApplicationPacket *app);

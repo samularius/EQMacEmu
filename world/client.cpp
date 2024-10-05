@@ -10,7 +10,6 @@
 #include "../common/inventory_profile.h"
 #include "../common/races.h"
 #include "../common/classes.h"
-#include "../common/languages.h"
 #include "../common/skills.h"
 #include "../common/extprofile.h"
 #include "../common/strings.h"
@@ -18,6 +17,9 @@
 #include "../common/random.h"
 #include "../common/data_verification.h"
 #include "../common/opcodemgr.h"
+#include "../common/zone_store.h"
+#include "../common/content/world_content_service.h"
+#include "../common/skill_caps.h"
 
 #include "client.h"
 #include "worlddb.h"
@@ -83,11 +85,11 @@ Client::Client(EQStreamInterface* ieqs)
 
 	autobootup_timeout.Disable();
 	connect.Disable();
-	seencharsel = false;
+	seen_character_select = false;
 	cle = 0;
-	zoneID = 0;
+	zone_id = 0;
 	char_name[0] = 0;
-	charid = 0;
+	char_id = 0;
 	pwaitingforbootup = 0;
 	m_ClientVersionBit = 0;
 	numclients++;
@@ -95,7 +97,7 @@ Client::Client(EQStreamInterface* ieqs)
 }
 
 Client::~Client() {
-	if (RunLoops && cle && zoneID == 0 && zoneGuildID == 0xFFFFFFFF) {
+	if (RunLoops && cle && zone_id == 0 && zoneGuildID == 0xFFFFFFFF) {
 		cle->SetOnline(CLE_Status_Offline);
 	}
 
@@ -166,12 +168,13 @@ void Client::SendCharInfo() {
 	if (cle) {
 		cle->SetOnline(CLE_Status_CharSelect);
 	}
-
-	seencharsel = true;
 	if (RuleB(Quarm, DeleteHCCharactersAfterDeath))
 	{
 		database.ClearHardcoreCharacters(GetAccountID());
 	}
+	
+	seen_character_select = true;
+	
 	// Send OP_SendCharInfo
 	auto outapp = new EQApplicationPacket(OP_SendCharInfo, sizeof(CharacterSelect_Struct));
 	CharacterSelect_Struct* cs = (CharacterSelect_Struct*)outapp->pBuffer;
@@ -276,15 +279,15 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 			uint32 tmpaccid = 0;
 			uint64 tmpdeathtime = 0;
 			database.GetLiveCharByLSID(id, char_name);
-			charid = database.GetCharacterInfo(char_name, &tmpaccid, &zoneID, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
-			if (charid == 0 || tmpdeathtime != 0 || tmpaccid != GetAccountID()) {
+
+			charid = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
+			if (charid == 0 || tmpdeathtime != 0 || tmpaccid != GetAccountID()) 
+			{
 				Log(Logs::Detail, Logs::WorldServer, "Could not get CharInfo for '%s'", char_name);
 				eqs->Close();
 				return true;
 			}
-			cle->SetChar(charid, char_name);
-			//seencharsel = true;
-			//EnterWorld(false);
+			cle->SetChar(char_id, char_name);
 			SendEnterWorld(cle->name());
 		}
 
@@ -333,7 +336,7 @@ bool Client::HandleNameApprovalPacket(const EQApplicationPacket *app)
 		return false;
 	}
 
-	if (!EQ::ValueWithin(class_id, WARRIOR, BEASTLORD)) {
+	if (!IsPlayerClass(class_id)) {
 		LogInfo("Invalid Class ID.");
 		return false;
 	}
@@ -523,7 +526,8 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	uint32 tmpaccid = 0;
 	uint64 tmpdeathtime = 0;
 	charid = database.GetCharacterInfo(char_name, &tmpaccid, &zoneID, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
-	if (charid == 0 || tmpaccid != GetAccountID()) {
+	char_id = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
+	if (char_id == 0 || tmpaccid != GetAccountID()) {
 		Log(Logs::Detail, Logs::WorldServer, "Could not get CharInfo for '%s'", char_name);
 		eqs->Close();
 		return true;
@@ -536,10 +540,10 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 		return true;
 	}
 
-	if (zoneID == 0 || !database.GetZoneName(zoneID)) {
+	if (zone_id == 0 || !ZoneName(zone_id)) {
 		// This is to save people in an invalid zone, once it's removed from the DB
-		database.MoveCharacterToZone(charid, "bazaar");
-		Log(Logs::Detail, Logs::WorldServer, "Zone not found in database zone_id=%i, moving char to bazaar character:%s", zoneID, char_name);
+		database.MoveCharacterToZone(char_id, ZoneID("bazaar"));
+		Log(Logs::Detail, Logs::WorldServer, "Zone not found in database zone_id=%i, moving char to bazaar character:%s", zone_id, char_name);
 	}
 
 	if (!is_player_zoning) {
@@ -557,7 +561,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 			strcpy(gl->member_name, char_name);
 			gl->checkleader = true;
 
-			database.SetGroupID(char_name, 0, charid, GetAccountID());
+			database.SetGroupID(char_name, 0, char_id, GetAccountID());
 			
 			zoneserver_list.SendPacket(pack);
 			safe_delete(pack);
@@ -644,13 +648,18 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	if (!is_player_zoning)
 	{
 		auto outapp = new EQApplicationPacket(OP_MOTD);
-		std::string tmp;
-		if (database.GetVariable("MOTD", tmp)) {
-			outapp->size = tmp.length() + 1;
+		std::string motd = RuleS(World, MOTD);
+		if (!motd.empty()) {
+			outapp->size = motd.length() + 1;
 			outapp->pBuffer = new uchar[outapp->size];
 			memset(outapp->pBuffer, 0, outapp->size);
-			strcpy((char*)outapp->pBuffer, tmp.c_str());
-
+			strcpy((char*)outapp->pBuffer, motd.c_str());
+		}
+		else if (database.GetVariable("MOTD", motd)) {
+			outapp->size = motd.length() + 1;
+			outapp->pBuffer = new uchar[outapp->size];
+			memset(outapp->pBuffer, 0, outapp->size);
+			strcpy((char*)outapp->pBuffer, motd.c_str());
 		}
 		else {
 			// Null Message of the Day. :)
@@ -664,7 +673,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 
 		int MailKey = emu_random.Int(1, INT_MAX);
 
-		database.SetMailKey(charid, GetIP(), MailKey);
+		database.SetMailKey(char_id, GetIP(), MailKey);
 
 		auto outapp2 = new EQApplicationPacket(OP_SetChatServer);
 		char buffer[112];
@@ -940,30 +949,29 @@ bool Client::Process() {
 }
 
 void Client::EnterWorld(bool TryBootup) {
-	if (zoneID == 0)
+	if (zone_id == 0)
 		return;
+	ZoneServer* zone_server = nullptr;
+	zone_server = zoneserver_list.FindByZoneID(zone_id, zoneGuildID);
 
-	ZoneServer* zs = nullptr;
-	zs = zoneserver_list.FindByZoneID(zoneID, zoneGuildID);
-
-	if (zs) {
+	if (zone_server) {
 		// warn the world we're comming, so it knows not to shutdown
-		zs->IncomingClient(this);
+		zone_server->IncomingClient(this);
 	}
 	else
 	{
 		if (TryBootup && !RuleB(World, DontBootDynamics) || TryBootup && zoneGuildID != 0xFFFFFFFF) {
-			Log(Logs::Detail, Logs::WorldServer, "Attempting autobootup of (%d) (%d)", zoneID, zoneGuildID);
+		LogInfo("Attempting autobootup of [{}] [{}]", zone_id, zoneGuildID);
 			autobootup_timeout.Start();
-			pwaitingforbootup = zoneserver_list.TriggerBootup(zoneID, zoneGuildID);
+			pwaitingforbootup = zoneserver_list.TriggerBootup(zone_id, zoneGuildID);
 			if (pwaitingforbootup == 0) {
-				Log(Logs::Detail, Logs::WorldServer,"No zoneserver available to boot up.");
+				LogInfo("No zoneserver available to boot up.");
 				ZoneUnavail();
 			}
 			return;
 		}
 		else {
-			Log(Logs::Detail, Logs::WorldServer, "Requested zone %d (%d) is not running.", zoneID, zoneGuildID);
+		LogInfo("Requested zone [{}][{}] is not running.", zone_id, zoneGuildID);
 			ZoneUnavail();
 			return;
 		}
@@ -974,16 +982,15 @@ void Client::EnterWorld(bool TryBootup) {
 		return;
 	}
 
-	cle->SetChar(charid, char_name);
+	cle->SetChar(char_id, char_name);
 
-	database.CharacterJoin(charid, char_name);
+	database.CharacterJoin(char_id, char_name);
 	database.UpdateLiveChar(char_name, GetAccountID());
 
-	Log(Logs::Detail, Logs::WorldServer, "%s (%d : %d)", seencharsel ? "Entering zone" : "Zoning to", zoneID, zoneGuildID);
-//	database.SetAuthentication(account_id, char_name, zone_name, ip);
+	LogInfo("{} [{}] [{}]", seen_character_select ? "Zoning from character select" : "Zoning to", zone_id, zoneGuildID);
 
-	if (seencharsel) {
-		if (GetAdmin() < 80 && zoneserver_list.IsZoneLocked(zoneID)) {
+	if (seen_character_select) {
+		if (GetAdmin() < 80 && zoneserver_list.IsZoneLocked(zone_id)) {
 			Log(Logs::Detail, Logs::WorldServer,"Enter world failed. Zone is locked.");
 			ZoneUnavail();
 			return;
@@ -997,7 +1004,7 @@ void Client::EnterWorld(bool TryBootup) {
 		WorldToZone_Struct* wtz = (WorldToZone_Struct*) pack->pBuffer;
 		wtz->account_id = GetAccountID();
 		wtz->response = 0;
-		zs->SendPacket(pack);
+		zone_server->SendPacket(pack);
 		delete pack;
 	}
 	else {	// if they havent seen character select screen, we can assume this is a zone
@@ -1009,7 +1016,8 @@ void Client::EnterWorld(bool TryBootup) {
 void Client::Clearance(int8 response)
 {
 	ZoneServer* zs = nullptr;
-	zs = zoneserver_list.FindByZoneID(zoneID, zoneGuildID);
+
+	zs = zoneserver_list.FindByZoneID(zone_id, zoneGuildID);
 
 	if(zs == 0 || response == -1 || response == 0)
 	{
@@ -1030,13 +1038,13 @@ void Client::Clearance(int8 response)
 		return;
 	}
 
-	if (zoneID == 0) {
+	if (zone_id == 0) {
 		Log(Logs::Detail, Logs::WorldServer, "zoneID is nullptr in Client::Clearance!!");
 		ZoneUnavail();
 		return;
 	}
 
-	const char* zonename = database.GetZoneName(zoneID);
+	const char* zonename = ZoneName(zone_id);
 	if (zonename == 0) {
 		Log(Logs::Detail, Logs::WorldServer, "zonename is nullptr in Client::Clearance!!");
 		ZoneUnavail();
@@ -1078,7 +1086,7 @@ void Client::Clearance(int8 response)
 
 	strcpy(zsi->ip, zs_addr);
 	zsi->port =ntohs(zs->GetCPort());
-	Log(Logs::Detail, Logs::WorldServer,"Sending client to zone %s (%d) at %s:%d",zonename,zoneID,zsi->ip,zsi->port);
+	Log(Logs::Detail, Logs::WorldServer,"Sending client to zone %s (%d) at %s:%d",zonename, zone_id,zsi->ip,zsi->port);
 	QueuePacket(outapp);
 	safe_delete(outapp);
 
@@ -1092,13 +1100,13 @@ void Client::Clearance(int8 response)
 void Client::ZoneUnavail() {
 	auto outapp = new EQApplicationPacket(OP_ZoneUnavail, sizeof(ZoneUnavail_Struct));
 	ZoneUnavail_Struct* ua = (ZoneUnavail_Struct*)outapp->pBuffer;
-	const char* zonename = database.GetZoneName(zoneID);
+	const char* zonename = ZoneName(zone_id);
 	if (zonename)
 		strcpy(ua->zonename, zonename);
 	QueuePacket(outapp);
 	delete outapp;
 
-	zoneID = 0;
+	zone_id = 0;
 	pwaitingforbootup = 0;
 	autobootup_timeout.Disable();
 }
@@ -1238,9 +1246,9 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 	if(database.GetVariable("startzone", startzone))
 	{
 		Log(Logs::Detail, Logs::WorldServer,"Found 'startzone' variable setting: %s", startzone.c_str());
-		pp.zone_id = database.GetZoneID(startzone.c_str());
+		pp.zone_id = ZoneID(startzone.c_str());
 		if(pp.zone_id)
-			database.GetSafePoints(pp.zone_id, &pp.x, &pp.y, &pp.z);
+			database.GetSafePoints(ZoneName(pp.zone_id), &pp.x, &pp.y, &pp.z);
 		else
 			Log(Logs::Detail, Logs::WorldServer,"Error getting zone id for '%s'", startzone.c_str());
 	}
@@ -1471,101 +1479,86 @@ void Client::SetRaceStartingSkills( PlayerProfile_Struct *pp )
 
 void Client::SetRacialLanguages( PlayerProfile_Struct *pp )
 {
-	switch( pp->race )
-	{
-	case BARBARIAN:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_BARBARIAN] = 100;
+	switch( pp->race ) {
+		case Race::Human: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
 			break;
 		}
-	case DARK_ELF:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DARK_ELVISH] = 100;
-			pp->languages[LANG_DARK_SPEECH] = 100;
-			pp->languages[LANG_ELDER_ELVISH] = 54;
-			pp->languages[LANG_ELVISH] = 54;
+		case Race::Barbarian: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Barbarian] = Language::MaxValue;
 			break;
 		}
-	case DWARF:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DWARVISH] = 100;
-			pp->languages[LANG_GNOMISH] = 25;
+		case Race::Erudite: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Erudian] = Language::MaxValue;
 			break;
 		}
-	case ERUDITE:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_ERUDIAN] = 100;
+		case Race::WoodElf: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Elvish] = Language::MaxValue;
 			break;
 		}
-	case GNOME:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DWARVISH] = 25;
-			pp->languages[LANG_GNOMISH] = 100;
+		case Race::HighElf : {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::DarkElvish] = 25;
+			pp->languages[Language::ElderElvish] = 25;
+			pp->languages[Language::Elvish] = Language::MaxValue;
 			break;
 		}
-	case HALF_ELF:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_ELVISH] = 100;
+		case Race::DarkElf: {
+		   pp->languages[Language::CommonTongue] = Language::MaxValue;
+		   pp->languages[Language::DarkElvish] = Language::MaxValue;
+		   pp->languages[Language::DarkSpeech] = Language::MaxValue;
+		   pp->languages[Language::ElderElvish] = Language::MaxValue;
+		   pp->languages[Language::Elvish] = 25;
 			break;
 		}
-	case HALFLING:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_HALFLING] = 100;
+		case Race::HalfElf: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Elvish] = Language::MaxValue;
 			break;
 		}
-	case HIGH_ELF:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DARK_ELVISH] = 51;
-			pp->languages[LANG_ELDER_ELVISH] = 51;
-			pp->languages[LANG_ELVISH] = 100;
+		case Race::Dwarf: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Dwarvish] = Language::MaxValue;
+			pp->languages[Language::Gnomish] = 25;
 			break;
 		}
-	case HUMAN:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
+		case Race::Troll: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::DarkSpeech] = Language::MaxValue;
+			pp->languages[Language::Troll] = Language::MaxValue;
 			break;
 		}
-	case IKSAR:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DARK_SPEECH] = 100;
-			pp->languages[LANG_LIZARDMAN] = 100;
+		case Race::Ogre: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::DarkSpeech] = Language::MaxValue;
+			pp->languages[Language::Ogre] = Language::MaxValue;
 			break;
 		}
-	case OGRE:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DARK_SPEECH] = 100;
-			pp->languages[LANG_OGRE] = 100;
+		case Race::Halfling: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Halfling] = Language::MaxValue;
 			break;
 		}
-	case TROLL:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_DARK_SPEECH] = 100;
-			pp->languages[LANG_TROLL] = 100;
+		case Race::Gnome: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::Dwarvish] = 25;
+			pp->languages[Language::Gnomish] = Language::MaxValue;
 			break;
 		}
-	case WOOD_ELF:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_ELVISH] = 100;
+		case Race::Iksar: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::DarkSpeech] = Language::MaxValue;
+			pp->languages[Language::Lizardman] = Language::MaxValue;
 			break;
 		}
-	case VAHSHIR:
-		{
-			pp->languages[LANG_COMMON_TONGUE] = 100;
-			pp->languages[LANG_COMBINE_TONGUE] = 100;
-			pp->languages[LANG_ERUDIAN] = 32;
-			pp->languages[LANG_VAH_SHIR] = 100;
+		case Race::VahShir: {
+			pp->languages[Language::CommonTongue] = Language::MaxValue;
+			pp->languages[Language::CombineTongue] = Language::MaxValue;
+			pp->languages[Language::Erudian] = 32;
+			pp->languages[Language::VahShir] = Language::MaxValue;
 			break;
 		}
 	}
@@ -1575,11 +1568,11 @@ void Client::SetClassLanguages(PlayerProfile_Struct *pp)
 {
 	// we only need to handle one class, but custom server might want to do more
 	switch(pp->class_) {
-	case ROGUE:
-		pp->languages[LANG_THIEVES_CANT] = 100;
-		break;
-	default:
-		break;
+		case Class::Rogue:
+			pp->languages[Language::ThievesCant] = Language::MaxValue;
+			break;
+		default:
+			break;
 	}
 }
 

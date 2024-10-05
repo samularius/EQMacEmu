@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errmsg.h>
 #include <mysqld_error.h>
 #include <limits.h>
 #include <ctype.h>
@@ -47,47 +46,8 @@
 #include "../common/strings.h"
 #include "../common/servertalk.h"
 
-Database::Database ()
-{
-	DBInitVars();
-}
 
-/*
- * Establish a connection to a mysql database with the supplied parameters
- */
-Database::Database(const char* host, const char* user, const char* passwd, const char* database, uint32 port)
-{
-	DBInitVars();
-	Connect(host, user, passwd, database, port);
-}
-
-bool Database::Connect(const char* host, const char* user, const char* passwd, const char* database, uint32 port)
-{
-	uint32 errnum= 0;
-	char errbuf[MYSQL_ERRMSG_SIZE];
-	if (!Open(host, user, passwd, database, port, &errnum, errbuf))
-	{
-		LogError("Failed to connect to database: Error: {} ", errbuf);
-		HandleMysqlError(errnum);
-		return false;
-	}
-	else
-	{
-		Log(Logs::General, Logs::Status, "Using database '%s' at %s:%d",database,host,port);
-		return true;
-	}
-}
-
-void Database::DBInitVars() {}
-
-void Database::HandleMysqlError(uint32 errnum) {}
-
-/*
- * Close the connection to the database
- */
-Database::~Database() {}
-
-void Database::LogPlayerSpeech(
+void QSDatabase::LogPlayerSpeech(
 	const char *from,
 	const char *to,
 	const char *message,
@@ -125,7 +85,7 @@ void Database::LogPlayerSpeech(
 
 }
 
-void Database::LogPlayerItemDelete(QSPlayerLogItemDelete_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerItemDelete(QSPlayerLogItemDelete_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -159,7 +119,7 @@ void Database::LogPlayerItemDelete(QSPlayerLogItemDelete_Struct* QS, uint32 item
     }
 }
 
-void Database::LogPlayerItemMove(QSPlayerLogItemMove_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerItemMove(QSPlayerLogItemMove_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -196,7 +156,7 @@ void Database::LogPlayerItemMove(QSPlayerLogItemMove_Struct* QS, uint32 items)
     }
 }
 
-void Database::LogMerchantTransaction(QSMerchantLogTransaction_Struct* QS, uint32 items)
+void QSDatabase::LogMerchantTransaction(QSMerchantLogTransaction_Struct* QS, uint32 items)
 {
 	/* Merchant transactions are from the perspective of the merchant, not the player -U */
 	if (items == 0)
@@ -250,7 +210,7 @@ void Database::LogMerchantTransaction(QSMerchantLogTransaction_Struct* QS, uint3
     }
 }
 
-void Database::LogPlayerAARateHourly(QSPlayerAARateHourly_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerAARateHourly(QSPlayerAARateHourly_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -274,7 +234,7 @@ void Database::LogPlayerAARateHourly(QSPlayerAARateHourly_Struct* QS, uint32 ite
 	}
 }
 
-void Database::LogPlayerAAPurchase(QSPlayerAAPurchase_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerAAPurchase(QSPlayerAAPurchase_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -304,7 +264,7 @@ void Database::LogPlayerAAPurchase(QSPlayerAAPurchase_Struct* QS, uint32 items)
 	}
 }
 
-void Database::LogPlayerTSEvents(QSPlayerTSEvents_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerTSEvents(QSPlayerTSEvents_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -336,7 +296,7 @@ void Database::LogPlayerTSEvents(QSPlayerTSEvents_Struct* QS, uint32 items)
 	}
 }
 
-void Database::LogPlayerQGlobalUpdates(QSPlayerQGlobalUpdate_Struct* QS, uint32 items)
+void QSDatabase::LogPlayerQGlobalUpdates(QSPlayerQGlobalUpdate_Struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -364,7 +324,7 @@ void Database::LogPlayerQGlobalUpdates(QSPlayerQGlobalUpdate_Struct* QS, uint32 
 	}
 }
 
-void Database::LogPlayerLootRecords(QSPlayerLootRecords_struct* QS, uint32 items)
+void QSDatabase::LogPlayerLootRecords(QSPlayerLootRecords_struct* QS, uint32 items)
 {
 	if (items == 0)
 	{
@@ -405,7 +365,7 @@ void Database::LogPlayerLootRecords(QSPlayerLootRecords_struct* QS, uint32 items
 	}
 }
 
-void Database::GeneralQueryReceive(ServerPacket *pack)
+void QSDatabase::GeneralQueryReceive(ServerPacket *pack)
 {
 	/*
 	 * These are general queries passed from anywhere in zone instead of packing structures and breaking them down again and again

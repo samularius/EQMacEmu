@@ -1318,6 +1318,28 @@ bool Lua_Client::SendGMCommand(std::string message, bool ignore_status) {
 	return self->SendGMCommand(message, ignore_status);
 }
 
+void Lua_Client::SetClientMaxLevel(uint8 max_level) {
+	Lua_Safe_Call_Void();
+	self->SetClientMaxLevel(max_level);
+}
+
+uint8 Lua_Client::GetClientMaxLevel() {
+	Lua_Safe_Call_Int();
+	return self->GetClientMaxLevel();
+}
+
+uint8 Lua_Client::GetSkillTrainLevel(int skill_id)
+{
+	Lua_Safe_Call_Int();
+	return self->GetSkillTrainLevel(static_cast<EQ::skills::SkillType>(skill_id), self->GetClass());
+}
+
+void Lua_Client::MaxSkills()
+{
+	Lua_Safe_Call_Void();
+	self->MaxSkills();
+}
+
 luabind::scope lua_register_client() {
 	return luabind::class_<Lua_Client, Lua_Mob>("Client")
 		.def(luabind::constructor<>())
@@ -1554,7 +1576,12 @@ luabind::scope lua_register_client() {
 		.def("PermaGender", (void(Lua_Client::*)(uint32))&Lua_Client::PermaGender)
 		.def("ScribeSpells", (uint16(Lua_Client::*)(uint8, uint8))& Lua_Client::ScribeSpells)
 		.def("SendGMCommand", (bool(Lua_Client:: *)(std::string)) &Lua_Client::SendGMCommand)
-		.def("SendGMCommand", (bool(Lua_Client:: *)(std::string, bool)) &Lua_Client::SendGMCommand);
+		.def("SendGMCommand", (bool(Lua_Client:: *)(std::string, bool)) &Lua_Client::SendGMCommand)
+		.def("SetClientMaxLevel", (void(Lua_Client::*)(int))& Lua_Client::SetClientMaxLevel)
+		.def("GetClientMaxLevel", (int(Lua_Client::*)(void))& Lua_Client::GetClientMaxLevel)
+		.def("GetSkillTrainLevel", (uint8(Lua_Client::*)(int))& Lua_Client::GetSkillTrainLevel)
+		.def("MaxSkills", (void(Lua_Client::*)(void))& Lua_Client::MaxSkills);
+
 }
 
 luabind::scope lua_register_inventory_where() {
