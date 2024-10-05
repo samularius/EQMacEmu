@@ -1,7 +1,6 @@
 #include "../client.h"
 
-
-void command_zoneguild(Client* c, const Seperator* sep)
+void command_zoneguild(Client *c, const Seperator *sep)
 {
 	int arguments = sep->argnum;
 	if (!arguments) {
@@ -76,3 +75,4 @@ void command_zoneguild(Client* c, const Seperator* sep)
 		zone_mode
 	);
 }
+

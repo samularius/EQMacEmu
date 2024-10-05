@@ -5,11 +5,11 @@ void command_zopp(Client *c, const Seperator *sep){
 	if (!c)
 		return;
 	else if (sep->argnum < 3 || sep->argnum > 4)
-		c->Message(Chat::White, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
+		c->Message(Chat::Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
 	else if (strcasecmp(sep->arg[1], "trade") && strcasecmp(sep->arg[1], "t") && strcasecmp(sep->arg[1], "summon") && strcasecmp(sep->arg[1], "s"))
-		c->Message(Chat::White, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
+		c->Message(Chat::Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
 	else if (!sep->IsNumber(2) || !sep->IsNumber(3) || (sep->argnum == 4 && !sep->IsNumber(4)))
-		c->Message(Chat::White, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
+		c->Message(Chat::Default, "Usage: #zopp [trade/summon] [slot id] [item id] [*charges]");
 	else {
 		ItemPacketType packettype;
 
@@ -43,12 +43,12 @@ void command_zopp(Client *c, const Seperator *sep){
 
 		if (charges < 0 || charges > FakeItem->StackSize) {
 			c->Message(Chat::Red, "Warning: The specified charge count does not meet expected criteria!");
-			c->Message(Chat::White, "Processing request..results may cause unpredictable behavior.");
+			c->Message(Chat::Default, "Processing request..results may cause unpredictable behavior.");
 		}
 
 		EQ::ItemInstance* FakeItemInst = database.CreateItem(FakeItem, charges);
 		c->SendItemPacket(slotid, FakeItemInst, packettype);
-		c->Message(Chat::White, "Sending zephyr op packet to client - [%s] %s (%u) with %i %s to slot %i.", packettype == ItemPacketTrade ? "Trade" : "Summon", FakeItem->Name, itemid, charges, abs(charges == 1) ? "charge" : "charges", slotid);
+		c->Message(Chat::Default, "Sending zephyr op packet to client - [%s] %s (%u) with %i %s to slot %i.", packettype == ItemPacketTrade ? "Trade" : "Summon", FakeItem->Name, itemid, charges, abs(charges == 1) ? "charge" : "charges", slotid);
 		safe_delete(FakeItemInst);
 	}
 }

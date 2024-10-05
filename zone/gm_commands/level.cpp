@@ -11,7 +11,7 @@ void command_level(Client *c, const Seperator *sep)
 		(!c->GetTarget()->IsNPC() && ((c->Admin() < commandLevelNPCAboveCap) && (level > RuleI(Character, MaxLevel))))) ||
 		(c->Admin() < RuleI(GM, MinStatusToLevelTarget) && level > RuleI(Character, MaxLevel)))
 	{
-		c->Message(Chat::White, "Error: #Level: Invalid Level");
+		c->Message(Chat::Default, "Error: #Level: Invalid Level");
 		return;
 	}
 	else if (c->GetTarget())
@@ -21,12 +21,12 @@ void command_level(Client *c, const Seperator *sep)
 		target = true;
 	}
 	else if (c->GetTarget() && c->Admin() < RuleI(GM, MinStatusToLevelTarget) && level <= RuleI(Character, MaxLevel) && level > 0) {
-		c->Message(Chat::White, "Your status level only supports self use of this command.");
+		c->Message(Chat::Default, "Your status level only supports self use of this command.");
 		c->SetLevel(level, true);
 	}
 	else
 	{
-		c->Message(Chat::White, "No valid target selected, using command on self.");
+		c->Message(Chat::Default, "No valid target selected, using command on self.");
 		c->SetLevel(level, true);
 	}
 

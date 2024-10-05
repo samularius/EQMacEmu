@@ -8,20 +8,20 @@ void command_disablerecipe(Client *c, const Seperator *sep){
 			recipe_id = atoi(sep->arg[1]);
 		}
 		else {
-			c->Message(Chat::White, "Invalid number of arguments.\nUsage: #disablerecipe recipe_id");
+			c->Message(Chat::Default, "Invalid number of arguments.\nUsage: #disablerecipe recipe_id");
 			return;
 		}
 		if (recipe_id > 0) {
 			success = database.DisableRecipe(recipe_id);
 			if (success) {
-				c->Message(Chat::White, "Recipe disabled.");
+				c->Message(Chat::Default, "Recipe disabled.");
 			}
 			else {
-				c->Message(Chat::White, "Recipe not disabled.");
+				c->Message(Chat::Default, "Recipe not disabled.");
 			}
 		}
 		else {
-			c->Message(Chat::White, "Invalid recipe id.\nUsage: #disablerecipe recipe_id");
+			c->Message(Chat::Default, "Invalid recipe id.\nUsage: #disablerecipe recipe_id");
 		}
 	}
 }

@@ -27,8 +27,8 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 		if (current_npc) {
 			std::string npc_name = current_npc->GetCleanName();
 			uint32 zone_id = zone->GetZoneID();
-
-			std::string command_link = Saylink::Silent(
+			// The GenerateQuestSaylink doesn't always produce desired result. it needs a workaround fix
+			/*std::string command_link = EQ::SayLinkEngine::GenerateQuestSaylink(
 				fmt::format(
 					"#{} {} {} {} {}",
 					"zone",
@@ -37,13 +37,14 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 					current_npc->GetY(),
 					current_npc->GetZ()
 				),
+				false,
 				"Goto"
-			);
+			);*/
 			npc_link = fmt::format(
-				" NPC: {} (ID {}) [{}]",
+				" NPC: {} (ID {}) ", // [{}]",
 				npc_name,
-				current_entity_id,
-				command_link
+				current_entity_id
+				//command_link
 			);
 		}
 
@@ -53,7 +54,7 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 				linker.SetLinkType(EQ::saylink::SayLinkLootItem);
 				linker.SetLootData(current_item);
 				c->Message(
-					Chat::White,
+					Chat::Default,
 					fmt::format(
 						" {}. {} ({}) {} ",
 						loot_id,
@@ -80,7 +81,7 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 			"not dropping"
 			);
 		c->Message(
-			Chat::White,
+			Chat::Default,
 			fmt::format(
 				" {} ({}) is {}. ",
 				database.CreateItemLink(search_item_id),
@@ -101,7 +102,7 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 			"items are dropping"
 			);
 		c->Message(
-			Chat::White,
+			Chat::Default,
 			fmt::format(
 				" {} {}. ",
 				loot_amount,
@@ -111,4 +112,3 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 	}
 }
 
-//Please keep this at the bottom of command.cpp! Feel free to use this for temporary commands used in testing :)

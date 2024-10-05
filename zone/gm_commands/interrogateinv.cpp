@@ -16,14 +16,14 @@ void command_interrogateinv(Client *c, const Seperator *sep)
 
 	if (strcasecmp(sep->arg[1], "help") == 0) {
 		if (c->Admin() < commandInterrogateInv) {
-			c->Message(Chat::White, "Usage: #interrogateinv");
-			c->Message(Chat::White, "  Displays your inventory's current in-memory nested storage references");
+			c->Message(Chat::Default, "Usage: #interrogateinv");
+			c->Message(Chat::Default, "  Displays your inventory's current in-memory nested storage references");
 		}
 		else {
-			c->Message(Chat::White, "Usage: #interrogateinv [log] [silent]");
-			c->Message(Chat::White, "  Displays your or your Player target inventory's current in-memory nested storage references");
-			c->Message(Chat::White, "  [log] - Logs interrogation to file");
-			c->Message(Chat::White, "  [silent] - Omits the in-game message portion of the interrogation");
+			c->Message(Chat::Default, "Usage: #interrogateinv [log] [silent]");
+			c->Message(Chat::Default, "  Displays your or your Player target inventory's current in-memory nested storage references");
+			c->Message(Chat::Default, "  [log] - Logs interrogation to file");
+			c->Message(Chat::Default, "  [silent] - Omits the in-game message portion of the interrogation");
 		}
 		return;
 	}

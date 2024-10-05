@@ -23,8 +23,8 @@ void command_corpse(Client *c, const Seperator *sep)
 	std::string help17 = "  #corpse reset - Resets looter status on targetted corpse for debugging.";
 	std::string help18 = "  #corpse backups - List of current target's corpse backups.";
 	std::string help19 = "  #corpse restore [corpse_id] - Summons the specified corpse from a player's backups.";
-
-	std::string help[] = { help0, help1, help2, help3, help4, help5, help6, help7, help8, help9, help10, help11, help12, help13, help14, help15, help16, help17, help18, help19 };
+	std::string help20 = "  #corpse summonall [name] - Summons all of [name]'s oldest buried corpse, if any exist.";
+	std::string help[] = { help0, help1, help2, help3, help4, help5, help6, help7, help8, help9, help10, help11, help12, help13, help14, help15, help16, help17, help18, help19, help20 };
 
 	Mob *target = c->GetTarget();
 
@@ -33,7 +33,7 @@ void command_corpse(Client *c, const Seperator *sep)
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "buriedcount") == 0)
@@ -44,16 +44,16 @@ void command_corpse(Client *c, const Seperator *sep)
 			t = c->GetTarget()->CastToClient();
 		else
 		{
-			c->Message(Chat::White, "You must first select a target!");
+			c->Message(Chat::Default, "You must first select a target!");
 			return;
 		}
 
 		uint32 CorpseCount = database.GetCharacterBuriedCorpseCount(t->CharacterID());
 
 		if (CorpseCount > 0)
-			c->Message(Chat::White, "Your target has a total of %u buried corpses.", CorpseCount);
+			c->Message(Chat::Default, "Your target has a total of %u buried corpses.", CorpseCount);
 		else
-			c->Message(Chat::White, "Your target doesn't have any buried corpses.");
+			c->Message(Chat::Default, "Your target doesn't have any buried corpses.");
 
 		return;
 	}
@@ -67,58 +67,58 @@ void command_corpse(Client *c, const Seperator *sep)
 				t = c->GetTarget()->CastToClient();
 			else
 			{
-				c->Message(Chat::White, "You must first turn your GM flag on and select a target!");
+				c->Message(Chat::Default, "You must first turn your GM flag on and select a target!");
 				return;
 			}
 
 			Corpse* PlayerCorpse = database.SummonBuriedCharacterCorpses(t->CharacterID(), t->GetZoneID(), zone->GetGuildID(), t->GetPosition());
 
 			if (!PlayerCorpse)
-				c->Message(Chat::White, "Your target doesn't have any buried corpses.");
+				c->Message(Chat::Default, "Your target doesn't have any buried corpses.");
 
 			return;
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to summon buried corpses.");
+			c->Message(Chat::Default, "Insufficient status to summon buried corpses.");
 	}
 	else if (strcasecmp(sep->arg[1], "charid") == 0)
 	{
 		if (c->Admin() >= commandEditPlayerCorpses)
 		{
 			if (target == 0 || !target->IsPlayerCorpse())
-				c->Message(Chat::White, "Error: Target must be a player corpse to set ID.");
+				c->Message(Chat::Default, "Error: Target must be a player corpse to set ID.");
 			else if (!sep->IsNumber(2))
-				c->Message(Chat::White, "Error: charid must be a number.");
+				c->Message(Chat::Default, "Error: charid must be a number.");
 			else
-				c->Message(Chat::White, "Setting CharID=%u on PlayerCorpse '%s'", target->CastToCorpse()->SetCharID(atoi(sep->arg[2])), target->GetName());
+				c->Message(Chat::Default, "Setting CharID=%u on PlayerCorpse '%s'", target->CastToCorpse()->SetCharID(atoi(sep->arg[2])), target->GetName());
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to change corpse owner.");
+			c->Message(Chat::Default, "Insufficient status to change corpse owner.");
 	}
 	else if (strcasecmp(sep->arg[1], "delete") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target the corpse you wish to delete");
+			c->Message(Chat::Default, "Error: Target the corpse you wish to delete");
 		else if (target->IsNPCCorpse())
 		{
-			c->Message(Chat::White, "Depoping %s.", target->GetName());
+			c->Message(Chat::Default, "Depoping %s.", target->GetName());
 			target->CastToCorpse()->DepopNPCCorpse();
 		}
 		else if (c->Admin() >= commandEditPlayerCorpses)
 		{
-			c->Message(Chat::White, "Deleting %s.", target->GetName());
+			c->Message(Chat::Default, "Deleting %s.", target->GetName());
 			target->CastToCorpse()->Delete();
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to delete player corpse.");
+			c->Message(Chat::Default, "Insufficient status to delete player corpse.");
 	}
 	else if (strcasecmp(sep->arg[1], "deletenpccorpses") == 0)
 	{
 		int32 tmp = entity_list.DeleteNPCCorpses();
 		if (tmp >= 0)
-			c->Message(Chat::White, "%d corpses deleted.", tmp);
+			c->Message(Chat::Default, "%d corpses deleted.", tmp);
 		else
-			c->Message(Chat::White, "DeletePlayerCorpses Error #%d", tmp);
+			c->Message(Chat::Default, "DeletePlayerCorpses Error #%d", tmp);
 	}
 	else if (strcasecmp(sep->arg[1], "deleteplayercorpses") == 0)
 	{
@@ -126,45 +126,45 @@ void command_corpse(Client *c, const Seperator *sep)
 		{
 			int32 tmp = entity_list.DeletePlayerCorpses();
 			if (tmp >= 0)
-				c->Message(Chat::White, "%i corpses deleted.", tmp);
+				c->Message(Chat::Default, "%i corpses deleted.", tmp);
 			else
-				c->Message(Chat::White, "DeletePlayerCorpses Error #%i", tmp);
+				c->Message(Chat::Default, "DeletePlayerCorpses Error #%i", tmp);
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to delete player corpse.");
+			c->Message(Chat::Default, "Insufficient status to delete player corpse.");
 	}
 	else if (strcasecmp(sep->arg[1], "depop") == 0)
 	{
 		if (target == 0 || !target->IsPlayerCorpse())
-			c->Message(Chat::White, "Error: Target must be a player corpse to depop.");
+			c->Message(Chat::Default, "Error: Target must be a player corpse to depop.");
 		else if (c->Admin() >= commandEditPlayerCorpses && target->IsPlayerCorpse())
 		{
-			c->Message(Chat::White, "Depoping %s.", target->GetName());
+			c->Message(Chat::Default, "Depoping %s.", target->GetName());
 			target->CastToCorpse()->DepopPlayerCorpse();
 			if (!sep->arg[2][0] || atoi(sep->arg[2]) != 0)
 				target->CastToCorpse()->Bury();
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to depop player corpse.");
+			c->Message(Chat::Default, "Insufficient status to depop player corpse.");
 	}
 	else if (strcasecmp(sep->arg[1], "depopall") == 0)
 	{
 		if (target == 0 || !target->IsClient())
-			c->Message(Chat::White, "Error: Target must be a player to depop their corpses.");
+			c->Message(Chat::Default, "Error: Target must be a player to depop their corpses.");
 		else if (c->Admin() >= commandEditPlayerCorpses && target->IsClient())
 		{
-			c->Message(Chat::White, "Depoping %s\'s corpses.", target->GetName());
+			c->Message(Chat::Default, "Depoping %s\'s corpses.", target->GetName());
 			target->CastToClient()->DepopAllCorpses();
 			if (!sep->arg[2][0] || atoi(sep->arg[2]) != 0)
 				target->CastToClient()->BuryPlayerCorpses();
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to depop player corpses.");
+			c->Message(Chat::Default, "Insufficient status to depop player corpses.");
 	}
 	else if (strcasecmp(sep->arg[1], "inspect") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target must be a corpse to inspect.");
+			c->Message(Chat::Default, "Error: Target must be a corpse to inspect.");
 		else
 			target->CastToCorpse()->QueryLoot(c);
 	}
@@ -185,11 +185,11 @@ void command_corpse(Client *c, const Seperator *sep)
 	else if (strcasecmp(sep->arg[1], "locate") == 0)
 	{
 		if (target == 0 || !target->IsClient())
-			c->Message(Chat::White, "Error: Target must be a player to locate their corpses.");
+			c->Message(Chat::Default, "Error: Target must be a player to locate their corpses.");
 		else
 		{
 			c->Message(Chat::Red, "CorpseID : Zone , x , y , z , Buried");
-			std::string query = StringFormat("SELECT id, zone_id, x, y, z, is_buried FROM character_corpses WHERE charid = %d", target->CastToClient()->CharacterID());
+			std::string query = StringFormat("SELECT id, zone_id, x, y, z, is_buried, zone_guild_id FROM character_corpses WHERE charid = %d", target->CastToClient()->CharacterID());
 			auto results = database.QueryDatabase(query);
 
 			if (!results.Success() || results.RowCount() == 0)
@@ -201,60 +201,70 @@ void command_corpse(Client *c, const Seperator *sep)
 			for (auto row = results.begin(); row != results.end(); ++row)
 			{
 
-				c->Message(Chat::Yellow, " %s:	%s, %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[2], row[3], row[4], row[5]);
+				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[6], row[2], row[3], row[4], row[5]);
 			}
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "lock") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target must be a corpse in order to lock.");
+			c->Message(Chat::Default, "Error: Target must be a corpse in order to lock.");
 		else {
 			target->CastToCorpse()->Lock();
-			c->Message(Chat::White, "Locking %s...", target->GetName());
+			c->Message(Chat::Default, "Locking %s...", target->GetName());
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "unlock") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target must be a corpse in order to unlock.");
+			c->Message(Chat::Default, "Error: Target must be a corpse in order to unlock.");
 		else {
 			target->CastToCorpse()->UnLock();
-			c->Message(Chat::White, "Unlocking %s...", target->GetName());
+			c->Message(Chat::Default, "Unlocking %s...", target->GetName());
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "removecash") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target the corpse you wish to remove the cash from");
+			c->Message(Chat::Default, "Error: Target the corpse you wish to remove the cash from");
 		else if (!target->IsPlayerCorpse() || c->Admin() >= commandEditPlayerCorpses)
 		{
-			c->Message(Chat::White, "Removing Cash from %s.", target->GetName());
+			c->Message(Chat::Default, "Removing Cash from %s.", target->GetName());
 			target->CastToCorpse()->RemoveCash();
 		}
 		else
-			c->Message(Chat::White, "Insufficient status to modify cash on player corpse.");
+			c->Message(Chat::Default, "Insufficient status to modify cash on player corpse.");
 	}
 	else if (strcasecmp(sep->arg[1], "reset") == 0)
 	{
 		if (target == 0 || !target->IsCorpse())
-			c->Message(Chat::White, "Error: Target the corpse you wish to reset");
+			c->Message(Chat::Default, "Error: Target the corpse you wish to reset");
 		else
 			target->CastToCorpse()->ResetLooter();
 	}
 	else if (strcasecmp(sep->arg[1], "backups") == 0)
 	{
+
 		if (target == 0 || !target->IsClient())
-			c->Message(Chat::White, "Error: Target must be a player to list their backups.");
+			c->Message(Chat::Default, "Error: Target must be a player to list their backups.");
 		else
 		{
-			c->Message(Chat::Red, "CorpseID : Zone , x , y , z , Items");
-			std::string query = StringFormat("SELECT id, zone_id, x, y, z FROM character_corpses_backup WHERE charid = %d", target->CastToClient()->CharacterID());
+			uint32 charid = 0;
+			if (!sep->arg[2][0])
+			{
+				charid = target->CastToClient()->CharacterID();
+			}
+			else
+				charid = database.GetCharacterID(sep->arg[2]);
+
+
+			c->Message(Chat::Red, "CorpseID : Zone , Guild, x , y , z , Items");
+			std::string query = StringFormat("SELECT id, zone_id, x, y, z, zone_guild_id FROM character_corpses_backup WHERE charid = %d", charid);
 			auto results = database.QueryDatabase(query);
 
 			if (!results.Success() || results.RowCount() == 0)
 			{
-				c->Message(Chat::Red, "No corpse backups exist for %s with ID: %i.", target->GetName(), target->CastToClient()->CharacterID());
+				c->Message(Chat::Red, "No corpse backups exist for %s with ID: %i.", sep->arg[3], charid);
 				return;
 			}
 
@@ -264,7 +274,7 @@ void command_corpse(Client *c, const Seperator *sep)
 				auto ic_results = database.QueryDatabase(ic_query);
 				auto ic_row = ic_results.begin();
 
-				c->Message(Chat::Yellow, " %s:	%s, %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[2], row[3], row[4], ic_row[0]);
+				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[5], row[2], row[3], row[4], ic_row[0]);
 			}
 		}
 	}
@@ -275,17 +285,9 @@ void command_corpse(Client *c, const Seperator *sep)
 			uint32 corpseid;
 			Client *t = c;
 
-			if (c->GetTarget() && c->GetTarget()->IsClient() && c->GetGM())
-				t = c->GetTarget()->CastToClient();
-			else
-			{
-				c->Message(Chat::White, "You must first turn your GM flag on and select a target!");
-				return;
-			}
-
 			if (!sep->IsNumber(2))
 			{
-				c->Message(Chat::White, "Usage: #corpse restore [corpse_id].");
+				c->Message(Chat::Default, "Usage: #corpse restore [corpse_id].");
 				return;
 			}
 			else
@@ -301,19 +303,14 @@ void command_corpse(Client *c, const Seperator *sep)
 				c->Message(Chat::Red, "Corpse %i has been found! Please summon or delete it before attempting to restore from a backup.", atoi(sep->arg[2]));
 				return;
 			}
-			else if(!database.IsCorpseBackupOwner(corpseid, t->CharacterID()))
-			{
-				c->Message(Chat::Red, "Targetted player is not the owner of the specified corpse!");
-				return;
-			}
 			else
 			{
 				if(database.CopyBackupCorpse(corpseid))
 				{
-					Corpse* PlayerCorpse = database.SummonCharacterCorpse(corpseid, t->CharacterID(), t->GetZoneID(), zone->GetGuildID(), t->GetPosition());
+					Corpse* PlayerCorpse = database.SummonCharacterCorpse(corpseid, 0, zone->GetZoneID(), zone->GetGuildID(), c->GetPosition());
 
 					if (!PlayerCorpse)
-						c->Message(Chat::White, "Summoning of backup corpse failed. Please escalate this issue.");
+						c->Message(Chat::Default, "Summoning of backup corpse failed. Please escalate this issue.");
 
 					return;
 				}
@@ -326,7 +323,40 @@ void command_corpse(Client *c, const Seperator *sep)
 		}
 		else
 		{
-			c->Message(Chat::White, "Insufficient status to summon backup corpses.");
+			c->Message(Chat::Default, "Insufficient status to summon backup corpses.");
+		}
+	}
+	else if (strcasecmp(sep->arg[1], "summonall") == 0)
+	{
+		if (sep->arg[2][0] != 0 && !sep->IsNumber(2))
+		{
+			std::string summon_corpse_char_name = sep->arg[2];
+			auto corpse_list_copy = entity_list.GetCorpseList();
+			int nCorpseCount = 0;
+			for (auto corpse : corpse_list_copy)
+			{
+				Corpse* pCorpse = corpse.second;
+				if (pCorpse && pCorpse->IsPlayerCorpse())
+				{
+					if (strcmp(pCorpse->GetOwnerName(), summon_corpse_char_name.c_str()) == 0)
+					{
+						pCorpse->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
+						nCorpseCount++;
+					}
+				}
+			}
+			if (nCorpseCount > 0)
+			{
+				c->Message(Chat::Default, "Summoned %d corpses to your location from player %s", nCorpseCount, summon_corpse_char_name.c_str());
+			}
+			else
+			{
+				c->Message(Chat::Red, "No corpses with name %s exist in this zone.", summon_corpse_char_name.c_str());
+			}
+		}
+		else
+		{
+			c->Message(Chat::Red, "Invalid character ID or parameter count for #corpse summonall");
 		}
 	}
 	else
@@ -334,7 +364,7 @@ void command_corpse(Client *c, const Seperator *sep)
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 }

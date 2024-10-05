@@ -4,7 +4,7 @@ void command_qglobal(Client *c, const Seperator *sep)
 {
 	//In-game switch for qglobal column
 	if (sep->arg[1][0] == 0) {
-		c->Message(Chat::White, "Syntax: #qglobal [on/off/view]. Requires NPC target.");
+		c->Message(Chat::Default, "Syntax: #qglobal [on/off/view]. Requires NPC target.");
 		return;
 	}
 

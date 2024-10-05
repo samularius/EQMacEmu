@@ -12,7 +12,7 @@ void command_setlanguage(Client *c, const Seperator *sep){
 	if (!strcasecmp(sep->arg[1], "list")) {
 		for (int language = LANG_COMMON_TONGUE; language <= LANG_UNKNOWN2; language++) {
 			c->Message(
-				Chat::White,
+				Chat::Default,
 				fmt::format(
 					"Language {}: {}",
 					language,
@@ -27,10 +27,10 @@ void command_setlanguage(Client *c, const Seperator *sep){
 		language_value < 0 ||
 		language_value > 100
 		) {
-		c->Message(Chat::White, "Usage: #setlanguage [Language ID] [Language Value]");
-		c->Message(Chat::White, "Usage: #setlanguage [List]");
-		c->Message(Chat::White, "Language ID = 0 to 26", LANG_UNKNOWN2);
-		c->Message(Chat::White, "Language Value = 0 to 100", HARD_SKILL_CAP);
+		c->Message(Chat::Default, "Usage: #setlanguage [Language ID] [Language Value]");
+		c->Message(Chat::Default, "Usage: #setlanguage [List]");
+		c->Message(Chat::Default, "Language ID = 0 to 26", LANG_UNKNOWN2);
+		c->Message(Chat::Default, "Language Value = 0 to 100", HARD_SKILL_CAP);
 	}
 	else {
 		LogInfo(
@@ -45,7 +45,7 @@ void command_setlanguage(Client *c, const Seperator *sep){
 
 		if (c != target) {
 			c->Message(
-				Chat::White,
+				Chat::Default,
 				fmt::format(
 					"Set {} ({}) to {} for {}.",
 					EQ::constants::GetLanguageName(language_id),

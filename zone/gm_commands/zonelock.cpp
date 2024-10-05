@@ -18,7 +18,7 @@ void command_zonelock(Client *c, const Seperator *sep){
 			worldserver.SendPacket(pack);
 		}
 		else
-			c->Message(Chat::White, "Usage: #zonelock lock [zonename]");
+			c->Message(Chat::Default, "Usage: #zonelock lock [zonename]");
 	}
 	else if (strcasecmp(sep->arg[1], "unlock") == 0 && c->Admin() >= commandLockZones) {
 		uint16 tmp = database.GetZoneID(sep->arg[2]);
@@ -28,15 +28,15 @@ void command_zonelock(Client *c, const Seperator *sep){
 			worldserver.SendPacket(pack);
 		}
 		else
-			c->Message(Chat::White, "Usage: #zonelock unlock [zonename]");
+			c->Message(Chat::Default, "Usage: #zonelock unlock [zonename]");
 	}
 	else {
-		c->Message(Chat::White, "#zonelock sub-commands");
-		c->Message(Chat::White, "  list");
+		c->Message(Chat::Default, "#zonelock sub-commands");
+		c->Message(Chat::Default, "  list");
 		if (c->Admin() >= commandLockZones)
 		{
-			c->Message(Chat::White, "  lock [zonename]");
-			c->Message(Chat::White, "  unlock [zonename]");
+			c->Message(Chat::Default, "  lock [zonename]");
+			c->Message(Chat::Default, "  unlock [zonename]");
 		}
 	}
 	safe_delete(pack);

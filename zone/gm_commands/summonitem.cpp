@@ -12,7 +12,7 @@ void command_summonitem(Client *c, const Seperator *sep)
 		itemid = link_body.item_id;
 	}
 	else if (!sep->IsNumber(1)) {
-		c->Message(Chat::White, "Usage: #summonitem [item id] [charges], charges are optional");
+		c->Message(Chat::Default, "Usage: #summonitem [item id] [charges], charges are optional");
 		return;
 	}
 	else {

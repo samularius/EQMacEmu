@@ -15,7 +15,7 @@ void command_bug(Client *c, const Seperator *sep)
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "list") == 0)
@@ -40,7 +40,7 @@ void command_bug(Client *c, const Seperator *sep)
 	{
 		if (sep->arg[2][0] == 0)
 		{
-			c->Message(Chat::White, "Usage: #bug view (bug number) Type #bug list for a list");
+			c->Message(Chat::Default, "Usage: #bug view (bug number) Type #bug list for a list");
 			return;
 		}
 		Log(Logs::Detail, Logs::Normal, "Bug viewed by %s, bug number:", c->GetName(), atoi(sep->arg[2]));
@@ -65,7 +65,7 @@ void command_bug(Client *c, const Seperator *sep)
 		{
 			if (sep->arg[1][0] == 0 || sep->arg[2][0] == 0 || strcasecmp(sep->arg[2], "*") == 0)
 			{
-				c->Message(Chat::White, "Usage: #bug delete (bug number) Type #bug list for a list");
+				c->Message(Chat::Default, "Usage: #bug delete (bug number) Type #bug list for a list");
 				return;
 			}
 
@@ -79,14 +79,14 @@ void command_bug(Client *c, const Seperator *sep)
 			Log(Logs::Detail, Logs::Normal, "Delete bug request from %s, bug number:", c->GetName(), atoi(sep->arg[2]));
 		}
 		else
-			c->Message(Chat::White, "Your access level is not high enough to use this command.");
+			c->Message(Chat::Default, "Your access level is not high enough to use this command.");
 	}
 	else
 	{
 		int size = sizeof(help) / sizeof(std::string);
 		for (int i = 0; i < size; i++)
 		{
-			c->Message(Chat::White, help[i].c_str());
+			c->Message(Chat::Default, help[i].c_str());
 		}
 	}
 }

@@ -53,6 +53,6 @@ void command_equipitem(Client *c, const Seperator *sep){
 			c->Message(Chat::Red, "Error: Item on your cursor cannot be equipped");
 	}
 	else
-		c->Message(Chat::White, "Usage: #equipitem slotid[0-21] - equips the item on your cursor to the position");
+		c->Message(Chat::Default, "Usage: #equipitem slotid[0-21] - equips the item on your cursor to the position");
 }
 

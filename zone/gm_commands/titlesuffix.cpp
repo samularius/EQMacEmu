@@ -3,7 +3,7 @@
 
 void command_titlesuffix(Client *c, const Seperator *sep){
 	if (sep->arg[1][0] == 0)
-		c->Message(Chat::White, "Usage: #titlesuffix [remove|text] [1 = create row in title table] - remove or set title suffix to 'text'");
+		c->Message(Chat::Default, "Usage: #titlesuffix [remove|text] [1 = create row in title table] - remove or set title suffix to 'text'");
 	else {
 		bool Save = (atoi(sep->arg[2]) == 1);
 

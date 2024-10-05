@@ -3,7 +3,7 @@
 
 void command_title(Client *c, const Seperator *sep){
 	if (sep->arg[1][0] == 0)
-		c->Message(Chat::White, "Usage: #title [remove|text] [1 = Create row in title table] - remove or set title to 'text'");
+		c->Message(Chat::Default, "Usage: #title [remove|text] [1 = Create row in title table] - remove or set title to 'text'");
 	else {
 		bool Save = (atoi(sep->arg[2]) == 1);
 

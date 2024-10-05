@@ -12,7 +12,7 @@ void command_mana(Client *c, const Seperator *sep)
 
 	if (c != target) {
 		c->Message(
-			Chat::White,
+			Chat::Default,
 			fmt::format(
 				"Set {} ({}) to full Mana.",
 				target->GetCleanName(),
@@ -21,7 +21,7 @@ void command_mana(Client *c, const Seperator *sep)
 		);
 	}
 	else {
-		c->Message(Chat::White, "Restored your Mana to full.");
+		c->Message(Chat::Default, "Restored your Mana to full.");
 	}
 }
 

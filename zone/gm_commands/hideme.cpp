@@ -5,7 +5,7 @@ void command_hideme(Client *c, const Seperator *sep){
 	bool state = atobool(sep->arg[1]);
 
 	if (sep->arg[1][0] == 0)
-		c->Message(Chat::White, "Usage: #hideme [on/off]");
+		c->Message(Chat::Default, "Usage: #hideme [on/off]");
 	else
 	{
 		c->SetHideMe(state);

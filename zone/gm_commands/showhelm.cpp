@@ -29,14 +29,14 @@ void command_showhelm(Client *c, const Seperator *sep)
 		}
 		else
 		{
-			c->Message(Chat::White, "There was no change in your showhelm setting.");
+			c->Message(Chat::Default, "There was no change in your showhelm setting.");
 			return;
 		}
 		
 		c->Message(Chat::Yellow, "You will %s display helms.", state ? "now" : "no longer");
 	}
 	else
-		c->Message(Chat::White, "Usage: #showhelm on/off [all]");
+		c->Message(Chat::Default, "Usage: #showhelm on/off [all]");
 
 	return;
 }

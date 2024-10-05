@@ -2,7 +2,7 @@
 
 void command_setfaction(Client *c, const Seperator *sep){
 	if ((sep->arg[1][0] == 0 || strcasecmp(sep->arg[1], "*") == 0) || ((c->GetTarget() == 0) || (c->GetTarget()->IsClient()))) {
-		c->Message(Chat::White, "Usage: #setfaction [faction number]");
+		c->Message(Chat::Default, "Usage: #setfaction [faction number]");
 		return;
 	}
 	
