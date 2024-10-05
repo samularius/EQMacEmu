@@ -15,8 +15,8 @@ void command_aggrozone(Client *c, const Seperator *sep){
 		use_ignore_dist = atoi(sep->arg[2]);
 	entity_list.AggroZone(m, hate, use_ignore_dist);
 	if (!c->GetTarget())
-		c->Message(Chat::Default, "Train to you! Last chance to go invulnerable...");
+		c->Message(Chat::White, "Train to you! Last chance to go invulnerable...");
 	else
-		c->Message(Chat::Default, "Train to %s! Watch them die!!!", c->GetTarget()->GetCleanName());
+		c->Message(Chat::White, "Train to %s! Watch them die!!!", c->GetTarget()->GetCleanName());
 }
 

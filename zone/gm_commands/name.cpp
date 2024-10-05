@@ -4,7 +4,7 @@ void command_name(Client *c, const Seperator *sep){
 	Client *target;
 
 	if ((strlen(sep->arg[1]) == 0) || (!(c->GetTarget() && c->GetTarget()->IsClient())))
-		c->Message(Chat::Default, "Usage: #name newname (requires player target)");
+		c->Message(Chat::White, "Usage: #name newname (requires player target)");
 	else
 	{
 		target = c->GetTarget()->CastToClient();
@@ -13,9 +13,9 @@ void command_name(Client *c, const Seperator *sep){
 
 		if (target->ChangeFirstName(sep->arg[1], c->GetName()))
 		{
-			c->Message(Chat::Default, "Successfully renamed %s to %s", oldname.c_str(), sep->arg[1]);
+			c->Message(Chat::White, "Successfully renamed %s to %s", oldname.c_str(), sep->arg[1]);
 			// until we get the name packet working right this will work
-			c->Message(Chat::Default, "Sending player to char select.");
+			c->Message(Chat::White, "Sending player to char select.");
 			target->Kick();
 		}
 		else

@@ -3,8 +3,8 @@
 void command_castspell(Client *c, const Seperator *sep){
 	if (!sep->IsNumber(1))
 	{
-		c->Message(Chat::Default, "Usage: #CastSpell spellid gm_override entityid");
-		c->Message(Chat::Default, "gm_override 0: Cast Normally. 1: Skip stacking and resist checks. 2: Normal, but don't send buff fade when a spell overwrites.");
+		c->Message(Chat::White, "Usage: #CastSpell spellid gm_override entityid");
+		c->Message(Chat::White, "gm_override 0: Cast Normally. 1: Skip stacking and resist checks. 2: Normal, but don't send buff fade when a spell overwrites.");
 	}
 	else 
 	{
@@ -28,7 +28,7 @@ void command_castspell(Client *c, const Seperator *sep){
 			}
 			else
 			{
-				c->Message(Chat::Default, "Caster specified is not a NPC or is not valid.");
+				c->Message(Chat::White, "Caster specified is not a NPC or is not valid.");
 				return;
 			}
 		}
@@ -44,7 +44,7 @@ void command_castspell(Client *c, const Seperator *sep){
 			c->Admin() < commandCastSpecials)
 			c->Message(Chat::Red, "Unable to cast spell.");
 		else if (spellid >= SPDAT_RECORDS)
-			c->Message(Chat::Default, "Error: #CastSpell: Argument out of range");
+			c->Message(Chat::White, "Error: #CastSpell: Argument out of range");
 		else
 		{
 			if (c->GetTarget() == 0)

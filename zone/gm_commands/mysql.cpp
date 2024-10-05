@@ -3,17 +3,17 @@
 void command_mysql(Client *c, const Seperator *sep)
 {
 	if (!sep->arg[1][0] || !sep->arg[2][0]) {
-		c->Message(Chat::Default, "Usage: #mysql query \"Query here\"");
+		c->Message(Chat::White, "Usage: #mysql query \"Query here\"");
 		return;
 	}
 
 	if (strcasecmp(sep->arg[1], "help") == 0) {
-		c->Message(Chat::Default, "MYSQL In-Game CLI Interface:");
-		c->Message(Chat::Default, "Example: #mysql query \"Query goes here quoted\" -s -h");
-		c->Message(Chat::Default, "To use 'like \"%%something%%\" replace the %% with #");
-		c->Message(Chat::Default, "Example: #mysql query \"select * from table where name like \"#something#\"");
-		c->Message(Chat::Default, "-s - Spaces select entries apart");
-		c->Message(Chat::Default, "-h - Colors every other select result");
+		c->Message(Chat::White, "MYSQL In-Game CLI Interface:");
+		c->Message(Chat::White, "Example: #mysql query \"Query goes here quoted\" -s -h");
+		c->Message(Chat::White, "To use 'like \"%%something%%\" replace the %% with #");
+		c->Message(Chat::White, "Example: #mysql query \"select * from table where name like \"#something#\"");
+		c->Message(Chat::White, "-s - Spaces select entries apart");
+		c->Message(Chat::White, "-h - Colors every other select result");
 		return;
 	}
 
@@ -69,7 +69,7 @@ void command_mysql(Client *c, const Seperator *sep)
 			lineVec.push_back(lineText.str());
 
 			if (optionS) //This provides spacing for the space switch
-				c->Message(Chat::Default, " ");
+				c->Message(Chat::White, " ");
 			if (optionH) //This option will highlight every other row
 				highlightTextIndex = 1 - highlightTextIndex;
 

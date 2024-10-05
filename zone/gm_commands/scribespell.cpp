@@ -9,17 +9,17 @@ void command_scribespell(Client *c, const Seperator *sep){
 		t = c->GetTarget()->CastToClient();
 
 	if (!sep->arg[1][0]) {
-		c->Message(Chat::Default, "FORMAT: #scribespell <spellid>");
+		c->Message(Chat::White, "FORMAT: #scribespell <spellid>");
 		return;
 	}
 
 	spell_id = atoi(sep->arg[1]);
 
 	if (IsValidSpell(spell_id)) {
-		t->Message(Chat::Default, "Scribing spell: %s (%i) to spellbook.", spells[spell_id].name, spell_id);
+		t->Message(Chat::White, "Scribing spell: %s (%i) to spellbook.", spells[spell_id].name, spell_id);
 
 		if (t != c)
-			c->Message(Chat::Default, "Scribing spell: %s (%i) for %s.", spells[spell_id].name, spell_id, t->GetName());
+			c->Message(Chat::White, "Scribing spell: %s (%i) for %s.", spells[spell_id].name, spell_id, t->GetName());
 
 		Log(Logs::General, Logs::Normal, "Scribe spell: %s (%i) request for %s from %s.", spells[spell_id].name, spell_id, t->GetName(), c->GetName());
 

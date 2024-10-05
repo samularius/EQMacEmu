@@ -6,7 +6,7 @@ void command_weather(Client *c, const Seperator *sep)
 {
 	if (!(sep->arg[1][0] == '0' || sep->arg[1][0] == '1' || sep->arg[1][0] == '2')) 
 	{
-		c->Message(Chat::Default, "Usage: #weather <0/1/2> - Off/Rain/Snow <0/1> - Serverwide <minutes> - Duration");
+		c->Message(Chat::White, "Usage: #weather <0/1/2> - Off/Rain/Snow <0/1> - Serverwide <minutes> - Duration");
 		return;
 	}
 

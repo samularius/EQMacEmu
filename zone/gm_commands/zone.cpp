@@ -4,14 +4,14 @@ void command_zone(Client *c, const Seperator *sep)
 {
 	int arguments = sep->argnum;
 	if (!arguments) {
-		c->Message(Chat::Default, "Usage: #zone [Zone ID|Zone Short Name] [X] [Y] [Z]");
+		c->Message(Chat::White, "Usage: #zone [Zone ID|Zone Short Name] [X] [Y] [Z]");
 		return;
 	}
 
 	const char* zone_identifier = sep->arg[1];
 
 	if (Strings::IsNumber(zone_identifier) && !strcmp(zone_identifier, "0")) {
-		c->Message(Chat::Default, "Sending you to the safe coordinates of this zone.");
+		c->Message(Chat::White, "Sending you to the safe coordinates of this zone.");
 
 		c->MovePC(
 			0.0f,
@@ -32,7 +32,7 @@ void command_zone(Client *c, const Seperator *sep)
 	auto zone_short_name = database.GetZoneName(zone_id);
 	if (!zone_id || !zone_short_name) {
 		c->Message(
-			Chat::Default,
+			Chat::White,
 			fmt::format(
 				"No zones were found matching '{}'.",
 				zone_identifier
@@ -43,7 +43,7 @@ void command_zone(Client *c, const Seperator *sep)
 
 	auto min_status = database.GetMinStatus(zone_id);
 	if (c->Admin() < min_status) {
-		c->Message(Chat::Default, "Your status is not high enough to go to this zone.");
+		c->Message(Chat::White, "Your status is not high enough to go to this zone.");
 		return;
 	}
 
@@ -52,8 +52,9 @@ void command_zone(Client *c, const Seperator *sep)
 	auto z = sep->IsNumber(4) ? std::stof(sep->arg[4]) : 0.0f;
 	auto zone_mode = sep->IsNumber(2) ? ZoneSolicited : ZoneToSafeCoords;
 
-	c->MovePC(
+	c->MovePCGuildID(
 		zone_id,
+		GUILD_NONE
 		x,
 		y,
 		z,

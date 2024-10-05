@@ -2,8 +2,8 @@
 
 void command_serversidename(Client *c, const Seperator *sep){
 	if (c->GetTarget())
-		c->Message(Chat::Default, c->GetTarget()->GetName());
+		c->Message(Chat::White, c->GetTarget()->GetName());
 	else
-		c->Message(Chat::Default, "Error: no target");
+		c->Message(Chat::White, "Error: no target");
 }
 

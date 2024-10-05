@@ -47,7 +47,7 @@ void command_skilldifficulty(Client *c, const Seperator *sep)
 				auto pack = new ServerPacket(ServerOP_ReloadSkills, 0);
 				worldserver.SendPacket(pack);
 				safe_delete(pack);
-				c->Message(Chat::Default, "Set skill %d to difficulty %0.2f and reloaded all zones.", skillid, difficulty);
+				c->Message(Chat::White, "Set skill %d to difficulty %0.2f and reloaded all zones.", skillid, difficulty);
 			}
 
 		}
@@ -56,7 +56,7 @@ void command_skilldifficulty(Client *c, const Seperator *sep)
 			auto pack = new ServerPacket(ServerOP_ReloadSkills, 0);
 			worldserver.SendPacket(pack);
 			safe_delete(pack);
-			c->Message(Chat::Default, "Reloaded skills in all zones.");
+			c->Message(Chat::White, "Reloaded skills in all zones.");
 		}
 		else if (strcasecmp(sep->arg[1], "values") == 0)
 		{
@@ -80,10 +80,10 @@ void command_skilldifficulty(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: #skills info - Provides information about target.");
-		c->Message(Chat::Default, "#skills difficulty [skillid] [difficulty] - Sets difficulty for selected skill.");
-		c->Message(Chat::Default, "#skills reload - Reloads skill difficulty in each zone.");
-		c->Message(Chat::Default, "#skills values - Displays target's skill values.");
+		c->Message(Chat::White, "Usage: #skills info - Provides information about target.");
+		c->Message(Chat::White, "#skills difficulty [skillid] [difficulty] - Sets difficulty for selected skill.");
+		c->Message(Chat::White, "#skills reload - Reloads skill difficulty in each zone.");
+		c->Message(Chat::White, "#skills values - Displays target's skill values.");
 	}
 }
 

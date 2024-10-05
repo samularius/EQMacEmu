@@ -6,8 +6,8 @@ void command_showskills(Client *c, const Seperator *sep){
 	if (c->GetTarget())
 		t = c->GetTarget();
 
-	c->Message(Chat::Default, "Skills for %s", t->GetName());
+	c->Message(Chat::White, "Skills for %s", t->GetName());
 	for (EQ::skills::SkillType i = EQ::skills::Skill1HBlunt; i <= EQ::skills::HIGHEST_SKILL; i = (EQ::skills::SkillType)(i + 1))
-		c->Message(Chat::Default, "Skill [%d] is at [%d]", i, t->GetSkill(i));
+		c->Message(Chat::White, "Skill [%d] is at [%d]", i, t->GetSkill(i));
 }
 

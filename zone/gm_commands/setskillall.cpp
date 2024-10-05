@@ -2,12 +2,12 @@
 
 void command_setskillall(Client *c, const Seperator *sep){
 	if (c->GetTarget() == 0)
-		c->Message(Chat::Default, "Error: #setallskill: No target.");
+		c->Message(Chat::White, "Error: #setallskill: No target.");
 	else if (!c->GetTarget()->IsClient())
-		c->Message(Chat::Default, "Error: #setskill: Target must be a client.");
+		c->Message(Chat::White, "Error: #setskill: Target must be a client.");
 	else if (!sep->IsNumber(1) || atoi(sep->arg[1]) < 0) {
-		c->Message(Chat::Default, "Usage: #setskillall value ");
-		c->Message(Chat::Default, "       value = 0 to %d", HARD_SKILL_CAP);
+		c->Message(Chat::White, "Usage: #setskillall value ");
+		c->Message(Chat::White, "       value = 0 to %d", HARD_SKILL_CAP);
 	}
 	else {
 		if (c->Admin() >= commandSetSkillsOther || c->GetTarget() == c || c->GetTarget() == 0) {
@@ -26,13 +26,13 @@ void command_setskillall(Client *c, const Seperator *sep){
 				}
 				else
 				{
-					c->Message(Chat::Default, "Error: #setallskill: No target.");
+					c->Message(Chat::White, "Error: #setallskill: No target.");
 					return;
 				}
 			}
 		}
 		else
-			c->Message(Chat::Default, "Error: Your status is not high enough to set anothers skills");
+			c->Message(Chat::White, "Error: Your status is not high enough to set anothers skills");
 	}
 }
 

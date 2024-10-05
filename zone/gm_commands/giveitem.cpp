@@ -2,13 +2,7 @@
 
 void command_giveitem(Client *c, const Seperator *sep){
 	if (!sep->IsNumber(1)) {
-		c->Message(Chat::Red, "Usage: #giveitem [item id] [charges] [reason], charges are optional, reason is required.");
-	}
-	else if (sep->arg[2][0] == 0) {
-		c->Message(Chat::Red, "Reason is required.");
-	}
-	else if (sep->IsNumber(2) &&sep->arg[3][0] == 0) {
-		c->Message(Chat::Red, "Reason is required.");
+		c->Message(Chat::Red, "Usage: #summonitem [item id] [charges], charges are optional");
 	}
 	else if (c->GetTarget() == nullptr) {
 		c->Message(Chat::Red, "You must target a client to give the item to.");
