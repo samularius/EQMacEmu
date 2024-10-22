@@ -2417,7 +2417,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		return 0;
 
 	// if we have at least one, we can make do, we'll just pretend they're the same
-	if(!caster) 
+	if(!caster)
 		caster = target;
 	if(!target)
 		target = caster;
