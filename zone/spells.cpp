@@ -2415,18 +2415,12 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if(!caster && !target)
 		return 0;
-		
-	
 
 	// if we have at least one, we can make do, we'll just pretend they're the same
-	if(!caster) {
-		Log(Logs::Detail, Logs::Spells, "Spell %d: NO CASTER, assuming TARGET", spell_id);
+	if(!caster) 
 		caster = target;
-	}
-	if(!target) {
-		Log(Logs::Detail, Logs::Spells, "Spell %d: NO TARGET, assuming CASTER", spell_id);
+	if(!target)
 		target = caster;
-	}
 
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;
@@ -2508,8 +2502,6 @@ int CalcBuffDuration_modification(int spell_id, int duration, bool isclient)
 		return duration;
 	}
 	
-	Log(Logs::Detail, Logs::Spells, "Spell %d: We passed all checks - start modification", spell_id);
-	
 	SpellModifier_Struct spellModifier;
 
 	// Ordered search through our spell modifier map, check exact spell and zone first, then fallback to aggregators
@@ -2562,12 +2554,10 @@ bool FindSpellModifier(int isclient, int spell_id, int zone_id, SpellModifier_St
 	
 	if (foundModifier != spellModifiers.end()) 
 	{
-		Log(Logs::Detail, Logs::Spells, "FindSpellModifier: client(%d) spell_id(%d) zone_id(%s) FOUND!", isclient, spell_id, zone_id);
 		spellModifier = foundModifier->second;
 		return true;
 	}
 	
-	Log(Logs::Detail, Logs::Spells, "FindSpellModifier: client(%d) spell_id(%d) zone_id(%s) NOT FOUND!", isclient, spell_id, zone_id);
 	return false;
 }
 
