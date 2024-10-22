@@ -2439,7 +2439,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if (caster && formula != DF_Permanent)
 	{
-		res = CalcBuffDuration_modification(spell_id, duration, caster->IsClient());
+		res = CalcBuffDuration_modification(spell_id, res, caster->IsClient());
 		
 		if (caster->IsClient() && IsBeneficialSpell(spell_id))
 		{	
