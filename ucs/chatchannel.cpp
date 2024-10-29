@@ -479,7 +479,7 @@ ChatChannel *ChatChannelList::AddClientToChannel(std::string ChannelName, Client
 		Password = ChannelName.substr(Colon + 1);
 	}
 
-	if (NormalisedName.compare(RuleS(Quarm, AllianceChannelName)) == 0)
+	if (NormalisedName.compare(RuleS(Quarm, AllianceChannelName)) == 0 || NormalisedName.compare(RuleS(Quarm, AllianceChannelReplacementName)) == 0)
 	{
 		NormalisedName = RuleS(Quarm, AllianceChannelReplacementName);
 		Password = "";
