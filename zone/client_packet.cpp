@@ -5518,6 +5518,8 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 					uint8 lang_skill = 100;
 					std::string message = StringFormat("Invited %s to the group.", Invitee->CastToClient()->GetCleanName());
 					group->GroupMessage(this, language, lang_skill, message.c_str());
+					message = StringFormat("You tell your party, '%s'", message.c_str());
+					Message(Chat::White, message.c_str());
 				}
 			}
 			else if (Invitee->IsRaidGrouped())
