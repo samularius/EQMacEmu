@@ -385,8 +385,6 @@ void WorldDatabase::SetMailKey(int CharID, int IPAddress, int MailKey) {
 		sprintf(MailKeyString, "%08X%08X", IPAddress, MailKey);
 	else
 		sprintf(MailKeyString, "%08X", MailKey);
-		
-	Log(Logs::General, Logs::Info, "WorldDatabase::SetMailKey(%i, %s)", CharID, MailKeyString);
 
     std::string query = StringFormat("UPDATE character_data SET mailkey = '%s' WHERE id = '%i'",
                                     MailKeyString, CharID);
