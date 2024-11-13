@@ -78,6 +78,8 @@ public:
 
 	void GetClientList(Json::Value &response);
 
+	std::string AppendChallengeModeFlagsToName(ClientListEntry* cle);
+
 protected:
 	inline uint32 GetNextCLEID() { return NextCLEID++; }
 
