@@ -1,7 +1,7 @@
 #include "../client.h"
 
 void command_emoteview(Client *c, const Seperator *sep)
-{
+	{
 	if (!c->GetTarget() || !c->GetTarget()->IsNPC()) {
 		c->Message(Chat::White, "You must target an NPC to view their emotes.");
 		return;
@@ -53,7 +53,7 @@ void command_emoteview(Client *c, const Seperator *sep)
 			).c_str()
 		);
 		return;
-	}
+}
 
 	c->Message(
 		Chat::White,

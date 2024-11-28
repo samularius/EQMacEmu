@@ -1129,7 +1129,7 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 	}
 	case ChatChannel_Say: { /* Say */
 		if(message[0] == COMMAND_CHAR) {
-			if (command_dispatch(this, message) == -2) {
+			if (command_dispatch(this, message, false) == -2) {
 				if(parse->PlayerHasQuestSub(EVENT_COMMAND)) {
 					int i = parse->EventPlayer(EVENT_COMMAND, this, message, 0);
 					if(i == 0 && !RuleB(Chat, SuppressCommandErrors)) {
@@ -7058,18 +7058,20 @@ void Client::SendChatLineBreak(uint16 color) {
 
 uint16 Client::GetWeaponEffectID(int slot)
 {
-	if (slot != EQ::invslot::slotPrimary && slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo)
+	if (slot != EQ::invslot::slotPrimary && slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo) {
 		return 0;
+	}
 
 	EQ::ItemInstance* weaponInst = GetInv().GetItem(slot);
 	const EQ::ItemData* weapon = nullptr;
-	if (weaponInst)
+	if (weaponInst) {
 		weapon = weaponInst->GetItem();
+	}
 
-	if (weapon)
+	if (weapon) {
 		return weapon->Proc.Effect;
-	else
-		return 0;
+
+	return 0;
 }
 
 void Client::PermaGender(uint32 gender)
@@ -7080,5 +7082,5 @@ void Client::PermaGender(uint32 gender)
 }
 
 bool Client::SendGMCommand(std::string message, bool ignore_status) {
-	return command_dispatch(this, message.c_str()) >= 0 ? true : false;
+	return command_dispatch(this, message, ignore_status) >= 0 ? true : false;
 }

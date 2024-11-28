@@ -22,8 +22,9 @@ void command_repop(Client *c, const Seperator *sep)
 			iterator.Reset();
 			while (iterator.MoreElements()) {
 				std::string query = StringFormat(
-					"DELETE FROM respawn_times WHERE id = %lu",
-					(unsigned long)iterator.GetData()->GetID()
+					"DELETE FROM respawn_times WHERE id = %lu and guild_id = %lu",
+					(unsigned long)iterator.GetData()->GetID(),
+					(unsigned long)zone->GetGuildID()
 				);
 				auto results = database.QueryDatabase(query);
 				iterator.Advance();

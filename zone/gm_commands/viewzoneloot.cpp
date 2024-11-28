@@ -27,7 +27,6 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 		if (current_npc) {
 			std::string npc_name = current_npc->GetCleanName();
 			uint32 zone_id = zone->GetZoneID();
-
 			std::string command_link = Saylink::Silent(
 				fmt::format(
 					"#{} {} {} {} {}",
@@ -111,4 +110,3 @@ void command_viewzoneloot(Client* c, const Seperator* sep)
 	}
 }
 
-//Please keep this at the bottom of command.cpp! Feel free to use this for temporary commands used in testing :)
