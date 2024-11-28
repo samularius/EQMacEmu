@@ -17,12 +17,12 @@ void command_appearance(Client *c, const Seperator *sep)
 				).c_str()
 			);
 		}
-
+	// sends any appearance packet
 		return;
 	}
 	Mob *t = c;
 	if (c->GetTarget()) {
-		t = c->GetTarget();
+			t = c->GetTarget();
 	}
 
 	const uint32 type = Strings::ToUnsignedInt(sep->arg[1]);

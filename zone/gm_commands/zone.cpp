@@ -52,9 +52,8 @@ void command_zone(Client *c, const Seperator *sep)
 	auto z = sep->IsNumber(4) ? std::stof(sep->arg[4]) : 0.0f;
 	auto zone_mode = sep->IsNumber(2) ? ZoneSolicited : ZoneToSafeCoords;
 
-	c->MovePCGuildID(
+	c->MovePC(
 		zone_id,
-		GUILD_NONE
 		x,
 		y,
 		z,

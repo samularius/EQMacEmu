@@ -31,6 +31,7 @@ void command_summon(Client *c, const Seperator *sep){
 				szp->x_pos = c->GetX(); // May need to add a factor of 8 in here..
 				szp->y_pos = c->GetY();
 				szp->z_pos = c->GetZ();
+				szp->zoneguildid = zone->GetGuildID();
 				worldserver.SendPacket(pack);
 				safe_delete(pack);
 			}
@@ -72,7 +73,7 @@ void command_summon(Client *c, const Seperator *sep){
 		}
 
 		c->Message(Chat::White, "Summoning player %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
-		t->CastToClient()->MovePC(zone->GetZoneID(), c->GetX(), c->GetY(), c->GetZ(), c->GetHeading(), 2, GMSummon);
+		t->CastToClient()->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), c->GetX(), c->GetY(), c->GetZ(), c->GetHeading(), 2, GMSummon);
 	}
 }
 

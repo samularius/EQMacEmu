@@ -16,7 +16,7 @@ void command_flymode(Client *c, const Seperator *sep)
 	auto flymode_id = std::stoul(sep->arg[1]);
 	uint32 account = c->AccountID();
 	if (
-		flymode_id <GravityBehavior::Ground &&
+		flymode_id < GravityBehavior::Ground &&
 		flymode_id > GravityBehavior::Water
 		) {
 		c->Message(Chat::White, "Usage:: #flymode [Flymode ID]");

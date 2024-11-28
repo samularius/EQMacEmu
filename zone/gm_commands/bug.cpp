@@ -1,3 +1,4 @@
+
 #include "../client.h"
 
 void command_bug(Client *c, const Seperator *sep)

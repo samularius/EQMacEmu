@@ -3,7 +3,7 @@
 extern WorldServer worldserver;
 
 void command_reloadworld(Client *c, const Seperator *sep){
-	//c->Message(Chat::White, "Reloading quest cache, reloading rules, and repopping zones worldwide.");
+	//c->Message(Chat::Default, "Reloading quest cache, reloading rules, and repopping zones worldwide.");
 	auto pack = new ServerPacket(ServerOP_ReloadWorld, sizeof(ReloadWorld_Struct));
 	ReloadWorld_Struct* RW = (ReloadWorld_Struct*) pack->pBuffer;
 	RW->Option = 0; //Keep it, maybe we'll use it in the future.

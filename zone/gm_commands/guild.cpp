@@ -9,19 +9,6 @@ void command_guild(Client *c, const Seperator *sep){
 	Mob *target = c->GetTarget();
 
 	if (strcasecmp(sep->arg[1], "help") == 0) {
-		/*
-		c->Message(Chat::White, "Guild commands:");
-		c->Message(Chat::White, "  #guild status [name] - shows guild and rank of target");
-		c->Message(Chat::White, "  #guild info guildnum - shows info/current structure");
-		c->Message(Chat::White, "  #guild invite [charname]");
-		c->Message(Chat::White, "  #guild remove [charname]");
-		c->Message(Chat::White, "  #guild promote rank [charname]");
-		c->Message(Chat::White, "  #guild demote rank [charname]");
-		c->Message(Chat::White, "  /guildmotd [newmotd] (use 'none' to clear)");
-		c->Message(Chat::White, "  #guild edit rank title newtitle");
-		c->Message(Chat::White, "  #guild edit rank permission 0/1");
-		c->Message(Chat::White, "  #guild leader newleader (they must be rank0)");
-		*/
 		c->Message(Chat::White, "GM Guild commands:");
 		c->Message(Chat::White, "  #guild list - lists all guilds on the server");
 		c->Message(Chat::White, "  #guild create {guildleader charname or CharID} guildname");
@@ -30,7 +17,6 @@ void command_guild(Client *c, const Seperator *sep){
 		c->Message(Chat::White, "  #guild set charname guildID    (0=no guild)");
 		c->Message(Chat::White, "  #guild setrank charname rank");
 		c->Message(Chat::White, "  #guild setleader guildID {guildleader charname or CharID}");
-		//c->Message(Chat::White, "  #guild setdoor guildEQID");
 	}
 	else if (strcasecmp(sep->arg[1], "status") == 0 || strcasecmp(sep->arg[1], "stat") == 0) {
 		Client* client = 0;
@@ -72,19 +58,19 @@ void command_guild(Client *c, const Seperator *sep){
 	/*
 	else if (strcasecmp(sep->arg[1], "edit") == 0) {
 	if (c->GuildDBID() == 0)
-	c->Message(Chat::White, "You arent in a guild!");
+	c->Message(Chat::Default, "You arent in a guild!");
 	else if (!sep->IsNumber(2))
-	c->Message(Chat::White, "Error: invalid rank #.");
+	c->Message(Chat::Default, "Error: invalid rank #.");
 	else if (atoi(sep->arg[2]) < 0 || atoi(sep->arg[2]) > GUILD_MAX_RANK)
-	c->Message(Chat::White, "Error: invalid rank #.");
+	c->Message(Chat::Default, "Error: invalid rank #.");
 	else if (!c->GuildRank() == 0)
-	c->Message(Chat::White, "You must be rank %s to use edit.", guilds[c->GuildEQID()].rank[0].rankname);
+	c->Message(Chat::Default, "You must be rank %s to use edit.", guilds[c->GuildEQID()].rank[0].rankname);
 	else if (!worldserver.Connected())
-	c->Message(Chat::White, "Error: World server dirconnected");
+	c->Message(Chat::Default, "Error: World server dirconnected");
 	else {
 	if (!helper_guild_edit(c, c->GuildDBID(), c->GuildEQID(), atoi(sep->arg[2]), sep->arg[3], sep->argplus[4])) {
-	c->Message(Chat::White, "  #guild edit rank title newtitle");
-	c->Message(Chat::White, "  #guild edit rank permission 0/1");
+	c->Message(Chat::Default, "  #guild edit rank title newtitle");
+	c->Message(Chat::Default, "  #guild edit rank permission 0/1");
 	}
 	else {
 	auto pack = new ServerPacket(ServerOP_RefreshGuild, 5);
@@ -97,20 +83,20 @@ void command_guild(Client *c, const Seperator *sep){
 	}
 	else if (strcasecmp(sep->arg[1], "gmedit") == 0 && admin >= 100) {
 	if (!sep->IsNumber(2))
-	c->Message(Chat::White, "Error: invalid guilddbid.");
+	c->Message(Chat::Default, "Error: invalid guilddbid.");
 	else if (!sep->IsNumber(3))
-	c->Message(Chat::White, "Error: invalid rank #.");
+	c->Message(Chat::Default, "Error: invalid rank #.");
 	else if (atoi(sep->arg[3]) < 0 || atoi(sep->arg[3]) > GUILD_MAX_RANK)
-	c->Message(Chat::White, "Error: invalid rank #.");
+	c->Message(Chat::Default, "Error: invalid rank #.");
 	else if (!worldserver.Connected())
-	c->Message(Chat::White, "Error: World server dirconnected");
+	c->Message(Chat::Default, "Error: World server dirconnected");
 	else {
 	uint32 eqid = database.GetGuildEQID(atoi(sep->arg[2]));
 	if (eqid == GUILD_NONE)
-	c->Message(Chat::White, "Error: Guild not found");
+	c->Message(Chat::Default, "Error: Guild not found");
 	else if (!helper_guild_edit(c, atoi(sep->arg[2]), eqid, atoi(sep->arg[3]), sep->arg[4], sep->argplus[5])) {
-	c->Message(Chat::White, "  #guild gmedit guilddbid rank title newtitle");
-	c->Message(Chat::White, "  #guild gmedit guilddbid rank permission 0/1");
+	c->Message(Chat::Default, "  #guild gmedit guilddbid rank title newtitle");
+	c->Message(Chat::Default, "  #guild gmedit guilddbid rank permission 0/1");
 	}
 	else {
 	auto pack = new ServerPacket(ServerOP_RefreshGuild, 5);
@@ -164,24 +150,6 @@ void command_guild(Client *c, const Seperator *sep){
 			}
 		}
 	}
-	/*else if (strcasecmp(sep->arg[1], "setdoor") == 0 && admin >= minStatusToEditOtherGuilds) {
-
-	if (!sep->IsNumber(2))
-	c->Message(Chat::White, "Usage: #guild setdoor guildEQid (0 = delete guilddoor)");
-	else {
-	// guild doors
-	if((!guilds[atoi(sep->arg[2])].databaseID) && (atoi(sep->arg[2])!=0) )
-	{
-
-	c->Message(Chat::White, "These is no guild with this guildEQid");
-	}
-	else {
-	c->SetIsSettingGuildDoor(true);
-	c->Message(Chat::White, "Click on a door you want to become a guilddoor");
-	c->SetSetGuildDoorID(atoi(sep->arg[2]));
-	}
-	}
-	}*/
 	else if (strcasecmp(sep->arg[1], "setrank") == 0) {
 		int rank = atoi(sep->arg[3]);
 		if (!sep->IsNumber(3))
@@ -412,12 +380,12 @@ grl.warpeace = guilds[eqid].rank[rank].warpeace;
 
 if (strcasecmp(what, "title") == 0) {
 if (strlen(value) > 100)
-c->Message(Chat::White, "Error: Title has a maxium length of 100 characters.");
+c->Message(Chat::Default, "Error: Title has a maxium length of 100 characters.");
 else
 strcpy(grl.rankname, value);
 }
 else if (rank == 0)
-c->Message(Chat::White, "Error: Rank 0's permissions can not be changed.");
+c->Message(Chat::Default, "Error: Rank 0's permissions can not be changed.");
 else {
 if (!(strlen(value) == 1 && (value[0] == '0' || value[0] == '1')))
 
@@ -440,10 +408,10 @@ grl.speakgu = (value[0] == '1');
 else if (strcasecmp(what, "warpeace") == 0)
 grl.warpeace = (value[0] == '1');
 else
-c->Message(Chat::White, "Error: Permission name not recognized.");
+c->Message(Chat::Default, "Error: Permission name not recognized.");
 }
 if (!database.EditGuild(dbid, rank, &grl))
-c->Message(Chat::White, "Error: database.EditGuild() failed");
+c->Message(Chat::Default, "Error: database.EditGuild() failed");
 return true;
 }*/
 

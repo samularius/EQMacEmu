@@ -1,7 +1,7 @@
 #include "../client.h"
 
 void command_emotesearch(Client *c, const Seperator *sep)
-{
+	{
 	auto arguments = sep->argnum;
 	if (!arguments) {
 		c->Message(Chat::White, "Usage: #emotesearch [Emote ID]");
@@ -56,9 +56,9 @@ void command_emotesearch(Client *c, const Seperator *sep)
 
 			if (emote_count == 50) {
 				break;
+				}
 			}
 		}
-	}
 	else {
 		auto emote_id = std::stoul(search_criteria);
 
@@ -89,13 +89,13 @@ void command_emotesearch(Client *c, const Seperator *sep)
 
 				emote_count++;
 				emote_number++;
-			}
+				}
 
 			if (emote_count == 50) {
-				break;
+					break;
 			}
-		}
 	}
+}
 
 	auto found_string = (
 		found_by_id ?
