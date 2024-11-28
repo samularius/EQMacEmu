@@ -32,6 +32,7 @@
 #include "../zone/string_ids.h"
 #include "../common/zone_store.h"
 #include <set>
+#include <cstring>  // For strlen and strncat
 
 extern ConsoleList		console_list;
 extern ZSList			zoneserver_list;
@@ -713,7 +714,8 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 					++totalusers;
 					if (totalusers <= wholimit || admin >= gmwholist || (whom->guildid >= 0 && noguildlimit))
 					{
-						totallength = totallength + strlen(countcle->name()) + strlen(countcle->AccountName()) + strlen(guild_mgr.GetGuildName(countcle->GuildID())) + 5;
+						std::string name = AppendChallengeModeFlagsToName(countcle);
+						totallength = totallength + name.length() + strlen(countcle->AccountName()) + strlen(guild_mgr.GetGuildName(countcle->GuildID())) + 5;
 					}
 				}
 				// Count for Players. We want to exclude anon players from the count.
@@ -723,7 +725,8 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 					++totalusers;
 					if (totalusers <= wholimit || admin >= gmwholist || (whom->guildid >= 0 && noguildlimit))
 					{
-						totallength = totallength + strlen(countcle->name()) + strlen(guild_mgr.GetGuildName(countcle->GuildID())) + 5;
+						std::string name = AppendChallengeModeFlagsToName(countcle);
+						totallength = totallength + name.length() + strlen(guild_mgr.GetGuildName(countcle->GuildID())) + 5;
 					}
 				}
 			}
@@ -889,7 +892,8 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 					plgm = cle->Admin();
 
 				char plname[64] = { 0 };
-				strcpy(plname, cle->name());
+				std::string name = AppendChallengeModeFlagsToName(cle);
+				strcpy(plname, name.c_str());				
 
 				char placcount[30] = { 0 };
 				if (admin >= cle->Admin() && admin >= AccountStatus::QuestTroupe)
@@ -942,6 +946,38 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 		Log(Logs::Detail, Logs::WorldServer, "Unknown error in world's SendWhoAll (probably mem error), ignoring... Player id is: %i, Name is: %s", fromid, to);
 		return;
 	}
+}
+
+std::string ClientList::AppendChallengeModeFlagsToName(ClientListEntry* cle) 
+{
+	if (cle == nullptr) 
+	{
+        return ""; 
+    }
+
+    std::string name = cle->name();
+
+    if (cle->IsSelfFound() || cle->IsHardcore() || cle->IsSolo()) 
+	{
+        std::string appendStr = "[";
+        if (cle->IsSolo())
+            appendStr += "S";
+        if (cle->IsSelfFound())
+            appendStr += "SF";
+        if (cle->IsHardcore())
+            appendStr += "HC";
+		appendStr += "] ";
+
+		auto remainingSpace = 63 - name.length();
+		
+		// Append the flag to the name if there's enough space
+		if (remainingSpace > appendStr.length()) 
+		{
+			name = appendStr + name;
+		}
+    }
+
+    return name;
 }
 
 void ClientList::SendFriendsWho(ServerFriendsWho_Struct *FriendsWho, WorldTCPConnection* connection) {
@@ -1599,6 +1635,9 @@ bool ClientList::WhoAllFilter(ClientListEntry* client, Who_All_Struct* whom, int
 		((tmpZone != 0 && strncasecmp(tmpZone, whom->whom, whomlen) == 0 && not_anon) || //zone (GM only)
 		strncasecmp(client->name(),whom->whom, whomlen) == 0 || // name
 		(strncasecmp(guild_mgr.GetGuildName(client->GuildID()), whom->whom, whomlen) == 0 && guild_not_anon)|| // This is used by who all guild
+		(strstr(whom->whom, "solo") != NULL && client->IsSolo()) || // This is used to search for any players with the solo flag
+		(strstr(whom->whom, "selffound") != NULL && client->IsSelfFound() && !client->IsSolo()) || // This is used to search for any players with the self found flag that aren't solo
+		(strstr(whom->whom, "hardcore") != NULL && client->IsHardcore()) || // This is used to search for any players with the hardcore flag
 		(admin >= gmwholist && strncasecmp(client->AccountName(), whom->whom, whomlen) == 0)))) // account (GM only)
 	{
 		return true;

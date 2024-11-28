@@ -44,9 +44,12 @@ public:
 
 	int FindAccount(const char *CharacterName, Client *c);
 	int FindCharacter(const char *CharacterName);
+	bool VerifyMailKey(const std::string& characterName, int IPAddress, const std::string& MailKey);
 	bool GetVariable(const char* varname, char* varvalue, uint16 varvalue_len);
 	bool LoadChatChannels();
 	void GetAccountStatus(Client *c);
+	void LogUCSPlayerSpeech(const char* from, const char* to, const char* message, uint16 minstatus, uint32 guilddbid, uint8 type, uint32 characterid, uint32 groupid);
+	uint8 CheckUCSRevoked(uint32 account_id);
 	void SetChannelPassword(std::string ChannelName, std::string Password);
 	void SetChannelOwner(std::string ChannelName, std::string Owner);
 	void SetMessageStatus(int MessageNumber, int Status);

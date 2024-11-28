@@ -3993,7 +3993,7 @@ bool ZoneDatabase::ResetStartingItems(Client* c, uint32 si_race, uint32 si_class
 		si_race,
 		si_class,
 		si_deity,
-		si_current_zone,
+		starting_zone_id,
 		admin_level,
 		ContentFilterCriteria::apply().c_str()
 	);
