@@ -7058,18 +7058,20 @@ void Client::SendChatLineBreak(uint16 color) {
 
 uint16 Client::GetWeaponEffectID(int slot)
 {
-	if (slot != EQ::invslot::slotPrimary && slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo)
+	if (slot != EQ::invslot::slotPrimary && slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo) {
 		return 0;
+	}
 
 	EQ::ItemInstance* weaponInst = GetInv().GetItem(slot);
 	const EQ::ItemData* weapon = nullptr;
-	if (weaponInst)
+	if (weaponInst) {
 		weapon = weaponInst->GetItem();
+	}
 
-	if (weapon)
+	if (weapon) {
 		return weapon->Proc.Effect;
-	else
-		return 0;
+
+	return 0;
 }
 
 void Client::PermaGender(uint32 gender)
