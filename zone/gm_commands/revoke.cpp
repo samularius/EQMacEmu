@@ -6,7 +6,7 @@ extern WorldServer worldserver;
 void command_revoke(Client *c, const Seperator *sep)
 {
 	if (sep->arg[1][0] == 0 || sep->arg[2][0] == 0 || sep->arg[3][0] == 0) {
-		c->Message(Chat::Default, "Usage: #revoke [charname] [0(unrevoke) / 1(all but guild/group/raid) / 2(guild/group/raid mute)] [duration in days (0 days is perma)]");
+		c->Message(Chat::White, "Usage: #revoke [charname] [0(unrevoke) / 1(all but guild/group/raid) / 2(guild/group/raid mute)] [duration in days (0 days is perma)]");
 		return;
 	}
 

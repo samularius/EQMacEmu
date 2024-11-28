@@ -24,30 +24,30 @@ class Client;
 class Seperator;
 
 #include "../common/types.h"
+#include <string>
 
 #define	COMMAND_CHAR '#'
 
 typedef void (*CmdFuncPtr)(Client*, const Seperator*);
 
 typedef struct {
-	int access;
-	const char* desc;		// description of command
+	uint8 admin;
+	std::string description;
 	CmdFuncPtr function;	//null means perl function
 } CommandRecord;
 
-extern int (*command_dispatch)(Client*, char const*);
-extern int commandcount;			// number of commands loaded
+extern int (*command_dispatch)(Client *, std::string, bool);
+extern int command_count; // Commands Loaded Count
 
 // the command system:
 int command_init(void);
 void command_deinit(void);
-
+int command_add(std::string command_name, std::string description, uint8 admin, CmdFuncPtr function);
+int command_notavail(Client *c, std::string message, bool ignore_status);
+int command_realdispatch(Client *c, std::string message, bool ignore_status);
+void command_logcommand(Client *c, std::string message);
+uint8 GetCommandStatus(Client *c, std::string command_name);
 void SendRuleSubCommands(Client* c);
-
-int command_add(std::string command_name, const char* desc, int access, CmdFuncPtr function);
-int command_notavail(Client* c, const char* message);
-int command_realdispatch(Client* c, char const* message);
-void command_logcommand(Client* c, const char* message);
 
 //commands
 void command_advnpcspawn(Client* c, const Seperator* sep);
@@ -64,6 +64,7 @@ void command_ban(Client* c, const Seperator* sep);
 void command_betabuff(Client* c, const Seperator* sep);
 void command_beard(Client* c, const Seperator* sep);
 void command_beardcolor(Client* c, const Seperator* sep);
+void command_bestz(Client *c, const Seperator *sep);
 void command_bind(Client* c, const Seperator* sep);
 void command_boatinfo(Client* c, const Seperator* sep);
 void command_bug(Client* c, const Seperator* sep);
@@ -71,6 +72,7 @@ void command_castspell(Client* c, const Seperator* sep);
 void command_chat(Client* c, const Seperator* sep);
 void command_chattest(Client* c, const Seperator* sep);
 void command_checklos(Client* c, const Seperator* sep);
+void command_clearsaylink(Client *c, const Seperator *sep);
 void command_cleartimers(Client* c, const Seperator* sep);
 void command_connectworldserver(Client* c, const Seperator* sep);
 void command_coredump(Client* c, const Seperator* sep);
@@ -99,10 +101,7 @@ void command_expansion(Client* c, const Seperator* sep);
 void command_face(Client* c, const Seperator* sep);
 void command_falltest(Client* c, const Seperator* sep);
 void command_fillbuffs(Client* c, const Seperator* sep);
-void command_findaliases(Client* c, const Seperator* sep);
-void command_findnpctype(Client* c, const Seperator* sep);
-void command_findspell(Client* c, const Seperator* sep);
-void command_findzone(Client* c, const Seperator* sep);
+void command_find(Client *c, const Seperator *sep);
 void command_fixmob(Client* c, const Seperator* sep);
 void command_flagedit(Client* c, const Seperator* sep);
 void command_flag(Client* c, const Seperator* sep);
@@ -145,17 +144,16 @@ void command_interrogatelegacy(Client* c, const Seperator* sep);
 void command_interrupt(Client* c, const Seperator* sep);
 void command_invul(Client* c, const Seperator* sep);
 void command_ipban(Client* c, const Seperator* sep);
-void command_ipc(Client* c, const Seperator* sep);
 void command_ipexemption(Client* c, const Seperator* sep);
 void command_iplookup(Client* c, const Seperator* sep);
 void command_iteminfo(Client* c, const Seperator* sep);
-void command_itemsearch(Client* c, const Seperator* sep);
 void command_keyring(Client* c, const Seperator* sep);
 void command_kick(Client* c, const Seperator* sep);
 void command_kill(Client* c, const Seperator* sep);
 void command_lastname(Client* c, const Seperator* sep);
 void command_leaderboard(Client* c, const Seperator* sep);
 void command_level(Client* c, const Seperator* sep);
+void command_list(Client *c, const Seperator *sep);
 void command_listnpcs(Client* c, const Seperator* sep);
 void command_load_shared_memory(Client* c, const Seperator* sep);
 void command_loc(Client* c, const Seperator* sep);
@@ -195,21 +193,15 @@ void command_numauths(Client* c, const Seperator* sep);
 void command_oocmute(Client* c, const Seperator* sep);
 void command_opcode(Client* c, const Seperator* sep);
 void command_optest(Client* c, const Seperator* sep);
-#ifdef PACKET_PROFILER
-void command_packetprofile(Client* c, const Seperator* sep);
-#endif
 void command_path(Client* c, const Seperator* sep);
 void command_peekinv(Client* c, const Seperator* sep);
+void command_pf(Client *c, const Seperator *sep);
 void command_peqzone(Client* c, const Seperator* sep);
 void command_permaclass(Client* c, const Seperator* sep);
 void command_permagender(Client* c, const Seperator* sep);
 void command_permarace(Client* c, const Seperator* sep);
 void command_petition(Client* c, const Seperator* sep);
 void command_playsound(Client* c, const Seperator* sep);
-#ifdef EQPROFILE
-void command_profiledump(Client* c, const Seperator* sep);
-void command_profilereset(Client* c, const Seperator* sep);
-#endif
 void command_push(Client* c, const Seperator* sep);
 void command_pvp(Client* c, const Seperator* sep);
 void command_qglobal(Client* c, const Seperator* sep);
@@ -267,12 +259,14 @@ void command_showbuffs(Client* c, const Seperator* sep);
 void command_showfilters(Client* c, const Seperator* sep);
 void command_showhelm(Client* c, const Seperator* sep);
 void command_showlootlockouts(Client* c, const Seperator* sep);
+void command_shownpcgloballoot(Client *c, const Seperator *sep);
 void command_showpetspell(Client* c, const Seperator* sep);
 void command_showquake(Client* c, const Seperator* sep);
 void command_showregen(Client* c, const Seperator* sep);
 void command_showskills(Client* c, const Seperator* sep);
 void command_showspellslist(Client* c, const Seperator* sep);
 void command_showstats(Client* c, const Seperator* sep);
+void command_showzonegloballoot(Client *c, const Seperator *sep);
 void command_showtraderitems(Client* c, const Seperator* sep);
 void command_shutdown(Client* c, const Seperator* sep);
 void command_size(Client* c, const Seperator* sep);
@@ -288,9 +282,7 @@ void command_summonitem(Client* c, const Seperator* sep);
 void command_suspend(Client* c, const Seperator* sep);
 void command_synctod(Client* c, const Seperator* sep);
 void command_testcommand(Client* c, const Seperator* sep);
-void command_testcopy(Client* c, const Seperator* sep);
 void command_testspawn(Client* c, const Seperator* sep);
-void command_testspawnkill(Client* c, const Seperator* sep);
 void command_texture(Client* c, const Seperator* sep);
 void command_time(Client* c, const Seperator* sep);
 void command_timers(Client* c, const Seperator* sep);
@@ -305,7 +297,6 @@ void command_unmemspell(Client* c, const Seperator* sep);
 void command_unmemspells(Client* c, const Seperator* sep);
 void command_unscribespell(Client* c, const Seperator* sep);
 void command_unscribespells(Client* c, const Seperator* sep);
-void command_update(Client* c, const Seperator* sep);
 void command_uptime(Client* c, const Seperator* sep);
 void command_version(Client* c, const Seperator* sep);
 void command_viewnpctype(Client* c, const Seperator* sep);

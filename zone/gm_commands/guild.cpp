@@ -9,28 +9,14 @@ void command_guild(Client *c, const Seperator *sep){
 	Mob *target = c->GetTarget();
 
 	if (strcasecmp(sep->arg[1], "help") == 0) {
-		/*
-		c->Message(Chat::Default, "Guild commands:");
-		c->Message(Chat::Default, "  #guild status [name] - shows guild and rank of target");
-		c->Message(Chat::Default, "  #guild info guildnum - shows info/current structure");
-		c->Message(Chat::Default, "  #guild invite [charname]");
-		c->Message(Chat::Default, "  #guild remove [charname]");
-		c->Message(Chat::Default, "  #guild promote rank [charname]");
-		c->Message(Chat::Default, "  #guild demote rank [charname]");
-		c->Message(Chat::Default, "  /guildmotd [newmotd] (use 'none' to clear)");
-		c->Message(Chat::Default, "  #guild edit rank title newtitle");
-		c->Message(Chat::Default, "  #guild edit rank permission 0/1");
-		c->Message(Chat::Default, "  #guild leader newleader (they must be rank0)");
-		*/
-		c->Message(Chat::Default, "GM Guild commands:");
-		c->Message(Chat::Default, "  #guild list - lists all guilds on the server");
-		c->Message(Chat::Default, "  #guild create {guildleader charname or CharID} guildname");
-		c->Message(Chat::Default, "  #guild delete guildID");
-		c->Message(Chat::Default, "  #guild rename guildID newname");
-		c->Message(Chat::Default, "  #guild set charname guildID    (0=no guild)");
-		c->Message(Chat::Default, "  #guild setrank charname rank");
-		c->Message(Chat::Default, "  #guild setleader guildID {guildleader charname or CharID}");
-		//c->Message(Chat::Default, "  #guild setdoor guildEQID");
+		c->Message(Chat::White, "GM Guild commands:");
+		c->Message(Chat::White, "  #guild list - lists all guilds on the server");
+		c->Message(Chat::White, "  #guild create {guildleader charname or CharID} guildname");
+		c->Message(Chat::White, "  #guild delete guildID");
+		c->Message(Chat::White, "  #guild rename guildID newname");
+		c->Message(Chat::White, "  #guild set charname guildID    (0=no guild)");
+		c->Message(Chat::White, "  #guild setrank charname rank");
+		c->Message(Chat::White, "  #guild setleader guildID {guildleader charname or CharID}");
 	}
 	else if (strcasecmp(sep->arg[1], "status") == 0 || strcasecmp(sep->arg[1], "stat") == 0) {
 		Client* client = 0;
@@ -39,24 +25,24 @@ void command_guild(Client *c, const Seperator *sep){
 		else if (target != 0 && target->IsClient())
 			client = target->CastToClient();
 		if (client == 0)
-			c->Message(Chat::Default, "You must target someone or specify a character name");
+			c->Message(Chat::White, "You must target someone or specify a character name");
 		else if ((client->Admin() >= minStatusToEditOtherGuilds && admin < minStatusToEditOtherGuilds) && client->GuildID() != c->GuildID()) // no peeping for GMs, make sure tell message stays the same
-			c->Message(Chat::Default, "You must target someone or specify a character name.");
+			c->Message(Chat::White, "You must target someone or specify a character name.");
 		else {
 			if (!client->IsInAGuild())
-				c->Message(Chat::Default, "%s is not in a guild.", client->GetName());
+				c->Message(Chat::White, "%s is not in a guild.", client->GetName());
 			else if (guild_mgr.IsGuildLeader(client->GuildID(), client->CharacterID()))
-				c->Message(Chat::Default, "%s is the leader of <%s> rank: %s", client->GetName(), guild_mgr.GetGuildName(client->GuildID()), guild_mgr.GetRankName(client->GuildID(), client->GuildRank()));
+				c->Message(Chat::White, "%s is the leader of <%s> rank: %s", client->GetName(), guild_mgr.GetGuildName(client->GuildID()), guild_mgr.GetRankName(client->GuildID(), client->GuildRank()));
 			else
-				c->Message(Chat::Default, "%s is a member of <%s> rank: %s", client->GetName(), guild_mgr.GetGuildName(client->GuildID()), guild_mgr.GetRankName(client->GuildID(), client->GuildRank()));
+				c->Message(Chat::White, "%s is a member of <%s> rank: %s", client->GetName(), guild_mgr.GetGuildName(client->GuildID()), guild_mgr.GetRankName(client->GuildID(), client->GuildRank()));
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "info") == 0) {
 		if (sep->arg[2][0] == 0 && c->IsInAGuild()) {
 			if (admin >= minStatusToEditOtherGuilds)
-				c->Message(Chat::Default, "Usage: #guildinfo guild_id");
+				c->Message(Chat::White, "Usage: #guildinfo guild_id");
 			else
-				c->Message(Chat::Default, "You're not in a guild");
+				c->Message(Chat::White, "You're not in a guild");
 		}
 		else {
 			uint32 tmp = GUILD_NONE;
@@ -123,7 +109,7 @@ void command_guild(Client *c, const Seperator *sep){
 	*/
 	else if (strcasecmp(sep->arg[1], "set") == 0) {
 		if (!sep->IsNumber(3))
-			c->Message(Chat::Default, "Usage: #guild set charname guildgbid (0 = clear guildtag)");
+			c->Message(Chat::White, "Usage: #guild set charname guildgbid (0 = clear guildtag)");
 		else {
 			uint32 guild_id = atoi(sep->arg[3]);
 
@@ -160,34 +146,16 @@ void command_guild(Client *c, const Seperator *sep){
 				c->Message(Chat::Red, "Error putting '%s' into guild %d", sep->arg[2], guild_id);
 			}
 			else {
-				c->Message(Chat::Default, "%s has been put into guild %d", sep->arg[2], guild_id);
+				c->Message(Chat::White, "%s has been put into guild %d", sep->arg[2], guild_id);
 			}
 		}
 	}
-	/*else if (strcasecmp(sep->arg[1], "setdoor") == 0 && admin >= minStatusToEditOtherGuilds) {
-
-	if (!sep->IsNumber(2))
-	c->Message(Chat::Default, "Usage: #guild setdoor guildEQid (0 = delete guilddoor)");
-	else {
-	// guild doors
-	if((!guilds[atoi(sep->arg[2])].databaseID) && (atoi(sep->arg[2])!=0) )
-	{
-
-	c->Message(Chat::Default, "These is no guild with this guildEQid");
-	}
-	else {
-	c->SetIsSettingGuildDoor(true);
-	c->Message(Chat::Default, "Click on a door you want to become a guilddoor");
-	c->SetSetGuildDoorID(atoi(sep->arg[2]));
-	}
-	}
-	}*/
 	else if (strcasecmp(sep->arg[1], "setrank") == 0) {
 		int rank = atoi(sep->arg[3]);
 		if (!sep->IsNumber(3))
-			c->Message(Chat::Default, "Usage: #guild setrank charname rank");
+			c->Message(Chat::White, "Usage: #guild setrank charname rank");
 		else if (rank < 0 || rank > GUILD_MAX_RANK)
-			c->Message(Chat::Default, "Error: invalid rank #.");
+			c->Message(Chat::White, "Error: invalid rank #.");
 		else {
 			uint32 charid = database.GetCharacterID(sep->arg[2]);
 			if (charid == 0) {
@@ -207,14 +175,14 @@ void command_guild(Client *c, const Seperator *sep){
 			if (!guild_mgr.SetGuildRank(charid, rank))
 				c->Message(Chat::Red, "Error while setting rank %d on '%s'.", rank, sep->arg[2]);
 			else
-				c->Message(Chat::Default, "%s has been set to rank %d", sep->arg[2], rank);
+				c->Message(Chat::White, "%s has been set to rank %d", sep->arg[2], rank);
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "create") == 0) {
 		if (sep->arg[3][0] == 0)
-			c->Message(Chat::Default, "Usage: #guild create {guildleader charname or CharID} guild name");
+			c->Message(Chat::White, "Usage: #guild create {guildleader charname or CharID} guild name");
 		else if (!worldserver.Connected())
-			c->Message(Chat::Default, "Error: World server dirconnected");
+			c->Message(Chat::White, "Error: World server dirconnected");
 		else {
 			uint32 leader = 0;
 			if (sep->IsNumber(2)) {
@@ -228,13 +196,13 @@ void command_guild(Client *c, const Seperator *sep){
 				return;
 			}
 			if (leader == 0) {
-				c->Message(Chat::Default, "Guild leader not found.");
+				c->Message(Chat::White, "Guild leader not found.");
 				return;
 			}
 
 			uint32 tmp = guild_mgr.FindGuildByLeader(leader);
 			if (tmp != GUILD_NONE) {
-				c->Message(Chat::Default, "Error: %s already is the leader of DB# %i '%s'.", sep->arg[2], tmp, guild_mgr.GetGuildName(tmp));
+				c->Message(Chat::White, "Error: %s already is the leader of DB# %i '%s'.", sep->arg[2], tmp, guild_mgr.GetGuildName(tmp));
 			}
 			else {
 
@@ -249,12 +217,12 @@ void command_guild(Client *c, const Seperator *sep){
 					sep->argplus[3], leader, (unsigned long)id);
 
 				if (id == GUILD_NONE)
-					c->Message(Chat::Default, "Guild creation failed.");
+					c->Message(Chat::White, "Guild creation failed.");
 				else {
-					c->Message(Chat::Default, "Guild created: Leader: %i, number %i: %s", leader, id, sep->argplus[3]);
+					c->Message(Chat::White, "Guild created: Leader: %i, number %i: %s", leader, id, sep->argplus[3]);
 
 					if (!guild_mgr.SetGuild(leader, id, GUILD_LEADER))
-						c->Message(Chat::Default, "Unable to set guild leader's guild in the database. Your going to have to run #guild set");
+						c->Message(Chat::White, "Unable to set guild leader's guild in the database. Your going to have to run #guild set");
 				}
 
 			}
@@ -262,14 +230,14 @@ void command_guild(Client *c, const Seperator *sep){
 	}
 	else if (strcasecmp(sep->arg[1], "delete") == 0) {
 		if (!sep->IsNumber(2))
-			c->Message(Chat::Default, "Usage: #guild delete guildID");
+			c->Message(Chat::White, "Usage: #guild delete guildID");
 		else if (!worldserver.Connected())
-			c->Message(Chat::Default, "Error: World server dirconnected");
+			c->Message(Chat::White, "Error: World server dirconnected");
 		else {
 			uint32 id = atoi(sep->arg[2]);
 
 			if (!guild_mgr.GuildExists(id)) {
-				c->Message(Chat::Default, "Guild %d does not exist!", id);
+				c->Message(Chat::White, "Guild %d does not exist!", id);
 				return;
 			}
 
@@ -289,22 +257,22 @@ void command_guild(Client *c, const Seperator *sep){
 				guild_mgr.GetGuildName(id), id);
 
 			if (!guild_mgr.DeleteGuild(id))
-				c->Message(Chat::Default, "Guild delete failed.");
+				c->Message(Chat::White, "Guild delete failed.");
 			else {
-				c->Message(Chat::Default, "Guild %d deleted.", id);
+				c->Message(Chat::White, "Guild %d deleted.", id);
 			}
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "rename") == 0) {
 		if ((!sep->IsNumber(2)) || sep->arg[3][0] == 0)
-			c->Message(Chat::Default, "Usage: #guild rename guildID newname");
+			c->Message(Chat::White, "Usage: #guild rename guildID newname");
 		else if (!worldserver.Connected())
-			c->Message(Chat::Default, "Error: World server dirconnected");
+			c->Message(Chat::White, "Error: World server dirconnected");
 		else {
 			uint32 id = atoi(sep->arg[2]);
 
 			if (!guild_mgr.GuildExists(id)) {
-				c->Message(Chat::Default, "Guild %d does not exist!", id);
+				c->Message(Chat::White, "Guild %d does not exist!", id);
 				return;
 			}
 
@@ -324,17 +292,17 @@ void command_guild(Client *c, const Seperator *sep){
 				guild_mgr.GetGuildName(id), id, sep->argplus[3]);
 
 			if (!guild_mgr.RenameGuild(id, sep->argplus[3]))
-				c->Message(Chat::Default, "Guild rename failed.");
+				c->Message(Chat::White, "Guild rename failed.");
 			else {
-				c->Message(Chat::Default, "Guild %d renamed to %s", id, sep->argplus[3]);
+				c->Message(Chat::White, "Guild %d renamed to %s", id, sep->argplus[3]);
 			}
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "setleader") == 0) {
 		if (sep->arg[3][0] == 0 || !sep->IsNumber(2))
-			c->Message(Chat::Default, "Usage: #guild setleader guild_id {guildleader charname or CharID}");
+			c->Message(Chat::White, "Usage: #guild setleader guild_id {guildleader charname or CharID}");
 		else if (!worldserver.Connected())
-			c->Message(Chat::Default, "Error: World server dirconnected");
+			c->Message(Chat::White, "Error: World server dirconnected");
 		else {
 			uint32 leader = 0;
 			if (sep->IsNumber(3)) {
@@ -350,15 +318,15 @@ void command_guild(Client *c, const Seperator *sep){
 
 			uint32 tmpdb = guild_mgr.FindGuildByLeader(leader);
 			if (leader == 0)
-				c->Message(Chat::Default, "New leader not found.");
+				c->Message(Chat::White, "New leader not found.");
 			else if (tmpdb != GUILD_NONE) {
-				c->Message(Chat::Default, "Error: %s already is the leader of guild # %i", sep->arg[2], tmpdb);
+				c->Message(Chat::White, "Error: %s already is the leader of guild # %i", sep->arg[2], tmpdb);
 			}
 			else {
 				uint32 id = atoi(sep->arg[2]);
 
 				if (!guild_mgr.GuildExists(id)) {
-					c->Message(Chat::Default, "Guild %d does not exist!", id);
+					c->Message(Chat::White, "Guild %d does not exist!", id);
 					return;
 				}
 
@@ -378,9 +346,9 @@ void command_guild(Client *c, const Seperator *sep){
 					guild_mgr.GetGuildName(id), id, leader);
 
 				if (!guild_mgr.SetGuildLeader(id, leader))
-					c->Message(Chat::Default, "Guild leader change failed.");
+					c->Message(Chat::White, "Guild leader change failed.");
 				else {
-					c->Message(Chat::Default, "Guild leader changed: guild # %d, Leader: %s", id, sep->argplus[3]);
+					c->Message(Chat::White, "Guild leader changed: guild # %d, Leader: %s", id, sep->argplus[3]);
 				}
 			}
 		}
@@ -393,7 +361,7 @@ void command_guild(Client *c, const Seperator *sep){
 		guild_mgr.ListGuilds(c);
 	}
 	else {
-		c->Message(Chat::Default, "Unknown guild command, try #guild help");
+		c->Message(Chat::White, "Unknown guild command, try #guild help");
 	}
 }
 

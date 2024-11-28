@@ -3,7 +3,7 @@
 void command_leaderboard(Client *c, const Seperator *sep)
 {
 	if (sep->arg[1][0] == 0) {
-		c->Message(Chat::Default, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
+		c->Message(Chat::White, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
 		return;
 	}
 
@@ -27,7 +27,7 @@ void command_leaderboard(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
+		c->Message(Chat::White, "Usage: #leaderboard [SFHC|SSFHC|SFHCOnly|HC]");
 		return;
 	}
 
@@ -35,19 +35,19 @@ void command_leaderboard(Client *c, const Seperator *sep)
 
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
-		c->Message(Chat::Default, "Error querying database.");
-		c->Message(Chat::Default, query.c_str());
+		c->Message(Chat::White, "Error querying database.");
+		c->Message(Chat::White, query.c_str());
 		return;
 	}
 
 	int count = 0;
 	const int maxrows = 25;
 
-	c->Message(Chat::Default, "---------------------------");
+	c->Message(Chat::White, "---------------------------");
 
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		if (++count > maxrows) {
-			c->Message(Chat::Default, "%i players shown.", maxrows);
+			c->Message(Chat::White, "%i players shown.", maxrows);
 			break;
 		}
 
@@ -61,12 +61,12 @@ void command_leaderboard(Client *c, const Seperator *sep)
 			SSFTag += "Self Found";
 
 		// Convert race and class to strings
-		c->Message(Chat::Default, "[%s %s] %s (%s) - %s", row[0], GetClassIDName(std::stoi(row[1]), std::stoi(row[0])), row[2], GetRaceIDName(std::stoi(row[3])), SSFTag.c_str());
+		c->Message(Chat::White, "[%s %s] %s (%s) - %s", row[0], GetClassIDName(std::stoi(row[1]), std::stoi(row[0])), row[2], GetRaceIDName(std::stoi(row[3])), SSFTag.c_str());
 	}
 
 	if (count <= maxrows)
-		c->Message(Chat::Default, "Query complete. %i rows shown.", count);
+		c->Message(Chat::White, "Query complete. %i rows shown.", count);
 	else if (count == 0)
-		c->Message(Chat::Default, "No matches found for %s.", sep->arg[1]);
+		c->Message(Chat::White, "No matches found for %s.", sep->arg[1]);
 }
 

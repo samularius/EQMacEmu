@@ -46,8 +46,8 @@ void command_makemule(Client* c, const Seperator* sep)
 		return;
 	}
 	c->SetMuleInitiated(true);
-	c->Message(Chat::Default, "You have initiated the process to make this account a mule. Mules can not leave designated trader zones or level past 1.");
-	c->Message(Chat::Default, "Once an account is made a mule it can not be undone. If successful then you will be disconnected and must re-enter the world.");
-	c->Message(Chat::Default, "If you wish to proceed then type: #makemule confirm");
+	c->Message(Chat::White, "You have initiated the process to make this account a mule. Mules can not leave designated trader zones or level past 1.");
+	c->Message(Chat::White, "Once an account is made a mule it can not be undone. If successful then you will be disconnected and must re-enter the world.");
+	c->Message(Chat::White, "If you wish to proceed then type: #makemule confirm");
 }
 

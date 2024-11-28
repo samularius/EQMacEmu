@@ -14,11 +14,11 @@ void command_summon(Client *c, const Seperator *sep){
 		else
 		{
 			if (!worldserver.Connected())
-				c->Message(Chat::Default, "Error: World server disconnected.");
+				c->Message(Chat::White, "Error: World server disconnected.");
 			else
 			{ // player is in another zone
 				//Taking this command out until we test the factor of 8 in ServerOP_ZonePlayer
-				//c->Message(Chat::Default, "Summoning player from another zone not yet implemented.");
+				//c->Message(Chat::White, "Summoning player from another zone not yet implemented.");
 				//return;
 
 				auto pack = new ServerPacket(ServerOP_ZonePlayer, sizeof(ServerZonePlayer_Struct));
@@ -43,9 +43,9 @@ void command_summon(Client *c, const Seperator *sep){
 	else
 	{
 		/*if(c->Admin() < 150)
-		c->Message(Chat::Default, "You need a NPC/corpse target for this command");
+		c->Message(Chat::White, "You need a NPC/corpse target for this command");
 		else*/
-		c->Message(Chat::Default, "Usage: #summon [charname] Either target or charname is required");
+		c->Message(Chat::White, "Usage: #summon [charname] Either target or charname is required");
 		return;
 	}
 
@@ -54,13 +54,13 @@ void command_summon(Client *c, const Seperator *sep){
 
 	if (t->IsNPC())
 	{ // npc target
-		c->Message(Chat::Default, "Summoning NPC %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
+		c->Message(Chat::White, "Summoning NPC %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
 		t->CastToNPC()->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
 		t->CastToNPC()->SaveGuardSpot();
 	}
 	else if (t->IsCorpse())
 	{ // corpse target
-		c->Message(Chat::Default, "Summoning corpse %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
+		c->Message(Chat::White, "Summoning corpse %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
 		t->CastToCorpse()->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
 	}
 	else if (t->IsClient())
@@ -72,7 +72,7 @@ void command_summon(Client *c, const Seperator *sep){
 			return;
 		}
 
-		c->Message(Chat::Default, "Summoning player %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
+		c->Message(Chat::White, "Summoning player %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
 		t->CastToClient()->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), c->GetX(), c->GetY(), c->GetZ(), c->GetHeading(), 2, GMSummon);
 	}
 }

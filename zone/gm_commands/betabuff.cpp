@@ -300,7 +300,7 @@ void command_betabuff(Client* c, const Seperator* sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: #betabuff [level] - level must be a level higher than your current level.");
+		c->Message(Chat::White, "Usage: #betabuff [level] - level must be a level higher than your current level.");
 	}
 }
 

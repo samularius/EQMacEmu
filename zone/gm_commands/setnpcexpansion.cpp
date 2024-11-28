@@ -29,7 +29,7 @@ void command_setnpcexpansion(Client* c, const Seperator* sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: #setnpcexpansion [min_expansion] [max_expansion]");
+		c->Message(Chat::White, "Usage: #setnpcexpansion [min_expansion] [max_expansion]");
 	}
 }
 

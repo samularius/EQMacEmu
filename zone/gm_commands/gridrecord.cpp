@@ -1,5 +1,11 @@
 #include "../client.h"
 
+std::vector<std::string> grid_wander_types = { "circle","rand10","random","patrol","onewayrepop","random5los","onewaydepop","wp0center","rcenter","randpath" };
+
+std::vector<std::string> grid_pause_types = { "rph", "full","pr" };
+
+
+
 void command_gridrecord(Client* c, const Seperator* sep)
 {
 	int32 highest_grid_plus_one = database.GetHighestGrid(zone->GetZoneID()) + 1;
@@ -32,7 +38,7 @@ void command_gridrecord(Client* c, const Seperator* sep)
 				c->gm_grid->wander_type = wander_type;
 				c->gm_grid->pause_type = pause_type;
 				c->gm_grid_waypoint_list.clear();
-				c->Message(Chat::Default, "Started recording grid %i, wandertype %i pausetype %i", c->gm_grid->id, wander_type, pause_type);
+				c->Message(Chat::White, "Started recording grid %i, wandertype %i pausetype %i", c->gm_grid->id, wander_type, pause_type);
 			}
 		}
 		else
@@ -57,7 +63,7 @@ void command_gridrecord(Client* c, const Seperator* sep)
 				i++;
 			}
 			c->gm_grid_waypoint_list.clear();
-			c->Message(Chat::Default, "Wrote grid %i to DB, wandertype %i pausetype %i, Wrote %i waypoints", c->gm_grid->id, (uint8)c->gm_grid->wander_type, (uint8)c->gm_grid->pause_type, i);
+			c->Message(Chat::White, "Wrote grid %i to DB, wandertype %i pausetype %i, Wrote %i waypoints", c->gm_grid->id, (uint8)c->gm_grid->wander_type, (uint8)c->gm_grid->pause_type, i);
 		}
 		if (c->gm_grid)
 			safe_delete(c->gm_grid);
@@ -89,7 +95,7 @@ void command_gridrecord(Client* c, const Seperator* sep)
 			wp.pause = pause;
 			wp.index = index;
 			c->gm_grid_waypoint_list.push_back(wp);
-			c->Message(Chat::Default, "Added WP %i to Temporary Grid %i", wp.index, c->gm_grid->id);
+			c->Message(Chat::White, "Added WP %i to Temporary Grid %i", wp.index, c->gm_grid->id);
 		}
 		else
 		{
@@ -99,12 +105,12 @@ void command_gridrecord(Client* c, const Seperator* sep)
 	else
 	{
 	HelpLabel:
-		c->Message(Chat::Default, "Usage: #gridrecord [start|stop|addwp]");
-		c->Message(Chat::Default, "[start] [type = ] [pausetype = full] ");
-		c->Message(Chat::Default, "[stop] [type] [pausetype = full] ");
-		c->Message(Chat::Default, "Valid WanderTypes (use abbreviation): [circle|rand10|random|patrol|onewayrepop|random5los|onewaydepop|wp0centerpoint (wp0center)|randcenterpoint (rcenter)|randpath ]");
-		c->Message(Chat::Default, "Valid FullTypes (use abbreviation): [randomplushalf (rph)|pausefull (full) |pauserandom (pr)]");
-		c->Message(Chat::Default, "Max Grid in Zone +1: %i", highest_grid_plus_one);
+		c->Message(Chat::White, "Usage: #gridrecord [start|stop|addwp]");
+		c->Message(Chat::White, "[start] [type = ] [pausetype = full] ");
+		c->Message(Chat::White, "[stop] [type] [pausetype = full] ");
+		c->Message(Chat::White, "Valid WanderTypes (use abbreviation): [circle|rand10|random|patrol|onewayrepop|random5los|onewaydepop|wp0centerpoint (wp0center)|randcenterpoint (rcenter)|randpath ]");
+		c->Message(Chat::White, "Valid FullTypes (use abbreviation): [randomplushalf (rph)|pausefull (full) |pauserandom (pr)]");
+		c->Message(Chat::White, "Max Grid in Zone +1: %i", highest_grid_plus_one);
 	}
 
 }

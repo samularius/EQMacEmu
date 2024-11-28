@@ -359,6 +359,39 @@ void command_corpse(Client *c, const Seperator *sep)
 			c->Message(Chat::Red, "Invalid character ID or parameter count for #corpse summonall");
 		}
 	}
+	else if (strcasecmp(sep->arg[1], "summonall") == 0)
+	{
+		if (sep->arg[2][0] != 0 && !sep->IsNumber(2))
+		{
+			std::string summon_corpse_char_name = sep->arg[2];
+			auto corpse_list_copy = entity_list.GetCorpseList();
+			int nCorpseCount = 0;
+			for (auto corpse : corpse_list_copy)
+			{
+				Corpse* pCorpse = corpse.second;
+				if (pCorpse && pCorpse->IsPlayerCorpse())
+				{
+					if (strcmp(pCorpse->GetOwnerName(), summon_corpse_char_name.c_str()) == 0)
+					{
+						pCorpse->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
+						nCorpseCount++;
+					}
+				}
+			}
+			if (nCorpseCount > 0)
+			{
+				c->Message(Chat::White, "Summoned %d corpses to your location from player %s", nCorpseCount, summon_corpse_char_name.c_str());
+			}
+			else
+			{
+				c->Message(Chat::Red, "No corpses with name %s exist in this zone.", summon_corpse_char_name.c_str());
+			}
+		}
+		else
+		{
+			c->Message(Chat::Red, "Invalid character ID or parameter count for #corpse summonall");
+		}
+	}
 	else
 	{
 		int size = sizeof(help) / sizeof(std::string);

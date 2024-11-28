@@ -62,6 +62,3 @@ void command_logcommand(Client *c, const char *message){
 		1
 		);
 }
-
-// commands go below here
-
