@@ -64,7 +64,7 @@ void command_grid(Client* c, const Seperator* sep) {
 
 			node_position.z += zoffset[node_loc];
 
-			NPC::SpawnGridNodeNPC(node_position, atoi(row[4]), zoffset[node_loc]);
+			NPC::SpawnGridNodeNPC(node_position, target->CastToNPC()->GetGrid(), atoi(row[4]), zoffset[node_loc]);
 		}
 	}
 	else if (strcasecmp("delete", sep->arg[1]) == 0)
@@ -77,10 +77,4 @@ void command_grid(Client* c, const Seperator* sep) {
 		c->Message(Chat::Default, "Usage: #grid max - displays the highest grid ID used in this zone (for add)");
 	}
 }
-
-std::vector<std::string> grid_wander_types = { "circle","rand10","random","patrol","onewayrepop","random5los","onewaydepop","wp0center","rcenter","randpath" };
-
-std::vector<std::string> grid_pause_types = { "rph", "full","pr" };
-
-
 

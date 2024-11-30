@@ -620,11 +620,9 @@ void NPC::AI_Start() {
 		AIautocastspell_timer = std::unique_ptr<Timer>(new Timer(750));
 	}
 
-	if (NPCTypedata) {
-		AI_AddNPCSpells(NPCTypedata->npc_spells_id);
-		ProcessSpecialAbilities(NPCTypedata->special_abilities);
-		AI_AddNPCSpellsEffects(NPCTypedata->npc_spells_effects_id);
-	}
+	AI_AddNPCSpells(NPCTypedata.npc_spells_id);
+	ProcessSpecialAbilities(NPCTypedata.special_abilities);
+	AI_AddNPCSpellsEffects(NPCTypedata.npc_spells_effects_id);
 
 	SendTo(GetX(), GetY(), GetZ());
 	SaveGuardSpot();
@@ -1669,7 +1667,7 @@ void Mob::AI_Process() {
 				{
 					HateSummon(GetTarget());
 				}
-				else if (RuleB(Quarm, EnableBardInstagibLimit) && GetTarget()->IsClient() && GetTarget()->GetClass() == BARD && CheckBardHateSummon(GetTarget()))
+				else if (RuleB(Quarm, EnableBardInstagibLimit) && GetTarget()->IsClient() && GetTarget()->GetClass() == Class::Bard && CheckBardHateSummon(GetTarget()))
 				{
 					BardHateSummon(GetTarget());
 				}
@@ -2561,13 +2559,13 @@ void Mob::AI_Event_NoLongerEngaged() {
 
 		if (zone && zone->GetGuildID() != GUILD_NONE)
 		{
-			if (GetSpecialAbility(TETHER)) {
+			if (GetSpecialAbility(SpecialAbility::Tether)) {
 
 				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
 				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
 			}
 
-			else if (GetSpecialAbility(LEASH)) {
+			else if (GetSpecialAbility(SpecialAbility::Leash)) {
 				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
 				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
 				SetHP(GetMaxHP());

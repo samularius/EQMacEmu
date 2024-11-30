@@ -48,6 +48,9 @@ int command_realdispatch(Client *c, std::string message, bool ignore_status);
 void command_logcommand(Client *c, std::string message);
 uint8 GetCommandStatus(Client *c, std::string command_name);
 void SendRuleSubCommands(Client* c);
+void SendNPCEditSubCommands(Client* c);
+void SendRuleSubCommands(Client* c);
+void SendGuildSubCommands(Client* c);
 
 //commands
 void command_advnpcspawn(Client* c, const Seperator* sep);

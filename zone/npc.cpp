@@ -142,8 +142,6 @@ NPC::NPC(const NPCType *npc_type_data, Spawn2* in_respawn, const glm::vec4& posi
 	instance_spawn_timer_override = 0;
 	memset(&NPCTypedata, 0, sizeof(NPCTypedata));
 	memcpy(&NPCTypedata, npc_type_data, sizeof(NPCTypedata));
-
-	NPCTypedata = npc_type_data;
 	NPCTypedata_ours = false;
 	respawn2 = in_respawn;
 
@@ -472,10 +470,6 @@ NPC::~NPC()
 
 
 	safe_delete(reface_timer);
-	
-	if (NPCTypedata_ours) {
-		safe_delete(NPCTypedata);
-	}
 	
 	safe_delete(swarmInfoPtr);
 	safe_delete(qGlobals);
@@ -806,6 +800,7 @@ void NPC::SpawnGridNodeNPC(const glm::vec4& position, int32 grid_id, int32 grid_
 	npc->GiveNPCTypeData();
 	npc->SetEntityVariable("grid_id", itoa(grid_id));
 	entity_list.AddNPC(npc);
+	safe_delete(npc_type);
 }
 
 void NPC::SpawnZonePointNodeNPC(std::string name, const glm::vec4& position)
@@ -851,6 +846,7 @@ void NPC::SpawnZonePointNodeNPC(std::string name, const glm::vec4& position)
 	npc->GiveNPCTypeData();
 
 	entity_list.AddNPC(npc);
+	safe_delete(npc_type);
 }
 
 
@@ -999,7 +995,7 @@ NPC* NPC::SpawnNPC(const char* spawncommand, const glm::vec4& position, Client* 
 		npc_type->d_melee_texture2 = atoi(sep.arg[8]);
 		npc_type->merchanttype = atoi(sep.arg[9]);
 		npc_type->bodytype = atoi(sep.arg[10]);
-
+		npc_type->npc_spells_id = 0;
 		npc_type->STR = 150;
 		npc_type->STA = 150;
 		npc_type->DEX = 150;
@@ -1036,7 +1032,7 @@ NPC* NPC::SpawnNPC(const char* spawncommand, const glm::vec4& position, Client* 
 			client->Message(Chat::White, "Bodytype: %u", npc->bodytype);
 			client->Message(Chat::White, "EntityID: %u", npc->GetID());
 		}
-
+		safe_delete(npc_type);
 		return npc;
 	}
 }

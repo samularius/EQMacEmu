@@ -399,7 +399,8 @@ namespace SpecialAbility {
 	constexpr int HasteImmunity = 51;
 	constexpr int DisarmImmunity = 52;
 	constexpr int RiposteImmunity = 53;
-	constexpr int Max = 54;
+	constexpr int ProximityAggro2 = 54;
+	constexpr int Max = 55;
 
 	constexpr int MaxParameters = 8;
 

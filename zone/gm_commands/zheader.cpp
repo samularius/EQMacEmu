@@ -5,7 +5,7 @@ void command_zheader(Client *c, const Seperator *sep){
 	if (sep->arg[1][0] == 0) {
 		c->Message(Chat::Default, "Usage: #zheader <zone name>");
 	}
-	else if (database.GetZoneID(sep->argplus[1]) == 0)
+	else if (ZoneID(sep->argplus[1]) == 0)
 		c->Message(Chat::Default, "Invalid Zone Name: %s", sep->argplus[1]);
 	else {
 

@@ -503,7 +503,7 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 	// depop pet
 	DepopPet();
 
-	Log(Logs::General, Logs::Status, "Zoning '%s' to: %s (%i) x=%f, y=%f, z=%f", m_pp.name, database.GetZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
+	Log(Logs::General, Logs::Status, "Zoning '%s' to: %s (%i) x=%f, y=%f, z=%f", m_pp.name, ZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
 
 	//set the player's coordinates in the new zone so they have them
 	//when they zone into it
@@ -522,7 +522,7 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 }
 
 void Client::MovePC(const char* zonename, float x, float y, float z, float heading, uint8 ignorerestrictions, ZoneMode zm) {
-	ProcessMovePC(ZoneID(zonename), database.GetZoneID(zonename) == zone->GetZoneID() ? zone->GetGuildID() : GUILD_NONE, x, y, z, heading, ignorerestrictions, zm);
+	ProcessMovePC(ZoneID(zonename), ZoneID(zonename) == zone->GetZoneID() ? zone->GetGuildID() : GUILD_NONE, x, y, z, heading, ignorerestrictions, zm);
 }
 
 //designed for in zone moving

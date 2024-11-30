@@ -1,6 +1,7 @@
 #include "../client.h"
 
-void command_ipban(Client *c, const Seperator *sep){
+void command_ipban(Client* c, const Seperator* sep)
+{
 	int arguments = sep->argnum;
 	if (!arguments) {
 		c->Message(Chat::Default, "Usage: #ipban [IP]");

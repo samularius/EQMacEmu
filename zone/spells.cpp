@@ -290,7 +290,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		NPC* spell_target_npc = spell_target->CastToNPC();
 		if (spell_target_npc)
 		{
-			if (spell_target_npc->GetSpecialAbility(IMMUNE_MAGIC) && spell_target_npc->GetSpecialAbility(IMMUNE_AGGRO))
+			if (spell_target_npc->GetSpecialAbility(SpecialAbility::MagicImmunity) && spell_target_npc->GetSpecialAbility(SpecialAbility::AggroImmunity))
 			{
 				InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, true, false);
 				return false;
@@ -2347,7 +2347,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 				recast += GetActSpellCasttime(spell_id, spells[spell_id].cast_time) / 1000 - 1;
 				if (
 					GetLevel() > 50 && spells[spell_id].goodEffect == 0 && spells[spell_id].cast_time > 2999 &&
-					(GetClass() == BEASTLORD || GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT)
+					(GetClass() == Class::Beastlord || GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight)
 				)
 					recast -= 1;
 			}
@@ -4096,7 +4096,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	if (IsNPC() && IsRainSpell(spell_id)) {
 
 		int resist_chance_percentage = 20;
-		if(caster->GetClass() == WIZARD) {
+		if(caster->GetClass() == Class::Wizard) {
 			resist_chance_percentage = RuleI(Spells, RainWizardResistChance);
 		}
 		

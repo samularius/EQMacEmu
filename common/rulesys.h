@@ -92,17 +92,6 @@ public:
 	static const int StringRuleCount = static_cast<int>(_StringRuleCount);
 
 	typedef enum {
-#define RULE_STRING(category_name, rule_name, default_value, notes) \
-        String__##rule_name,
-
-#include "ruletypes.h"
-
-		_StringRuleCount
-	} StringType;
-
-	static const int StringRuleCount = static_cast<int>(_StringRuleCount);
-
-	typedef enum {
 #define RULE_CATEGORY(category_name) \
         Category__##category_name,
 

@@ -479,7 +479,7 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 	swarm_pet_npc->UpdateEquipmentLight();
 
 	entity_list.AddNPC(swarm_pet_npc, true, true);
-
+	safe_delete(npc_type_copy);
 	return swarm_pet_npc;
 }
 

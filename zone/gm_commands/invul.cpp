@@ -20,26 +20,10 @@ void command_invul(Client *c, const Seperator *sep)
 	c->Message(
 		Chat::Default,
 		fmt::format(
-<<<<<<< HEAD
 			"{} {} now {}.",
 			c == target ? "You" : target->GetCleanName(),
 			c == target ? "are" : "is",
 			invul_flag ? "invulnerable" : "vulnerable"
-=======
-			"{} Command{} listed{}.",
-			found_count,
-			found_count != 1 ? "s" : "",
-			(
-				!search_criteria.empty() ?
-				fmt::format(
-					" matching '{}'",
-					search_criteria
-				) :
-				""
-				)
->>>>>>> upstream/main
 		).c_str()
 	);
 }
-
-<<<<<<< HEAD

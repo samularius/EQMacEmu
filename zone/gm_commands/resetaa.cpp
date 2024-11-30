@@ -6,6 +6,6 @@ void command_resetaa(Client* c, const Seperator *sep){
 		c->Message(Chat::Red, "Successfully reset %s's AAs", c->GetTarget()->GetName());
 	}
 	else
-		c->Message(Chat::Default, "Usage: Target a client and use #resetaa to reset the AA data in their Profile.");
+		c->Message(Chat::White, "Usage: Target a client and use #resetaa to reset the AA data in their Profile.");
 }
 

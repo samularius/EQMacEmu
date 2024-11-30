@@ -214,6 +214,7 @@
 #define ServerOP_QuakeRequest 0x4201
 #define ServerOP_QuakeEnded 0x4202
 #define ServerOP_ReloadSpellModifiers	0x4203
+#define ServerOP_ReloadRulesWorld 0x4204
 
 #define ServerOP_WIRemoteCall 0x5001
 #define ServerOP_WIRemoteCallResponse 0x5002

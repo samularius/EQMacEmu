@@ -684,10 +684,10 @@ void Client::CompleteConnect()
 			if (IsMule() && GetBaseRace() != IKSAR)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 				else {
-					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else if (IsMule() && GetBaseRace() == IKSAR)
@@ -696,11 +696,11 @@ void Client::CompleteConnect()
 			}
 			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
 			{
-				DoZoneMove(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
+				DoZoneMove(ZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 			}
 			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
-				DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+				DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 			}
 		}
 		else
@@ -709,11 +709,11 @@ void Client::CompleteConnect()
 			if (m_pp.expansions & LuclinEQ)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 
 				}
 				else {
-					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else
@@ -722,14 +722,14 @@ void Client::CompleteConnect()
 				if (IsMule())
 				{
 					if (RuleB(Quarm, EastCommonMules)) {
-						DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+						DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 					}
 					else {
-						DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+						DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 					}
 				}
 				else {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 			}
 		}
@@ -2322,7 +2322,7 @@ void Client::Handle_OP_Begging(const EQApplicationPacket *app)
 	if (GetTarget() && GetTarget()->IsNPC())
 		npc = GetTarget()->CastToNPC();
 
-	if (npc && npc->GetSpecialAbility(NO_HARM_FROM_CLIENT))
+	if (npc && npc->GetSpecialAbility(SpecialAbility::HarmFromClientImmunity))
 	{
 		return;
 	}

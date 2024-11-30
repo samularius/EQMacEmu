@@ -4456,6 +4456,8 @@ void Client::Doppelganger(uint16 spell_id, Mob *target, const char *name_overrid
 
 		entity_list.AddNPC(swarm_pet_npc);
 		summon_count--;
+
+		safe_delete(npc_type_copy);
 	}
 
 	safe_delete(made_npc);
@@ -6467,7 +6469,7 @@ void Client::SetClassLanguages()
 {
 	// we only need to handle one class, but custom server might want to do more
 	switch (m_pp.class_) {
-	case ROGUE:
+	case Class::Rogue:
 		m_pp.languages[LANG_THIEVES_CANT] = 100;
 		break;
 	default:
@@ -7270,6 +7272,7 @@ uint16 Client::GetWeaponEffectID(int slot)
 
 	if (weapon) {
 		return weapon->Proc.Effect;
+	}
 
 	return 0;
 }

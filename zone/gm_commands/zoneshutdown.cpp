@@ -14,7 +14,8 @@ void command_zoneshutdown(Client *c, const Seperator *sep){
 		if (sep->arg[1][0] >= '0' && sep->arg[1][0] <= '9')
 			s->ZoneServerID = atoi(sep->arg[1]);
 		else
-			s->zoneid = database.GetZoneID(sep->arg[1]);
+			s->zoneid = ZoneID(sep->arg[1]);
+		s->ZoneServerGuildID = GUILD_NONE;
 		worldserver.SendPacket(pack);
 		safe_delete(pack);
 	}

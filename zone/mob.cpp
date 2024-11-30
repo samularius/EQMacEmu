@@ -2074,7 +2074,7 @@ bool Mob::CheckBardHateSummon(Mob* summoned) {
 	if (zone->GetGuildID() != GUILD_NONE)
 		return false;
 
-	if (summoned->GetClass() != BARD || IsCharmedPet() || !summoned->IsClient() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
+	if (summoned->GetClass() != Class::Bard || IsCharmedPet() || !summoned->IsClient() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
 		return false;
 	}
 
@@ -2085,7 +2085,7 @@ bool Mob::CheckBardHateSummon(Mob* summoned) {
 		return false;
 
 	// now validate the timer
-	Timer* timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
+	Timer* timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
 	if (!timer) {
 		// dont currently have a timer going, so we are going to summon
 		return true;
@@ -2163,10 +2163,10 @@ bool Mob::BardHateSummon(Mob* summoned) {
 
 	// now validate the timer
 	int summon_timer_duration = RuleI(Quarm, BardInstagibResummonTimerMS);
-	Timer* timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
+	Timer* timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
 	if (!timer)
 	{
-		StartSpecialAbilityTimer(SPECATK_SUMMON, summon_timer_duration);
+		StartSpecialAbilityTimer(SpecialAbility::Summon, summon_timer_duration);
 	}
 	else {
 		if (!timer->Check())

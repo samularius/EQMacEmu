@@ -286,7 +286,7 @@ bool IsMemBlurSpell(uint16 spell_id)
 
 bool IsBardAOEDamageSpell(uint16 spell_id)
 {
-	if (IsValidSpell(spell_id) && GetSpellLevel(spell_id, BARD) < 100 && IsDamageSpell(spell_id) && spells[spell_id].aoerange > 0)
+	if (IsValidSpell(spell_id) && GetSpellLevel(spell_id, Class::Bard) < 100 && IsDamageSpell(spell_id) && spells[spell_id].aoerange > 0)
 	{
 		return true;
 	}

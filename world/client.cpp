@@ -280,8 +280,8 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 			uint64 tmpdeathtime = 0;
 			database.GetLiveCharByLSID(id, char_name);
 
-			charid = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
-			if (charid == 0 || tmpdeathtime != 0 || tmpaccid != GetAccountID()) 
+			char_id = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
+			if (char_id == 0 || tmpdeathtime != 0 || tmpaccid != GetAccountID())
 			{
 				Log(Logs::Detail, Logs::WorldServer, "Could not get CharInfo for '%s'", char_name);
 				eqs->Close();
@@ -525,7 +525,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 
 	uint32 tmpaccid = 0;
 	uint64 tmpdeathtime = 0;
-	charid = database.GetCharacterInfo(char_name, &tmpaccid, &zoneID, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
+	char_id = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
 	char_id = database.GetCharacterInfo(char_name, &tmpaccid, &zone_id, &zoneGuildID, 0, 0, 0, &tmpdeathtime);
 	if (char_id == 0 || tmpaccid != GetAccountID()) {
 		Log(Logs::Detail, Logs::WorldServer, "Could not get CharInfo for '%s'", char_name);
@@ -1279,11 +1279,6 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 
 	// set starting city location to the initial bind point
 	pp.binds[4] = pp.binds[0];
-
-	//Log(Logs::Detail, Logs::WorldServer, "Current location: %s  %0.2f, %0.2f, %0.2f, %0.2f",
-	//	database.GetZoneName(pp.zone_id), pp.x, pp.y, pp.z, pp.heading);
-	//Log(Logs::Detail, Logs::WorldServer, "Bind location: %s  %0.2f, %0.2f, %0.2f",
-	//	database.GetZoneName(pp.binds[0].zoneId), pp.binds[0].x, pp.binds[0].y, pp.binds[0].z);
 
 	/* Starting Items inventory */
 	database.SetStartingItems(&pp, &inv, pp.race, pp.class_, pp.deity, pp.zone_id, pp.name, GetAdmin());

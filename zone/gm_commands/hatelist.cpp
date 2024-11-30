@@ -11,5 +11,3 @@ void command_hatelist(Client *c, const Seperator *sep){
 	target->PrintHateListToClient(c);
 }
 
-#include "gm_commands/rules.cpp"
-

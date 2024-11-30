@@ -481,6 +481,7 @@ void Trap::CreateHiddenTrigger()
 	NPC* npca = new NPC(make_npc, nullptr, glm::vec4(m_Position, 0.0f), GravityBehavior::Water);
 	npca->GiveNPCTypeData();
 	entity_list.AddNPC(npca);
+	safe_delete(make_npc);
 
 	SetHiddenTrigger(npca);
 }

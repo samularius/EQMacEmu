@@ -9,31 +9,31 @@ void command_setgraveyard(Client *c, const Seperator *sep){
 		t = c->GetTarget()->CastToClient();
 
 	if (!sep->arg[1][0]) {
-		c->Message(Chat::Default, "Usage: #setgraveyard [zonename]");
+		c->Message(Chat::White, "Usage: #setgraveyard [zonename]");
 		return;
 	}
 
-	zoneid = database.GetZoneID(sep->arg[1]);
+	zoneid = ZoneID(sep->arg[1]);
 
 	if (zoneid > 0) {
 		graveyard_id = database.CreateGraveyardRecord(zoneid, t->GetPosition());
 
 		if (graveyard_id > 0) {
-			c->Message(Chat::Default, "Successfuly added a new record for this graveyard!");
+			c->Message(Chat::White, "Successfuly added a new record for this graveyard!");
 			if (database.AddGraveyardIDToZone(zoneid, graveyard_id) > 0) {
-				c->Message(Chat::Default, "Successfuly added this new graveyard for the zone %s.", sep->arg[1]);
+				c->Message(Chat::White, "Successfuly added this new graveyard for the zone %s.", sep->arg[1]);
 				// TODO: Set graveyard data to the running zone process.
-				c->Message(Chat::Default, "Done!");
+				c->Message(Chat::White, "Done!");
 			}
 			else
-				c->Message(Chat::Default, "Unable to add this new graveyard to the zone %s.", sep->arg[1]);
+				c->Message(Chat::White, "Unable to add this new graveyard to the zone %s.", sep->arg[1]);
 		}
 		else {
-			c->Message(Chat::Default, "Unable to create a new graveyard record in the database.");
+			c->Message(Chat::White, "Unable to create a new graveyard record in the database.");
 		}
 	}
 	else {
-		c->Message(Chat::Default, "Unable to retrieve a ZoneID for the zone: %s", sep->arg[1]);
+		c->Message(Chat::White, "Unable to retrieve a ZoneID for the zone: %s", sep->arg[1]);
 	}
 
 	return;

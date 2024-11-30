@@ -122,6 +122,8 @@ public:
 
 	Zone(uint32 in_zoneid, const char* in_short_name, uint32 guild_id = 0xFFFFFFFF);
 	~Zone();
+	/* When zone has its own version of time */
+	bool is_zone_time_localized;
 	bool	Init(bool is_static);
 	bool	LoadZoneCFG(const char* filename, bool DontLoadDefault = false);
 	bool	SaveZoneCFG();

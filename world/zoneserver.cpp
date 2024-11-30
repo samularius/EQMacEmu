@@ -718,7 +718,7 @@ bool ZoneServer::Process() {
 
 				SetZone_Struct* szs = (SetZone_Struct*) pack->pBuffer;
 				if (szs->zoneid != 0) {
-					if(database.GetZoneName(szs->zoneid))
+					if(ZoneName(szs->zoneid))
 						SetZone(szs->zoneid, szs->staticzone, szs->zoneguildid);
 					else
 						SetZone(0);
@@ -798,7 +798,7 @@ bool ZoneServer::Process() {
 				auto s = (ServerZoneStateChange_struct *) pack->pBuffer;
 				ZoneServer* zs = 0;
 				if (s->ZoneServerID != 0) {
-					zs = zoneserver_list.FindByID(s->ZoneServerID);
+					zs = zoneserver_list.FindByZoneID(s->ZoneServerID, s->ZoneServerGuildID);
 				}
 				else if (s->zoneid != 0) {
 					zs = zoneserver_list.FindByName(ZoneName(s->zoneid));
@@ -1057,7 +1057,7 @@ bool ZoneServer::Process() {
 					if (cle->Server() == 0) {
 						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, Chat::Red, fmt::format("Error: Cannot identify {}'s zoneserver.", gmg->gotoname).c_str());
 					}
-					else if (cle->Anon() == 1 && cle->Admin() > gmg->admin) {// no snooping for anon GMs
+					else if (cle->Anon() == 1 && cle->Admin() > gmg->admin)// no snooping for anon GMs
 						this->SendEmoteMessage(gmg->myname, 0, AccountStatus::Player, Chat::Red, fmt::format("Error: {} not found", gmg->gotoname).c_str());
 					else
 					{
@@ -1283,7 +1283,7 @@ bool ZoneServer::Process() {
 			}
 			case ServerOP_Consent_Response: {
 				// This just relays the packet back to the owner's zone. 
-				ServerOP_Consent_Struct s* = (ServerOP_Consent_Struct*)pack->pBuffer;
+				ServerOP_Consent_Struct* s = (ServerOP_Consent_Struct*)pack->pBuffer;
 				ZoneServer* zs = zoneserver_list.FindByZoneID(s->zone_id, s->GuildID);
 				if(zs) 
 				{

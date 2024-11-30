@@ -208,12 +208,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	auto npc_type = new NPCType;
 	memcpy(npc_type, base, sizeof(NPCType));
 
-	if ((GetClass() == NECROMANCER || GetClass() == SHADOWKNIGHT) && GetBaseRace() == IKSAR && npc_type->race == SKELETON) {
+	if ((GetClass() == Class::Necromancer || GetClass() == Class::ShadowKnight) && GetBaseRace() == Race::Iksar && npc_type->race == Race::Skeleton) {
 		npc_type->race = IKSAR_SKELETON;
 		npc_type->helmtexture = GetGender();
     }
 
-	if (GetClass() == NECROMANCER && GetBaseRace() == GNOME && npc_type->race == SKELETON && npc_type->size != 0)
+	if ((GetClass() == Class::Necromancer || GetClass() == Class::ShadowKnight) && GetBaseRace() == Race::Gnome && npc_type->race == Race::Skeleton && npc_type->size != 0)
 		npc_type->size = EQ::ClampUpper((float)npc_type->size - 2.0f, 3.0f);
 
 	npc_type->loot_lockout = 0;

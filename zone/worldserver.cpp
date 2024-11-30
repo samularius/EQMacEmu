@@ -1777,6 +1777,7 @@ void WorldServer::Process() {
 		case ServerOP_ReloadBlockedSpells:
 		{
 			zone->SendReloadMessage("Blocked Spells");
+			zone->ClearBlockedSpells();
 			zone->LoadZoneBlockedSpells();
 			break;
 		}

@@ -1402,6 +1402,7 @@ void lua_create_npc(luabind::adl::object table, float x, float y, float z, float
 	LuaCreateNPCParse(loot_lockout, uint32, false);
 	NPC* npc = new NPC(npc_type, nullptr, glm::vec4(x, y, z, heading),  GravityBehavior::Water);
 	entity_list.AddNPC(npc);
+	safe_delete(npc_type);
 }
 
 int get_rulei(int rule) {

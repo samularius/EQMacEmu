@@ -556,6 +556,7 @@ void Beacon::Tracer(int16 src_id, int16 tgt_id, glm::vec4 pos)
 	NPC* npc = new NPC(npc_type, 0, pos, GravityBehavior::Flying);
 
 	entity_list.AddNPC(npc, true, true);
+	safe_delete(npc_type);
 }
 
 bool Beacon::CheckProjectileCollision(glm::vec3 oloc) {

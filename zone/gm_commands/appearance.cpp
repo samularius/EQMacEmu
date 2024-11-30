@@ -1,22 +1,10 @@
 #include "../client.h"
 
-void command_appearance(Client *c, const Seperator *sep){
-	Mob *t = c->CastToMob();
+void command_appearance(Client* c, const Seperator* sep) {
 
-		for (const auto &a : EQ::constants::GetAppearanceTypeMap()) {
-			c->Message(
-				Chat::White,
-				fmt::format(
-					"Appearance Type {} | {}",
-					a.first,
-					a.second
-				).c_str()
-			);
-		}
-	// sends any appearance packet
-		return;
-	}
 	Mob *t = c;
+	if (!c)
+		return;
 	if (c->GetTarget()) {
 			t = c->GetTarget();
 	}
@@ -37,4 +25,3 @@ void command_appearance(Client *c, const Seperator *sep){
 		).c_str()
 	);
 }
-

@@ -1,4 +1,7 @@
 #include "../client.h"
+#include "../../common/skill_caps.h"
+
+extern SkillCaps skill_caps;
 
 void command_maxallskills(Client *c, const Seperator *sep){
 	if (c)
@@ -11,8 +14,8 @@ void command_maxallskills(Client *c, const Seperator *sep){
 			}
 			else
 			{
-				int max_skill_level = database.GetSkillCap(c->GetClass(), (EQ::skills::SkillType)i, c->GetLevel());
-				c->SetSkill((EQ::skills::SkillType)i, max_skill_level);
+				SkillCapsRepository::SkillCaps max_skill_level = skill_caps.GetSkillCap(c->GetClass(), (EQ::skills::SkillType)i, c->GetLevel());
+				c->SetSkill((EQ::skills::SkillType)i, max_skill_level.level);
 			}
 		}
 	}

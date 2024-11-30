@@ -83,7 +83,7 @@ Zone* zone = 0;
 const static std::set<std::string> arrClassicPlanes = { "hateplane", "airplane", "fearplane" };
 void UpdateWindowTitle(char* iNewTitle);
 
-bool Zone::Bootup(uint32 iZoneID, bool iStaticZone, uint32 iGuildID) {
+bool Zone::Bootup(uint32 iZoneID, bool is_static, uint32 iGuildID) {
 	const char* zonename = ZoneName(iZoneID);
 
 	if (iZoneID == 0 || zonename == 0)
@@ -1120,7 +1120,7 @@ bool Zone::Init(bool is_static) {
 
 	//load up the zone's doors (prints inside)
 	LoadZoneDoors();
-	LoadBlockedSpells();
+	LoadZoneBlockedSpells();
 	LoadZoneBanishPoint(zone->GetShortName());
 
 	//clear trader items if we are loading the bazaar
@@ -1216,7 +1216,7 @@ void Zone::ReloadStaticData() {
 	LoadKeyRingData(&key_ring_data_list);
 
 	LogInfo("Reloading Zone Data...");
-	database.GetZoneLongName(short_name, &long_name, file_name, &m_SafePoint.x, &m_SafePoint.y, &m_SafePoint.z, &pgraveyard_id, &pgraveyard_timer, &pMaxClients);
+	database.GetZoneLongName(short_name, &long_name, file_name, &m_safe_point.x, &m_safe_point.y, &m_safe_point.z, &m_graveyard_id, &m_graveyard_timer, &m_max_clients);
 
 	//load the zone config file.
 	if (!LoadZoneCFG(GetShortName(), true)) { // try loading the zone name...
@@ -1237,7 +1237,7 @@ bool Zone::LoadZoneCFG(const char* filename, bool DontLoadDefault)
 	safe_delete_array(map_name);
 
 	if (!database.GetZoneCFG(ZoneID(filename), &newzone_data, can_bind,
-		can_combat, can_levitate, can_castoutdoor, is_city, zone_type, default_ruleset, &map_name, can_bind_others, skip_los, drag_aggro, can_castdungeon, pull_limit,reducedspawntimers, trivial_loot_code))
+		can_combat, can_levitate, can_castoutdoor, is_city, zone_type, default_ruleset, &map_name, can_bind_others, skip_los, drag_aggro, can_castdungeon, pull_limit,reducedspawntimers, trivial_loot_code, is_hotzone))
 	{
 		LogError("Error loading the Zone Config.");
 		return false;
@@ -2161,7 +2161,10 @@ void Zone::SetGraveyard(uint32 zoneid, const glm::vec4& graveyardPosition) {
 	m_graveyard = graveyardPosition;
 }
 
-<
+void Zone::LoadZoneBanishPoint(const char* zone) {
+	database.GetZoneBanishPoint(zone_banish_point, zone);
+}
+
 void Zone::LoadZoneBlockedSpells()
 {
 	if(!blocked_spells)
