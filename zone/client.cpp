@@ -7070,6 +7070,7 @@ uint16 Client::GetWeaponEffectID(int slot)
 
 	if (weapon) {
 		return weapon->Proc.Effect;
+	}
 
 	return 0;
 }
