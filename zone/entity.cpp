@@ -29,6 +29,7 @@
 #include "../common/unix.h"
 #endif
 
+#include "../common/misc_functions.h"
 #include "../common/features.h"
 #include "../common/guilds.h"
 
@@ -243,6 +244,7 @@ const Encounter* Entity::CastToEncounter() const
 {
 	return static_cast<const Encounter *>(this);
 }
+
 EntityList::EntityList()
 	:
 	object_timer(5000),
@@ -560,7 +562,6 @@ void EntityList::MobProcess()
 				in.s_addr = mob->CastToClient()->GetIP();
 				Log(Logs::General, Logs::ZoneServer, "Dropping client: Process=false, ip=%s port=%u", inet_ntoa(in), mob->CastToClient()->GetPort());
 #endif
-				zone->StartShutdownTimer();
 				Group *g = GetGroupByMob(mob);
 				if(g) {
 					Log(Logs::General, Logs::Error, "About to delete a client still in a group.");
@@ -788,7 +789,7 @@ void EntityList::AddBeacon(Beacon *beacon)
 void EntityList::AddEncounter(Encounter *encounter)
 {
 	encounter->SetID(GetFreeID());
-	encounter_list.insert(std::pair<uint16, Encounter *>(encounter->GetID(), encounter));
+	encounter_list.emplace(std::pair<uint16, Encounter*>(encounter->GetID(), encounter));
 }
 
 void EntityList::AddToSpawnQueue(uint16 entityid, NewSpawn_Struct **ns)
@@ -1767,6 +1768,18 @@ Client *EntityList::GetClientByWID(uint32 iWID)
 	return nullptr;
 }
 
+Client* EntityList::GetClientByLSID(uint32 iLSID)
+{
+	auto it = client_list.begin();
+	while (it != client_list.end()) {
+		if (it->second->LSAccountID() == iLSID) {
+			return it->second;
+		}
+		++it;
+	}
+	return nullptr;
+}
+
 Client *EntityList::GetRandomClient(const glm::vec3& location, float Distance, Client *ExcludeClient)
 {
 	std::vector<Client *> ClientsInRange;
@@ -2206,6 +2219,10 @@ void EntityList::RemoveAllMobs()
 {
 	auto it = mob_list.begin();
 	while (it != mob_list.end()) {
+		if (!it->second) {
+			++it;
+			continue;
+		}
 		safe_delete(it->second);
 		free_ids.push(it->first);
 		it = mob_list.erase(it);
@@ -2228,8 +2245,9 @@ void EntityList::RemoveAllNPCs()
 void EntityList::RemoveAllGroups()
 {
 	while (!group_list.empty()) {
-		safe_delete(group_list.front());
+		auto group = group_list.front();
 		group_list.pop_front();
+		safe_delete(group);
 	}
 #if EQDEBUG >= 5
 	CheckGroupList (__FILE__, __LINE__);
@@ -2239,8 +2257,9 @@ void EntityList::RemoveAllGroups()
 void EntityList::RemoveAllRaids()
 {
 	while (!raid_list.empty()) {
-		safe_delete(raid_list.front());
+		auto raid = raid_list.front();
 		raid_list.pop_front();
+		safe_delete(raid);
 	}
 }
 
@@ -2322,18 +2341,25 @@ void EntityList::RemoveAllEncounters()
 
 bool EntityList::RemoveMob(uint16 delete_id)
 {
-	if (delete_id == 0)
+	if (delete_id == 0) {
 		return true;
+	}
 
 	auto it = mob_list.find(delete_id);
 	if (it != mob_list.end()) {
-		if (npc_list.count(delete_id))
+		if (!it->second) {
+			return false;
+		}
+		if (npc_list.count(delete_id)) {
 			entity_list.RemoveNPC(delete_id);
-		else if (client_list.count(delete_id))
+		}
+		else if (client_list.count(delete_id)) {
 			entity_list.RemoveClient(delete_id);
+		}
 		safe_delete(it->second);
-		if (!corpse_list.count(delete_id))
+		if (!corpse_list.count(delete_id)) {
 			free_ids.push(it->first);
+		}
 		mob_list.erase(it);
 		return true;
 	}
@@ -2364,13 +2390,14 @@ bool EntityList::RemoveNPC(uint16 delete_id)
 {
 	auto it = npc_list.find(delete_id);
 	if (it != npc_list.end()) {
-		// make sure its proximity is removed
+		NPC* npc = it->second;
 		RemoveProximity(delete_id);
-		// remove from the list
 		npc_list.erase(it);
-		// remove from limit list if needed
-		if (npc_limit_list.count(delete_id))
+		
+		if (npc_limit_list.count(delete_id)) {
 			npc_limit_list.erase(delete_id);
+		}
+
 		return true;
 	}
 	return false;

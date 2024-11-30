@@ -49,6 +49,10 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 	plocal=(local==1);
 	pversion = version;
 	pRevoked = revoked;
+	pLFGFromLevel = 0;
+	pLFGToLevel = 0;
+	pLFGMatchFilter = false;
+	memset(pLFGComments, 0, 64);
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList_Struct* scl, int8 iOnline)
@@ -69,6 +73,10 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList
 	pversion = 2;
 	pRevoked = scl->Revoked;
 	pmule = scl->mule;
+	pLFGFromLevel = 0;
+	pLFGToLevel = 0;
+	pLFGMatchFilter = false;
+	memset(pLFGComments, 0, 64);
 
 	if (iOnline >= CLE_Status_Zoning)
 		Update(iZS, scl, iOnline);
@@ -420,7 +428,6 @@ void ClientListEntry::ProcessTellQueue()
 	while (it != tell_queue.end()) {
 		pack = new ServerPacket(ServerOP_ChannelMessage, sizeof(ServerChannelMessage_Struct) + strlen((*it)->message) + 1);
 		memcpy(pack->pBuffer, *it, pack->size);
-		pack->Deflate();
 		Server()->SendPacket(pack);
 		safe_delete(pack);
 		safe_delete_array(*it);

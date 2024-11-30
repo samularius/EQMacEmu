@@ -59,6 +59,7 @@
 #include "../common/repositories/content_flags_repository.h"
 #include "../common/repositories/rule_sets_repository.h"
 #include "../common/repositories/zone_points_repository.h"
+#include "../common/serverinfo.h"
 
 #include <time.h>
 
@@ -107,11 +108,6 @@ bool Zone::Bootup(uint32 iZoneID, bool is_static, uint32 iGuildID) {
 		return false;
 	}
 	
-	LogInfo("{} is using {} for its map_name", zonename, zone->map_name);
-	zone->zonemap = Map::LoadMapFile(zone->map_name);
-	zone->watermap = WaterMap::LoadWaterMapfile(zone->map_name);
-	zone->pathing = IPathfinder::Load(zone->map_name);
-
 	std::string tmp;
 	if (database.GetVariable("loglevel", tmp)) {
 		int log_levels[4];
@@ -147,9 +143,13 @@ bool Zone::Bootup(uint32 iZoneID, bool is_static, uint32 iGuildID) {
 	LogInfo("---- Zone server [{}], listening on port:[{}] ----", zonename, ZoneConfig::get()->ZonePort);
 	LogInfo("Zone Bootup: [{}] [{}] ([{}]) ([{}])",
 		(is_static) ? "Static" : "Dynamic", zonename, iZoneID, iGuildID);
- 	parse->Init();
 	UpdateWindowTitle(nullptr);
-	zone->GetTimeSync();
+
+	if (!is_static) {
+		zone->GetTimeSync();
+	}
+
+	zone->StartShutdownTimer();
 
 	/* Set Logging */
 
@@ -840,10 +840,11 @@ bool Zone::IsLoaded() {
 	return is_zone_loaded;
 }
 
-void Zone::Shutdown(bool quite)
+void Zone::Shutdown(bool quiet)
 {
-	if (!is_zone_loaded)
+	if (!is_zone_loaded) {
 		return;
+	}
 
 	entity_list.StopMobAI();
 
@@ -857,9 +858,12 @@ void Zone::Shutdown(bool quite)
 
 	LogInfo("Zone Shutdown: {} ({})", zone->GetShortName(), zone->GetZoneID());
 	petition_list.ClearPetitions();
-	zone->GotCurTime(false);
-	if (!quite)
+	zone->SetZoneHasCurrentTime(false);
+
+	if (!quiet) {
 		LogInfo("Zone shutdown: going to sleep");
+	}
+
 	is_zone_loaded = false;
 
 	zone->ResetAuth();
@@ -869,6 +873,11 @@ void Zone::Shutdown(bool quite)
 	UpdateWindowTitle(nullptr);
 
 	LogSys.CloseFileLogs();
+
+	if (RuleB(Zone, KillProcessOnDynamicShutdown)) {
+		LogInfo("Shutting down");
+		EQ::EventLoop::Get().Shutdown();
+	}
 }
 
 void Zone::LoadZoneDoors()
@@ -896,7 +905,8 @@ void Zone::LoadZoneDoors()
 }
 
 Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
-:	autoshutdown_timer((RuleI(Zone, AutoShutdownDelay))),
+:	initgrids_timer(10000),
+	autoshutdown_timer((RuleI(Zone, AutoShutdownDelay))),
 	clientauth_timer(AUTHENTICATION_TIMEOUT * 1000),
 	spawn2_timer(1000),
 	hot_reload_timer(1000),
@@ -912,6 +922,8 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	qGlobals = nullptr;
 	default_ruleset = 0;
 
+	is_zone_time_localized = false;
+
 	process_mobs_while_empty = false;
 
 	loglevelvar = 0;
@@ -923,10 +935,9 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	memset(&zone_banish_point, 0, sizeof(ZoneBanishPoint));
 
 	short_name = strcpy(new char[strlen(in_short_name)+1], in_short_name);
-	std::string tmp = short_name;
-	for (auto & c : tmp) c = tolower(c);
-	strcpy(short_name, tmp.c_str());
+	strlwr(short_name);
 	memset(file_name, 0, sizeof(file_name));
+
 	long_name = 0;
 	aggroed_npcs = 0;
 	m_graveyard_id = 0;
@@ -955,7 +966,6 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	if (long_name == 0) {
 		long_name = strcpy(new char[18], "Long zone missing");
 	}
-	autoshutdown_timer.Start(AUTHENTICATION_TIMEOUT * 1000, false);
 	Weather_Timer = new Timer(60000);
 	Weather_Timer->Start();
 	EndQuake_Timer = new Timer(60000);
@@ -969,7 +979,7 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	trivial_loot_code = false;
 	aas = nullptr;
 	totalAAs = 0;
-	gottime = false;
+	zone_has_current_time = false;
 	idle = false;
 
 	map_name = nullptr;
@@ -1045,7 +1055,7 @@ bool Zone::Init(bool is_static) {
 	SetStaticZone(is_static);
 
 	//load the zone config file.
-	if (!LoadZoneCFG(GetShortName(), true)) { // try loading the zone name...
+	if (!LoadZoneCFG(GetShortName())) { // try loading the zone name...
 		LoadZoneCFG(GetFileName());
 	}// if that fails, try the file name, then load defaults
 
@@ -1058,20 +1068,45 @@ bool Zone::Init(bool is_static) {
 		}
 	}
 
-	zone->update_range = 1000.0f;
+	if (!map_name) {
+		LogError("No map name found for zone [{}]", GetShortName());
+		return false;
+	}
+
+	zonemap = Map::LoadMapFile(map_name);
+	watermap = WaterMap::LoadWaterMapfile(map_name);
+	pathing = IPathfinder::Load(map_name);
+
+	update_range = 1000.0f;
+
+	LogInfo("Loading timezone data...");
+	zone_time.setEQTimeZone(database.GetZoneTZ(zoneid));
+
+	database.LoadGlobalLoot();
+
+	LoadGrids();
+
+	if (RuleB(Zone, LevelBasedEXPMods)) {
+		LoadLevelEXPMods();
+	}
+
+	LogInfo("Flushing old respawn timers...");
+	database.QueryDatabase("DELETE FROM `respawn_times` WHERE (`start` + `duration`) < UNIX_TIMESTAMP(NOW())");
+
+	// make sure that anything that needs to be loaded prior to scripts is loaded before here
+	// this is to ensure that the scripts have access to the data they need
+	parse->ReloadQuests(true);
 
 	LogInfo("Loading spawn conditions...");
 	if(!spawn_conditions.LoadSpawnConditions(short_name, GetGuildID())) {
 		LogError("Loading spawn conditions failed, continuing without them.");
 	}
 
-	LogInfo("Loading static zone points...");
 	if (!database.LoadStaticZonePoints(&zone_point_list, short_name)) {
 		LogError("Loading static zone points failed.");
 		return false;
 	}
 
-	LogInfo("Loading spawn groups...");
 	if (!database.LoadSpawnGroups(short_name, &spawn_group_list)) {
 		LogError("Loading spawn groups failed.");
 		return false;
@@ -1084,7 +1119,6 @@ bool Zone::Init(bool is_static) {
 		return false;
 	}
 
-	LogInfo("Loading random box spawns...");
 	if (!database.PopulateRandomZoneSpawnList(zoneid, spawn2_list))
 	{
 		LogError("Loading random box spawns failed (Possibly over ID limit.)");
@@ -1115,55 +1149,29 @@ bool Zone::Init(bool is_static) {
 		LogError("Loading World Objects failed. continuing.");
 	}
 
-	LogInfo("Flushing old respawn timers...");
-	database.QueryDatabase("DELETE FROM `respawn_times` WHERE (`start` + `duration`) < UNIX_TIMESTAMP(NOW())");
-
 	//load up the zone's doors (prints inside)
 	LoadZoneDoors();
 	LoadZoneBlockedSpells();
 	LoadZoneBanishPoint(zone->GetShortName());
+	LoadNPCEmotes(&npc_emote_list);
+	LoadAlternateAdvancement();
+	GetMerchantDataForZoneLoad();
+	LoadTempMerchantData();
+	LoadKeyRingData(&key_ring_data_list);
+	LoadTickItems();
+
+	skill_difficulty.clear();
+	LoadSkillDifficulty();
 
 	//clear trader items if we are loading the bazaar
 	if(strncasecmp(short_name,"bazaar",6)==0) {
 		database.DeleteTraderItem(0);
 	}
-
-	LogInfo("Loading NPC Emotes...");
-	LoadNPCEmotes(&npc_emote_list);
-
-	LogInfo("Loading KeyRing Data...");
-	LoadKeyRingData(&key_ring_data_list);
-
-	//Load AA information
-	LoadAlternateAdvancement();
-
-	database.LoadGlobalLoot();
-
-	database.LoadGlobalLoot();
-
-	//Load merchant data
-	GetMerchantDataForZoneLoad();
-
-	//Load temporary merchant data
-	LoadTempMerchantData();
-
-	if (RuleB(Zone, LevelBasedEXPMods)) {
-		LoadLevelEXPMods();
-	}
-
-	skill_difficulty.clear();
-	LoadSkillDifficulty();
-
+	
 	petition_list.ClearPetitions();
 	petition_list.ReadDatabase();
 
-	LogInfo("Loading timezone data...");
-	zone_time.setEQTimeZone(database.GetZoneTZ(zoneid));
-
-	LogInfo("Init Finished: ZoneID = {}, Time Offset = {} ", zoneid, zone_time.getEQTimeZone());
-
-	LoadGrids();
-	LoadTickItems();
+	LogInfo("Zone booted successfully zone_id [{}] time_offset [{}]", zoneid, zone_time.getEQTimeZone());
 
 	//database.LoadQuakeData(zone->last_quake_struct);
 	if (newzone_data.maxclip > 0.0f) {
@@ -1219,7 +1227,7 @@ void Zone::ReloadStaticData() {
 	database.GetZoneLongName(short_name, &long_name, file_name, &m_safe_point.x, &m_safe_point.y, &m_safe_point.z, &m_graveyard_id, &m_graveyard_timer, &m_max_clients);
 
 	//load the zone config file.
-	if (!LoadZoneCFG(GetShortName(), true)) { // try loading the zone name...
+	if (!LoadZoneCFG(GetShortName())) { // try loading the zone name...
 		LoadZoneCFG(GetFileName());
 	} // if that fails, try the file name, then load defaults
 
@@ -1230,7 +1238,7 @@ void Zone::ReloadStaticData() {
 	LogInfo("Zone Static Data Reloaded.");
 }
 
-bool Zone::LoadZoneCFG(const char* filename, bool DontLoadDefault)
+bool Zone::LoadZoneCFG(const char* filename)
 {
 	memset(&newzone_data, 0, sizeof(NewZone_Struct));
 
@@ -1287,6 +1295,21 @@ void Zone::RemoveAuth(const char* iCharName, uint32 entity_id)
 		if (strcasecmp(zca->charname, iCharName) == 0 && zca->entity_id == entity_id) {
 			iterator.RemoveCurrent();
 			return;
+		}
+		iterator.Advance();
+	}
+}
+
+void Zone::RemoveAuth(uint32 lsid)
+{
+	LinkedListIterator<ZoneClientAuth_Struct*> iterator(client_auth_list);
+
+	iterator.Reset();
+	while (iterator.MoreElements()) {
+		ZoneClientAuth_Struct* zca = iterator.GetData();
+		if (zca->lsid == lsid) {
+			iterator.RemoveCurrent();
+			continue;
 		}
 		iterator.Advance();
 	}
@@ -1399,9 +1422,21 @@ bool Zone::Process() {
 		}
 	}
 
+	if (initgrids_timer.Check()) {
+		//delayed grid loading stuff.
+		initgrids_timer.Disable();
+		LinkedListIterator<Spawn2*> iterator(spawn2_list);
+
+		iterator.Reset();
+		while (iterator.MoreElements()) {
+			iterator.GetData()->LoadGrid();
+			iterator.Advance();
+		}
+	}
+
 	if(!staticzone) {
 		if (autoshutdown_timer.Check()) {
-			StartShutdownTimer();
+			ResetShutdownTimer();
 			if (numclients == 0) {
 				return false;
 			}
@@ -1594,19 +1629,46 @@ bool Zone::IsSpecialWeatherZone()
 	return false;
 }
 
-void Zone::StartShutdownTimer(uint32 set_time) {
-	if (set_time)
-		autoshutdown_timer.Start(set_time, false);
-	else
-	{
-		uint32 db_time = database.getZoneShutDownDelay(GetZoneID());
-		if (db_time > RuleI(Zone, AutoShutdownDelay))
-			set_time = db_time;
-		else
-			set_time = RuleI(Zone, AutoShutdownDelay);
+void Zone::StartShutdownTimer(uint32 set_time)
+{
+	// if we pass in the default value, we should pull from the zone and use it is different
+	std::string loaded_from = "rules";
+	if (set_time == (RuleI(Zone, AutoShutdownDelay))) {
+		auto delay = database.getZoneShutDownDelay(GetZoneID());
 
-		autoshutdown_timer.Start(set_time, false);
+		if (delay != RuleI(Zone, AutoShutdownDelay)) {
+			set_time = delay;
+			loaded_from = "zone table";
+		}
 	}
+
+	if (set_time != autoshutdown_timer.GetDuration()) {
+		LogInfo(
+			"[StartShutdownTimer] Reset to [{}] {} from original remaining time [{}] duration [{}] zone [{}]",
+			Strings::SecondsToTime(set_time, true),
+			!loaded_from.empty() ? fmt::format("(Loaded from [{}])", loaded_from) : "",
+			Strings::SecondsToTime(autoshutdown_timer.GetRemainingTime(), true),
+			Strings::SecondsToTime(autoshutdown_timer.GetDuration(), true),
+			zone->GetZoneDescription()
+		);
+	}
+	autoshutdown_timer.Start(set_time, false);
+}
+
+void Zone::ResetShutdownTimer() {
+	LogInfo(
+		"[ResetShutdownTimer] Reset to [{}] from original remaining time [{}] duration [{}] zone [{}]",
+		Strings::SecondsToTime(autoshutdown_timer.GetDuration(), true),
+		Strings::SecondsToTime(autoshutdown_timer.GetRemainingTime(), true),
+		Strings::SecondsToTime(autoshutdown_timer.GetDuration(), true),
+		zone->GetZoneDescription()
+	);
+	autoshutdown_timer.Start(autoshutdown_timer.GetDuration());
+}
+
+void Zone::StopShutdownTimer() {
+	LogInfo("Stopping zone shutdown timer");
+	autoshutdown_timer.Disable();
 }
 bool Zone::IsReducedSpawnTimersEnabled() 
 {
@@ -1770,7 +1832,8 @@ void Zone::Repop() {
 
 void Zone::GetTimeSync()
 {
-	if (worldserver.Connected() && !gottime) {
+	if (!zone_has_current_time) {
+		LogInfo("Requesting world time");
 		auto pack = new ServerPacket(ServerOP_GetWorldTime, 0);
 		worldserver.SendPacket(pack);
 		safe_delete(pack);
@@ -1794,17 +1857,38 @@ void Zone::SetDate(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute
 	}
 }
 
-void Zone::SetTime(uint8 hour, uint8 minute)
+void Zone::SetTime(uint8 hour, uint8 minute, bool update_world /*= true*/)
 {
 	if (worldserver.Connected()) {
 		auto pack = new ServerPacket(ServerOP_SetWorldTime, sizeof(eqTimeOfDay));
-		eqTimeOfDay* eqtod = (eqTimeOfDay*)pack->pBuffer;
-		zone_time.getEQTimeOfDay(time(0), &eqtod->start_eqtime);
-		eqtod->start_eqtime.minute=minute;
-		eqtod->start_eqtime.hour=hour;
-		eqtod->start_realtime=time(0);
-		LogInfo("Setting master time on world server to: {}:{} ({})\n", hour, minute, (int)eqtod->start_realtime);
-		worldserver.SendPacket(pack);
+		eqTimeOfDay *eq_time_of_day = (eqTimeOfDay*)pack->pBuffer;
+
+		zone_time.GetCurrentEQTimeOfDay(time(0), &eq_time_of_day->start_eqtime);
+		eq_time_of_day->start_eqtime.minute=minute;
+		eq_time_of_day->start_eqtime.hour=hour;
+		eq_time_of_day->start_realtime=time(0);
+
+		/* By Default we update worlds time, but we can optionally no update world which updates the rest of the zone servers */
+		if (update_world) {
+			LogInfo("Setting master time on world server to: {}:{} ({})\n", hour, minute, (int)eq_time_of_day->start_realtime);
+			worldserver.SendPacket(pack);
+			/* Set Time Localization Flag */
+			zone->is_zone_time_localized = false;
+		} 
+		/* When we don't update world, we are localizing ourselves, we become disjointed from normal syncs and set time locally */
+		else {
+			LogInfo("Setting zone localized time...");
+
+			zone->zone_time.SetCurrentEQTimeOfDay(eq_time_of_day->start_eqtime, eq_time_of_day->start_realtime);
+			EQApplicationPacket* outapp = new EQApplicationPacket(OP_TimeOfDay, sizeof(TimeOfDay_Struct));
+			TimeOfDay_Struct* time_of_day = (TimeOfDay_Struct*)outapp->pBuffer;
+			zone->zone_time.GetCurrentEQTimeOfDay(time(0), time_of_day);
+			entity_list.QueueClients(0, outapp, false);
+			safe_delete(outapp);
+
+			/* Set Time Localization Flag */
+			zone->is_zone_time_localized = true;
+		}
 		safe_delete(pack);
 	}
 }
@@ -2990,17 +3074,25 @@ void Zone::SetQuestHotReloadQueued(bool in_quest_hot_reload_queued)
 
 std::string Zone::GetZoneDescription()
 {
-	auto d = fmt::format(
-		"{} ({})",
+	if (!IsLoaded()) {
+		return fmt::format(
+			"PID ({})",
+			EQ::GetPID()
+		);
+	}
+
+	return fmt::format(
+		"PID ({}) {} ({})",
+		EQ::GetPID(),
 		GetLongName(),
 		GetZoneID()
 	);
-
-	return d;
 }
 
 void Zone::SendReloadMessage(std::string reload_type)
 {
+	LogInfo("Reloaded [{}]", reload_type);
+
 	worldserver.SendEmoteMessage(
 		0,
 		0,

@@ -24,6 +24,7 @@
 #include "../common/rulesys.h"
 #include "../common/skills.h"
 #include "../common/spdat.h"
+#include "../common/misc_functions.h"
 
 #include "quest_parser_collection.h"
 #include "string_ids.h"
@@ -1952,7 +1953,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					{
 						entity_list.ClearAggro(this);
 						if (IsClient())
-							CastToClient()->scanarea_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually moved
+							CastToClient()->m_client_npc_aggro_scan_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually moved
 					}
 					else if (caster != this)
 					{

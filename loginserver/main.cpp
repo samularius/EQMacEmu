@@ -160,7 +160,6 @@ int main()
 		ipMutex.unlock();
 		
 		server.client_manager->Process();
-		server.server_manager->Process();
 		timeout_manager.CheckTimeouts();
 	};
 

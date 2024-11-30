@@ -300,6 +300,7 @@ public:
 	inline void	PreDisconnect() { client_state = PREDISCONNECTED; }
 	inline void	Reconnect() { client_state = CLIENT_CONNECTED; }
 	inline bool IsLD() const { return (bool) (client_state == CLIENT_LINKDEAD); }
+	void Kick(const std::string& reason);
 	void WorldKick();
 	inline uint8 GetAnon() const { return m_pp.anon; }
 	inline PlayerProfile_Struct& GetPP() { return m_pp; }
@@ -1278,7 +1279,7 @@ private:
 	Timer global_channel_timer;
 	Timer fishing_timer;
 	Timer autosave_timer;
-	Timer scanarea_timer;
+
 	Timer	proximity_timer;
 	Timer	charm_class_attacks_timer;
 	Timer	charm_cast_timer;
@@ -1302,6 +1303,10 @@ private:
 	Timer instance_boot_grace_timer;
 
     glm::vec3 m_Proximity;
+
+	// client aggro
+	Timer m_client_npc_aggro_scan_timer;
+	void CheckClientToNpcAggroTimer();
 
 	void BulkSendInventoryItems();
 	void SendCursorItems();

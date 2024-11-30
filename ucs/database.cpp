@@ -20,6 +20,7 @@
 
 #include "../common/global_define.h"
 #include "../common/eqemu_logsys.h"
+#include "../common/misc_functions.h"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -102,12 +103,19 @@ Database::~Database()
 
 void Database::GetAccountStatus(Client *client) {
 
-	std::string query = StringFormat("SELECT `status`, `hideme`, `karma`, `revoked` "
-                                    "FROM `account` WHERE `id` = %i LIMIT 1",
-                                    client->GetAccountID());
+	std::string query = StringFormat(
+		"SELECT `status`, `hideme`, `karma`, `revoked` FROM `account` WHERE `id` = %i LIMIT 1",
+		client->GetAccountID()
+	);
+
     auto results = QueryDatabase(query);
     if (!results.Success()) {
-		LogMySQLError("Unable to get account status for character [{0}], error [{1}]", client->GetName().c_str(), results.ErrorMessage().c_str());
+		LogMySQLError(
+			"Unable to get account status for character [{0}], error [{1}]", 
+			client->GetName().c_str(), 
+			results.ErrorMessage().c_str()
+		);
+
 		return;
 	}
 

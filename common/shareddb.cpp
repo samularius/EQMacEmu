@@ -574,6 +574,22 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 			item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
 			item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
 
+		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
+			//Bane Damage
+			item.BaneDmgAmt = 0;
+			item.BaneDmgBody = 0;
+			item.BaneDmgRace = 0;
+
+			// Elemental Damage
+			item.ElemDmgType = 0;
+			item.ElemDmgAmt = 0;
+		}
+		else {
+			//Bane Damage
+			item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
+			item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
+			item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
+			
 			// Elemental Damage
 			item.ElemDmgType = static_cast<uint8>(std::stoul(row[ItemField::elemdmgtype]));
 			item.ElemDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::elemdmgamt]));
@@ -589,44 +605,25 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 		item.Deity = std::stoul(row[ItemField::deity]);
 		item.ItemClass = std::stoi(row[ItemField::itemclass]);
 		item.Races = std::stoi(row[ItemField::races]);
-		item.ReqLevel = static_cast<uint8>(std::stoul(row[ItemField::reqlevel]));
-		if (RuleB(AlKabor, EnableEraItemRules))
-		{
-			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
-			{
-				item.RecLevel = 0;
-				item.RecSkill = 0;
-			}
-			else
-			{
-				item.RecLevel = static_cast<uint8>(std::stoul(row[ItemField::reclevel]));
-				item.RecSkill = static_cast<uint8>(std::stoul(row[ItemField::recskill]));
-			}
+
+		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
+			item.RecLevel = 0;
+			item.RecSkill = 0;
+			item.ReqLevel = 0;
 		}
-		else
-		{
+		else {
 			item.RecLevel = static_cast<uint8>(std::stoul(row[ItemField::reclevel]));
 			item.RecSkill = static_cast<uint8>(std::stoul(row[ItemField::recskill]));
+			item.ReqLevel = static_cast<uint8>(std::stoul(row[ItemField::reqlevel]));
 		}
-
 		item.Slots = std::stoi(row[ItemField::slots]);
 
 		// Skill Modifier
-		if (RuleB(AlKabor, EnableEraItemRules))
-		{
-			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
-			{
-				item.SkillModValue = 0;
-				item.SkillModType = 0;
-			}
-			else
-			{
-				item.SkillModValue = std::stoi(row[ItemField::skillmodvalue]);
-				item.SkillModType = std::stoul(row[ItemField::skillmodtype]);
-			}
+		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
+			item.SkillModValue = 0;
+			item.SkillModType = 0;
 		}
-		else
-		{
+		else {
 			item.SkillModValue = std::stoi(row[ItemField::skillmodvalue]);
 			item.SkillModType = std::stoul(row[ItemField::skillmodtype]);
 		}
@@ -672,28 +669,14 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 		item.RecastDelay = std::stoul(row[ItemField::recastdelay]);
 		item.RecastType = std::stoul(row[ItemField::recasttype]);
 
-		if (RuleB(AlKabor, EnableEraItemRules))
-		{
-			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra) //Luclin
-			{
-				// Focus Effect
-				item.Focus.Effect = 0;
-				item.Focus.Type = 0;
-				item.Focus.Level = 0;
-				item.Focus.Level2 = 0;
-			}
-			else
-			{
-				// Focus Effect
-				item.Focus.Effect = std::stoi(row[ItemField::focuseffect]);
-				item.Focus.Type = std::stoi(row[ItemField::focustype]);
-				item.Focus.Level = static_cast<uint8>(std::stoul(row[ItemField::focuslevel]));
-				item.Focus.Level2 = static_cast<uint8>(std::stoul(row[ItemField::focuslevel2]));
-			}
+		// Focus Effect
+		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
+			item.Focus.Effect = 0;
+			item.Focus.Type = 0;
+			item.Focus.Level = 0;
+			item.Focus.Level2 = 0;
 		}
-		else
-		{
-			// Focus Effect
+		else {
 			item.Focus.Effect = std::stoi(row[ItemField::focuseffect]);
 			item.Focus.Type = std::stoi(row[ItemField::focustype]);
 			item.Focus.Level = static_cast<uint8>(std::stoul(row[ItemField::focuslevel]));

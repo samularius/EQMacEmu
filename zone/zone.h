@@ -78,6 +78,7 @@ struct ZoneClientAuth_Struct {
 	uint32	accid;
 	int16	admin;
 	uint32	charid;
+	uint32  lsid;
 	bool	tellsoff;
 	char	charname[64];
 	char	lskey[30];
@@ -122,10 +123,12 @@ public:
 
 	Zone(uint32 in_zoneid, const char* in_short_name, uint32 guild_id = 0xFFFFFFFF);
 	~Zone();
+	
 	/* When zone has its own version of time */
 	bool is_zone_time_localized;
+
 	bool	Init(bool is_static);
-	bool	LoadZoneCFG(const char* filename, bool DontLoadDefault = false);
+	bool	LoadZoneCFG(const char* filename);
 	bool	SaveZoneCFG();
 	bool	IsLoaded();
 	bool	IsPVPZone() { return pvpzone; }
@@ -183,7 +186,9 @@ public:
 	void	RepopClose(const glm::vec4& client_position, uint32 repop_distance);
 	void	ClearNPCTypeCache(int id);
 	void	SpawnStatus(Mob* client, char filter = 'a', uint32 spawnid = 0);
-	void	StartShutdownTimer(uint32 set_time = 0);
+	void	StartShutdownTimer(uint32 set_time = (RuleI(Zone, AutoShutdownDelay)));
+	void	ResetShutdownTimer();
+	void    StopShutdownTimer();
 	void    ChangeWeather();
 	bool	HasWeather();
 	bool	IsSpecialWeatherZone();
@@ -193,6 +198,7 @@ public:
 
 	void	AddAuth(ServerZoneIncomingClient_Struct* szic);
 	void	RemoveAuth(const char* iCharName, uint32 entity_id);
+	void	RemoveAuth(uint32 lsid);
 	void	ResetAuth();
 	bool	GetAuth(uint32 iIP, const char* iCharName, uint32* oWID = 0, uint32* oAccID = 0, uint32* oCharID = 0, int16* oStatus = 0, char* oLSKey = 0, bool* oTellsOff = 0, uint32* oVersionbit = 0, uint32 entity_id = 0);
 	bool	CheckAuth(const char* iCharName);
@@ -202,7 +208,7 @@ public:
 	void	SetNumAggroedNPCs(uint16 count) { aggroed_npcs = count; }
 	void		SetStaticZone(bool sz)	{ staticzone = sz; }
 	inline bool	IsStaticZone()			{ return staticzone; }
-	inline void	GotCurTime(bool time)	{ gottime = time; }
+	inline void	SetZoneHasCurrentTime(bool time)	{ zone_has_current_time = time; }
 
 	void	SpawnConditionChanged(const SpawnCondition &c, int16 old_value);
 	void	UpdateGroupTimers(SpawnGroup* sg, uint32 newtimer);
@@ -251,7 +257,7 @@ public:
 	EQTime	zone_time;
 	void	GetTimeSync();
 	void	SetDate(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute);
-	void	SetTime(uint8 hour, uint8 minute);
+	void	SetTime(uint8 hour, uint8 minute, bool update_world = true);
 
 	bool	process_mobs_while_empty;
 	void	weatherSend(uint32 timer = 0);
@@ -448,7 +454,7 @@ private:
 	bool	trivial_loot_code;
 
 	bool	staticzone;
-	bool	gottime;
+	bool	zone_has_current_time;
 
 	uint32 pQueuedMerchantsWorkID;
 	uint32 pQueuedTempMerchantsWorkID;
