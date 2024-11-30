@@ -1,4 +1,4 @@
-#include "../client.h"
+ #include "../client.h"
 
 void command_attack(Client *c, const Seperator *sep){
 	if (c->GetTarget() && c->GetTarget()->IsNPC() && sep->arg[1] != 0) {
@@ -6,9 +6,9 @@ void command_attack(Client *c, const Seperator *sep){
 		if (sictar)
 			c->GetTarget()->CastToNPC()->AddToHateList(sictar, 1, 0);
 		else
-			c->Message(Chat::Default, "Error: %s not found", sep->arg[1]);
+			c->Message(Chat::White, "Error: %s not found", sep->arg[1]);
 	}
 	else
-		c->Message(Chat::Default, "Usage: (needs NPC targeted) #attack targetname");
+		c->Message(Chat::White, "Usage: (needs NPC targeted) #attack targetname");
 }
 

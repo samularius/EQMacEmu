@@ -15,7 +15,7 @@ void command_undeletechar(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: undeletechar [charname]");
+		c->Message(Chat::White, "Usage: undeletechar [charname]");
 	}
 }
 

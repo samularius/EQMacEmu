@@ -24,7 +24,7 @@ void command_mule(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		c->Message(Chat::Default, "Usage: #mule [accountname] [0/1]");
+		c->Message(Chat::White, "Usage: mule [accountname] [0/1]");
 	}
 }
 

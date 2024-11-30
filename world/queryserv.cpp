@@ -35,9 +35,9 @@ void QueryServConnection::RemoveConnection(std::shared_ptr<EQ::Net::ServertalkSe
 
 void QueryServConnection::HandleGenericMessage(uint16_t opcode, EQ::Net::Packet& p) {
 	uint32 ZoneID = p.GetUInt32(0);
-	uint16 InstanceID = p.GetUInt32(4);
+	uint32 InstanceID = p.GetUInt32(4);
 	ServerPacket pack(opcode, p);
-	zoneserver_list.SendPacket(ZoneID, &pack);
+	zoneserver_list.SendPacket(ZoneID, (uint32)InstanceID, &pack);
 }
 
 

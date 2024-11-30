@@ -843,6 +843,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 			ServerGroupLeave_Struct* gl = (ServerGroupLeave_Struct*)pack->pBuffer;
 			if(zone){
 				if(gl->zoneid == zone->GetZoneID() && gl->zoneguildid == zone->GetGuildID())
+				{
 					break;
 				}
 
@@ -861,7 +862,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 			if (Invitee && Invitee->IsClient() && Invitee->CastToClient()->GetBaseClass() == 0)
 				is_null_flag = 1;
 
-			if(Invitee && Invitee->IsClient() && !Invitee->IsRaidGrouped() && gis->is_null == is_null_flag && Invitee->CastToClient()->IsSelfFound() == gis->self_found && !Invitee->CastToClient()->IsSoloOnly())
+			if (Invitee && Invitee->IsClient() && !Invitee->IsRaidGrouped() && gis->is_null == is_null_flag && Invitee->CastToClient()->IsSelfFound() == gis->self_found && !Invitee->CastToClient()->IsSoloOnly())
 			{
 				auto outapp = new EQApplicationPacket(OP_GroupInvite, sizeof(GroupInvite_Struct));
 				memcpy(outapp->pBuffer, gis, sizeof(GroupInvite_Struct));
@@ -2191,7 +2192,6 @@ bool WorldServer::SendChannelMessage(const char* from, uint8 chan_num, uint32 gu
 	scm->lang_skill = lang_skill;
 	strcpy(scm->message, buffer);
 
-	pack->Deflate();
 	bool ret = SendPacket(pack);
 	safe_delete(pack);
 	return ret;

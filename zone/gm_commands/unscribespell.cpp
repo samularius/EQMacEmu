@@ -9,7 +9,7 @@ void command_unscribespell(Client *c, const Seperator *sep){
 		t = c->GetTarget()->CastToClient();
 
 	if (!sep->arg[1][0]) {
-		c->Message(Chat::Default, "FORMAT: #unscribespell <spellid>");
+		c->Message(Chat::White, "FORMAT: #unscribespell <spellid>");
 		return;
 	}
 
@@ -21,10 +21,10 @@ void command_unscribespell(Client *c, const Seperator *sep){
 		if (book_slot >= 0) {
 			t->UnscribeSpell(book_slot);
 
-			t->Message(Chat::Default, "Unscribing spell: %s (%i) from spellbook.", spells[spell_id].name, spell_id);
+			t->Message(Chat::White, "Unscribing spell: %s (%i) from spellbook.", spells[spell_id].name, spell_id);
 
 			if (t != c)
-				c->Message(Chat::Default, "Unscribing spell: %s (%i) for %s.", spells[spell_id].name, spell_id, t->GetName());
+				c->Message(Chat::White, "Unscribing spell: %s (%i) for %s.", spells[spell_id].name, spell_id, t->GetName());
 
 			Log(Logs::General, Logs::Normal, "Unscribe spell: %s (%i) request for %s from %s.", spells[spell_id].name, spell_id, t->GetName(), c->GetName());
 		}

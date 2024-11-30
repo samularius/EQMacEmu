@@ -1,10 +1,26 @@
 #include "../client.h"
 
-void command_appearance(Client* c, const Seperator* sep) {
+void command_appearance(Client *c, const Seperator *sep)
+{
+	const int arguments = sep->argnum;
+	if (!arguments || !sep->IsNumber(1) || !sep->IsNumber(2)) {
+		c->Message(Chat::White, "Usage: #appearance [Type] [Value]");
+		c->Message(Chat::White, "Note: Types are as follows:");
 
-	Mob *t = c;
-	if (!c)
+		for (const auto &a : EQ::constants::GetAppearanceTypeMap()) {
+			c->Message(
+				Chat::White,
+				fmt::format(
+					"Appearance Type {} | {}",
+					a.first,
+					a.second
+				).c_str()
+			);
+		}
+
 		return;
+	}
+	Mob *t = c;
 	if (c->GetTarget()) {
 			t = c->GetTarget();
 	}

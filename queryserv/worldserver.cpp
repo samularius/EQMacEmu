@@ -89,7 +89,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 		}
 		
 		case ServerOP_Speech: {
-			Server_Speech_Struct *SSS = (Server_Speech_Struct *)pack->pBuffer;
+			Server_Speech_Struct* SSS = (Server_Speech_Struct*)p.Data();
 			std::string          tmp1 = SSS->from;
 			std::string          tmp2 = SSS->to;
 			database.LogPlayerSpeech(tmp1.c_str(), tmp2.c_str(), SSS->message, SSS->minstatus, SSS->guilddbid, SSS->type, SSS->characterid, SSS->groupid);

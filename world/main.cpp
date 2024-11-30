@@ -416,9 +416,6 @@ int main(int argc, char** argv) {
 	LogInfo("Initializing [EventScheduler]");
 	event_scheduler.SetDatabase(&database)->LoadScheduledEvents();
 
-	Timer EQTimeTimer(600000);
-	EQTimeTimer.Start(600000);
-
 	// global loads
 	LogInfo("Loading launcher list..");
 	launcher_list.LoadList();

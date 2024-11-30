@@ -445,7 +445,7 @@ bool SharedDatabase::LoadItems(const std::string &prefix)
 	return true;
 }
 
-void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_item_id) 
+void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_item_id)
 {
 	EQ::FixedMemoryHashSet<EQ::ItemData> hash(reinterpret_cast<uint8*>(data), size, items, max_item_id);
 
@@ -466,7 +466,7 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 		}
 	}
 
-    EQ::ItemData item;
+	EQ::ItemData item;
 
 	const std::string query = "SELECT source,"
 #define F(x) "`"#x"`,"
@@ -474,12 +474,12 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 #undef F
 		"updated FROM items ORDER BY id";
 	auto results = QueryDatabase(query);
-    if (!results.Success()) {
-        return;
-    }
+	if (!results.Success()) {
+		return;
+	}
 
-    for(auto row = results.begin(); row != results.end(); ++row) {
-        memset(&item, 0, sizeof(EQ::ItemData));
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		memset(&item, 0, sizeof(EQ::ItemData));
 
 		float enabled_era = RuleR(World, CurrentExpansion);
 
@@ -542,38 +542,6 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 		item.HP = std::stoi(row[ItemField::hp]);
 		item.Mana = std::stoi(row[ItemField::mana]);
 		item.AC = std::stoi(row[ItemField::ac]);
-
-		if (RuleB(AlKabor, EnableEraItemRules))
-		{
-			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
-			{
-				item.BaneDmgAmt = 0;
-				item.BaneDmgBody = 0;
-				item.BaneDmgRace = 0;
-
-				// Elemental Damage
-				item.ElemDmgType = 0;
-				item.ElemDmgAmt = 0;
-			}
-			else
-			{
-				//Bane Damage
-				item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
-				item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
-				item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
-
-				// Elemental Damage
-				item.ElemDmgType = static_cast<uint8>(std::stoul(row[ItemField::elemdmgtype]));
-				item.ElemDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::elemdmgamt]));
-			}
-		}
-		else
-		{
-			//Bane Damage
-			item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
-			item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
-			item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
-
 		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
 			//Bane Damage
 			item.BaneDmgAmt = 0;
@@ -589,7 +557,7 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 			item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
 			item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
 			item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
-			
+
 			// Elemental Damage
 			item.ElemDmgType = static_cast<uint8>(std::stoul(row[ItemField::elemdmgtype]));
 			item.ElemDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::elemdmgamt]));
@@ -701,7 +669,7 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 		item.Worn.Type = std::stoi(row[ItemField::worntype]);
 		item.Worn.Level = static_cast<uint8>(std::stoul(row[ItemField::wornlevel]));
 		item.Worn.Level2 = static_cast<uint8>(std::stoul(row[ItemField::wornlevel2]));
-		
+
 		//Expansion appears in
 		item.min_expansion = std::stof(row[ItemField::min_expansion]);
 		item.max_expansion = std::stof(row[ItemField::max_expansion]);
@@ -725,8 +693,8 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 					item.ItemType == EQ::item::ItemTypeUnknown4 ||
 					item.ItemType == EQ::item::ItemTypeFishingBait ||
 					item.ItemType == EQ::item::ItemTypeAlcohol
+					)
 				)
-			)
 		{
 			// item is stackable
 			item.StackSize = 20;
@@ -753,8 +721,8 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 					item.ItemType == EQ::item::ItemTypeUnknown4 ||
 					item.ItemType == EQ::item::ItemTypeFishingBait ||
 					item.ItemType == EQ::item::ItemTypeAlcohol
+					)
 				)
-			)
 		{
 			// item is stackable
 			item.StackSize = 20;
@@ -765,14 +733,14 @@ void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_
 			item.StackSize = 1;
 		}
 
-        try {
-            hash.insert(item.ID, item);
-        } catch(std::exception &ex) {
-            LogError("Database::LoadItems: {0}", ex.what());
-            break;
-        }
-    }
-
+		try {
+			hash.insert(item.ID, item);
+		}
+		catch (std::exception& ex) {
+			LogError("Database::LoadItems: {0}", ex.what());
+			break;
+		}
+	}
 }
 
 const EQ::ItemData* SharedDatabase::GetItem(uint32 id)

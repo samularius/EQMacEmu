@@ -2,9 +2,11 @@
 #include "../worldserver.h"
 extern WorldServer worldserver;
 
-void command_emote(Client *c, const Seperator *sep){
-	if (sep->arg[3][0] == 0)
-		c->Message(Chat::Default, "Usage: #emote [name | world | zone] type# message");
+void command_emote(Client *c, const Seperator *sep)
+{
+	if (sep->arg[3][0] == 0) {
+		c->Message(Chat::White, "Usage: #emote [name | world | zone] type# message");
+	}
 	else {
 		if (strcasecmp(sep->arg[1], "zone") == 0){
 			char* newmessage = 0;

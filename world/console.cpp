@@ -594,10 +594,10 @@ void ConsoleZoneBootup(
 		LogInfo("Console ZoneBootup: {}, {}, {}", tmpname, args[1].c_str(), args[0].c_str());
 
 		if (args.size() > 2) {
-			zoneserver_list.SOPZoneBootup(tmpname, atoi(args[0].c_str()), args[1].c_str(), (bool)(strcasecmp(args[1].c_str(), "static") == 0));
+			zoneserver_list.SOPZoneBootup(tmpname, atoi(args[0].c_str()), atoll(args[1].c_str()), args[2].c_str(), (bool)(strcasecmp(args[2].c_str(), "static") == 0));
 		}
 		else {
-			zoneserver_list.SOPZoneBootup(tmpname, atoi(args[0].c_str()), args[1].c_str(), false);
+			zoneserver_list.SOPZoneBootup(tmpname, atoi(args[0].c_str()), atoll(args[1].c_str()), args[2].c_str(), false);
 		}
 	}
 }

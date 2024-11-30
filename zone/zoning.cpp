@@ -496,7 +496,7 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 
 	/* Dont clear aggro until the zone is successful */
 	entity_list.RemoveFromHateLists(this);
-	scanarea_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
+	m_client_npc_aggro_scan_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
 
 	EndShield();		// warrior /shield
 

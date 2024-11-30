@@ -1217,7 +1217,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p) {
 							scs->zone_id = s->zone_id;
 							scs->message_string_id = 1427; //CONSENT_GIVEN
 							scs->corpse_id = s->corpse_id;
-							zs = zoneserver_list.FindByZoneID(cle_reply->zone());
+							zs = zoneserver_list.FindByZoneID(cle_reply->zone(), cle_reply->GetZoneGuildID());
 							if (zs) {
 								// Sends packet to owner so they get the success message. If this fails, consent will still occur the owner just won't get a message.
 								Log(Logs::Detail, Logs::WorldServer, "Sent consent packet from player %s to player %s in zone %u.", s->ownername, s->grantname, cle->zone());
