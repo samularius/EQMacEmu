@@ -311,6 +311,7 @@ RULE_STRING(Quarm, AllianceChannelName, "Alliance", "")
 RULE_STRING(Quarm, AllianceChannelReplacementName, "General", "")
 RULE_INT(Quarm, AllianceChannelLevelRequirement, 10, "")
 RULE_BOOL(Quarm, DruidEpicAppliesEnsnare, true, "")
+RULE_BOOL(Quarm, PreNerfSneakHide, true, "This should be false during Luclin.")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
