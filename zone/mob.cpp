@@ -519,7 +519,7 @@ bool Mob::IsInvisible(Mob* other) const
 
 	if(hidden)
 	{
-		if (RuleB(Quarm, PreNerfSneakHide))
+		if (RuleB(Quarm, PreNerfSneakHide) && GetClass() == ROGUE)
 		{
 			if (!other->SeeSneak())
 				return true;
