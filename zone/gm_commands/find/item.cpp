@@ -72,6 +72,10 @@ void FindItem(Client *c, const Seperator *sep)
 
 	for (const auto& e : l) {
 		const auto *item = database.GetItem(e);
+		
+		if (!item)
+			continue;
+
 		auto summon_links = Saylink::Silent(
 			fmt::format(
 				"#si {}",
