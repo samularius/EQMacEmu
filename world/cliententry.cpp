@@ -99,7 +99,7 @@ ClientListEntry::~ClientListEntry()
 		incremented_player_count = false;
 	}
 
-	SetOnline(CLE_Status_Offline);
+	SetOnline(CLE_Status::Offline);
 	SetAccountID(0);
 	for (auto &elem : tell_queue)
 		safe_delete_array(elem);

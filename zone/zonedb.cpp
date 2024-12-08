@@ -1337,7 +1337,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		(unsigned long)m_epp->zone_guild_id,
 		Strings::Escape(m_epp->temp_last_name).c_str(),
 		m_epp->married_character_id,
-		m_epp->char_export_flag
+		m_epp->char_export_flag,
 		mail_key.c_str()
 	);
 	auto results = database.QueryDatabase(query);

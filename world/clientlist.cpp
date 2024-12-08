@@ -352,7 +352,7 @@ bool ClientList::CheckMuleLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientL
 			(RuleI(World, ExemptMaxClientsStatus) < 0))) {
 
 			// Increment the occurrences of this forum name
-			if (curCLE->Online() >= CLE_Status_Zoning && (cle == nullptr || cle != curCLE))
+			if (curCLE->Online() >= CLE_Status::Zoning && (cle == nullptr || cle != curCLE))
 				MuleInstances++;
 		}
 		iterator.Advance();
@@ -469,7 +469,7 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 			if (cle->AccountID() && cle->AccountName() && cle->AccountName()[0] != 0 && inet_ntoa(in) && inet_ntoa(in)[0] != 0 && strlen(inet_ntoa(in)) > 0)
 			{
 				fmt::format_to(std::back_inserter(out), "ID: {}  Acc# {}  AccName: {}  IP: {}", cle->GetID(), cle->AccountID(), cle->AccountName(), inet_ntoa(in));
-				fmt::format_to(std::back_inserter(out), "{}  Stale: {}  Online: {}  Admin: {}", newline, cle->GetStaleCounter(), cle->Online(), cle->Admin());
+				fmt::format_to(std::back_inserter(out), "{}  Stale: {}  Online: {}  Admin: {}", newline, cle->GetStaleCounter(), (int)cle->Online(), cle->Admin());
 				if (cle->LSID())
 					fmt::format_to(std::back_inserter(out), "{}  LSID: {}  LSName: {}  WorldAdmin: {}", newline, cle->LSID(), cle->LSName(), cle->WorldAdmin());
 				if (cle->CharID())

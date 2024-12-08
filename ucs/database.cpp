@@ -91,7 +91,7 @@ void UCSDatabase::GetAccountStatus(Client *client) {
 
 }
 
-void Database::LogUCSPlayerSpeech(
+void UCSDatabase::LogUCSPlayerSpeech(
 	const char* from,
 	const char* to,
 	const char* message,
@@ -129,7 +129,7 @@ void Database::LogUCSPlayerSpeech(
 
 }
 
-uint8 Database::CheckUCSRevoked(uint32 account_id) {
+uint8 UCSDatabase::CheckUCSRevoked(uint32 account_id) {
 	auto query = fmt::format(
 		"SELECT `revoked`, UNIX_TIMESTAMP(`revokeduntil`) as `revokeduntil`, UNIX_TIMESTAMP() as `current` FROM `account` WHERE `id` = {} ",
 		account_id
@@ -201,44 +201,6 @@ int UCSDatabase::FindAccount(const char *characterName, Client *client) {
 	return accountID;
 }
 
-bool UCSDatabase::VerifyMailKey(const std::string& characterName, int IPAddress, const std::string& MailKey)
-{
-
-	std::string query = StringFormat(
-		"SELECT `mailkey` FROM `character_data` WHERE `name`='%s' LIMIT 1",
-		characterName.c_str()
-	);
-
-	auto results = QueryDatabase(query);
-	if (!results.Success()) {
-		LogInfo("Error retrieving mailkey from database: [{}]", results.ErrorMessage().c_str());
-		return false;
-	}
-
-	if (results.RowCount() == 0) {
-		LogInfo("No mailkeys found for [{}].", characterName.c_str());
-		return false;
-	}
-
-	auto row = results.begin();
-
-	// The key is the client's IP address (expressed as 8 hex digits) and an 8 hex digit random string generated
-	// by world.
-	//
-	char combinedKey[17];
-
-	if (RuleB(Chat, EnableMailKeyIPVerification) == true) {
-		sprintf(combinedKey, "%08X%s", IPAddress, MailKey.c_str());
-	}
-	else {
-		sprintf(combinedKey, "%s", MailKey.c_str());
-	}
-
-	LogInfo("DB key is [[{}]], Client key is [[{}]]", (row[0] ? row[0] : ""), combinedKey);
-
-	return !strcmp(row[0], combinedKey);
-}
-
 int UCSDatabase::FindCharacter(const char *characterName)
 {
 	char *safeCharName = RemoveApostrophes(characterName);
@@ -264,7 +226,7 @@ int UCSDatabase::FindCharacter(const char *characterName)
 	return characterID;
 }
 
-bool Database::VerifyMailKey(const std::string& characterName, int IPAddress, const std::string& MailKey)
+bool UCSDatabase::VerifyMailKey(const std::string& characterName, int IPAddress, const std::string& MailKey)
 {
 	std::string query = StringFormat("SELECT `mailkey` FROM `character_data` WHERE `name`='%s' LIMIT 1", characterName.c_str());
 
@@ -295,7 +257,6 @@ bool Database::VerifyMailKey(const std::string& characterName, int IPAddress, co
 
 	return !strcmp(row[0], combinedKey);
 }
-
 
 bool UCSDatabase::GetVariable(const char* varname, char* varvalue, uint16 varvalue_len) {
 	std::string query = StringFormat("SELECT `value` FROM `variables` WHERE `varname` = '%s'", varname);

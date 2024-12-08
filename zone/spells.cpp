@@ -1425,7 +1425,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 		{
 			if (spell_target->IsNPC())
 			{
-				if (!spell_target->CastToNPC()->GetSpecialAbility(UNSNAREABLE))
+				if (!spell_target->CastToNPC()->GetSpecialAbility(SpecialAbility::SnareImmunity))
 				{
 					SpellFinished(512, spell_target, slot, mana_used, inventory_slot, resist_adjust);
 				}
