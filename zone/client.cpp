@@ -431,7 +431,7 @@ Client::~Client() {
 	numclients--;
 	UpdateWindowTitle(nullptr);
 	if (zone) {
-		zone->RemoveAuth(GetName(), GetID());
+		zone->RemoveAuth(GetName(), lskey);
 	}
 
 	//let the stream factory know were done with this stream
@@ -2407,7 +2407,7 @@ void Client::SetPVP(uint8 toggle) {
 void Client::Kick(const std::string& reason) {
 	client_state = CLIENT_KICKED;
 
-	LogInfo("Client [{}] kicked, reason [{}]", GetCleanName(), reason.c_str());
+	LogClientLogin("Client [{}] kicked, reason [{}]", GetCleanName(), reason.c_str());
 }
 
 void Client::WorldKick() {
@@ -5023,7 +5023,7 @@ void Client::TryItemTimer(int slot)
 		return;
 	}
 
-	auto item_timers = inst->GetTimers();
+	auto& item_timers = inst->GetTimers();
 	auto it_iter = item_timers.begin();
 	while (it_iter != item_timers.end()) {
 		if (it_iter->second.Check()) {

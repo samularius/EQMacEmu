@@ -87,6 +87,7 @@
 #include "world_event_scheduler.h"
 #include "../common/path_manager.h"
 #include "../common/skill_caps.h"
+#include "../common/ip_util.h"
 
 SkillCaps skill_caps;
 ZoneStore zone_store;
@@ -428,7 +429,6 @@ int main(int argc, char** argv) {
 		RegisterConsoleFunctions(console);
 	}
 
-	LogInfo("Initializing [WorldContentService]");
 	content_service.SetDatabase(&database)
 		->SetExpansionContext()
 		->ReloadContentFlags();
@@ -489,10 +489,10 @@ int main(int argc, char** argv) {
 	server_connection->OnConnectionRemoved(
 		"Launcher", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
 			LogInfo(
-					"Removed Launcher connection from [{0}]",
+				"Removed Launcher connection from [{0}]",
 				connection->GetUUID()
 			);
-				
+
 			launcher_list.Remove(connection);
 		}
 	);
@@ -530,46 +530,52 @@ int main(int argc, char** argv) {
 			);
 
 			UCSLink.SetConnection(connection);
+
+			zoneserver_list.UpdateUCSServerAvailable();
+
+			
 		}
 	);
 
 	server_connection->OnConnectionRemoved(
 		"UCS", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
-			LogInfo("Connection lost from UCS Server [{}]", 
-				connection->GetUUID());
+			LogInfo("Connection lost from UCS Server [{}]", connection->GetUUID());
 
 			auto ucs_connection = UCSLink.GetConnection();
+
 			if (ucs_connection->GetUUID() == connection->GetUUID()) {
+				LogInfo("Removing currently active UCS connection");
 				UCSLink.SetConnection(nullptr);
+				zoneserver_list.UpdateUCSServerAvailable(false);
 			}
 		}
 	);
 
 	server_connection->OnConnectionIdentified(
 		"WebInterface", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
-		LogInfo(
-			"New WebInterface Server connection from [{}] at [{}:{}]",
-			connection->Handle()->RemoteIP(),
-			connection->Handle()->RemotePort(),
-			connection->GetUUID()
-		);
+			LogInfo(
+				"New WebInterface Server connection from [{}] at [{}:{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID()
+			);
 
-		web_interface.AddConnection(connection);
-	}
+			web_interface.AddConnection(connection);
+		}
 	);
 
 	server_connection->OnConnectionRemoved(
 		"WebInterface", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
-		LogInfo(
-			"Removed WebInterface Server connection from [{}]",
-			connection->GetUUID()
-		);
+			LogInfo(
+				"Removed WebInterface Server connection from [{}]",
+				connection->GetUUID()
+			);
 
-		web_interface.RemoveConnection(connection);
-	}
+			web_interface.RemoveConnection(connection);
+		}
 	);
 
-
+	WorldConfig::CheckForPossibleConfigurationIssues();
 
 	if (eqsf.Open()) {
 		LogInfo("Client (UDP) listener started.");

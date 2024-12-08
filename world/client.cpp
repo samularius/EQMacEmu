@@ -69,10 +69,10 @@ extern ClientList client_list;
 extern EQ::Random emu_random;
 extern uint32 numclients;
 extern volatile bool RunLoops;
+extern volatile bool UCSServerAvailable_;
 
 Client::Client(EQStreamInterface* ieqs)
 :	autobootup_timeout(RuleI(World, ZoneAutobootTimeoutMS)),
-	CLE_keepalive_timer(RuleI(World, ClientKeepaliveTimeoutMS)),
 	connect(1000),
 	eqs(ieqs)
 {
@@ -89,7 +89,8 @@ Client::Client(EQStreamInterface* ieqs)
 	zone_id = 0;
 	char_name[0] = 0;
 	char_id = 0;
-	pwaitingforbootup = 0;
+	zone_waiting_for_bootup = 0;
+	enter_world_triggered = false;
 	m_ClientVersionBit = 0;
 	numclients++;
 	zoneGuildID = 0xFFFFFFFF;
@@ -97,7 +98,7 @@ Client::Client(EQStreamInterface* ieqs)
 
 Client::~Client() {
 	if (RunLoops && cle && zone_id == 0 && zoneGuildID == 0xFFFFFFFF) {
-		cle->SetOnline(CLE_Status_Offline);
+		cle->SetOnline(CLE_Status::Offline);
 	}
 
 	numclients--;
@@ -165,7 +166,7 @@ void Client::SendExpansionInfo() {
 void Client::SendCharInfo() {
 
 	if (cle) {
-		cle->SetOnline(CLE_Status_CharSelect);
+		cle->SetOnline(CLE_Status::CharSelect);
 	}
 	if (RuleB(Quarm, DeleteHCCharactersAfterDeath))
 	{
@@ -198,8 +199,9 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 	strn0cpy(name, (char*)login_info->login_info,18);
 	strn0cpy(password, (char*)&(login_info->login_info[strlen(name)+1]), 15);
 
+	LogDebug("Receiving Login Info Packet from Client | name [{0}] password [{1}]", name, password);
+
 	if (strlen(password) <= 1) {
-		// TODO: Find out how to tell the client wrong username/password
 		LogInfo("Login without a password");
 		return false;
 	}
@@ -233,7 +235,7 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 		mule = false;
 		database.GetAccountRestriction(cle->AccountID(), expansion, mule);
 
-		if(cle->Online() < CLE_Status_Online)
+		if(cle->Online() < CLE_Status::Online)
 			cle->SetOnline();
 		
 		if(eqs->ClientVersion() == EQ::versions::ClientVersion::Mac)
@@ -668,26 +670,29 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 		safe_delete(outapp);
 	}
 
-		int MailKey = emu_random.Int(1, INT_MAX);
+	// set mailkey - used for duration of character session
+	int MailKey = emu_random.Int(1, INT_MAX);
 
-		database.SetMailKey(char_id, GetIP(), MailKey);
-
-		auto outapp2 = new EQApplicationPacket(OP_SetChatServer);
-		char buffer[112];
-
-		const WorldConfig *Config = WorldConfig::get();
-
-		sprintf(buffer, "%s,%i,%s.%s,%08x",
+	database.SetMailKey(char_id, GetIP(), MailKey);
+	if (UCSServerAvailable_) {
+		const WorldConfig* Config = WorldConfig::get();
+		std::string buffer;
+		buffer = StringFormat("%s,%i,%s.%s,%08X",
 			RuleS(Quarm, ChatHostname).c_str(),
 			RuleI(Quarm, ChatPort),
 			RuleS(Quarm, ChatShortName).c_str(),
-			this->GetCharName(), MailKey
-			);
-		outapp2->size = strlen(buffer) + 1;
-		outapp2->pBuffer = new uchar[outapp2->size];
-		memcpy(outapp2->pBuffer, buffer, outapp2->size);
-		QueuePacket(outapp2);
-		safe_delete(outapp2);
+			GetCharName(),
+			MailKey
+		);
+
+		auto outapp = new EQApplicationPacket(OP_SetChatServer, (buffer.length() + 1));
+		memcpy(outapp->pBuffer, buffer.c_str(), buffer.length());
+		outapp->pBuffer[buffer.length()] = '\0';
+
+
+		QueuePacket(outapp);
+		safe_delete(outapp);
+	}
 	
 	EnterWorld();
 
@@ -905,17 +910,17 @@ bool Client::Process() {
 
 	if (autobootup_timeout.Check()) {
 		Log(Logs::Detail, Logs::WorldServer, "Zone bootup timer expired, bootup failed or too slow.");
-		ZoneUnavail();
+		TellClientZoneUnavailable();
 	}
 	if(connect.Check()){
 		//SendGuildList();// Send OPCode: OP_GuildsList
 		SendApproveWorld();
 		connect.Disable();
 	}
-	if (CLE_keepalive_timer.Check()) {
-		if (cle)
-			cle->KeepAlive();
-	}
+
+	if (cle)
+		cle->KeepAlive();
+
 
 	/************ Get all packets from packet manager out queue and process them ************/
 	EQApplicationPacket *app = 0;
@@ -952,30 +957,42 @@ void Client::EnterWorld(bool TryBootup) {
 	zone_server = zoneserver_list.FindByZoneID(zone_id, zoneGuildID);
 
 	if (zone_server) {
-		// warn the world we're comming, so it knows not to shutdown
-		zone_server->IncomingClient(this);
+		if (false == enter_world_triggered) {
+			//Drop any clients we own in other zones.
+			zoneserver_list.DropClient(GetLSID(), zone_server);
+			// warn the zone we're coming
+			zone_server->IncomingClient(this);
+			//tell the server not to trigger this multiple times before we get a zone unavailable
+			enter_world_triggered = true;
+		}
 	}
 	else
 	{
 		if (TryBootup && !RuleB(World, DontBootDynamics) || TryBootup && zoneGuildID != 0xFFFFFFFF) {
 		LogInfo("Attempting autobootup of [{}] [{}]", zone_id, zoneGuildID);
 			autobootup_timeout.Start();
-			pwaitingforbootup = zoneserver_list.TriggerBootup(zone_id, zoneGuildID);
-			if (pwaitingforbootup == 0) {
+			zone_waiting_for_bootup = zoneserver_list.TriggerBootup(zone_id, zoneGuildID);
+			if (zone_waiting_for_bootup == 0) {
 				LogInfo("No zoneserver available to boot up.");
-				ZoneUnavail();
+				TellClientZoneUnavailable();
 			}
 			return;
 		}
 		else {
 		LogInfo("Requested zone [{}][{}] is not running.", zone_id, zoneGuildID);
-			ZoneUnavail();
+		TellClientZoneUnavailable();
 			return;
 		}
 	}
-	pwaitingforbootup = 0;
+	zone_waiting_for_bootup = 0;
 
-	if(!cle) {
+	if (GetAdmin() < 80 && zoneserver_list.IsZoneLocked(zone_id)) {
+		LogInfo("Enter world failed. Zone is locked.");
+		TellClientZoneUnavailable();
+		return;
+	}
+	if (!cle) {
+		TellClientZoneUnavailable();
 		return;
 	}
 
@@ -987,12 +1004,6 @@ void Client::EnterWorld(bool TryBootup) {
 	LogInfo("{} [{}] [{}]", seen_character_select ? "Zoning from character select" : "Zoning to", zone_id, zoneGuildID);
 
 	if (seen_character_select) {
-		if (GetAdmin() < 80 && zoneserver_list.IsZoneLocked(zone_id)) {
-			Log(Logs::Detail, Logs::WorldServer,"Enter world failed. Zone is locked.");
-			ZoneUnavail();
-			return;
-		}
-
 		auto pack = new ServerPacket;
 		pack->opcode = ServerOP_AcceptWorldEntrance;
 		pack->size = sizeof(WorldToZone_Struct);
@@ -1025,26 +1036,26 @@ void Client::Clearance(int8 response)
 			Log(Logs::Detail, Logs::WorldServer, "Invalid response %d in Client::Clearance", response);
 		}
 
-		ZoneUnavail();
+		TellClientZoneUnavailable();
 		return;
 	}
 
 	if (zs->GetCAddress() == nullptr) {
 		Log(Logs::Detail, Logs::WorldServer, "Unable to do zs->GetCAddress() in Client::Clearance!!");
-		ZoneUnavail();
+		TellClientZoneUnavailable();
 		return;
 	}
 
 	if (zone_id == 0) {
 		Log(Logs::Detail, Logs::WorldServer, "zoneID is nullptr in Client::Clearance!!");
-		ZoneUnavail();
+		TellClientZoneUnavailable();
 		return;
 	}
 
 	const char* zonename = ZoneName(zone_id);
 	if (zonename == 0) {
 		Log(Logs::Detail, Logs::WorldServer, "zonename is nullptr in Client::Clearance!!");
-		ZoneUnavail();
+		TellClientZoneUnavailable();
 		return;
 	}
 
@@ -1087,11 +1098,11 @@ void Client::Clearance(int8 response)
 	if (cle)
 	{
 		autobootup_timeout.Disable();
-		cle->SetOnline(CLE_Status_Zoning);
+		cle->SetOnline(CLE_Status::Zoning);
 	}
 }
 
-void Client::ZoneUnavail() {
+void Client::TellClientZoneUnavailable() {
 	auto outapp = new EQApplicationPacket(OP_ZoneUnavail, sizeof(ZoneUnavail_Struct));
 	ZoneUnavail_Struct* ua = (ZoneUnavail_Struct*)outapp->pBuffer;
 	const char* zonename = ZoneName(zone_id);
@@ -1101,7 +1112,8 @@ void Client::ZoneUnavail() {
 	delete outapp;
 
 	zone_id = 0;
-	pwaitingforbootup = 0;
+	zone_waiting_for_bootup = 0;
+	enter_world_triggered = false;
 	autobootup_timeout.Disable();
 }
 
@@ -1569,7 +1581,7 @@ bool Client::GetSessionLimit()
 {
 	if (RuleI(World, AccountSessionLimit) >= 0 && cle->Admin() < (RuleI(World, ExemptAccountLimitStatus)) && (RuleI(World, ExemptAccountLimitStatus) != -1)) 
 	{
-		if(client_list.CheckAccountActive(cle->AccountID()) && cle->Online() != CLE_Status_Zoning)
+		if(client_list.CheckAccountActive(cle->AccountID()) && cle->Online() != CLE_Status::Zoning)
 		{
 			Log(Logs::Detail, Logs::WorldServer,"Account %d attempted to login with an active player in the world.", cle->AccountID());
 			return true;
