@@ -71,12 +71,12 @@ void FindItem(Client *c, const Seperator *sep)
 	auto found_count = 0;
 
 	for (const auto& e : l) {
-		const auto item = database.GetItem(e);
-		if (!item) {
+		const auto *item = database.GetItem(e);
+		
+		if (!item)
 			continue;
-		}
 
-		std::string summon_links = Saylink::Silent(
+		auto summon_links = Saylink::Silent(
 			fmt::format(
 				"#si {}",
 				e

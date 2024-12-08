@@ -1417,6 +1417,22 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 		return;
 	}
 
+	// Wrath of Nature Quarm logic. (Druid Epic)
+	// Apply Ensnare if mob is not immune.
+	if (RuleB(Quarm, DruidEpicAppliesEnsnare))
+	{
+		if (spell_id == 1926 && spell_target)
+		{
+			if (spell_target->IsNPC())
+			{
+				if (!spell_target->CastToNPC()->GetSpecialAbility(UNSNAREABLE))
+				{
+					SpellFinished(512, spell_target, slot, mana_used, inventory_slot, resist_adjust);
+				}
+			}
+		}
+	}
+
 	if(DeleteChargeFromSlot >= 0)
 		CastToClient()->DeleteItemInInventory(DeleteChargeFromSlot, 1, true);
 
@@ -1989,7 +2005,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		return false;
 	}
 
-	if (spell_target && spell_id == SPELL_CAZIC_TOUCH && IsNPC() && zone->GetZoneExpansion() != PlanesEQ)
+	if (spell_target && spell_id == SPELL_CAZIC_TOUCH && IsNPC() && zone->GetZoneExpansion() != PlanesEQ || spell_target && IsClient() && spell_id == SPELL_CAZIC_TOUCH)
 	{
 		Shout("%s!",spell_target->name);
 	}
