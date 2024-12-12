@@ -36,7 +36,6 @@ SET(world_headers
 	login_server_list.h
 	main.h
 	queryserv.h
-	char_create_data.h
 	ucs.h
 	wguild_mgr.h
 	world_config.h

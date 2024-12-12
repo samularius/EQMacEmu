@@ -28,7 +28,7 @@
 #include "zonelist.h"
 #include "clientlist.h"
 #include "wguild_mgr.h"
-#include "char_create_data.h"
+#include "../common/char_create_data.h"
 #include "console.h"
 
 #include <iostream>

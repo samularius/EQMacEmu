@@ -3,6 +3,7 @@
 
 #define MAX_ITEM_ID				200000
 
+#include "char_create_data.h"
 #include "database.h"
 #include "skills.h"
 #include "spdat.h"
@@ -49,6 +50,8 @@ public:
 	bool	SetGMInvul(uint32 account_id, bool gminvul);
 	bool	SetGMFlymode(uint32 account_id, uint8 flymode);
 	bool	SetGMIgnoreTells(uint32 account_id, uint8 ignoretells);
+	bool    GetCharCreateStats(uint32 class_id, uint32 race_id, RaceClassAllocation& out);
+	bool    GetCharCreateFullInfo(uint32 class_id, uint32 race_id, uint32 diety_id, uint32 player_choice_city, uint32& expansions_req, RaceClassAllocation& out_allocation, BindStruct& out_bind);
 
 	/*
 	* Character InventoryProfile

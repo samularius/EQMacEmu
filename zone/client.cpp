@@ -496,6 +496,119 @@ void Client::ReportConnectingState() {
 	};
 }
 
+bool Client::SetBaseStatAllocation(
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
+	bool check_cooldown)
+{
+	if (check_cooldown && !p_timers.Expired(&database, pTimerPlayerStatsChange, false)) {
+		Message(Chat::Red, "You must wait 7 days before reallocating your stats agian.");
+		return false;
+	}
+
+	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
+		Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
+		return false;
+	}
+
+	RaceClassAllocation allocation;
+	if (!database.GetCharCreateStats(GetBaseClass(), GetBaseRace(), allocation)) {
+		Message(Chat::Red, "This race/deity/city combination is not available.");
+		return false;
+	}
+
+	uint16 total_points_spent = bonusSTR + bonusSTA + bonusAGI + bonusDEX + bonusWIS + bonusINT + bonusCHA;
+	uint16 total_points_budget = allocation.DefaultPointAllocation[0]
+		+ allocation.DefaultPointAllocation[1]
+		+ allocation.DefaultPointAllocation[2]
+		+ allocation.DefaultPointAllocation[3]
+		+ allocation.DefaultPointAllocation[4]
+		+ allocation.DefaultPointAllocation[5]
+		+ allocation.DefaultPointAllocation[6];
+
+	if (total_points_spent != total_points_budget) {
+		Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
+		return false;
+	}
+
+	// New base stats
+	m_pp.STR = allocation.BaseStats[0] + bonusSTR;
+	m_pp.DEX = allocation.BaseStats[1] + bonusDEX;
+	m_pp.AGI = allocation.BaseStats[2] + bonusAGI;
+	m_pp.STA = allocation.BaseStats[3] + bonusSTA;
+	m_pp.INT = allocation.BaseStats[4] + bonusINT;
+	m_pp.WIS = allocation.BaseStats[5] + bonusWIS;
+	m_pp.CHA = allocation.BaseStats[6] + bonusCHA;
+
+	p_timers.Start(pTimerPlayerStatsChange, 604800);
+
+	// Success
+	return true;
+}
+
+bool Client::SetBaseRaceAndStatAllocation(
+	uint32 new_race, uint32 new_deity, uint32 player_choice_city,
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA)
+{
+
+	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
+		Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
+		return false;
+	}
+
+	uint32 expansions_req;
+	RaceClassAllocation allocation;
+	BindStruct start_zone_bind;
+	if (!database.GetCharCreateFullInfo(GetBaseClass(), new_race, new_deity, player_choice_city, expansions_req, allocation, start_zone_bind)) {
+		Message(Chat::Red, "This race/deity/city combination is not available.");
+		return false;
+	}
+
+	// Check if expansions are unlocked for this combination
+	uint32 expansion_bits = 0;
+	uint32 expansion = (uint32)content_service.GetCurrentExpansion();
+	while (expansion != 0) {
+		expansion_bits = (expansion_bits << 1) | 1;
+		expansion >>= 1;
+	}
+	if ((expansions_req & expansion_bits) != expansions_req) {
+		Message(Chat::Red, "This race is not available in the current expansion.");
+		return false;
+	}
+
+	uint16 total_points_spent = bonusSTR + bonusSTA + bonusAGI + bonusDEX + bonusWIS + bonusINT + bonusCHA;
+	uint16 total_points_budget = allocation.DefaultPointAllocation[0]
+		+ allocation.DefaultPointAllocation[1]
+		+ allocation.DefaultPointAllocation[2]
+		+ allocation.DefaultPointAllocation[3]
+		+ allocation.DefaultPointAllocation[4]
+		+ allocation.DefaultPointAllocation[5]
+		+ allocation.DefaultPointAllocation[6];
+
+	if (total_points_spent != total_points_budget) {
+		Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
+		return false;
+	}
+
+	// New base stats
+	m_pp.STR = allocation.BaseStats[0] + bonusSTR;
+	m_pp.DEX = allocation.BaseStats[1] + bonusDEX;
+	m_pp.AGI = allocation.BaseStats[2] + bonusAGI;
+	m_pp.STA = allocation.BaseStats[3] + bonusSTA;
+	m_pp.INT = allocation.BaseStats[4] + bonusINT;
+	m_pp.WIS = allocation.BaseStats[5] + bonusWIS;
+	m_pp.CHA = allocation.BaseStats[6] + bonusCHA;
+
+	// Set new race/deity/city
+	SetBaseRace(new_race);
+	SetDeity(new_deity);
+	m_pp.binds[4].zoneId = start_zone_bind.zoneId;
+	m_pp.binds[4].x = start_zone_bind.x;
+	m_pp.binds[4].y = start_zone_bind.y;
+	m_pp.binds[4].z = start_zone_bind.z;
+	m_pp.binds[4].heading = start_zone_bind.heading;
+	return true;
+}
+
 bool Client::SaveAA(){
 	int first_entry = 0;
 	std::string rquery;
@@ -6298,8 +6411,10 @@ void Client::SetRaceStartingSkills()
 	}
 	case DWARF:
 	{
-		m_pp.skills[EQ::skills::SkillSenseHeading] = 50; //Even if we set this to 0, Intel client sets this to 50 anyway. Confirmed this is correct for era.
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSenseHeading, 50);
+		if (m_pp.skills[EQ::skills::SkillSenseHeading] < 50) {
+			m_pp.skills[EQ::skills::SkillSenseHeading] = 50; //Even if we set this to 0, Intel client sets this to 50 anyway. Confirmed this is correct for era.
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSenseHeading, 50);
+		}
 		break;
 	}
 	case DARK_ELF:
@@ -6310,40 +6425,58 @@ void Client::SetRaceStartingSkills()
 	}
 	case GNOME:
 	{
-		m_pp.skills[EQ::skills::SkillTinkering] = 50;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillTinkering, 50);
+		if (m_pp.skills[EQ::skills::SkillTinkering] < 50) {
+			m_pp.skills[EQ::skills::SkillTinkering] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillTinkering, 50);
+		}
 		break;
 	}
 	case HALFLING:
 	{
-		m_pp.skills[EQ::skills::SkillHide] = 50;
-		m_pp.skills[EQ::skills::SkillSneak] = 50;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSneak, 50);
+		if (m_pp.skills[EQ::skills::SkillHide] < 50) {
+			m_pp.skills[EQ::skills::SkillHide] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
+		}
+		if (m_pp.skills[EQ::skills::SkillSneak] < 50) {
+			m_pp.skills[EQ::skills::SkillSneak] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSneak, 50);
+		}
 		break;
 	}
 	case IKSAR:
 	{
-		m_pp.skills[EQ::skills::SkillForage] = 50;
-		m_pp.skills[EQ::skills::SkillSwimming] = 100;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillForage, 50);
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSwimming, 100);
+		if (m_pp.skills[EQ::skills::SkillForage] < 50) {
+			m_pp.skills[EQ::skills::SkillForage] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillForage, 50);
+		}
+		if (m_pp.skills[EQ::skills::SkillSwimming] < 100) {
+			m_pp.skills[EQ::skills::SkillSwimming] = 100;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSwimming, 100);
+		}
 		break;
 	}
 	case WOOD_ELF:
 	{
-		m_pp.skills[EQ::skills::SkillForage] = 50;
-		m_pp.skills[EQ::skills::SkillHide] = 50;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillForage, 50);
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
+		if (m_pp.skills[EQ::skills::SkillForage] < 50) {
+			m_pp.skills[EQ::skills::SkillForage] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillForage, 50);
+		}
+		if (m_pp.skills[EQ::skills::SkillHide] < 50) {
+			m_pp.skills[EQ::skills::SkillHide] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
+		}
 		break;
 	}
 	case VAHSHIR:
 	{
-		m_pp.skills[EQ::skills::SkillSafeFall] = 50;
-		m_pp.skills[EQ::skills::SkillSneak] = 50;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSafeFall, 50);
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSneak, 50);
+		if (m_pp.skills[EQ::skills::SkillSafeFall] < 50) {
+			m_pp.skills[EQ::skills::SkillSafeFall] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSafeFall, 50);
+		}
+		if (m_pp.skills[EQ::skills::SkillSneak] < 50) {
+			m_pp.skills[EQ::skills::SkillSneak] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillSneak, 50);
+		}
 		break;
 	}
 	}
@@ -6365,14 +6498,14 @@ void Client::SetRacialLanguages()
 		m_pp.languages[LANG_DARK_ELVISH] = 100;
 		m_pp.languages[LANG_DARK_SPEECH] = 100;
 		m_pp.languages[LANG_ELDER_ELVISH] = 54;
-		m_pp.languages[LANG_ELVISH] = 54;
+		m_pp.languages[LANG_ELVISH] = m_pp.languages[LANG_ELVISH] > 54 ? m_pp.languages[LANG_ELVISH] : 54;
 		break;
 	}
 	case DWARF:
 	{
 		m_pp.languages[LANG_COMMON_TONGUE] = 100;
 		m_pp.languages[LANG_DWARVISH] = 100;
-		m_pp.languages[LANG_GNOMISH] = 25;
+		m_pp.languages[LANG_GNOMISH] = m_pp.languages[LANG_GNOMISH] > 25 ? m_pp.languages[LANG_GNOMISH] : 25;
 		break;
 	}
 	case ERUDITE:
@@ -6384,7 +6517,7 @@ void Client::SetRacialLanguages()
 	case GNOME:
 	{
 		m_pp.languages[LANG_COMMON_TONGUE] = 100;
-		m_pp.languages[LANG_DWARVISH] = 25;
+		m_pp.languages[LANG_DWARVISH] = m_pp.languages[LANG_DWARVISH] > 25 ? m_pp.languages[LANG_DWARVISH] : 25;
 		m_pp.languages[LANG_GNOMISH] = 100;
 		break;
 	}
@@ -6403,8 +6536,8 @@ void Client::SetRacialLanguages()
 	case HIGH_ELF:
 	{
 		m_pp.languages[LANG_COMMON_TONGUE] = 100;
-		m_pp.languages[LANG_DARK_ELVISH] = 51;
-		m_pp.languages[LANG_ELDER_ELVISH] = 51;
+		m_pp.languages[LANG_DARK_ELVISH] = m_pp.languages[LANG_DARK_ELVISH] > 51 ? m_pp.languages[LANG_DARK_ELVISH] : 51;
+		m_pp.languages[LANG_ELDER_ELVISH] = m_pp.languages[LANG_ELDER_ELVISH] > 51 ? m_pp.languages[LANG_ELDER_ELVISH] : 51;
 		m_pp.languages[LANG_ELVISH] = 100;
 		break;
 	}
@@ -6444,7 +6577,7 @@ void Client::SetRacialLanguages()
 	{
 		m_pp.languages[LANG_COMMON_TONGUE] = 100;
 		m_pp.languages[LANG_COMBINE_TONGUE] = 100;
-		m_pp.languages[LANG_ERUDIAN] = 32;
+		m_pp.languages[LANG_ERUDIAN] = m_pp.languages[LANG_ERUDIAN] > 32 ? m_pp.languages[LANG_ERUDIAN] : 32;
 		m_pp.languages[LANG_VAH_SHIR] = 100;
 		break;
 	}
@@ -7079,7 +7212,7 @@ void Client::PermaGender(uint32 gender)
 {
 	SetBaseGender(gender);
 	Save();
-	SendIllusionPacket(gender);
+	SendIllusionPacket(GetRace(), gender);
 }
 
 bool Client::SendGMCommand(std::string message, bool ignore_status) {

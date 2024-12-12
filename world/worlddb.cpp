@@ -24,7 +24,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include "char_create_data.h"
+#include "../common/char_create_data.h"
 #include "../common/repositories/criteria/content_filter_criteria.h"
 
 WorldDatabase database;
