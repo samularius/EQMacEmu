@@ -1,3 +1,6 @@
+#ifndef CHAR_CREATE_DATA_H
+#define CHAR_CREATE_DATA_H
+
 #pragma pack(1)
 
 struct RaceClassAllocation {
@@ -16,3 +19,5 @@ struct RaceClassCombos {
 };
 
 #pragma pack()
+
+#endif

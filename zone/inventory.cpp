@@ -601,6 +601,60 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	}
 }
 
+void Client::ResetPlayerForNewGamePlus()
+{
+	// Revert player's bind location to default starting
+	SetBindPoint(m_pp.binds[4].zoneId, glm::vec3(m_pp.binds[4].x, m_pp.binds[4].y, m_pp.binds[4].z));
+
+	// Remove memmed spells
+	UnmemSpellAll(false);
+
+	// Fade all buffs.
+	BuffFadeAll(false, true);
+
+	// Remove all factions.
+	database.RemoveAllFactions(this);
+	factionvalues.clear();
+
+	// Reset level
+	if (GetLevel() > 10) {
+		SetLevel(10, true);
+	}
+
+	// Commit immediately (Save) and then send home
+	Save(1);
+	ForceGoToDeath();
+}
+
+void Client::ResetRacialSkills()
+{
+	if (GetBaseRace() != GNOME && m_pp.skills[EQ::skills::SkillTinkering] > 0) {
+		m_pp.skills[EQ::skills::SkillTinkering] = 0;
+		database.DeleteCharacterSkill(CharacterID(), EQ::skills::SkillTinkering);
+	}
+	ResetRacialSkill(EQ::skills::SkillForage);
+	ResetRacialSkill(EQ::skills::SkillHide);
+	ResetRacialSkill(EQ::skills::SkillSneak);
+	ResetRacialSkill(EQ::skills::SkillSafeFall);
+}
+
+void Client::ResetRacialSkill(EQ::skills::SkillType skill)
+{
+	if (!CanHaveSkill(skill)) {
+		if (m_pp.skills[skill] > 0) {
+			m_pp.skills[skill] = 0;
+			database.DeleteCharacterSkill(CharacterID(), skill);
+		}
+		return;
+	}
+	int maxSkill = MaxSkill(skill);
+	if (m_pp.skills[skill] > maxSkill) {
+		m_pp.skills[skill] = maxSkill;
+		database.SaveCharacterSkill(CharacterID(), skill, maxSkill);
+		return;
+	}
+}
+
 // Remove item from inventory
 void Client::DeleteItemInInventory(int16 slot_id, int8 quantity, bool client_update, bool update_db) 
 {

@@ -110,6 +110,19 @@ void Lua_Client::SetBaseGender(int v) {
 	self->SetBaseGender(v);
 }
 
+bool Lua_Client::PermaStats(
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown) {
+	Lua_Safe_Call_Bool();
+	return self->PermaStats(self, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, check_cooldown);
+}
+
+bool Lua_Client::PermaRace(
+	uint32 new_race, uint32 new_deity, uint32 player_choice_city, 
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
+	Lua_Safe_Call_Bool();
+	return self->PermaRace(self, new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA);
+}
+
 int Lua_Client::GetBaseFace() {
 	Lua_Safe_Call_Int();
 	return self->GetBaseFace();
@@ -962,6 +975,12 @@ void Lua_Client::ClearPlayerInfoAndGrantStartingItems()
 	self->ClearPlayerInfoAndGrantStartingItems();
 }
 
+void Lua_Client::ResetPlayerForNewGamePlus()
+{
+	Lua_Safe_Call_Void();
+	self->ResetPlayerForNewGamePlus();
+}
+
 int Lua_Client::GetModCharacterFactionLevel(int faction) {
 	Lua_Safe_Call_Int();
 	return self->GetModCharacterFactionLevel(faction);
@@ -1340,6 +1359,8 @@ luabind::scope lua_register_client() {
 		.def("SetBaseClass", (void(Lua_Client::*)(int))&Lua_Client::SetBaseClass)
 		.def("SetBaseRace", (void(Lua_Client::*)(int))&Lua_Client::SetBaseRace)
 		.def("SetBaseGender", (void(Lua_Client::*)(int))&Lua_Client::SetBaseGender)
+		.def("PermaStats", (bool(Lua_Client::*)(uint16,uint16,uint16,uint16,uint16,uint16,uint16,bool))&Lua_Client::PermaStats)
+		.def("PermaRace", (bool(Lua_Client::*)(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint16))&Lua_Client::PermaRace)
 		.def("GetBaseFace", (int(Lua_Client::*)(void))&Lua_Client::GetBaseFace)
 		.def("GetLanguageSkill", (int(Lua_Client::*)(int))&Lua_Client::GetLanguageSkill)
 		.def("GetLastName", (const char *(Lua_Client::*)(void))&Lua_Client::GetLastName)
@@ -1546,6 +1567,7 @@ luabind::scope lua_register_client() {
 		.def("SetSoloOnly", (void(Lua_Client::*)(int))&Lua_Client::SetSoloOnly)
 		.def("IsSoloOnly", (int(Lua_Client::*)(void))&Lua_Client::IsSoloOnly)
 		.def("ClearPlayerInfoAndGrantStartingItems", (void(Lua_Client::*)(void))&Lua_Client::ClearPlayerInfoAndGrantStartingItems)
+		.def("ResetPlayerForNewGamePlus", (void(Lua_Client::*)(void))& Lua_Client::ResetPlayerForNewGamePlus)
 		.def("ScribeSpells", (uint16(Lua_Client::*)(uint8, uint8))& Lua_Client::ScribeSpells)
 		.def("IsMarried", (bool(Lua_Client::*)())&Lua_Client::IsMarried)
 		.def("SetMarried", (void(Lua_Client::*)(const char*))&Lua_Client::SetMarried)

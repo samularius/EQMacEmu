@@ -1003,6 +1003,15 @@ bool ZoneDatabase::DeleteCharacterSkills(uint32 character_id, PlayerProfile_Stru
 	return true;
 }
 
+bool ZoneDatabase::DeleteCharacterSkill(uint32 character_id, uint32 skill_id) {
+	std::string query = StringFormat(
+		"DELETE FROM "
+		"`character_skills` "
+		"WHERE `id` = %u AND skill_id = %u", character_id, skill_id);
+	auto results = database.QueryDatabase(query);
+	return true;
+}
+
 bool ZoneDatabase::LoadCharacterCurrency(uint32 character_id, PlayerProfile_Struct* pp){
 	std::string query = StringFormat(
 		"SELECT                  "
