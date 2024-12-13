@@ -603,27 +603,20 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 
 void Client::ResetPlayerForNewGamePlus()
 {
-	//Revert player's bind location to default starting
+	// Revert player's bind location to default starting
 	SetBindPoint(m_pp.binds[4].zoneId, glm::vec3(m_pp.binds[4].x, m_pp.binds[4].y, m_pp.binds[4].z));
 
-	//Remove memmed spells
+	// Remove memmed spells
 	UnmemSpellAll(false);
 
-	//Fade all buffs.
+	// Fade all buffs.
 	BuffFadeAll(false, true);
 
-	//Remove all factions.
+	// Remove all factions.
 	database.RemoveAllFactions(this);
 	factionvalues.clear();
 
-	//Cleanup skills
-	//Preserve when possible, but remove missing racials and cap them to normal values.
-	SetRacialLanguages();
-	SetClassLanguages();
-	ResetRacialSkills();
-	SetRaceStartingSkills();
-
-	//Reset level
+	// Reset level
 	if (GetLevel() > 10) {
 		SetLevel(10, true);
 	}

@@ -48,8 +48,8 @@ public:
 	void SetBaseClass(int v);
 	void SetBaseRace(int v);
 	void SetBaseGender(int v);
-	bool SetBaseStatAllocation(uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown);
-	bool SetBaseRaceAndStatAllocation(
+	bool PermaStats(uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown);
+	bool PermaRace(
 		uint32 new_race, uint32 new_deity, uint32 player_choice_city,
 		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA
 	);

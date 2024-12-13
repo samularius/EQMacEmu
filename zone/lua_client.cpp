@@ -110,17 +110,17 @@ void Lua_Client::SetBaseGender(int v) {
 	self->SetBaseGender(v);
 }
 
-bool Lua_Client::SetBaseStatAllocation(
+bool Lua_Client::PermaStats(
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown) {
 	Lua_Safe_Call_Bool();
-	return self->SetBaseStatAllocation(bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, check_cooldown);
+	return self->PermaStats(bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, check_cooldown);
 }
 
-bool Lua_Client::SetBaseRaceAndStatAllocation(
+bool Lua_Client::PermaRace(
 	uint32 new_race, uint32 new_deity, uint32 player_choice_city, 
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
 	Lua_Safe_Call_Bool();
-	return self->SetBaseRaceAndStatAllocation(new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA);
+	return self->PermaRace(new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA);
 }
 
 int Lua_Client::GetBaseFace() {
@@ -1359,8 +1359,8 @@ luabind::scope lua_register_client() {
 		.def("SetBaseClass", (void(Lua_Client::*)(int))&Lua_Client::SetBaseClass)
 		.def("SetBaseRace", (void(Lua_Client::*)(int))&Lua_Client::SetBaseRace)
 		.def("SetBaseGender", (void(Lua_Client::*)(int))&Lua_Client::SetBaseGender)
-		.def("SetBaseStatAllocation", (bool(Lua_Client::*)(uint16,uint16,uint16,uint16,uint16,uint16,uint16,bool))&Lua_Client::SetBaseStatAllocation)
-		.def("SetBaseRaceAndStatAllocation", (bool(Lua_Client::*)(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint16))&Lua_Client::SetBaseRaceAndStatAllocation)
+		.def("PermaStats", (bool(Lua_Client::*)(uint16,uint16,uint16,uint16,uint16,uint16,uint16,bool))&Lua_Client::PermaStats)
+		.def("PermaRace", (bool(Lua_Client::*)(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint16))&Lua_Client::PermaRace)
 		.def("GetBaseFace", (int(Lua_Client::*)(void))&Lua_Client::GetBaseFace)
 		.def("GetLanguageSkill", (int(Lua_Client::*)(int))&Lua_Client::GetLanguageSkill)
 		.def("GetLastName", (const char *(Lua_Client::*)(void))&Lua_Client::GetLastName)

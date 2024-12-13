@@ -496,7 +496,7 @@ void Client::ReportConnectingState() {
 	};
 }
 
-bool Client::SetBaseStatAllocation(
+bool Client::PermaStats(
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
 	bool check_cooldown)
 {
@@ -545,10 +545,29 @@ bool Client::SetBaseStatAllocation(
 	return true;
 }
 
-bool Client::SetBaseRaceAndStatAllocation(
+bool Client::PermaRace(
 	uint32 new_race, uint32 new_deity, uint32 player_choice_city,
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA)
 {
+
+	uint32 old_base_race = GetBaseRace();
+	bool should_illusion_packet = (old_base_race == GetRace());
+
+	// If stats are unspecified, use their current stat allocation and carry it over
+	if (bonusSTR == 0xFF && bonusSTA == 0xFF && bonusAGI == 0xFF && bonusDEX == 0xFF && bonusWIS == 0xFF && bonusINT == 0xFF && bonusCHA == 0xFF) {
+		RaceClassAllocation old_allocation;
+		if (!database.GetCharCreateStats(GetClass(), old_base_race, old_allocation)) {
+			Message(Chat::Red, "[ERROR] Could not determine base class parameters.");
+			return false;
+		}
+		bonusSTR = m_pp.STR - old_allocation.BaseStats[0];
+		bonusDEX = m_pp.DEX - old_allocation.BaseStats[1];
+		bonusAGI = m_pp.AGI - old_allocation.BaseStats[2];
+		bonusSTA = m_pp.STA - old_allocation.BaseStats[3];
+		bonusINT = m_pp.INT - old_allocation.BaseStats[4];
+		bonusWIS = m_pp.WIS - old_allocation.BaseStats[5];
+		bonusCHA = m_pp.CHA - old_allocation.BaseStats[6];
+	}
 
 	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
 		Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
@@ -606,6 +625,18 @@ bool Client::SetBaseRaceAndStatAllocation(
 	m_pp.binds[4].y = start_zone_bind.y;
 	m_pp.binds[4].z = start_zone_bind.z;
 	m_pp.binds[4].heading = start_zone_bind.heading;
+
+	// Cleanup racial skills that may have changed due to race swap
+	if (old_base_race != new_race) {
+		SetRacialLanguages();
+		ResetRacialSkills();
+		SetRaceStartingSkills();
+	}
+
+	if (should_illusion_packet) {
+		SendIllusionPacket(new_race);
+	}
+
 	return true;
 }
 
@@ -6497,7 +6528,7 @@ void Client::SetRacialLanguages()
 		m_pp.languages[LANG_COMMON_TONGUE] = 100;
 		m_pp.languages[LANG_DARK_ELVISH] = 100;
 		m_pp.languages[LANG_DARK_SPEECH] = 100;
-		m_pp.languages[LANG_ELDER_ELVISH] = 54;
+		m_pp.languages[LANG_ELDER_ELVISH] = m_pp.languages[LANG_ELDER_ELVISH] > 54 ? m_pp.languages[LANG_ELDER_ELVISH] : 54;
 		m_pp.languages[LANG_ELVISH] = m_pp.languages[LANG_ELVISH] > 54 ? m_pp.languages[LANG_ELVISH] : 54;
 		break;
 	}
