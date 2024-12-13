@@ -1,0 +1,1 @@
+ALTER TABLE `character_data` ADD COLUMN `e_times_rebirthed` int(11) NOT NULL DEFAULT 0 AFTER `e_char_export_flag`;
