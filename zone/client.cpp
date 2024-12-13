@@ -497,22 +497,27 @@ void Client::ReportConnectingState() {
 }
 
 bool Client::PermaStats(
+	Client* error_listener,
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
 	bool check_cooldown)
 {
+	if (error_listener == nullptr) {
+		error_listener = this;
+	}
+
 	if (check_cooldown && !p_timers.Expired(&database, pTimerPlayerStatsChange, false)) {
-		Message(Chat::Red, "You must wait 7 days before reallocating your stats agian.");
+		error_listener->Message(Chat::Red, "You must wait 7 days before reallocating your stats agian.");
 		return false;
 	}
 
 	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
-		Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
+		error_listener->Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
 		return false;
 	}
 
 	RaceClassAllocation allocation;
 	if (!database.GetCharCreateStats(GetBaseClass(), GetBaseRace(), allocation)) {
-		Message(Chat::Red, "This race/deity/city combination is not available.");
+		error_listener->Message(Chat::Red, "This race/deity/city combination is not available.");
 		return false;
 	}
 
@@ -526,7 +531,7 @@ bool Client::PermaStats(
 		+ allocation.DefaultPointAllocation[6];
 
 	if (total_points_spent != total_points_budget) {
-		Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
+		error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
 		return false;
 	}
 
@@ -546,9 +551,13 @@ bool Client::PermaStats(
 }
 
 bool Client::PermaRace(
+	Client* error_listener,
 	uint32 new_race, uint32 new_deity, uint32 player_choice_city,
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA)
 {
+	if (error_listener == nullptr) {
+		error_listener = this;
+	}
 
 	uint32 old_base_race = GetBaseRace();
 	bool should_illusion_packet = (old_base_race == GetRace());
@@ -557,7 +566,7 @@ bool Client::PermaRace(
 	if (bonusSTR == 0xFF && bonusSTA == 0xFF && bonusAGI == 0xFF && bonusDEX == 0xFF && bonusWIS == 0xFF && bonusINT == 0xFF && bonusCHA == 0xFF) {
 		RaceClassAllocation old_allocation;
 		if (!database.GetCharCreateStats(GetClass(), old_base_race, old_allocation)) {
-			Message(Chat::Red, "[ERROR] Could not determine base class parameters.");
+			error_listener->Message(Chat::Red, "[ERROR] Could not determine base class parameters.");
 			return false;
 		}
 		bonusSTR = m_pp.STR - old_allocation.BaseStats[0];
@@ -570,7 +579,7 @@ bool Client::PermaRace(
 	}
 
 	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
-		Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
+		error_listener->Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
 		return false;
 	}
 
@@ -578,7 +587,7 @@ bool Client::PermaRace(
 	RaceClassAllocation allocation;
 	BindStruct start_zone_bind;
 	if (!database.GetCharCreateFullInfo(GetBaseClass(), new_race, new_deity, player_choice_city, expansions_req, allocation, start_zone_bind)) {
-		Message(Chat::Red, "This race/deity/city combination is not available.");
+		error_listener->Message(Chat::Red, "This race/deity/city combination is not available.");
 		return false;
 	}
 
@@ -590,7 +599,7 @@ bool Client::PermaRace(
 		expansion >>= 1;
 	}
 	if ((expansions_req & expansion_bits) != expansions_req) {
-		Message(Chat::Red, "This race is not available in the current expansion.");
+		error_listener->Message(Chat::Red, "This race is not available in the current expansion.");
 		return false;
 	}
 
@@ -604,7 +613,7 @@ bool Client::PermaRace(
 		+ allocation.DefaultPointAllocation[6];
 
 	if (total_points_spent != total_points_budget) {
-		Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
+		error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
 		return false;
 	}
 

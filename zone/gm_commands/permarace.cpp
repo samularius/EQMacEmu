@@ -130,7 +130,7 @@ void command_permarace(Client *c, const Seperator *sep){
 		c->Message(Chat::White, "Setting %s's race - zone to take effect", t->GetName());
 		Log(Logs::General, Logs::Normal, "Permanant race change request from %s for %s, requested race:%i", c->GetName(), t->GetName(), race);
 		uint32 tmp = Mob::GetDefaultGender(race, t->GetBaseGender());
-		if (deity >= 0 && city >= 0 && t->PermaRace(race, deity, city)) {
+		if (deity >= 0 && city >= 0 && t->PermaRace(c, race, deity, city)) {
 			t->SetBaseGender(tmp);
 			t->Save();
 			t->SendIllusionPacket(race);
