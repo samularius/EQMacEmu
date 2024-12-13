@@ -1346,37 +1346,37 @@ bool Client::CheckCharCreateInfo(CharCreate_Struct *cc)
 		allocation.DefaultPointAllocation[5] +
 		allocation.DefaultPointAllocation[6];
 
-	if (cc->STR > allocation.BaseStats[0] + max_stats || cc->STR < allocation.BaseStats[0]) {
+	if (cc->STR > allocation.BaseStats[0] + max_stats || cc->STR < allocation.BaseStats[0] || cc->STR > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Strength out of range");
 		return false;
 	}
 
-	if (cc->DEX > allocation.BaseStats[1] + max_stats || cc->DEX < allocation.BaseStats[1]) {
+	if (cc->DEX > allocation.BaseStats[1] + max_stats || cc->DEX < allocation.BaseStats[1] || cc->DEX > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Dexterity out of range");
 		return false;
 	}
 
-	if (cc->AGI > allocation.BaseStats[2] + max_stats || cc->AGI < allocation.BaseStats[2]) {
+	if (cc->AGI > allocation.BaseStats[2] + max_stats || cc->AGI < allocation.BaseStats[2] || cc->AGI > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Agility out of range");
 		return false;
 	}
 
-	if (cc->STA > allocation.BaseStats[3] + max_stats || cc->STA < allocation.BaseStats[3]) {
+	if (cc->STA > allocation.BaseStats[3] + max_stats || cc->STA < allocation.BaseStats[3] || cc->STA > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Stamina out of range");
 		return false;
 	}
 
-	if (cc->INT > allocation.BaseStats[4] + max_stats || cc->INT < allocation.BaseStats[4]) {
+	if (cc->INT > allocation.BaseStats[4] + max_stats || cc->INT < allocation.BaseStats[4] || cc->INT > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Intelligence out of range");
 		return false;
 	}
 
-	if (cc->WIS > allocation.BaseStats[5] + max_stats || cc->WIS < allocation.BaseStats[5]) {
+	if (cc->WIS > allocation.BaseStats[5] + max_stats || cc->WIS < allocation.BaseStats[5] || cc->WIS > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Wisdom out of range");
 		return false;
 	}
 
-	if (cc->CHA > allocation.BaseStats[6] + max_stats || cc->CHA < allocation.BaseStats[6]) {
+	if (cc->CHA > allocation.BaseStats[6] + max_stats || cc->CHA < allocation.BaseStats[6] || cc->CHA > 150) {
 		Log(Logs::Detail, Logs::WorldServer, "Charisma out of range");
 		return false;
 	}

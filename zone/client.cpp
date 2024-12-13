@@ -535,6 +535,41 @@ bool Client::PermaStats(
 		return false;
 	}
 
+	if (allocation.BaseStats[0] + bonusSTR > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STRENGTH.");
+		return false;
+	}
+
+	if (allocation.BaseStats[1] + bonusDEX > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in DEXTERITY.");
+		return false;
+	}
+
+	if (allocation.BaseStats[2] + bonusAGI > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in AGILITY.");
+		return false;
+	}
+
+	if (allocation.BaseStats[3] + bonusSTA > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STAMINA.");
+		return false;
+	}
+
+	if (allocation.BaseStats[4] + bonusINT > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in INTELLIGENCE.");
+		return false;
+	}
+
+	if (allocation.BaseStats[5] + bonusWIS > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in WISDOM.");
+		return false;
+	}
+
+	if (allocation.BaseStats[6] + bonusCHA > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in CHARISMA.");
+		return false;
+	}
+
 	// New base stats
 	m_pp.STR = allocation.BaseStats[0] + bonusSTR;
 	m_pp.DEX = allocation.BaseStats[1] + bonusDEX;
@@ -614,6 +649,41 @@ bool Client::PermaRace(
 
 	if (total_points_spent != total_points_budget) {
 		error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
+		return false;
+	}
+
+	if (allocation.BaseStats[0] + bonusSTR > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STRENGTH.");
+		return false;
+	}
+
+	if (allocation.BaseStats[1] + bonusDEX > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in DEXTERITY.");
+		return false;
+	}
+
+	if (allocation.BaseStats[2] + bonusAGI > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in AGILITY.");
+		return false;
+	}
+
+	if (allocation.BaseStats[3] + bonusSTA > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STAMINA.");
+		return false;
+	}
+
+	if (allocation.BaseStats[4] + bonusINT > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in INTELLIGENCE.");
+		return false;
+	}
+
+	if (allocation.BaseStats[5] + bonusWIS > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in WISDOM.");
+		return false;
+	}
+
+	if (allocation.BaseStats[6] + bonusCHA > 150) {
+		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in CHARISMA.");
 		return false;
 	}
 

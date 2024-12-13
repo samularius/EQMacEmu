@@ -1243,7 +1243,6 @@ const char *Group::GetClientNameByIndex(uint8 index)
 void Group::SetLevels()
 {
 	maxlevel = 1;
-	maxlevel2 = 1;
 	minlevel = 65;
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++) 
 	{
@@ -1254,9 +1253,6 @@ void Group::SetLevels()
 
 			if (members[i]->GetLevel() < minlevel)
 				minlevel = members[i]->GetLevel();
-
-			if (members[i]->CastToClient()->GetLevel2() > maxlevel2)
-				maxlevel2 = members[i]->CastToClient()->GetLevel2();
 		}
 	}
 
