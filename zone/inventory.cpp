@@ -621,6 +621,12 @@ void Client::ResetPlayerForNewGamePlus()
 		SetLevel(10, true);
 	}
 
+	m_epp.e_times_rebirthed++;
+
+	std::string romanName = "_" + Strings::IntToRoman(m_epp.e_times_rebirthed);
+
+	ChangeLastName(romanName.c_str());
+
 	// Commit immediately (Save) and then send home
 	Save(1);
 	ForceGoToDeath();
