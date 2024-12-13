@@ -341,7 +341,7 @@ public:
 	bool PermaRace(
 		Client* error_listener,
 		uint32 new_race, uint32 new_deity, uint32 player_choice_city,
-		uint16 bonusSTA = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF
+		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF
 	);
 
 	inline uint8 GetLevel2() const { return m_pp.level2; }
