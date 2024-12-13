@@ -1011,7 +1011,7 @@ bool Group::ProcessGroupSplit(Mob* killed_mob, struct GroupExpSplit_Struct& gs, 
 			{
 				Client *cmember = members[x]->CastToClient();
 				if (cmember->CastToClient()->GetZoneID() == zone->GetZoneID() && 
-					cmember->IsInLevelRange(maxlevel) && 
+					cmember->IsInLevelRange(maxlevel) &&
 					(cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()))
 				{
 					// get highest level of player who gets exp from this mob
@@ -1110,7 +1110,7 @@ void Group::GiveGroupSplitExp(Mob* killed_mob, uint8 maxlevel, int16 weighted_le
 				{
 					if (cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm())
 					{
-						if (cmember->IsInLevelRange(maxlevel))
+						if (cmember->IsInLevelRange(maxlevel, maxlevel2))
 						{
 							float split_percent = static_cast<float>(cmember->GetLevel() + 5u) / static_cast<float>(weighted_levels + 5*close_count);
 							float splitgroupxp = groupexp * split_percent;
@@ -1157,6 +1157,7 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 
 	uint8 membercount = 0;
 	uint16 maxlevel = 0;
+	uint16 maxlevel2 = 0;
 	uint16 weighted_levels = 0;
 
 	//Grabs membercount and maxlevel.
@@ -1169,6 +1170,9 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 			{
 				if (cmember->GetLevel() > maxlevel)
 					maxlevel = cmember->GetLevel();
+
+				if (cmember->GetLevel2() > maxlevel2)
+					maxlevel2 = cmember->GetLevel2();
 
 				if ((cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()) &&
 					cmember->IsInExpRange(killed_mob))
@@ -1188,8 +1192,8 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 	{
 		if (members[i].member != nullptr)
 		{
-			Client *cmember = members[i].member;
-			if(cmember && !cmember->IsInLevelRange(maxlevel))
+			Client* cmember = members[i].member;
+			if(cmember && !cmember->IsInLevelRange(maxlevel, maxlevel2))
 			{
 				if(membercount != 0)
 				{
@@ -1221,7 +1225,7 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 				(cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()) && 
 				cmember->IsInExpRange(killed_mob))
 			{
-				if (cmember->IsInLevelRange(maxlevel))
+				if (cmember->IsInLevelRange(maxlevel, maxlevel2))
 				{
 					float split_percent = static_cast<float>(cmember->GetLevel()) / weighted_levels;
 					float splitgroupxp = groupexp * split_percent;
@@ -1299,6 +1303,10 @@ bool Client::IsInExpRange(Mob* defender)
 		return true;
 }
 
+bool Client::IsInLevelRange(uint8 maxlevel, uint8 maxlevel2) {
+	return IsInLevelRange(maxlevel) && IsInLevel2Range(maxlevel2);
+}
+
 bool Client::IsInLevelRange(uint8 maxlevel)
 {
 	if(IsMule())
@@ -1312,6 +1320,28 @@ bool Client::IsInLevelRange(uint8 maxlevel)
 	else if (maxlevel < 10u && GetLevel() > (maxlevel - 5u))	// allow a minimum of a -4 difference
 		return true;
 	else if (GetLevel() >= (maxlevel * 10u / 15u))	// this rounding allows a level 40 to group with a 61 which is correct.  some sources online are inaccurate
+		return true;
+
+	return false;
+}
+
+// SelfFound characters must also have their historical highest level in range of each other
+bool Client::IsInLevel2Range(uint8 maxlevel2)
+{
+	if (IsMule())
+		return false;
+
+	if (!IsSelfFound())
+		return true;
+
+	// EQ supposedly had a minimum group range at very low levels.  What this should be is not known exactly.
+	// The EQ Official Player's Guide says it was 3 but a PoP era log shows a level 10 grouping with a level 6.
+	// I have a hunch they may have enlarged it in Luclin along with the newbie changes.  Setting this to 4 for now
+	if (maxlevel2 < 6u)	// allow level 1s to group with level 5s
+		return true;
+	else if (maxlevel2 < 10u && GetLevel2() >(maxlevel2 - 5u))	// allow a minimum of a -4 difference
+		return true;
+	else if (GetLevel2() >= (maxlevel2 * 10u / 15u))	// this rounding allows a level 40 to group with a 61 which is correct.  some sources online are inaccurate
 		return true;
 
 	return false;

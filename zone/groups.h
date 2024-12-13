@@ -104,6 +104,7 @@ public:
 	bool	disbandcheck;
 	bool	castspell;
 	uint8	maxlevel;
+	uint8   maxlevel2;
 	uint8	minlevel;
 
 private:

@@ -547,6 +547,8 @@ public:
 	uint32  GetEXPForLevel(uint16 level, bool aa = false);
 	bool	IsInExpRange(Mob* defender);
 	bool	IsInLevelRange(uint8 maxlevel);
+	bool	IsInLevel2Range(uint8 maxlevel2);
+	bool    IsInLevelRange(uint8 maxlevel, uint8 maxlevel2);
 
 	void GoToBind(uint8 bindnum = 0);
 	void BootFromGuildInstance();
