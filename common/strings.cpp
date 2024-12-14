@@ -1113,3 +1113,59 @@ std::string Strings::RemoveNumbers(std::string s)
 	return s.substr(0, current);
 }
 
+// Helper function to convert Roman numeral to integer
+int Strings::RomanToInt(const std::string& roman) {
+	std::unordered_map<char, int> romanToValue = {
+		{'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+		{'C', 100}, {'D', 500}, {'M', 1000}
+	};
+
+	int result = 0;
+	int prevValue = 0;
+
+	// Traverse the Roman numeral string in reverse order
+	for (int i = roman.size() - 1; i >= 0; --i) {
+		int currentValue = romanToValue[roman[i]];
+		if (currentValue < prevValue) {
+			result -= currentValue;  // If currentValue < prevValue, subtract it
+		}
+		else {
+			result += currentValue;  // Otherwise, add it
+		}
+		prevValue = currentValue;
+	}
+
+	return result;
+}
+
+// Helper function to convert integer to Roman numeral
+std::string Strings::IntToRoman(int num) {
+	std::vector<std::pair<int, std::string>> valuePairs = {
+		{1000, "M"}, {900, "CM"}, {500, "D"}, {400, "CD"},
+		{100, "C"}, {90, "XC"}, {50, "L"}, {40, "XL"},
+		{10, "X"}, {9, "IX"}, {5, "V"}, {4, "IV"}, {1, "I"}
+	};
+
+	std::string result = "";
+	for (const auto& pair : valuePairs) {
+		while (num >= pair.first) {
+			result += pair.second;
+			num -= pair.first;
+		}
+	}
+
+	return result;
+}
+
+std::string Strings::IncrementRoman(const std::string& roman) {
+	// Step 1: Convert the Roman numeral to an integer
+	int num = RomanToInt(roman);
+
+	// Step 2: Increment the integer by 1
+	num++;
+
+	// Step 3: Convert the incremented integer back to a Roman numeral
+	return IntToRoman(num);
+}
+
+

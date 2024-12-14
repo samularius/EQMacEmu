@@ -760,7 +760,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_zone_guild_id`,		    "
 		"`e_temp_last_name`,		"
 		"`e_married_character_id`,	"
-		"`e_char_export_flag`			"
+		"`e_char_export_flag`,		"
+		"`e_times_rebirthed`		"
 		"FROM                       "
 		"character_data             "
 		"WHERE `id` = %i         ", character_id);
@@ -830,6 +831,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		strcpy(m_epp->temp_last_name, row[r]); r++;								 // "e_temp_last_name,          "
 		m_epp->married_character_id = atoi(row[r]); r++;						 // "`e_married_character_id"	"
 		m_epp->char_export_flag = atoi(row[r]); r++;									 // "`e_char_export_flag`			"
+		m_epp->e_times_rebirthed = atoi(row[r]); r++;									 // "`e_times_rebirthed`			"
 	}
 	return true;
 }
@@ -1202,7 +1204,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_zone_guild_id,			 "
 		" e_temp_last_name,			 "
 		" e_married_character_id,	 "
-		" e_char_export_flag				 "
+		" e_char_export_flag,		 "
+		" e_times_rebirthed			 "
 		")							 "
 		"VALUES ("
 		"%u,"  // id																" id,                        "
@@ -1270,7 +1273,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%lu,"   // e_zone_guild_id
 		"'%s',"  // e_temp_last_name
 		"%u,"  // e_married_character_id
-		"%u"  // e_char_export_flag
+		"%u,"  // e_char_export_flag
+		"%u"  // e_times_rebirthed
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "
@@ -1337,7 +1341,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		(unsigned long)m_epp->zone_guild_id,
 		Strings::Escape(m_epp->temp_last_name).c_str(),
 		m_epp->married_character_id,
-		m_epp->char_export_flag
+		m_epp->char_export_flag,
+		m_epp->e_times_rebirthed
 	);
 	auto results = database.QueryDatabase(query);
 	Log(Logs::General, Logs::Character, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);

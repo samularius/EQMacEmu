@@ -616,9 +616,20 @@ void Client::ResetPlayerForNewGamePlus()
 	database.RemoveAllFactions(this);
 	factionvalues.clear();
 
+	uint32 cur_level = GetLevel();
 	// Reset level
-	if (GetLevel() > 10) {
+	if (cur_level > 10) {
 		SetLevel(10, true);
+	}
+
+	if (cur_level >= RuleI(Quarm, RebirthTitleLevel))
+	{
+		if (m_epp.e_times_rebirthed == 0)
+			m_epp.e_times_rebirthed = 1;
+
+		m_epp.e_times_rebirthed++;
+		std::string romanName = "_" + Strings::IntToRoman(m_epp.e_times_rebirthed);
+		ChangeLastName(romanName.c_str());
 	}
 
 	// Commit immediately (Save) and then send home
