@@ -308,7 +308,8 @@ int command_init(void)
 		command_add("peekinv", "[worn/inv/cursor/bank/trade/world/all] - Print out contents of your player target's inventory.", AccountStatus::EQSupport, command_peekinv) ||
 		command_add("permaclass", "[classnum] - Change your or your player target's class (target is disconnected).", AccountStatus::GMMgmt, command_permaclass) ||
 		command_add("permagender", "[gendernum] - Change your or your player target's gender (zone to take effect).", AccountStatus::GMMgmt, command_permagender) ||
-		command_add("permarace", "[racenum] - Change your or your player target's race (zone to take effect).", AccountStatus::GMMgmt, command_permarace) ||
+		command_add("permarace", "[race] [deity] [home city] - Change your or your target's race, deity, and home city (zone to take effect).", AccountStatus::GMMgmt, command_permarace) ||
+		command_add("permastats", "[stats list] - Change your or your target's starting stat point allocation (zone to take effect).", AccountStatus::GMMgmt, command_permastats) ||
 		command_add("petition", "Handles everything petition related. Use with no args or with 'help' for how to use.", AccountStatus::ApprenticeGuide, command_petition) ||
 		command_add("peqzone", "[zonename] - Go to specified zone, if you have > 75% health.", AccountStatus::Max, command_peqzone) ||
 		command_add("pf", "Display additional mob coordinate and wandering data.", AccountStatus::GMStaff, command_pf) ||
@@ -1185,6 +1186,7 @@ void command_clearsaylink(Client *c, const Seperator *sep) {
 #include "gm_commands/permaclass.cpp"
 #include "gm_commands/permagender.cpp"
 #include "gm_commands/permarace.cpp"
+#include "gm_commands/permastats.cpp"
 #include "gm_commands/petition.cpp"
 #include "gm_commands/pf.cpp"
 #include "gm_commands/playsound.cpp"
