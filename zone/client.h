@@ -325,7 +325,7 @@ public:
 	inline bool GetGM() const { return m_pp.gm != 0; }
 
 	inline void SetBaseClass(uint32 i) { m_pp.class_=i; }
-	inline void SetBaseRace(uint32 i) { m_pp.race=i; }
+	void SetBaseRace(uint32 i, bool update_racial_skills = true);
 	inline void SetBaseGender(uint32 i) { m_pp.gender=i; }
 	inline void SetDeity(uint32 i) {m_pp.deity=i;deity=i;}
 

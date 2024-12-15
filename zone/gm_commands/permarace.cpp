@@ -1,3 +1,7 @@
+#include <string>
+#include <cctype>
+#include <algorithm>
+
 #include "../client.h"
 
 int find_race(std::string& input)
@@ -94,7 +98,7 @@ int find_racial_city(std::string& input)
 		return 9;
 	else if (input.find("felwithe") != std::string::npos)
 		return 10;
-	else if (input.find("akanon") != std::string::npos)
+	else if (input.find("akanon") != std::string::npos || input.find("ak'anon") != std::string::npos)
 		return 11;
 	else if (input.find("cabilis") != std::string::npos)
 		return 12;
@@ -104,20 +108,25 @@ int find_racial_city(std::string& input)
 }
 
 void command_permarace(Client *c, const Seperator *sep){
+
 	Client *t = c;
+	if (c->GetTarget() && c->GetTarget()->IsClient())
+		t = c->GetTarget()->CastToClient();
 
+	// Convert the input string to lowercase
 	std::string input = sep->msg;
+	std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 
+	// Find race/deity/city. Race can be textual or ID (if in first position)
 	int race = find_race(input);
 	if (race == -1 && sep->arg[1][0] != 0) {
 		race = atoi(sep->arg[1]);
 	}
 	int deity = find_racial_deity(input);
 	int city = find_racial_city(input);
-	bool force = input.find("force") != std::string::npos;
 
-	if (c->GetTarget() && c->GetTarget()->IsClient())
-		t = c->GetTarget()->CastToClient();
+	// 'force' keyword can be used to force the race/deity combination, but will leave the stats as the old race unless it was a valid combination.
+	bool force = input.find("force") != std::string::npos;
 
 	if (race < 0 || (deity < 0 && city < 0 && !force)) {
 		c->Message(Chat::White, "Usage: '#permarace <race> <deity> <city> [force]'. Example: '#permarace human agnostic freeport. <race> can be racenum or string.");
@@ -127,25 +136,34 @@ void command_permarace(Client *c, const Seperator *sep){
 	else if (!t->IsClient())
 		c->Message(Chat::White, "Target is not a client.");
 	else {
-		c->Message(Chat::White, "Setting %s's race - zone to take effect", t->GetName());
-		Log(Logs::General, Logs::Normal, "Permanant race change request from %s for %s, requested race:%i", c->GetName(), t->GetName(), race);
+		bool success = false;
+
 		uint32 tmp = Mob::GetDefaultGender(race, t->GetBaseGender());
 		if (deity >= 0 && city >= 0 && t->PermaRace(c, race, deity, city)) {
-			t->SetBaseGender(tmp);
-			t->Save();
-			t->SendIllusionPacket(race);
-			return;
+			success = true;
 		}
-		if (force) {
-			uint32 tmp = Mob::GetDefaultGender(race, t->GetBaseGender());
-			t->SetBaseRace(race);
+
+		// If 'force' was requested, we will still update their race, racial skills, and deity (if specified)
+		if (!success && force) {
+			t->SetBaseRace(race, true);
 			if (deity >= 0) {
 				t->SetDeity(deity);
+				c->Message(Chat::White, "[Warning] Forcefully updated race and deity as requested.");
 			}
+			else {
+				c->Message(Chat::White, "[Warning] Forcefully updated race as requested.");
+			}
+			c->Message(Chat::White, "[Warning] Base stats are NOT changed! Use '#permastats <stats>' to fix the character's base stats and bonus stats.");
+			success = true;
+		}
+
+		if (success) {
 			t->SetBaseGender(tmp);
 			t->Save();
 			t->SendIllusionPacket(race);
-			c->Message(Chat::Yellow, "[Warning] Forcefully updated race and deity as requested. Base stats may need to be fixed manually.");
+
+			c->Message(Chat::White, "Setting %s's race - zone to take effect", t->GetName());
+			Log(Logs::General, Logs::Normal, "Permanant race change request from %s for %s, requested race:%i", c->GetName(), t->GetName(), race);
 		}
 	}
 }
