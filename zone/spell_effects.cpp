@@ -2344,6 +2344,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 			case SE_FinishingBlowLvl:
 			case SE_AETaunt:
 			case SE_SkillAttack:			// Used after PoP
+			// Quarm XP Potions
+			case SE_KillXPBonus:
+			case SE_QuestXPBonus:
+			case SE_FactionBonus:
+			case SE_SkillUpBonus:
+			case SE_TradeSkillUpBonus:
 			{
 				break;
 			}
