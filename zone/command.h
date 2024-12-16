@@ -200,6 +200,7 @@ void command_peqzone(Client* c, const Seperator* sep);
 void command_permaclass(Client* c, const Seperator* sep);
 void command_permagender(Client* c, const Seperator* sep);
 void command_permarace(Client* c, const Seperator* sep);
+void command_permastats(Client* c, const Seperator* sep);
 void command_petition(Client* c, const Seperator* sep);
 void command_playsound(Client* c, const Seperator* sep);
 void command_push(Client* c, const Seperator* sep);

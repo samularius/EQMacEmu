@@ -530,7 +530,7 @@ bool Client::PermaStats(
 
 	RaceClassAllocation allocation;
 	if (!database.GetCharCreateStats(GetBaseClass(), GetBaseRace(), allocation)) {
-		error_listener->Message(Chat::Red, "This race/deity/city combination is not available.");
+		error_listener->Message(Chat::Red, "This race/class combination is not available. Base stats cannot be determined.");
 		return false;
 	}
 
