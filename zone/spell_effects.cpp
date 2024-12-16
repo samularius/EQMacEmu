@@ -2172,6 +2172,39 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 				break;
 			}
 
+			
+			// Quarm XP Potions
+			case SE_KillXPBonus:
+			{
+				if(spell.base[i] > 0 && spell.buffduration > 300)
+					Message(Chat::Experience, "You gain a kill experience bonus of (%i) for the duration of this effect.");
+				break;
+			}
+			case SE_QuestXPBonus:
+			{
+				if (spell.base[i] > 0 && spell.buffduration > 300)
+					Message(Chat::Experience, "You gain a quest experience bonus for the duration of this effect.");
+				break;
+			}
+			case SE_FactionBonus:
+			{
+				if (spell.base[i] > 0 && spell.buffduration > 300)
+					Message(Chat::Experience, "You gain a faction bonus for the duration of this effect.");
+				break;
+			}
+			case SE_SkillUpBonus:
+			{
+				if (spell.base[i] > 0 && spell.buffduration > 300)
+					Message(Chat::Experience, "You gain a skill up rate bonus for the duration of this effect.");
+				break;
+			}
+			case SE_TradeSkillUpBonus:
+			{
+				if (spell.base[i] > 0 && spell.buffduration > 300)
+					Message(Chat::Experience, "You gain a tradeskill skill up rate bonus for the duration of this effect.");
+				break;
+			}
+
 			case SE_Stamina:
 			{
 				if (buffslot >= 0)
@@ -2344,12 +2377,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 			case SE_FinishingBlowLvl:
 			case SE_AETaunt:
 			case SE_SkillAttack:			// Used after PoP
-			// Quarm XP Potions
-			case SE_KillXPBonus:
-			case SE_QuestXPBonus:
-			case SE_FactionBonus:
-			case SE_SkillUpBonus:
-			case SE_TradeSkillUpBonus:
 			{
 				break;
 			}

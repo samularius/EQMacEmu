@@ -157,6 +157,11 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 		}
 	}
 
+	if (spellbonuses.KillXPBonus != 1.0f)
+	{
+		Message(Chat::Yellow, "You receive a %.2f bonus! (Buff)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
+	}
+
 	// This logic replicates the September 4 & 6 2002 patch exp modifications that granted a large
 	// experience bonus to kills within +/-5 levels of the player for level 51+ players
 	uint8 moblevel = killed_mob->GetLevel();
@@ -412,6 +417,10 @@ void Client::AddQuestEXP(uint32 in_add_exp, bool bypass_cap) {
 	if (buffmod != 1.0f)
 	{
 		add_exp = (uint32)((float)add_exp * (float)buffmod);
+		if (spellbonuses.KillXPBonus)
+		{
+			Message(Chat::Experience, "You receive a %.2f bonus! (Buff)", (spellbonuses.QuestXPBonus - 1.0f) * 100.0f);
+		}
 		Log(Logs::Detail, Logs::EQMac, "Quest EXP awarded is %d. Quest XP Bonus of %0.2f was applied.", add_exp, buffmod);  
 	}
 
