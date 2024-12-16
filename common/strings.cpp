@@ -16,6 +16,7 @@
 
 #include "strings.h"
 #include <algorithm>
+#include <unordered_map>
 #include <fmt/format.h>
 
 #ifdef _WINDOWS
