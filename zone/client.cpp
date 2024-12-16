@@ -496,6 +496,19 @@ void Client::ReportConnectingState() {
 	};
 }
 
+void Client::SetBaseRace(uint32 i, bool update_racial_skills) {
+
+	uint16 old_base_race = m_pp.race;
+	m_pp.race = i;
+
+	if (update_racial_skills && old_base_race != m_pp.race) {
+		// Cleanup racial skills that may have changed due to race swap
+		SetRacialLanguages();
+		ResetRacialSkills();
+		SetRaceStartingSkills();
+	}
+}
+
 bool Client::PermaStats(
 	Client* error_listener,
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
@@ -696,21 +709,16 @@ bool Client::PermaRace(
 	m_pp.WIS = allocation.BaseStats[5] + bonusWIS;
 	m_pp.CHA = allocation.BaseStats[6] + bonusCHA;
 
-	// Set new race/deity/city
-	SetBaseRace(new_race);
+	// Set their new race (and racial skills)
+	SetBaseRace(new_race, true);
+	// Set new deity
 	SetDeity(new_deity);
+	// Set net home city
 	m_pp.binds[4].zoneId = start_zone_bind.zoneId;
 	m_pp.binds[4].x = start_zone_bind.x;
 	m_pp.binds[4].y = start_zone_bind.y;
 	m_pp.binds[4].z = start_zone_bind.z;
 	m_pp.binds[4].heading = start_zone_bind.heading;
-
-	// Cleanup racial skills that may have changed due to race swap
-	if (old_base_race != new_race) {
-		SetRacialLanguages();
-		ResetRacialSkills();
-		SetRaceStartingSkills();
-	}
 
 	if (should_illusion_packet) {
 		SendIllusionPacket(new_race);
