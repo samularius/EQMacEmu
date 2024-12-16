@@ -2067,31 +2067,31 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses* ne
 			
 			case SE_KillXPBonus:
 			{
-				new_bonus->KillXPBonus = static_cast<float>(effect_value) / 100;
+				new_bonus->KillXPBonus = static_cast<float>(effect_value) / 100.0f;
 				break;
 			}
 			
 			case SE_QuestXPBonus:
 			{
-				new_bonus->QuestXPBonus = static_cast<float>(effect_value) / 100;
+				new_bonus->QuestXPBonus = static_cast<float>(effect_value) / 100.0f;
 				break;
 			}
 			
 			case SE_FactionBonus:
 			{
-				new_bonus->FactionBonus = static_cast<float>(effect_value) / 100;
+				new_bonus->FactionBonus = static_cast<float>(effect_value) / 100.0f;
 				break;
 			}
 			
 			case SE_SkillUpBonus:
 			{
-				new_bonus->SkillUpBonus = static_cast<float>(effect_value) / 100;
+				new_bonus->SkillUpBonus = static_cast<float>(effect_value) / 100.0f;
 				break;
 			}
 			
 			case SE_TradeSkillUpBonus:
 			{
-				new_bonus->TradeSkillUpBonus = static_cast<float>(effect_value) / 100;
+				new_bonus->TradeSkillUpBonus = static_cast<float>(effect_value) / 100.0f;
 				break;
 			}
 
