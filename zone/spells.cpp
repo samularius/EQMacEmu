@@ -3514,7 +3514,10 @@ void Mob::BuffFadeNonPersistDeath()
 	int buff_count = GetMaxTotalSlots();
 	for (int j = 0; j < buff_count; j++) {
 		if (buffs[j].spellid != SPELL_UNKNOWN)
-			BuffFadeBySlot(j, false, false);
+		{
+			if (spells[buffs[j].spellid].persist_through_death != 1)
+				BuffFadeBySlot(j, false, false);
+		}
 	}
 	//we tell BuffFadeBySlot not to recalc, so we can do it only once when were done
 	CalcBonuses();

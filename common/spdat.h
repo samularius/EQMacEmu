@@ -491,6 +491,11 @@ typedef enum {
 #define SE_HeadShotLevel				346	// implemented[AA] - HeadShot max level to kill
 #define SE_LimitSpellGroup				385	// implemented - Limits to spell group(ie type 3 reuse reduction augs that are class specific and thus all share s SG)
 #define SE_FinishingBlowLvl				440 // implemented[AA] - Sets the level Finishing blow can be triggered on an NPC
+#define SE_KillXPBonus				500 // Quarm - Kill XP Multiplier
+#define SE_QuestXPBonus				501 // Quarm - Quest XP Mutiplier
+#define SE_FactionBonus				502 // Quarm - Faction Increase Multiplier
+#define SE_SkillUpBonus				503 // Quarm - SkillUp Rate Multiplier
+#define SE_TradeSkillUpBonus			504 // Quarm - TradeSkillUp Rate Multiplier
 // LAST
 
 
@@ -631,6 +636,8 @@ struct SPDat_Spell_Struct
 /* 182 */	bool AllowRest;
 /* 183 */	int custom_icon; // Used by spell guide
 /* 184 */	bool not_player_spell;
+/* 185 */	bool disabled;
+/* 186 */	bool persist_through_death; // Quarm addition - Used by BuffFadeNonPersistDeath()
 			uint8 DamageShieldType; // This field does not exist in spells_us.txt
 			int min_castinglevel;
 			bool bardsong;
@@ -639,7 +646,6 @@ struct SPDat_Spell_Struct
 			int32 curse_counters;
 			bool manatapspell;
 			bool hasrecourse;
-			bool disabled;
 			bool contains_se_currentmana;
 };
 

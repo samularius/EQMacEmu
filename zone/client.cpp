@@ -2330,6 +2330,14 @@ bool Client::CheckIncreaseSkill(EQ::skills::SkillType skillid, Mob *against_who,
 			difficulty *= global_skillup_mod;
 		}
 
+		// Add skillup mod from buffs (Quarm XP Potions)
+		float buff_skillup_mod = spellbonuses.SkillUpBonus ? spellbonuses.SkillUpBonus : 1.0f; 
+		if (buff_skillup_mod != 1.0f) 
+		{
+			difficulty *= buff_skillup_mod;
+			Log(Logs::Detail, Logs::Skills, "SkillUp Chance Modifier %0.2f applied. New difficulty is %0.2f.", buff_skillup_mod, difficulty);
+		}
+		
 		if(difficulty < 1.0f)
 			difficulty = 1.0f;
 		if(difficulty > 28.0f)
@@ -4980,6 +4988,14 @@ int32 Client::UpdatePersonalFaction(int32 char_id, int32 npc_value, int32 factio
 				Log(Logs::Detail, Logs::Faction, "Faction Multiplier %0.2f applied to faction %d for %s.", factionMultiplier, faction_id, GetName());
 				hit *= factionMultiplier;
 			}
+		}
+		
+		// Add Faction multiplier from buffs (Quarm XP Potions)
+		const float factionBuffMultiplier = spellbonuses.FactionBonus ? spellbonuses.FactionBonus : 1.0f; 
+		if (factionBuffMultiplier > 0)
+		{
+			Log(Logs::Detail, Logs::Faction, "Faction Buff Multipler %0.2f applied to faction %d for %s.", factionBuffMultiplier, faction_id, GetName());
+			hit *= factionBuffMultiplier;
 		}
 		
 		int16 min_personal_faction = database.MinFactionCap(faction_id);

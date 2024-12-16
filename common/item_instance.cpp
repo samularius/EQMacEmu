@@ -619,7 +619,7 @@ bool EQ::ItemInstance::IsTieredPotion() const
 	{
 		return false;
 	}
-	else if (m_item->Click.Effect == 49 || (m_item->Click.Effect >= 1252 && m_item->Click.Effect <= 1266))
+	else if (m_item->Click.Effect == 49 || (m_item->Click.Effect >= 1252 && m_item->Click.Effect <= 1266) || m_item->Click.Effect == 3999)
 	{
 		return true;
 	}

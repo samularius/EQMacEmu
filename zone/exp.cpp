@@ -134,6 +134,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	float race_mult = 1.0f; // race modifier for AA exp
 	float totalmod = RuleR(Character, ExpMultiplier);	// should be 1.0 for non-custom
 	float aa_mult = RuleR(Character, AAExpMultiplier);	// should be 1.0 for non-custom
+	float buffmod = spellbonuses.KillXPBonus ? spellbonuses.KillXPBonus : 1.0f; // XP bonus from buffs (Quarm XP Potions)
 	float aa_lvl_mod = 1.0f;	// level_exp_mods table
 	float class_mult = 1.0f;	// since we don't factor class into exp required for level like Sony did, we have to add exp on kills.  does not apply to AAs
 	if (GetClass() == WARRIOR) class_mult = 10.0f / 9.0f;
@@ -154,6 +155,11 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 				}
 			}
 		}
+	}
+
+	if (spellbonuses.KillXPBonus != 1.0f)
+	{
+		Message(Chat::Yellow, "You receive a %.2f bonus! (Buff)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
 	}
 
 	// This logic replicates the September 4 & 6 2002 patch exp modifications that granted a large
@@ -247,7 +253,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	}
 	con_mult /= 100.0f;
 
-	add_exp = static_cast<uint32>(add_exp * lb_mult * mlm * con_mult * totalmod); // multipliers that apply to level and aa exp
+	add_exp = static_cast<uint32>(add_exp * lb_mult * mlm * con_mult * totalmod * buffmod); // multipliers that apply to level and aa exp
 
 	// if NPC is killed by PBAoE damage, then reduce experience gained if NPC is in a certain level range. (42-55)  this is AK behavior although specifics are still not known
 	if (killed_mob->IsNPC() && RuleB(AlKabor, ReduceAEExp) && killed_mob->pbaoe_damage > (killed_mob->GetMaxHP() / 2))
@@ -343,9 +349,9 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	}
 
 	if (add_aaxp)
-		Log(Logs::Detail, Logs::EQMac, "[Exp Multipliers] Light Blue: %0.2f  HBM: %0.3f  MLM: %0.3f  ConRule: %0.2f  ExpRule: %0.2f  AARule: %0.2f  Race: %0.2f", lb_mult, hbm, mlm, con_mult, totalmod, aa_mult, race_mult);
+		Log(Logs::Detail, Logs::EQMac, "[Exp Multipliers] Light Blue: %0.2f  HBM: %0.3f  MLM: %0.3f  ConRule: %0.2f  ExpRule: %0.2f  BuffBonus: %0.2f  AARule: %0.2f  Race: %0.2f", lb_mult, hbm, mlm, con_mult, totalmod, buffmod, aa_mult, race_mult);
 	else
-		Log(Logs::Detail, Logs::EQMac, "[Exp Multipliers] Light Blue: %0.2f  HBM: %0.3f  MLM: %0.3f  ConRule: %0.2f  ExpRule: %0.2f  Class: %0.4f", lb_mult, hbm, mlm, con_mult, totalmod, class_mult);
+		Log(Logs::Detail, Logs::EQMac, "[Exp Multipliers] Light Blue: %0.2f  HBM: %0.3f  MLM: %0.3f  ConRule: %0.2f  ExpRule: %0.2f  BuffBonus: %0.2f  Class: %0.4f", lb_mult, hbm, mlm, con_mult, totalmod, buffmod, class_mult);
 
 	uint32 new_exp = GetEXP() + add_exp;
 	uint32 old_aaexp = GetAAXP();
@@ -404,6 +410,18 @@ void Client::AddQuestEXP(uint32 in_add_exp, bool bypass_cap) {
 		{
 			add_exp = (uint32)((float)in_add_exp * (float)RuleR(Quarm, QuestExpMultiplier));
 		}
+	}
+	
+	// Add Quest XP bonus from buffs (Quarm XP Potions)
+	float buffmod = spellbonuses.QuestXPBonus ? spellbonuses.QuestXPBonus : 1.0f; 
+	if (buffmod != 1.0f)
+	{
+		add_exp = (uint32)((float)add_exp * (float)buffmod);
+		if (spellbonuses.KillXPBonus)
+		{
+			Message(Chat::Experience, "You receive a %.2f bonus! (Buff)", (spellbonuses.QuestXPBonus - 1.0f) * 100.0f);
+		}
+		Log(Logs::Detail, Logs::EQMac, "Quest EXP awarded is %d. Quest XP Bonus of %0.2f was applied.", add_exp, buffmod);  
 	}
 
 	if (m_epp.perAA<0 || m_epp.perAA>100)

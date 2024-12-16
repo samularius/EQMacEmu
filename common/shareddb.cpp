@@ -1621,6 +1621,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells)
 		sp[tempid].not_player_spell = atoi(row[184]) != 0;
 		sp[tempid].DamageShieldType = 0;
 		sp[tempid].disabled = atoi(row[185]) != 0;
+		sp[tempid].persist_through_death = atoi(row[186]) != 0;
 
 		// other effects associated with spells, to allow quick access
 		sp[tempid].min_castinglevel = 0;
