@@ -2177,7 +2177,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 			case SE_KillXPBonus:
 			{
 				if(spell.base[i] > 0 && spell.buffduration > 300)
-					Message(Chat::Experience, "You gain a kill experience bonus of (%i) for the duration of this effect.");
+					Message(Chat::Experience, "You gain a kill experience bonus for the duration of this effect.");
 				break;
 			}
 			case SE_QuestXPBonus:

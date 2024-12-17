@@ -2534,7 +2534,21 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 		for (int j = 0; j < buff_count; j++)
 		{
 			if (buffs[j].spellid == spid)
+			{
+				auto action_packet = new EQApplicationPacket(OP_Action, sizeof(Action_Struct));
+				Action_Struct* action = (Action_Struct*)action_packet->pBuffer;
+				action->source = GetID();
+
+				action->level = buffs[j].casterlevel;	// effective level, used for potions
+				action->type = 231;	// 231 means a spell
+				action->spell = spid;
+				action->sequence = (GetHeading() * 2.0f);	// heading
+				action->instrument_mod = buffs[j].instrumentmod;
+				action->buff_unknown = 0x04;	// this is a success flag
+				QueuePacket(action_packet);
+				safe_delete(action_packet);
 				SendBuffDurationPacket(spid, buffs[j].ticsremaining, buffs[j].casterlevel, j, buffs[j].instrumentmod);
+			}
 		}
 	}
 
