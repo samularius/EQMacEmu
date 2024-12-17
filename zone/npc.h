@@ -138,7 +138,7 @@ public:
 	int32 GetActSpellHealing(uint16 spell_id, int32 value, Mob* target = nullptr, bool hot = false);
 
 	virtual void SetTarget(Mob* mob);
-	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) const { if (skill_num <= EQ::skills::HIGHEST_SKILL) { return skills[skill_num]; } return 0; }
+	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) { if (skill_num <= EQ::skills::HIGHEST_SKILL) { return skills[skill_num]; } return 0; }
 	void SetSkill(EQ::skills::SkillType skill_num, uint16 value);
 
 	void CalcItemBonuses(StatBonuses *newbon);

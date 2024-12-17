@@ -328,7 +328,7 @@ public:
 	bool HasBowAndArrowEquipped() const { return HasBowEquipped() && HasArrowEquipped(); }
 	inline void SetBashEnablingWeapon(bool val) { has_bashEnablingWeapon = val; } //Used for SK/Pal epics
 	bool HasBashEnablingWeapon() const { return has_bashEnablingWeapon; }
-	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) const { return 0; }
+	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) { return 0; }
 	virtual void SetSkill(EQ::skills::SkillType skill_num, uint16 value) {};
 	virtual uint32 GetEquipment(uint8 material_slot) const { return(0); }
 	virtual int32 GetEquipmentMaterial(uint8 material_slot) const;

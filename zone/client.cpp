@@ -2590,7 +2590,7 @@ uint16 Client::GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skillid
 	return Result;
 }
 
-uint16 Client::GetSkill(EQ::skills::SkillType skill_id) const
+uint16 Client::GetSkill(EQ::skills::SkillType skill_id)
 {
 	uint16 tmp_skill = 0;
 	if (skill_id <= EQ::skills::HIGHEST_SKILL)
@@ -2610,8 +2610,13 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id) const
 		{
 			tmp_skill = m_pp.skills[skill_id];
 		}
-	} 
+	}
+	if(m_epp.e_times_rebirthed > 0)
+		return std::min(tmp_skill, this->GetMaxSkillAfterSpecializationRules(skill_id, MaxSkill(skill_id, GetClass(), RuleI(Character, MaxLevel))));
 	
+	if (GetBaseClass() == 0)
+		return std::min((uint16)200, MaxSkill(skill_id, 1, RuleI(Character, MaxLevel)));
+
 	return tmp_skill;
 }
 
