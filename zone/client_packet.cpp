@@ -2521,10 +2521,22 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 	uint32 spid = sbf->spellid;
 	Log(Logs::General, Logs::Spells, "Client requested that buff with spell id %d be canceled. bardmodifier: %d activated: %d slot_number: %d bufftype: %d duration: %d level: %d", spid, sbf->bard_modifier, sbf->activated, sbf->slot_number, sbf->bufftype, sbf->duration, sbf->level);
 
+	if (!IsValidSpell(spid))
+		return;
+
 	if (spid == 0xFFFF)
 		QueuePacket(app);
-	else
+	else if(IsValidSpell(spid) && spells[spid].goodEffect != 0 && spells[spid].persist_through_death == 0)
 		BuffFadeBySpellID(spid);
+	else if(IsValidSpell(spid))
+	{
+		int buff_count = GetMaxTotalSlots();
+		for (int j = 0; j < buff_count; j++)
+		{
+			if (buffs[j].spellid == spid)
+				SendBuffDurationPacket(spid, buffs[j].ticsremaining, buffs[j].casterlevel, j, buffs[j].instrumentmod);
+		}
+	}
 
 	return;
 }

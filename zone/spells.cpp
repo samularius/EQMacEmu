@@ -3603,6 +3603,9 @@ void Mob::BuffFadeBySitModifier()
 // removes the buff matching spell_id
 void Mob::BuffFadeBySpellID(uint16 spell_id, bool message)
 {
+	if (!IsValidSpell(spell_id))
+		return;
+
 	int buff_count = GetMaxTotalSlots();
 	for (int j = 0; j < buff_count; j++)
 	{
