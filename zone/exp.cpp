@@ -150,7 +150,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 				if (m_epp.married_character_id == our_group->members[x]->CastToClient()->CharacterID())
 				{
 					class_mult += 0.20f;
-					Message(Chat::Experience, "You receive a bonus! (Partner)");
+					Message(Chat::Yellow, "You receive a bonus! (Partner)");
 					break;
 				}
 			}
@@ -159,7 +159,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 
 	if (spellbonuses.KillXPBonus != 1.0f)
 	{
-		Message(Chat::Experience, "You receive a %.2f percent bonus! (Buff)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
+		Message(Chat::Yellow, "You receive a %.2f percent bonus! (Buff)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
 	}
 
 	// This logic replicates the September 4 & 6 2002 patch exp modifications that granted a large
