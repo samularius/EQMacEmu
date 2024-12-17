@@ -730,7 +730,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 	return true;
 }
 
-uint16 Mob::GetSpecializeSkillValue(uint16 spell_id) const {
+uint16 Mob::GetSpecializeSkillValue(uint16 spell_id) {
 	switch(spells[spell_id].skill) {
 	case EQ::skills::SkillAbjuration:
 		return(GetSkill(EQ::skills::SkillSpecializeAbjure));

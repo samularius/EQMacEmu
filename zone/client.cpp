@@ -2404,7 +2404,7 @@ void Client::CheckLanguageSkillIncrease(uint8 langid, uint8 TeacherSkill) {
 	}
 }
 
-bool Client::HasSkill(EQ::skills::SkillType skill_id) const {
+bool Client::HasSkill(EQ::skills::SkillType skill_id) {
 	/*if(skill_id == SkillMeditate)
 	{
 		if(SkillTrainLvl(skill_id, GetClass()) >= GetLevel())
@@ -2414,7 +2414,7 @@ bool Client::HasSkill(EQ::skills::SkillType skill_id) const {
 		return((GetSkill(skill_id) > 0) && CanHaveSkill(skill_id));
 }
 
-bool Client::CanHaveSkill(EQ::skills::SkillType skill_id) const 
+bool Client::CanHaveSkill(EQ::skills::SkillType skill_id) 
 {
 	bool value = database.GetSkillCap(GetClass(), skill_id, RuleI(Character, MaxLevel)) > 0;
 

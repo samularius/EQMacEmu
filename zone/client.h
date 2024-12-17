@@ -651,8 +651,8 @@ public:
 	void IncreaseLanguageSkill(int skill_id, int value = 1);
 	virtual uint16 GetSkill(EQ::skills::SkillType skill_id);
 	uint32	GetRawSkill(EQ::skills::SkillType skill_id) const { if (skill_id <= EQ::skills::HIGHEST_SKILL) { return(m_pp.skills[skill_id]); } return 0; }
-	bool	HasSkill(EQ::skills::SkillType skill_id) const;
-	bool	CanHaveSkill(EQ::skills::SkillType skill_id) const;
+	bool	HasSkill(EQ::skills::SkillType skill_id);
+	bool	CanHaveSkill(EQ::skills::SkillType skill_id);
 	void	SetSkill(EQ::skills::SkillType skill_num, uint16 value, bool silent = false);
 	void	AddSkill(EQ::skills::SkillType skillid, uint16 value);
 	void	CheckSpecializeIncrease(uint16 spell_id);
