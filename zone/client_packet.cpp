@@ -1332,7 +1332,18 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			strcpy(lastname, m_epp.temp_last_name);
 		}
 	}
+	if (m_epp.e_times_rebirthed)
+	{
+		std::string playerLastname = "";
 
+		if (m_pp.last_name[0])
+		{
+			playerLastname += m_pp.last_name;
+		}
+		std::string romanName = playerLastname + "_" + Strings::IntToRoman(m_epp.e_times_rebirthed);
+		memset(lastname, 0, 64);
+		strcpy(lastname, romanName.c_str());
+	}
 	/* If PP is set to weird coordinates */
 	if ((m_pp.x == -1 && m_pp.y == -1 && m_pp.z == -1) || (m_pp.x == -2 && m_pp.y == -2 && m_pp.z == -2)) {
         auto safePoint = zone->GetSafePoint();

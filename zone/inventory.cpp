@@ -625,11 +625,10 @@ void Client::ResetPlayerForNewGamePlus()
 	if (cur_level >= RuleI(Quarm, RebirthTitleLevel))
 	{
 		if (m_epp.e_times_rebirthed == 0)
+		{
 			m_epp.e_times_rebirthed = 1;
-
+		}
 		m_epp.e_times_rebirthed++;
-		std::string romanName = "_" + Strings::IntToRoman(m_epp.e_times_rebirthed);
-		ChangeLastName(romanName.c_str());
 	}
 
 	// Commit immediately (Save) and then send home
