@@ -649,7 +649,7 @@ public:
 
 	void IncreaseSkill(int skill_id, int value = 1) { if (skill_id <= EQ::skills::HIGHEST_SKILL) { m_pp.skills[skill_id] += value; } }
 	void IncreaseLanguageSkill(int skill_id, int value = 1);
-	virtual uint16 GetSkill(EQ::skills::SkillType skill_id) const;
+	virtual uint16 GetSkill(EQ::skills::SkillType skill_id);
 	uint32	GetRawSkill(EQ::skills::SkillType skill_id) const { if (skill_id <= EQ::skills::HIGHEST_SKILL) { return(m_pp.skills[skill_id]); } return 0; }
 	bool	HasSkill(EQ::skills::SkillType skill_id) const;
 	bool	CanHaveSkill(EQ::skills::SkillType skill_id) const;
