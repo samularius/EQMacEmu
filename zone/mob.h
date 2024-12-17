@@ -899,7 +899,7 @@ public:
 	virtual int32 CheckHealAggroAmount(uint16 spell_id, Mob* target, uint32 heal_possible = 0, bool from_clickable = false);
 	virtual uint32 GetAA(uint32 aa_id) const { return(0); }
 
-	uint32 GetInstrumentMod(uint16 spell_id) const;
+	uint32 GetInstrumentMod(uint16 spell_id);
 	int CalcSpellEffectValue(uint16 spell_id, int effect_index, int caster_level = 1, int ticsremaining = 0, int instrumentmod = 10);
 	int CalcSpellEffectValue_formula(int formula, int base, int max, int caster_level, uint16 spell_id, int ticsremaining = 0);
 	uint32 GetCastedSpellInvSlot() const { return casting_spell_inventory_slot; }

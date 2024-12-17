@@ -1692,7 +1692,7 @@ int32	Client::CalcCR(bool ignoreCap, bool includeSpells)
 	return(calc);
 }
 
-uint32 Mob::GetInstrumentMod(uint16 spell_id) const
+uint32 Mob::GetInstrumentMod(uint16 spell_id)
 {
 	if (GetClass() != BARD)	// instrument mods don't work for non bards
 		return 10;
