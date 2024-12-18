@@ -1589,7 +1589,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	for (int i = 0; i < max_slots; i++) 
 	{
 		if ((buffs[i].spellid != SPELL_UNKNOWN && !stripbuffs) ||
-			IsResurrectionEffects(buffs[i].spellid))
+			IsResurrectionEffects(buffs[i].spellid) ||
+			SpellPersistsThroughDeath(buffs[i].spellid))
 		{
 			m_pp.buffs[i].spellid = buffs[i].spellid;
 			m_pp.buffs[i].bard_modifier = buffs[i].instrumentmod;
@@ -1616,7 +1617,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	if(stripbuffs)
 	{
 		Log(Logs::General, Logs::EQMac, "Removing buffs from %s. HP is: %i MaxHP is: %i BaseHP is: %i HP from items is: %i HP from spells is: %i", GetName(), GetHP(), GetMaxHP(), GetBaseHP(), itembonuses.HP, spellbonuses.HP);
-		BuffFadeAll(true);
+		BuffFadeNonPersistDeath(true);
 		SetHP(itembonuses.HP);
 	}
 
