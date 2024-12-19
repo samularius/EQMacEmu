@@ -616,6 +616,9 @@ void Client::ResetPlayerForNewGamePlus()
 	database.RemoveAllFactions(this);
 	factionvalues.clear();
 
+	// Prevent Old Corpse Rez
+	database.MarkAllCharacterCorpsesNotRezzable(CharacterID());
+
 	uint32 cur_level = GetLevel();
 	// Reset level
 	if (cur_level > 10) {
