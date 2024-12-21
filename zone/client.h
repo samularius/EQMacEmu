@@ -328,9 +328,24 @@ public:
 	inline bool GetGM() const { return m_pp.gm != 0; }
 
 	inline void SetBaseClass(uint32 i) { m_pp.class_=i; }
-	inline void SetBaseRace(uint32 i) { m_pp.race=i; }
+	void SetBaseRace(uint32 i, bool update_racial_skills = true);
 	inline void SetBaseGender(uint32 i) { m_pp.gender=i; }
 	inline void SetDeity(uint32 i) {m_pp.deity=i;deity=i;}
+
+	// Changes the starting stats for the character. Returns false if invalid.
+	bool PermaStats(
+		Client* error_listener,
+		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
+		bool check_cooldown = true
+	);
+
+	// Changes the starting race/deity/city combination for the character, along with the given stats. Returns false if invalid.
+	// Leaving all bonus values to default (0xFF) will default to using the character's current point distribution from their old race.
+	bool PermaRace(
+		Client* error_listener,
+		uint32 new_race, uint32 new_deity, uint32 player_choice_city,
+		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF
+	);
 
 	inline uint8 GetLevel2() const { return m_pp.level2; }
 	inline uint16 GetBaseRace() const { return m_pp.race; }
@@ -619,6 +634,8 @@ public:
 	bool	HasMoney(uint64 copper);
 	void	ClearMoney();
 	void	RemoveAllSkills();
+	void    ResetRacialSkills();
+	void    ResetRacialSkill(EQ::skills::SkillType skill);
 	uint64	GetCarriedMoney();
 	uint64	GetAllMoney();
 
@@ -639,10 +656,10 @@ public:
 
 	void IncreaseSkill(int skill_id, int value = 1) { if (skill_id <= EQ::skills::HIGHEST_SKILL) { m_pp.skills[skill_id] += value; } }
 	void IncreaseLanguageSkill(int skill_id, int value = 1);
-	virtual uint16 GetSkill(EQ::skills::SkillType skill_id) const;
+	virtual uint16 GetSkill(EQ::skills::SkillType skill_id);
 	uint32	GetRawSkill(EQ::skills::SkillType skill_id) const { if (skill_id <= EQ::skills::HIGHEST_SKILL) { return(m_pp.skills[skill_id]); } return 0; }
-	bool	HasSkill(EQ::skills::SkillType skill_id) const;
-	bool	CanHaveSkill(EQ::skills::SkillType skill_id) const;
+	bool	HasSkill(EQ::skills::SkillType skill_id);
+	bool	CanHaveSkill(EQ::skills::SkillType skill_id);
 	void	SetSkill(EQ::skills::SkillType skill_num, uint16 value, bool silent = false);
 	void	AddSkill(EQ::skills::SkillType skillid, uint16 value);
 	void	CheckSpecializeIncrease(uint16 spell_id);
@@ -775,6 +792,7 @@ public:
 	int32	GetItemIDAt(int16 slot_id);
 	bool	FindOnCursor(uint32 item_id);
 	void	ClearPlayerInfoAndGrantStartingItems(bool goto_death = true);
+	void	ResetPlayerForNewGamePlus();
 	bool	PutItemInInventory(int16 slot_id, const EQ::ItemInstance& inst, bool client_update = false);
 	bool	PushItemOnCursor(const EQ::ItemInstance& inst, bool client_update = false);
 	bool	PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop = false);

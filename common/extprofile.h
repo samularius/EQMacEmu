@@ -63,6 +63,7 @@ struct ExtendedProfile_Struct {
 	char				temp_last_name[64]; /* Erollsi Holiday Event Related */
 	uint32				married_character_id;
 	uint8				char_export_flag;
+	uint32				e_times_rebirthed;
 };
 
 #pragma pack()

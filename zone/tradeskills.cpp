@@ -400,6 +400,17 @@ void Client::CheckIncreaseTradeskill(bool isSuccessfulCombine, EQ::skills::Skill
 			tradeDifficulty = 1.0f;
 		}
 	}
+	
+	// Add skillup mod from buffs (Quarm XP Potions)
+	float buff_skillup_mod = spellbonuses.TradeSkillUpBonus ? spellbonuses.TradeSkillUpBonus : 1.0f; 
+	if (buff_skillup_mod != 1.0f) 
+	{
+		tradeDifficulty *= buff_skillup_mod;
+		Log(Logs::Detail, Logs::Tradeskills, "Skillup Chance Modifier %0.2f applied. New difficulty is %0.2f.", buff_skillup_mod, tradeDifficulty);
+		if (tradeDifficulty < 1.0f) {
+			tradeDifficulty = 1.0f;
+		}
+	}
 
 	int tradeStat = 0;
 	if (tradeskill == EQ::skills::SkillFletching || tradeskill == EQ::skills::SkillMakePoison)

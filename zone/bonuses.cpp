@@ -2064,6 +2064,36 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses* ne
 				new_bonus->FoodWater = effect_value;
 				break;
 			}
+			
+			case SE_KillXPBonus:
+			{
+				new_bonus->KillXPBonus = static_cast<float>(effect_value) / 100.0f;
+				break;
+			}
+			
+			case SE_QuestXPBonus:
+			{
+				new_bonus->QuestXPBonus = static_cast<float>(effect_value) / 100.0f;
+				break;
+			}
+			
+			case SE_FactionBonus:
+			{
+				new_bonus->FactionBonus = static_cast<float>(effect_value) / 100.0f;
+				break;
+			}
+			
+			case SE_SkillUpBonus:
+			{
+				new_bonus->SkillUpBonus = static_cast<float>(effect_value) / 100.0f;
+				break;
+			}
+			
+			case SE_TradeSkillUpBonus:
+			{
+				new_bonus->TradeSkillUpBonus = static_cast<float>(effect_value) / 100.0f;
+				break;
+			}
 
 			//Special custom cases for loading effects on to NPC from 'npc_spels_effects' table
 			//if (IsAISpellEffect) {

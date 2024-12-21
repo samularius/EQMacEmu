@@ -123,6 +123,109 @@ bool SharedDatabase::SetGMIgnoreTells(uint32 account_id, uint8 ignoretells)
 	return true;
 }
 
+bool SharedDatabase::GetCharCreateFullInfo(uint32 class_id, uint32 race_id, uint32 diety_id, uint32 player_choice_city, uint32& expansions_req, RaceClassAllocation& out, BindStruct& start_zone_bind)
+{
+	std::string query = StringFormat(
+		"SELECT c.expansions_req"
+		", a.base_str"
+		", a.base_dex"
+		", a.base_agi"
+		", a.base_sta"
+		", a.base_int"
+		", a.base_wis"
+		", a.base_cha"
+		", a.alloc_str"
+		", a.alloc_dex"
+		", a.alloc_agi"
+		", a.alloc_sta"
+		", a.alloc_int"
+		", a.alloc_wis"
+		", a.alloc_cha"
+		", sz.zone_id"
+		", sz.bind_x"
+		", sz.bind_y"
+		", sz.bind_z"
+		", sz.heading"
+		" FROM char_create_combinations c"
+		" JOIN char_create_point_allocations a ON c.allocation_id = a.id"
+		" JOIN start_zones sz ON c.start_zone = sz.start_zone AND c.race = sz.player_race AND c.class = sz.player_class AND c.deity = sz.player_deity"
+		" WHERE c.race = %u AND c.class = %u AND c.deity = %u AND sz.player_choice = %u"
+		, race_id, class_id, diety_id, player_choice_city);
+
+	auto results = QueryDatabase(query);
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		expansions_req = atoi(row[0]); // expansions_req
+		out.BaseStats[0] = atoi(row[1]); // str
+		out.BaseStats[1] = atoi(row[2]); // dex
+		out.BaseStats[2] = atoi(row[3]); // agi
+		out.BaseStats[3] = atoi(row[4]); // sta
+		out.BaseStats[4] = atoi(row[5]); // int
+		out.BaseStats[5] = atoi(row[6]); // wis
+		out.BaseStats[6] = atoi(row[7]); // cha
+		out.DefaultPointAllocation[0] = atoi(row[8]); // str
+		out.DefaultPointAllocation[1] = atoi(row[9]); // dex
+		out.DefaultPointAllocation[2] = atoi(row[10]); // agi
+		out.DefaultPointAllocation[3] = atoi(row[11]); // sta
+		out.DefaultPointAllocation[4] = atoi(row[12]); // int
+		out.DefaultPointAllocation[5] = atoi(row[13]); // wis
+		out.DefaultPointAllocation[6] = atoi(row[14]); // cha
+		start_zone_bind.zoneId = atoi(row[15]); // zone_id
+		start_zone_bind.x = atof(row[16]); // bind_x
+		start_zone_bind.y = atof(row[17]); // bind_y
+		start_zone_bind.z = atof(row[18]); // bind_z
+		start_zone_bind.heading = atof(row[19]); // heading
+		return true;
+	}
+
+	return false;
+}
+
+bool SharedDatabase::GetCharCreateStats(uint32 class_id, uint32 race_id, RaceClassAllocation& out)
+{
+	std::string query = StringFormat(
+		"SELECT a.id"
+		", a.base_str"
+		", a.base_dex"
+		", a.base_agi"
+		", a.base_sta"
+		", a.base_int"
+		", a.base_wis"
+		", a.base_cha"
+		", a.alloc_str"
+		", a.alloc_dex"
+		", a.alloc_agi"
+		", a.alloc_sta"
+		", a.alloc_int"
+		", a.alloc_wis"
+		", a.alloc_cha"
+		" FROM char_create_combinations c"
+		" JOIN char_create_point_allocations a ON c.allocation_id = a.id"
+		" WHERE c.race = %u AND c.class = %u"
+		" LIMIT 1"
+		, race_id, class_id);
+
+	auto results = QueryDatabase(query);
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		out.BaseStats[0] = atoi(row[1]); // str
+		out.BaseStats[1] = atoi(row[2]); // dex
+		out.BaseStats[2] = atoi(row[3]); // agi
+		out.BaseStats[3] = atoi(row[4]); // sta
+		out.BaseStats[4] = atoi(row[5]); // int
+		out.BaseStats[5] = atoi(row[6]); // wis
+		out.BaseStats[6] = atoi(row[7]); // cha
+		out.DefaultPointAllocation[0] = atoi(row[8]); // str
+		out.DefaultPointAllocation[1] = atoi(row[9]); // dex
+		out.DefaultPointAllocation[2] = atoi(row[10]); // agi
+		out.DefaultPointAllocation[3] = atoi(row[11]); // sta
+		out.DefaultPointAllocation[4] = atoi(row[12]); // int
+		out.DefaultPointAllocation[5] = atoi(row[13]); // wis
+		out.DefaultPointAllocation[6] = atoi(row[14]); // cha
+		return true;
+	}
+
+	return false;
+}
+
 uint32 SharedDatabase::GetTotalTimeEntitledOnAccount(uint32 AccountID)
 {
 	uint32 EntitledTime = 0;
@@ -1306,6 +1409,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells)
 		sp[tempid].not_player_spell = atoi(row[184]) != 0;
 		sp[tempid].DamageShieldType = 0;
 		sp[tempid].disabled = atoi(row[185]) != 0;
+		sp[tempid].persist_through_death = atoi(row[186]) != 0;
 
 		// other effects associated with spells, to allow quick access
 		sp[tempid].min_castinglevel = 0;

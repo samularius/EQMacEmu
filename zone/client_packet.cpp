@@ -1338,7 +1338,18 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			strcpy(lastname, m_epp.temp_last_name);
 		}
 	}
+	if (m_epp.e_times_rebirthed)
+	{
+		std::string playerLastname = "";
 
+		if (m_pp.last_name[0])
+		{
+			playerLastname += m_pp.last_name;
+		}
+		std::string romanName = playerLastname + "_" + Strings::IntToRoman(m_epp.e_times_rebirthed);
+		memset(lastname, 0, 64);
+		strcpy(lastname, romanName.c_str());
+	}
 	/* If PP is set to weird coordinates */
 	if ((m_pp.x == -1 && m_pp.y == -1 && m_pp.z == -1) || (m_pp.x == -2 && m_pp.y == -2 && m_pp.z == -2)) {
         auto safePoint = zone->GetSafePoint();
@@ -1594,7 +1605,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	for (int i = 0; i < max_slots; i++) 
 	{
 		if ((buffs[i].spellid != SPELL_UNKNOWN && !stripbuffs) ||
-			IsResurrectionEffects(buffs[i].spellid))
+			IsResurrectionEffects(buffs[i].spellid) ||
+			SpellPersistsThroughDeath(buffs[i].spellid))
 		{
 			m_pp.buffs[i].spellid = buffs[i].spellid;
 			m_pp.buffs[i].bard_modifier = buffs[i].instrumentmod;
@@ -1621,7 +1633,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	if(stripbuffs)
 	{
 		Log(Logs::General, Logs::EQMac, "Removing buffs from %s. HP is: %i MaxHP is: %i BaseHP is: %i HP from items is: %i HP from spells is: %i", GetName(), GetHP(), GetMaxHP(), GetBaseHP(), itembonuses.HP, spellbonuses.HP);
-		BuffFadeAll(true);
+		BuffFadeNonPersistDeath(true);
 		SetHP(itembonuses.HP);
 	}
 
@@ -2538,11 +2550,55 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 	uint32 spid = sbf->spellid;
 	Log(Logs::General, Logs::Spells, "Client requested that buff with spell id %d be canceled. bardmodifier: %d activated: %d slot_number: %d bufftype: %d duration: %d level: %d", spid, sbf->bard_modifier, sbf->activated, sbf->slot_number, sbf->bufftype, sbf->duration, sbf->level);
 
+	if (!IsValidSpell(spid))
+		return;
+
 	if (spid == 0xFFFF)
 		QueuePacket(app);
-	else
+	else if(IsValidSpell(spid) && spells[spid].goodEffect != 0 && spells[spid].persist_through_death == 0)
 		BuffFadeBySpellID(spid);
+	else if(IsValidSpell(spid))
+	{
+		int buff_count = GetMaxTotalSlots();
+		for (int j = 0; j < buff_count; j++)
+		{
+			if (buffs[j].spellid == spid)
+			{
+				// we need to remove the buff and reapply it in the first empty slot to stay in sync with client
+				Buffs_Struct savedbuff = Buffs_Struct(buffs[j]); // save a copy before removing it
+				BuffFadeBySlot(j, false);				
 
+				// reapply buff server-side
+				int emptyslot = -1;
+				FindAffectSlot(this, spid, &emptyslot, 1);
+				buffs[emptyslot] = savedbuff;
+				CalcBonuses();
+
+				// reapply buff client-side
+				auto action_packet = new EQApplicationPacket(OP_Action, sizeof(Action_Struct));
+				Action_Struct* action = (Action_Struct*)action_packet->pBuffer;
+				action->target = GetID();
+				action->source = GetID();
+				action->level = buffs[emptyslot].casterlevel;	// effective level, used for potions
+				action->type = 231;	// 231 means a spell
+				action->spell = spid;
+				action->sequence = (GetHeading() * 2.0f);	// heading
+				action->instrument_mod = buffs[emptyslot].instrumentmod;
+				action->buff_unknown = 0x04;	// this is a success flag
+				
+				QueuePacket(action_packet);
+				safe_delete(action_packet);
+				SendBuffDurationPacket(spid, buffs[emptyslot].ticsremaining, buffs[emptyslot].casterlevel, emptyslot, buffs[emptyslot].instrumentmod);		
+				
+				if (spells[spid].goodEffect == 0)
+				{
+					Log(Logs::General, Logs::Error, "HACKER: %s (account: %s) attempted to remove a detrimental effect (spell id: %d) which they shouldn't be able to remove!",
+						CastToClient()->GetCleanName(), CastToClient()->AccountName(), spid);
+					database.SetHackerFlag(CastToClient()->AccountName(), CastToClient()->GetCleanName(), "Manually removed detrimental spell effect.");					
+				}
+			}
+		}
+	}
 	return;
 }
 

@@ -231,7 +231,7 @@ public:
 	float CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob *target = nullptr, bool use_resist_override = false,
 		int resist_override = 0, bool tick_save = false);
 	int ResistPhysical(int level_diff, uint8 caster_level);
-	uint16 GetSpecializeSkillValue(uint16 spell_id) const;
+	uint16 GetSpecializeSkillValue(uint16 spell_id);
 	void SendSpellBarEnable(uint16 spellid);
 	void ZeroCastingVars();
 	virtual void SpellProcess();
@@ -275,7 +275,7 @@ public:
 	void BuffFadeBySpellID(uint16 spell_id, bool message = true);
 	void BuffFadeByEffect(int effectid, int skipslot = -1);
 	void BuffFadeAll(bool skiprez = false, bool message = false);
-	void BuffFadeNonPersistDeath();
+	void BuffFadeNonPersistDeath(bool skiprez = false);
 	void BuffFadeDetrimental();
 	void BuffFadeBySlot(int slot, bool iRecalcBonuses = true, bool message = true, bool update = true);
 	void BuffFadeDetrimentalByCaster(Mob *caster);
@@ -326,7 +326,7 @@ public:
 	bool HasBowAndArrowEquipped() const { return HasBowEquipped() && HasArrowEquipped(); }
 	inline void SetBashEnablingWeapon(bool val) { has_bashEnablingWeapon = val; } //Used for SK/Pal epics
 	bool HasBashEnablingWeapon() const { return has_bashEnablingWeapon; }
-	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) const { return 0; }
+	virtual uint16 GetSkill(EQ::skills::SkillType skill_num) { return 0; }
 	virtual void SetSkill(EQ::skills::SkillType skill_num, uint16 value) {};
 	virtual uint32 GetEquipment(uint8 material_slot) const { return(0); }
 	virtual int32 GetEquipmentMaterial(uint8 material_slot) const;
@@ -901,7 +901,7 @@ public:
 	virtual int32 CheckHealAggroAmount(uint16 spell_id, Mob* target, uint32 heal_possible = 0, bool from_clickable = false);
 	virtual uint32 GetAA(uint32 aa_id) const { return(0); }
 
-	uint32 GetInstrumentMod(uint16 spell_id) const;
+	uint32 GetInstrumentMod(uint16 spell_id);
 	int CalcSpellEffectValue(uint16 spell_id, int effect_index, int caster_level = 1, int ticsremaining = 0, int instrumentmod = 10);
 	int CalcSpellEffectValue_formula(int formula, int base, int max, int caster_level, uint16 spell_id, int ticsremaining = 0);
 	uint32 GetCastedSpellInvSlot() const { return casting_spell_inventory_slot; }

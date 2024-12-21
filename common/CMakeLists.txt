@@ -321,6 +321,7 @@ SET(common_headers
 	additive_lagged_fibonacci_engine.h
 	base_packet.h
 	bodytypes.h
+	char_create_data.h
 	chat_oplist.h
 	classes.h
 	cli/argh.h

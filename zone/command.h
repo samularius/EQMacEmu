@@ -163,6 +163,8 @@ void command_numauths(Client* c, const Seperator* sep);
 void command_optest(Client* c, const Seperator* sep);
 void command_path(Client* c, const Seperator* sep);
 void command_pf(Client *c, const Seperator *sep);
+void command_ngpermarace(Client* c, const Seperator* sep);
+void command_ngpermastats(Client* c, const Seperator* sep);
 void command_petition(Client* c, const Seperator* sep);
 void command_playsound(Client* c, const Seperator* sep);
 void command_profanity(Client* c, const Seperator* sep);

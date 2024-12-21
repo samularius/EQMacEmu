@@ -288,6 +288,7 @@ public:
 	bool	DeleteCharacterAAs(uint32 character_id);
 	bool	DeleteCharacterConsent(char grantname[64], char ownername[64], uint32 corpse_id);
 	bool	DeleteCharacterSkills(uint32 character_id, PlayerProfile_Struct * pp);
+	bool	DeleteCharacterSkill(uint32 character_id, uint32 skill_id);
 
 	/* Character Inventory  */
 	bool	SaveSoulboundItems(Client* client, std::list<EQ::ItemInstance*>::const_iterator &start, std::list<EQ::ItemInstance*>::const_iterator &end);
@@ -308,6 +309,7 @@ public:
 	Corpse*		SummonBuriedCharacterCorpses(uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
 	Corpse*		SummonCharacterCorpse(uint32 corpse_id, uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
 	void		MarkCorpseAsRezzed(uint32 dbid);
+	void		MarkAllCharacterCorpsesNotRezzable(uint32 charid);
 	bool		BuryCharacterCorpse(uint32 dbid);
 	bool		BuryAllCharacterCorpses(uint32 charid);
 	bool		DeleteCharacterCorpse(uint32 dbid);

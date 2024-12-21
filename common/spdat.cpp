@@ -1432,3 +1432,11 @@ bool IsDispellableSpell(uint16 spell_id)
 
 	return true;
 }
+
+bool SpellPersistsThroughDeath(uint16 spell_id)
+{
+	if(IsValidSpell(spell_id) && spells[spell_id].persist_through_death == 1)
+		return true;
+
+	return false;	
+}

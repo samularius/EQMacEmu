@@ -47,6 +47,8 @@ enum {	//values for pTimerType
 	pTimerPeqzoneReuse = 23,
 	pTimerShield = 24,			// warrior /shield
 
+	pTimerPlayerStatsChange = 100,
+
 	pTimerAAStart = 1000,		//AA re-use timers
 	pTimerAAEnd = 2999,
 

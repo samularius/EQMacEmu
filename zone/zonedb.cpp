@@ -763,7 +763,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_zone_guild_id`,		    "
 		"`e_temp_last_name`,		"
 		"`e_married_character_id`,	"
-		"`e_char_export_flag`			"
+		"`e_char_export_flag`,		"
+		"`e_times_rebirthed`		"
 		"FROM                       "
 		"character_data             "
 		"WHERE `id` = %i         ", character_id);
@@ -833,6 +834,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		strcpy(m_epp->temp_last_name, row[r]); r++;								 // "e_temp_last_name,          "
 		m_epp->married_character_id = atoi(row[r]); r++;						 // "`e_married_character_id"	"
 		m_epp->char_export_flag = atoi(row[r]); r++;									 // "`e_char_export_flag`			"
+		m_epp->e_times_rebirthed = atoi(row[r]); r++;									 // "`e_times_rebirthed`			"
 	}
 	return true;
 }
@@ -1002,6 +1004,15 @@ bool ZoneDatabase::DeleteCharacterSkills(uint32 character_id, PlayerProfile_Stru
 		"DELETE FROM "
 		"`character_skills` "
 		"WHERE `id` = %u", character_id);
+	auto results = database.QueryDatabase(query);
+	return true;
+}
+
+bool ZoneDatabase::DeleteCharacterSkill(uint32 character_id, uint32 skill_id) {
+	std::string query = StringFormat(
+		"DELETE FROM "
+		"`character_skills` "
+		"WHERE `id` = %u AND skill_id = %u", character_id, skill_id);
 	auto results = database.QueryDatabase(query);
 	return true;
 }
@@ -1201,7 +1212,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_temp_last_name,			 "
 		" e_married_character_id,	 "
 		" e_char_export_flag,		 "
-		" mailkey					 "
+		" mailkey,					 "
+		" e_times_rebirthed			 "
 		")							 "
 		"VALUES ("
 		"%u,"  // id																" id,                        "
@@ -1270,7 +1282,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s',"  // e_temp_last_name
 		"%u,"  // e_married_character_id
 		"%u,"  // e_char_export_flag
-		"'%s'" // mailkey
+		"'%s'," // mailkey
+		"%u"  // e_times_rebirthed
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "
@@ -1338,7 +1351,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		Strings::Escape(m_epp->temp_last_name).c_str(),
 		m_epp->married_character_id,
 		m_epp->char_export_flag,
-		mail_key.c_str()
+		mail_key.c_str(),
+		m_epp->e_times_rebirthed
 	);
 	auto results = database.QueryDatabase(query);
 	Log(Logs::General, Logs::Character, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
@@ -3040,6 +3054,11 @@ bool ZoneDatabase::UpdateCharacterCorpseBackup(uint32 db_id, uint32 char_id, con
 
 void ZoneDatabase::MarkCorpseAsRezzed(uint32 db_id) {
 	std::string query = StringFormat("UPDATE `character_corpses` SET `is_rezzed` = 1 WHERE `id` = %i", db_id);
+	auto results = QueryDatabase(query);
+}
+
+void ZoneDatabase::MarkAllCharacterCorpsesNotRezzable(uint32 character_id) {
+	std::string query = StringFormat("UPDATE `character_corpses` SET `rezzable` = 0 WHERE `charid` = %u", character_id);
 	auto results = QueryDatabase(query);
 }
 

@@ -39,7 +39,6 @@ SET(world_headers
 	login_server_list.h
 	main.h
 	queryserv.h
-	char_create_data.h
 	ucs.h
 	web_interface.h
 	web_interface_eqw.h

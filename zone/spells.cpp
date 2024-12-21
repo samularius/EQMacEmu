@@ -734,7 +734,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 	return true;
 }
 
-uint16 Mob::GetSpecializeSkillValue(uint16 spell_id) const {
+uint16 Mob::GetSpecializeSkillValue(uint16 spell_id) {
 	switch(spells[spell_id].skill) {
 	case EQ::skills::SkillAbjuration:
 		return(GetSkill(EQ::skills::SkillSpecializeAbjure));
@@ -3510,12 +3510,20 @@ void Mob::BuffFadeAll(bool skiprez, bool message)
 	CalcBonuses();
 }
 
-void Mob::BuffFadeNonPersistDeath()
+void Mob::BuffFadeNonPersistDeath(bool skiprez)
 {
 	int buff_count = GetMaxTotalSlots();
 	for (int j = 0; j < buff_count; j++) {
 		if (buffs[j].spellid != SPELL_UNKNOWN)
+		{
+			if (skiprez && IsResurrectionEffects(buffs[j].spellid))
+				continue;
+			
+			if (SpellPersistsThroughDeath(buffs[j].spellid))
+				continue;
+			
 			BuffFadeBySlot(j, false, false);
+		}
 	}
 	//we tell BuffFadeBySlot not to recalc, so we can do it only once when were done
 	CalcBonuses();
@@ -3601,6 +3609,9 @@ void Mob::BuffFadeBySitModifier()
 // removes the buff matching spell_id
 void Mob::BuffFadeBySpellID(uint16 spell_id, bool message)
 {
+	if (!IsValidSpell(spell_id))
+		return;
+
 	int buff_count = GetMaxTotalSlots();
 	for (int j = 0; j < buff_count; j++)
 	{
@@ -5118,7 +5129,7 @@ void Mob::ResistSpell(Mob* caster, uint16 spell_id, bool isProc)
 			// See http://www.eqemulator.org/forums/showthread.php?t=43370
 			int aggroChance = 90 - caster->GetCHA() / 4;
 
-			if (!zone->random.Roll(aggroChance))
+			if (zone->random.Roll(aggroChance))
 			{
 				AddToHateList(caster, aggro);
 				Log(Logs::Detail, Logs::Spells, "ResistSpell(): Lull critical fail; aggro chance was %i.", aggroChance);

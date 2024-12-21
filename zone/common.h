@@ -270,6 +270,12 @@ struct StatBonuses {
 	bool	WaterBreathing;
 	uint8	BreathLevel;
 	int32	FoodWater;							// SE_Hunger - stops food/water consumption
+	// Quarm - XP Modifiers used for Potions
+	float KillXPBonus;					// Multiply XP received for kills
+	float QuestXPBonus;					// Multiply XP received for quests
+	float FactionBonus;					// Multiply faction hits
+	float SkillUpBonus;					// Increase skillup rate
+	float TradeSkillUpBonus;		// Increase skillup rate
 };
 
 typedef struct
