@@ -781,8 +781,8 @@ bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, EQ::I
 	const char *zname = ZoneName(pp->zone_id);
 	if(zname == nullptr) {
 		/* Zone not in the DB, something to prevent crash... */
-		strn0cpy(zone, "bazaar", 49);
-		pp->zone_id = Zones::BAZAAR;
+		strn0cpy(zone, "qeynos", 49);
+		pp->zone_id = Zones::QEYNOS;
 	}
 	else{ strn0cpy(zone, zname, 49); }
 
@@ -1427,7 +1427,7 @@ bool Database::CheckNameFilter(const char* name, bool surname) {
 		}
 		else {
 			num_c = 1;
-			c = str_name[x];
+			c = name[x];
 		}
 		if (num_c > 2) {
 			return false;
@@ -1453,24 +1453,23 @@ bool Database::CheckNameFilter(const char* name, bool surname) {
 
 		if (str_name.find(current_row) != std::string::npos)
 			return false;
+		}
 	}
 
 	// If the name has passed all the checks, return true.
 	return true;
 }
 
-bool Database::AddToNameFilter(const char* name) {
-	
-	std::string query = StringFormat("INSERT INTO name_filter (name) values ('%s')", name);
+bool Database::AddToNameFilter(std::string name) 
+{
+	auto query = fmt::format(
+		"INSERT INTO name_filter (name) values ('{}')",
+		name
+	);
 	auto results = QueryDatabase(query);
-
-	if (!results.Success())
-	{
+	if (!results.Success() || !results.RowsAffected()) {
 		return false;
 	}
-
-	if (results.RowsAffected() == 0)
-		return false;
 
 	return true;
 }
@@ -1553,15 +1552,18 @@ bool Database::UpdateName(const char* oldname, const char* newname) {
 }
 
 // If the name is used or an error occurs, it returns false, otherwise it returns true
-bool Database::CheckUsedName(const char* name, uint32 charid) {
-	std::string query = StringFormat("SELECT `id` FROM `character_data` WHERE `name` = '%s' AND id != %d", name, charid);
+bool Database::CheckUsedName(std::string name, uint32 charid) 
+{
+	auto query = fmt::format(
+		"SELECT `id` FROM `character_data` WHERE `name` = '{}' AND id != {}", 
+		name, 
+		charid
+	);
+
 	auto results = QueryDatabase(query); 
-	if (!results.Success()) {
+	if (!results.Success() || results.RowCount()) {
 		return false;
 	}
-
-	if (results.RowCount() > 0)
-		return false;
 
 	return true;
 }

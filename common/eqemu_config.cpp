@@ -93,8 +93,8 @@ void EQEmuConfig::parse_config() {
 		DisableConfigChecks = true;
 	}
 
-	ChatHost = _root["server"]["chatserver"].get("host", "eqchat.eqemulator.net").asString();
-	ChatPort = Strings::ToUnsignedInt(_root["server"]["chatserver"].get("port", "7778").asString());
+	ChatHost = _root["server"]["ucs"].get("host", "eqchat.eqemulator.net").asString();
+	ChatPort = Strings::ToUnsignedInt(_root["server"]["ucs"].get("port", "7778").asString());
 
 	DatabaseUsername = _root["server"]["database"].get("username", "eq").asString();
 	DatabasePassword = _root["server"]["database"].get("password", "eq").asString();
@@ -120,6 +120,7 @@ void EQEmuConfig::parse_config() {
 	QuestDir = _root["server"]["directories"].get("quests", "quests/").asString();
 	LuaModuleDir = _root["server"]["directories"].get("lua_modules", "quests/lua_modules/").asString();
 	PatchDir = _root["server"]["directories"].get("patches", "./").asString();
+	OpcodeDir = _root["server"]["directories"].get("opcodes", "./").asString();
 	SharedMemDir = _root["server"]["directories"].get("shared_memory", "shared/").asString();
 	LogDir = _root["server"]["directories"].get("logs", "logs/").asString();
 

@@ -41,12 +41,14 @@
 #include "../common/path_manager.h"
 #include "../common/zone_store.h"
 #include "../common/content/world_content_service.h"
+#include "../common/discord_manager.h"
 
 ChatChannelList *ChannelList;
 Clientlist *g_Clientlist;
 EQEmuLogSys LogSys;
 UCSDatabase database;
 WorldServer *worldserver = nullptr;
+DiscordManager discord_manager;
 PathManager path;
 std::unordered_set<uint32> ipWhitelist;
 std::mutex		ipMutex;
@@ -88,6 +90,13 @@ void CatchSignal(int sig_num) {
 		g_Clientlist->CloseAllConnections();
 		LogSys.CloseFileLogs();
 		std::exit(0);
+	}
+}
+
+void DiscordQueueListener() {
+	while (caught_loop == 0) {
+		discord_manager.ProcessMessageQueue();
+		Sleep(100);
 	}
 }
 
@@ -159,11 +168,13 @@ int main() {
 	std::signal(SIGKILL, CatchSignal);
 	std::signal(SIGSEGV, CatchSignal);
 
+	std::thread(DiscordQueueListener).detach();
+
 	worldserver = new WorldServer;
 
-		// uncomment to simulate timed crash for catching SIGSEV
-//	std::thread crash_test(crash_func);
-//	crash_test.detach();
+	// uncomment to simulate timed crash for catching SIGSEV
+	//	std::thread crash_test(crash_func);
+	//	crash_test.detach();
 
 	auto loop_fn = [&](EQ::Timer* t) {
 		if (keepalive.Check()) {

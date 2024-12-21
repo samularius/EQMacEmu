@@ -59,6 +59,7 @@ public:
 	void				SetCompile(char* in_compile){ strcpy(compiled,in_compile); }
 	inline uint32		GetZoneID() const	{ return zone_server_zone_id; }
 	inline uint32		GetZoneGuildID() const { return zone_server_guild_id; }
+	inline bool         IsConnected() const { return tcpc->Handle() ? tcpc->Handle()->IsConnected() : false; }
 	inline std::string	GetIP() const { return tcpc->Handle() ? tcpc->Handle()->RemoteIP() : ""; }
 	inline uint16		GetPort() const { return tcpc->Handle() ? tcpc->Handle()->RemotePort() : 0; }
 	inline const char*	GetCAddress() const	{ return client_address; }
