@@ -31937,1529 +31937,1529 @@ INSERT INTO spawn2 (`id`, `spawngroupID`, `zone`, `x`, `y`, `z`, `heading`, `res
 INSERT INTO spawnentry (`spawngroupID`, `npcID`, `chance`, `mintime`, `maxtime`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (448206, 13005, 75, 0, 0, -1, -1, NULL, NULL);
 INSERT INTO spawnentry (`spawngroupID`, `npcID`, `chance`, `mintime`, `maxtime`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (448206, 13109, 25, 0, 0, 3, 99, NULL, NULL);
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448206, "northkarana_448206", 1, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 1);
--- id(6611) = droga 
+-- id(6611) = droga
 UPDATE doors SET `keyitem` = 12708 WHERE `id` = 6611;
--- id(6612) = droga 
+-- id(6612) = droga
 UPDATE doors SET `keyitem` = 12710 WHERE `id` = 6612;
--- id(7807) = veeshan 
+-- id(7807) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7807;
--- id(7808) = veeshan 
+-- id(7808) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7808;
--- id(7809) = veeshan 
+-- id(7809) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7809;
--- id(7810) = veeshan 
+-- id(7810) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7810;
--- id(7811) = veeshan 
+-- id(7811) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7811;
--- id(7812) = veeshan 
+-- id(7812) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7812;
--- id(7820) = veeshan 
+-- id(7820) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7820;
--- id(7821) = veeshan 
+-- id(7821) = veeshan
 UPDATE doors SET `lockpick` = 210 WHERE `id` = 7821;
--- id(122) =  
+-- id(122) = 
 UPDATE fishing SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 122;
--- id(148) =  
+-- id(148) = 
 UPDATE fishing SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 148;
--- id(289) =  
+-- id(289) = 
 UPDATE fishing SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 289;
--- id(290) =  
+-- id(290) = 
 UPDATE fishing SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 290;
--- id(38) = bothunder/Rain Water 
+-- id(38) = bothunder/Rain Water
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 38;
--- id(111) = gfaydark/Morning Dew 
+-- id(111) = gfaydark/Morning Dew
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 111;
--- id(129) = kithicor/Oak Bark 
+-- id(129) = kithicor/Oak Bark
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 129;
--- id(133) = lfaydark/Morning Dew 
+-- id(133) = lfaydark/Morning Dew
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 133;
--- id(144) = misty/Misty Acorn 
+-- id(144) = misty/Misty Acorn
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 144;
--- id(368) = warslikswood/Oak Bark 
+-- id(368) = warslikswood/Oak Bark
 UPDATE forage SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 368;
--- id(15) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw 
+-- id(15) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw
 UPDATE grid SET `type2` = 2 WHERE `zoneid` = 5 AND `id` = 15;
--- id(20) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw 
+-- id(20) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw
 UPDATE grid SET `type2` = 2 WHERE `zoneid` = 5 AND `id` = 20;
--- id(21) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw 
+-- id(21) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll; a_gnoll_shaman; a_gnoll_flamepaw
 UPDATE grid SET `type2` = 2 WHERE `zoneid` = 5 AND `id` = 21;
--- id(22) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll_flamepaw; a_gnoll_champion; Grenix_Mucktail; Vexven_Mucktail 
+-- id(22) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll_flamepaw; a_gnoll_champion; Grenix_Mucktail; Vexven_Mucktail
 UPDATE grid SET `type2` = 2 WHERE `zoneid` = 5 AND `id` = 22;
--- id(23) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll_flamepaw; a_gnoll_champion 
+-- id(23) = highpass/a_gnoll_soothsayer; a_gnoll_brawler; a_gnoll_flamepaw; a_gnoll_champion
 UPDATE grid SET `type2` = 2 WHERE `zoneid` = 5 AND `id` = 23;
--- gridid(15) = highpass/1 
+-- gridid(15) = highpass/1
 UPDATE grid_entries SET `pause` = 90 WHERE `zoneid` = 5 AND `gridid` = 15 AND `number` = 1;
--- gridid(20) = highpass/1 
+-- gridid(20) = highpass/1
 UPDATE grid_entries SET `pause` = 90 WHERE `zoneid` = 5 AND `gridid` = 20 AND `number` = 1;
--- gridid(21) = highpass/1 
+-- gridid(21) = highpass/1
 UPDATE grid_entries SET `pause` = 90 WHERE `zoneid` = 5 AND `gridid` = 21 AND `number` = 1;
--- gridid(22) = highpass/1 
+-- gridid(22) = highpass/1
 UPDATE grid_entries SET `pause` = 90 WHERE `zoneid` = 5 AND `gridid` = 22 AND `number` = 1;
--- gridid(23) = highpass/1 
+-- gridid(23) = highpass/1
 UPDATE grid_entries SET `pause` = 90 WHERE `zoneid` = 5 AND `gridid` = 23 AND `number` = 1;
--- id(2) = Oak Bark 
+-- id(2) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2;
--- id(122) = Jack-O-Lantern Fungus 
+-- id(122) = Jack-O-Lantern Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 122;
--- id(123) = Morning Dew 
+-- id(123) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 123;
--- id(124) = Sarcoscypha Fungus 
+-- id(124) = Sarcoscypha Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 124;
--- id(125) = Misty Acorn 
+-- id(125) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 125;
--- id(126) = Permafrost Crystals 
+-- id(126) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 126;
--- id(127) = Permafrost Crystals 
+-- id(127) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 127;
--- id(128) = Permafrost Crystals 
+-- id(128) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 128;
--- id(129) = Permafrost Crystals 
+-- id(129) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 129;
--- id(130) = Permafrost Crystals 
+-- id(130) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 130;
--- id(131) = Permafrost Crystals 
+-- id(131) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 131;
--- id(132) = Permafrost Crystals 
+-- id(132) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 132;
--- id(138) = Iron Oxide 
+-- id(138) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 138;
--- id(140) = Russet Oxide 
+-- id(140) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 140;
--- id(1212) = Iron Oxide 
+-- id(1212) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1212;
--- id(1213) = Russet Oxide 
+-- id(1213) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1213;
--- id(1214) = Iron Oxide 
+-- id(1214) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1214;
--- id(1215) = Russet Oxide 
+-- id(1215) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1215;
--- id(1216) = Iron Oxide 
+-- id(1216) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1216;
--- id(1217) = Russet Oxide 
+-- id(1217) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1217;
--- id(1218) = Iron Oxide 
+-- id(1218) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1218;
--- id(1219) = Russet Oxide 
+-- id(1219) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1219;
--- id(1220) = Iron Oxide 
+-- id(1220) = Iron Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1220;
--- id(1221) = Russet Oxide 
+-- id(1221) = Russet Oxide
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1221;
--- id(1229) = Permafrost Crystals 
+-- id(1229) = Permafrost Crystals
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1229;
--- id(1230) = Morning Dew 
+-- id(1230) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1230;
--- id(1231) = Morning Dew 
+-- id(1231) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1231;
--- id(1232) = Morning Dew 
+-- id(1232) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1232;
--- id(1233) = Morning Dew 
+-- id(1233) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1233;
--- id(1234) = Morning Dew 
+-- id(1234) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1234;
--- id(1235) = Morning Dew 
+-- id(1235) = Morning Dew
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1235;
--- id(1236) = Jack-O-Lantern Fungus 
+-- id(1236) = Jack-O-Lantern Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1236;
--- id(1237) = Jack-O-Lantern Fungus 
+-- id(1237) = Jack-O-Lantern Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1237;
--- id(1238) = Jack-O-Lantern Fungus 
+-- id(1238) = Jack-O-Lantern Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1238;
--- id(1239) = Sarcoscypha Fungus 
+-- id(1239) = Sarcoscypha Fungus
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1239;
--- id(1241) = Oak Bark 
+-- id(1241) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1241;
--- id(1242) = Oak Bark 
+-- id(1242) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1242;
--- id(1243) = Oak Bark 
+-- id(1243) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1243;
--- id(1244) = Oak Bark 
+-- id(1244) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1244;
--- id(1245) = Oak Bark 
+-- id(1245) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1245;
--- id(1246) = Oak Bark 
+-- id(1246) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1246;
--- id(1247) = Oak Bark 
+-- id(1247) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1247;
--- id(1248) = Oak Bark 
+-- id(1248) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1248;
--- id(1249) = Oak Bark 
+-- id(1249) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1249;
--- id(1250) = Oak Bark 
+-- id(1250) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1250;
--- id(1251) = Oak Bark 
+-- id(1251) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1251;
--- id(1252) = Oak Bark 
+-- id(1252) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1252;
--- id(1253) = Oak Bark 
+-- id(1253) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1253;
--- id(1254) = Oak Bark 
+-- id(1254) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1254;
--- id(1255) = Oak Bark 
+-- id(1255) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1255;
--- id(1256) = Oak Bark 
+-- id(1256) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1256;
--- id(1257) = Oak Bark 
+-- id(1257) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1257;
--- id(1258) = Oak Bark 
+-- id(1258) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1258;
--- id(1259) = Oak Bark 
+-- id(1259) = Oak Bark
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1259;
--- id(1260) = Evergreen Leaf 
+-- id(1260) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1260;
--- id(1261) = Evergreen Leaf 
+-- id(1261) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1261;
--- id(1262) = Evergreen Leaf 
+-- id(1262) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1262;
--- id(1263) = Evergreen Leaf 
+-- id(1263) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1263;
--- id(1264) = Evergreen Leaf 
+-- id(1264) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1264;
--- id(1265) = Evergreen Leaf 
+-- id(1265) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1265;
--- id(1266) = Evergreen Leaf 
+-- id(1266) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1266;
--- id(1267) = Evergreen Leaf 
+-- id(1267) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1267;
--- id(1268) = Evergreen Leaf 
+-- id(1268) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1268;
--- id(1269) = Evergreen Leaf 
+-- id(1269) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1269;
--- id(1270) = Evergreen Leaf 
+-- id(1270) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1270;
--- id(1271) = Evergreen Leaf 
+-- id(1271) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1271;
--- id(1272) = Evergreen Leaf 
+-- id(1272) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1272;
--- id(1367) = Misty Acorn 
+-- id(1367) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1367;
--- id(1368) = Misty Acorn 
+-- id(1368) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1368;
--- id(1369) = Misty Acorn 
+-- id(1369) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1369;
--- id(1370) = Misty Acorn 
+-- id(1370) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1370;
--- id(1371) = Misty Acorn 
+-- id(1371) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1371;
--- id(1372) = Misty Acorn 
+-- id(1372) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1372;
--- id(1373) = Misty Acorn 
+-- id(1373) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1373;
--- id(1374) = Misty Acorn 
+-- id(1374) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1374;
--- id(1375) = Misty Acorn 
+-- id(1375) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1375;
--- id(1376) = Misty Acorn 
+-- id(1376) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1376;
--- id(1377) = Misty Acorn 
+-- id(1377) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1377;
--- id(1378) = Misty Acorn 
+-- id(1378) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1378;
--- id(1379) = Misty Acorn 
+-- id(1379) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1379;
--- id(1380) = Misty Acorn 
+-- id(1380) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1380;
--- id(1381) = Misty Acorn 
+-- id(1381) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1381;
--- id(1382) = Misty Acorn 
+-- id(1382) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1382;
--- id(1383) = Misty Acorn 
+-- id(1383) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1383;
--- id(1384) = Misty Acorn 
+-- id(1384) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1384;
--- id(1385) = Misty Acorn 
+-- id(1385) = Misty Acorn
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1385;
--- id(1509) = Evergreen Leaf 
+-- id(1509) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1509;
--- id(1510) = Evergreen Leaf 
+-- id(1510) = Evergreen Leaf
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 1510;
--- Name(Ykeshan Battle Axe) = 5604 
+-- Name(Ykeshan Battle Axe) = 5604
 UPDATE items SET `magic` = 1 WHERE `id` = 5604;
--- Name(Staff of Cancellation) = 10844 
+-- Name(Staff of Cancellation) = 10844
 UPDATE items SET `magic` = 1 WHERE `id` = 10844;
--- Name(A Koada'Dal Blood Doll) = 12737 
+-- Name(A Koada'Dal Blood Doll) = 12737
 UPDATE items SET `Name` = "A Koada'Dal Blood Doll", `norent` = 1 WHERE `id` = 12737;
--- id(107715) =  
+-- id(107715) = 
 UPDATE lootdrop SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 107715;
--- id(108150) =  
+-- id(108150) = 
 UPDATE lootdrop SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 108150;
--- id(108151) =  
+-- id(108151) = 
 UPDATE lootdrop SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 108151;
--- id(108680) =  
+-- id(108680) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 108680;
--- id(108682) =  
+-- id(108682) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 108682;
--- lootdrop_id(6622) = Russet Oxide 
+-- lootdrop_id(6622) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 6622 AND `item_id` = 22123;
--- lootdrop_id(6622) = Iron Oxide 
+-- lootdrop_id(6622) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 6622 AND `item_id` = 22124;
--- lootdrop_id(6622) = Charcoal 
+-- lootdrop_id(6622) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 6622 AND `item_id` = 22125;
--- lootdrop_id(6622) = Swirling Mist 
+-- lootdrop_id(6622) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 6622 AND `item_id` = 22523;
--- lootdrop_id(8071) = Human Blood 
+-- lootdrop_id(8071) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 8071 AND `item_id` = 22514;
--- lootdrop_id(9814) = Human Blood 
+-- lootdrop_id(9814) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 9814 AND `item_id` = 22514;
--- lootdrop_id(9815) = Human Blood 
+-- lootdrop_id(9815) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 9815 AND `item_id` = 22514;
--- lootdrop_id(12495) = Human Blood 
+-- lootdrop_id(12495) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 12495 AND `item_id` = 22514;
--- lootdrop_id(12505) = Human Blood 
+-- lootdrop_id(12505) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 12505 AND `item_id` = 22514;
--- lootdrop_id(17728) = Russet Oxide 
+-- lootdrop_id(17728) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 17728 AND `item_id` = 22123;
--- lootdrop_id(17728) = Drop of Mercury 
+-- lootdrop_id(17728) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 17728 AND `item_id` = 22517;
--- lootdrop_id(18843) = Rain Water 
+-- lootdrop_id(18843) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 18843 AND `item_id` = 28022;
--- lootdrop_id(19098) = Human Blood 
+-- lootdrop_id(19098) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 19098 AND `item_id` = 22514;
--- lootdrop_id(23173) = Human Blood 
+-- lootdrop_id(23173) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 23173 AND `item_id` = 22514;
--- lootdrop_id(91205) = Ivory 
+-- lootdrop_id(91205) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 91205 AND `item_id` = 22504;
--- lootdrop_id(91681) = Ivory 
+-- lootdrop_id(91681) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 91681 AND `item_id` = 22504;
--- lootdrop_id(91857) = Human Blood 
+-- lootdrop_id(91857) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 91857 AND `item_id` = 22514;
--- lootdrop_id(91861) = Elven Blood 
+-- lootdrop_id(91861) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 91861 AND `item_id` = 22515;
--- lootdrop_id(92400) = Ivory 
+-- lootdrop_id(92400) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 92400 AND `item_id` = 22504;
--- lootdrop_id(92458) = Human Blood 
+-- lootdrop_id(92458) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 92458 AND `item_id` = 22514;
--- lootdrop_id(92792) = Ivory 
+-- lootdrop_id(92792) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 92792 AND `item_id` = 22504;
--- lootdrop_id(93019) = Human Blood 
+-- lootdrop_id(93019) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93019 AND `item_id` = 22514;
--- lootdrop_id(93022) = Human Blood 
+-- lootdrop_id(93022) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93022 AND `item_id` = 22514;
--- lootdrop_id(93570) = Griffenne Blood 
+-- lootdrop_id(93570) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93570 AND `item_id` = 22526;
--- lootdrop_id(93598) = Human Blood 
+-- lootdrop_id(93598) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93598 AND `item_id` = 22514;
--- lootdrop_id(93619) = Dwarven Blood 
+-- lootdrop_id(93619) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93619 AND `item_id` = 22516;
--- lootdrop_id(93648) = Ivory 
+-- lootdrop_id(93648) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 93648 AND `item_id` = 22504;
--- lootdrop_id(93713) = Rain Water 
+-- lootdrop_id(93713) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93713 AND `item_id` = 28022;
--- lootdrop_id(93782) = Ivory 
+-- lootdrop_id(93782) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 93782 AND `item_id` = 22504;
--- lootdrop_id(93798) = Human Blood 
+-- lootdrop_id(93798) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 93798 AND `item_id` = 22514;
--- lootdrop_id(95504) = Essence of Wind 
+-- lootdrop_id(95504) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 95504 AND `item_id` = 10229;
--- lootdrop_id(95614) = Rain Water 
+-- lootdrop_id(95614) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 95614 AND `item_id` = 28022;
--- lootdrop_id(95953) = Russet Oxide 
+-- lootdrop_id(95953) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 95953 AND `item_id` = 22123;
--- lootdrop_id(95953) = Iron Oxide 
+-- lootdrop_id(95953) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 95953 AND `item_id` = 22124;
--- lootdrop_id(95953) = Charcoal 
+-- lootdrop_id(95953) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 95953 AND `item_id` = 22125;
--- lootdrop_id(96054) = Rain Water 
+-- lootdrop_id(96054) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 96054 AND `item_id` = 28022;
--- lootdrop_id(96166) = Rain Water 
+-- lootdrop_id(96166) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 96166 AND `item_id` = 28022;
--- lootdrop_id(97736) = Human Blood 
+-- lootdrop_id(97736) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 97736 AND `item_id` = 22514;
--- lootdrop_id(97915) = Lava Rock 
+-- lootdrop_id(97915) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 97915 AND `item_id` = 22521;
--- lootdrop_id(98122) = Russet Oxide 
+-- lootdrop_id(98122) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98122 AND `item_id` = 22123;
--- lootdrop_id(98122) = Iron Oxide 
+-- lootdrop_id(98122) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98122 AND `item_id` = 22124;
--- lootdrop_id(98122) = Charcoal 
+-- lootdrop_id(98122) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98122 AND `item_id` = 22125;
--- lootdrop_id(98122) = Drop of Mercury 
+-- lootdrop_id(98122) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 98122 AND `item_id` = 22517;
--- lootdrop_id(98164) = Russet Oxide 
+-- lootdrop_id(98164) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98164 AND `item_id` = 22123;
--- lootdrop_id(98164) = Iron Oxide 
+-- lootdrop_id(98164) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98164 AND `item_id` = 22124;
--- lootdrop_id(98164) = Charcoal 
+-- lootdrop_id(98164) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98164 AND `item_id` = 22125;
--- lootdrop_id(98515) = Human Blood 
+-- lootdrop_id(98515) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98515 AND `item_id` = 22514;
--- lootdrop_id(98520) = Human Blood 
+-- lootdrop_id(98520) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 98520 AND `item_id` = 22514;
--- lootdrop_id(99480) = Elven Blood 
+-- lootdrop_id(99480) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 99480 AND `item_id` = 22515;
--- lootdrop_id(99643) = Ivory 
+-- lootdrop_id(99643) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 99643 AND `item_id` = 22504;
--- lootdrop_id(99818) = Human Blood 
+-- lootdrop_id(99818) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 99818 AND `item_id` = 22514;
--- lootdrop_id(99820) = Human Blood 
+-- lootdrop_id(99820) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 99820 AND `item_id` = 22514;
--- lootdrop_id(100514) = Permafrost Crystals 
+-- lootdrop_id(100514) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 100514 AND `item_id` = 22121;
--- lootdrop_id(100514) = Essence of Winter 
+-- lootdrop_id(100514) = Essence of Winter
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 100514 AND `item_id` = 22532;
--- lootdrop_id(100522) = Permafrost Crystals 
+-- lootdrop_id(100522) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 100522 AND `item_id` = 22121;
--- lootdrop_id(100522) = Essence of Winter 
+-- lootdrop_id(100522) = Essence of Winter
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 100522 AND `item_id` = 22532;
--- lootdrop_id(100751) = Ivory 
+-- lootdrop_id(100751) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 100751 AND `item_id` = 22504;
--- lootdrop_id(101030) = Elven Blood 
+-- lootdrop_id(101030) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101030 AND `item_id` = 22515;
--- lootdrop_id(101067) = Elven Blood 
+-- lootdrop_id(101067) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101067 AND `item_id` = 22515;
--- lootdrop_id(101174) = Ivory 
+-- lootdrop_id(101174) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 101174 AND `item_id` = 22504;
--- lootdrop_id(101248) = Ivory 
+-- lootdrop_id(101248) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 101248 AND `item_id` = 22504;
--- lootdrop_id(101759) = Russet Oxide 
+-- lootdrop_id(101759) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101759 AND `item_id` = 22123;
--- lootdrop_id(101759) = Iron Oxide 
+-- lootdrop_id(101759) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101759 AND `item_id` = 22124;
--- lootdrop_id(101759) = Charcoal 
+-- lootdrop_id(101759) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101759 AND `item_id` = 22125;
--- lootdrop_id(101794) = Russet Oxide 
+-- lootdrop_id(101794) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101794 AND `item_id` = 22123;
--- lootdrop_id(101794) = Iron Oxide 
+-- lootdrop_id(101794) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101794 AND `item_id` = 22124;
--- lootdrop_id(101794) = Charcoal 
+-- lootdrop_id(101794) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101794 AND `item_id` = 22125;
--- lootdrop_id(101956) = Elven Blood 
+-- lootdrop_id(101956) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 101956 AND `item_id` = 22515;
--- lootdrop_id(102059) = Russet Oxide 
+-- lootdrop_id(102059) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102059 AND `item_id` = 22123;
--- lootdrop_id(102059) = Iron Oxide 
+-- lootdrop_id(102059) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102059 AND `item_id` = 22124;
--- lootdrop_id(102059) = Charcoal 
+-- lootdrop_id(102059) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102059 AND `item_id` = 22125;
--- lootdrop_id(102229) = Rain Water 
+-- lootdrop_id(102229) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102229 AND `item_id` = 28022;
--- lootdrop_id(102455) = Permafrost Crystals 
+-- lootdrop_id(102455) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 102455 AND `item_id` = 22121;
--- lootdrop_id(102460) = Permafrost Crystals 
+-- lootdrop_id(102460) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 102460 AND `item_id` = 22121;
--- lootdrop_id(102466) = Permafrost Crystals 
+-- lootdrop_id(102466) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 102466 AND `item_id` = 22121;
--- lootdrop_id(102510) = Human Blood 
+-- lootdrop_id(102510) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102510 AND `item_id` = 22514;
--- lootdrop_id(102658) = Essence of Shadow 
+-- lootdrop_id(102658) = Essence of Shadow
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 102658 AND `item_id` = 22518;
--- lootdrop_id(102873) = Essence of Sunlight 
+-- lootdrop_id(102873) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 102873 AND `item_id` = 22527;
--- lootdrop_id(102967) = Essence of Sunlight 
+-- lootdrop_id(102967) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 102967 AND `item_id` = 22527;
--- lootdrop_id(103023) = Essence of Sunlight 
+-- lootdrop_id(103023) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103023 AND `item_id` = 22527;
--- lootdrop_id(103172) = Green Froglok Skin 
+-- lootdrop_id(103172) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103172 AND `item_id` = 22134;
--- lootdrop_id(103267) = Scythe 
+-- lootdrop_id(103267) = Scythe
 UPDATE lootdrop_entries SET `chance` = 20 WHERE `lootdrop_id` = 103267 AND `item_id` = 5010;
--- lootdrop_id(103267) = Rusty Scythe 
+-- lootdrop_id(103267) = Rusty Scythe
 UPDATE lootdrop_entries SET `chance` = 25 WHERE `lootdrop_id` = 103267 AND `item_id` = 5015;
--- lootdrop_id(103267) = Bronze Scythe 
+-- lootdrop_id(103267) = Bronze Scythe
 UPDATE lootdrop_entries SET `chance` = 40 WHERE `lootdrop_id` = 103267 AND `item_id` = 5035;
--- lootdrop_id(103473) = Ivory 
+-- lootdrop_id(103473) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103473 AND `item_id` = 22504;
--- lootdrop_id(103564) = Essence of Shadow 
+-- lootdrop_id(103564) = Essence of Shadow
 UPDATE lootdrop_entries SET `multiplier` = 1, `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 103564 AND `item_id` = 22518;
--- lootdrop_id(103613) = Rain Water 
+-- lootdrop_id(103613) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 103613 AND `item_id` = 28022;
--- lootdrop_id(103656) = Jack-O-Lantern Fungus 
+-- lootdrop_id(103656) = Jack-O-Lantern Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 103656 AND `item_id` = 22122;
--- lootdrop_id(103796) = Green Froglok Skin 
+-- lootdrop_id(103796) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103796 AND `item_id` = 22134;
--- lootdrop_id(103866) = Sarcoscypha Fungus 
+-- lootdrop_id(103866) = Sarcoscypha Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103866 AND `item_id` = 22120;
--- lootdrop_id(103877) = Ivory 
+-- lootdrop_id(103877) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 103877 AND `item_id` = 22504;
--- lootdrop_id(104104) = Ivory 
+-- lootdrop_id(104104) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104104 AND `item_id` = 22504;
--- lootdrop_id(104107) = Ivory 
+-- lootdrop_id(104107) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104107 AND `item_id` = 22504;
--- lootdrop_id(104110) = Ivory 
+-- lootdrop_id(104110) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104110 AND `item_id` = 22504;
--- lootdrop_id(104135) = Permafrost Crystals 
+-- lootdrop_id(104135) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104135 AND `item_id` = 22121;
--- lootdrop_id(104192) = Rain Water 
+-- lootdrop_id(104192) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104192 AND `item_id` = 28022;
--- lootdrop_id(104198) = Rain Water 
+-- lootdrop_id(104198) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104198 AND `item_id` = 28022;
--- lootdrop_id(104201) = Rain Water 
+-- lootdrop_id(104201) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104201 AND `item_id` = 28022;
--- lootdrop_id(104223) = Permafrost Crystals 
+-- lootdrop_id(104223) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104223 AND `item_id` = 22121;
--- lootdrop_id(104248) = Rain Water 
+-- lootdrop_id(104248) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104248 AND `item_id` = 28022;
--- lootdrop_id(104376) = Jack-O-Lantern Fungus 
+-- lootdrop_id(104376) = Jack-O-Lantern Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104376 AND `item_id` = 22122;
--- lootdrop_id(104483) = Russet Oxide 
+-- lootdrop_id(104483) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104483 AND `item_id` = 22123;
--- lootdrop_id(104483) = Iron Oxide 
+-- lootdrop_id(104483) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104483 AND `item_id` = 22124;
--- lootdrop_id(104483) = Charcoal 
+-- lootdrop_id(104483) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104483 AND `item_id` = 22125;
--- lootdrop_id(104483) = Lava Rock 
+-- lootdrop_id(104483) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104483 AND `item_id` = 22521;
--- lootdrop_id(104487) = Swirling Mist 
+-- lootdrop_id(104487) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104487 AND `item_id` = 22523;
--- lootdrop_id(104497) = Ivory 
+-- lootdrop_id(104497) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104497 AND `item_id` = 22504;
--- lootdrop_id(104583) = Russet Oxide 
+-- lootdrop_id(104583) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104583 AND `item_id` = 22123;
--- lootdrop_id(104583) = Charcoal 
+-- lootdrop_id(104583) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104583 AND `item_id` = 22125;
--- lootdrop_id(104605) = Swirling Mist 
+-- lootdrop_id(104605) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104605 AND `item_id` = 22523;
--- lootdrop_id(104608) = Essence of Wind 
+-- lootdrop_id(104608) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 104608 AND `item_id` = 10229;
--- lootdrop_id(104608) = Swirling Mist 
+-- lootdrop_id(104608) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104608 AND `item_id` = 22523;
--- lootdrop_id(104714) = Rain Water 
+-- lootdrop_id(104714) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104714 AND `item_id` = 28022;
--- lootdrop_id(104889) = Permafrost Crystals 
+-- lootdrop_id(104889) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104889 AND `item_id` = 22121;
--- lootdrop_id(104889) = Ice Goblin Blood 
+-- lootdrop_id(104889) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104889 AND `item_id` = 22533;
--- lootdrop_id(104890) = Permafrost Crystals 
+-- lootdrop_id(104890) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104890 AND `item_id` = 22121;
--- lootdrop_id(104890) = Ice Goblin Blood 
+-- lootdrop_id(104890) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104890 AND `item_id` = 22533;
--- lootdrop_id(104895) = Ice Goblin Blood 
+-- lootdrop_id(104895) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104895 AND `item_id` = 22533;
--- lootdrop_id(104899) = Permafrost Crystals 
+-- lootdrop_id(104899) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104899 AND `item_id` = 22121;
--- lootdrop_id(104902) = Permafrost Crystals 
+-- lootdrop_id(104902) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104902 AND `item_id` = 22121;
--- lootdrop_id(104905) = Permafrost Crystals 
+-- lootdrop_id(104905) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104905 AND `item_id` = 22121;
--- lootdrop_id(104905) = Ice Goblin Blood 
+-- lootdrop_id(104905) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104905 AND `item_id` = 22533;
--- lootdrop_id(104906) = Permafrost Crystals 
+-- lootdrop_id(104906) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104906 AND `item_id` = 22121;
--- lootdrop_id(104909) = Permafrost Crystals 
+-- lootdrop_id(104909) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 104909 AND `item_id` = 22121;
--- lootdrop_id(104991) = Russet Oxide 
+-- lootdrop_id(104991) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104991 AND `item_id` = 22123;
--- lootdrop_id(104991) = Iron Oxide 
+-- lootdrop_id(104991) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104991 AND `item_id` = 22124;
--- lootdrop_id(104991) = Charcoal 
+-- lootdrop_id(104991) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 104991 AND `item_id` = 22125;
--- lootdrop_id(105048) = Iron Oxide 
+-- lootdrop_id(105048) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105048 AND `item_id` = 22124;
--- lootdrop_id(105056) = Human Blood 
+-- lootdrop_id(105056) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105056 AND `item_id` = 22514;
--- lootdrop_id(105143) = Permafrost Crystals 
+-- lootdrop_id(105143) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105143 AND `item_id` = 22121;
--- lootdrop_id(105231) = Human Blood 
+-- lootdrop_id(105231) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105231 AND `item_id` = 22514;
--- lootdrop_id(105292) = Human Blood 
+-- lootdrop_id(105292) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105292 AND `item_id` = 22514;
--- lootdrop_id(105373) = Lava Rock 
+-- lootdrop_id(105373) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105373 AND `item_id` = 22521;
--- lootdrop_id(105494) = Ivory 
+-- lootdrop_id(105494) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105494 AND `item_id` = 22504;
--- lootdrop_id(105494) = Essence of Winter 
+-- lootdrop_id(105494) = Essence of Winter
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105494 AND `item_id` = 22532;
--- lootdrop_id(105560) = Human Blood 
+-- lootdrop_id(105560) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105560 AND `item_id` = 22514;
--- lootdrop_id(105607) = Ivory 
+-- lootdrop_id(105607) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105607 AND `item_id` = 22504;
--- lootdrop_id(105629) = Ivory 
+-- lootdrop_id(105629) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105629 AND `item_id` = 22504;
--- lootdrop_id(105631) = Ivory 
+-- lootdrop_id(105631) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105631 AND `item_id` = 22504;
--- lootdrop_id(105642) = Ivory 
+-- lootdrop_id(105642) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105642 AND `item_id` = 22504;
--- lootdrop_id(105662) = Ivory 
+-- lootdrop_id(105662) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105662 AND `item_id` = 22504;
--- lootdrop_id(105664) = Ivory 
+-- lootdrop_id(105664) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105664 AND `item_id` = 22504;
--- lootdrop_id(105784) = Griffenne Blood 
+-- lootdrop_id(105784) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105784 AND `item_id` = 22526;
--- lootdrop_id(105792) = Ivory 
+-- lootdrop_id(105792) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105792 AND `item_id` = 22504;
--- lootdrop_id(105811) = Ivory 
+-- lootdrop_id(105811) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105811 AND `item_id` = 22504;
--- lootdrop_id(105815) = Ivory 
+-- lootdrop_id(105815) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105815 AND `item_id` = 22504;
--- lootdrop_id(105870) = Ice Goblin Blood 
+-- lootdrop_id(105870) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105870 AND `item_id` = 22533;
--- lootdrop_id(105872) = Permafrost Crystals 
+-- lootdrop_id(105872) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105872 AND `item_id` = 22121;
--- lootdrop_id(105872) = Ice Goblin Blood 
+-- lootdrop_id(105872) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105872 AND `item_id` = 22533;
--- lootdrop_id(105876) = Permafrost Crystals 
+-- lootdrop_id(105876) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105876 AND `item_id` = 22121;
--- lootdrop_id(105876) = Ice Goblin Blood 
+-- lootdrop_id(105876) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105876 AND `item_id` = 22533;
--- lootdrop_id(105880) = Permafrost Crystals 
+-- lootdrop_id(105880) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105880 AND `item_id` = 22121;
--- lootdrop_id(105880) = Essence of Winter 
+-- lootdrop_id(105880) = Essence of Winter
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105880 AND `item_id` = 22532;
--- lootdrop_id(105893) = Permafrost Crystals 
+-- lootdrop_id(105893) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105893 AND `item_id` = 22121;
--- lootdrop_id(105896) = Ice Goblin Blood 
+-- lootdrop_id(105896) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105896 AND `item_id` = 22533;
--- lootdrop_id(105899) = Permafrost Crystals 
+-- lootdrop_id(105899) = Permafrost Crystals
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105899 AND `item_id` = 22121;
--- lootdrop_id(105899) = Ice Goblin Blood 
+-- lootdrop_id(105899) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105899 AND `item_id` = 22533;
--- lootdrop_id(105922) = Human Blood 
+-- lootdrop_id(105922) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 105922 AND `item_id` = 22514;
--- lootdrop_id(105967) = Swirling Mist 
+-- lootdrop_id(105967) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 105967 AND `item_id` = 22523;
--- lootdrop_id(106097) = Rain Water 
+-- lootdrop_id(106097) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106097 AND `item_id` = 28022;
--- lootdrop_id(106100) = Rain Water 
+-- lootdrop_id(106100) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106100 AND `item_id` = 28022;
--- lootdrop_id(106102) = Rain Water 
+-- lootdrop_id(106102) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106102 AND `item_id` = 28022;
--- lootdrop_id(106137) = Rain Water 
+-- lootdrop_id(106137) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106137 AND `item_id` = 28022;
--- lootdrop_id(106208) = Lava Rock 
+-- lootdrop_id(106208) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106208 AND `item_id` = 22521;
--- lootdrop_id(106223) = Ivory 
+-- lootdrop_id(106223) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106223 AND `item_id` = 22504;
--- lootdrop_id(106227) = Lava Rock 
+-- lootdrop_id(106227) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106227 AND `item_id` = 22521;
--- lootdrop_id(106233) = Russet Oxide 
+-- lootdrop_id(106233) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106233 AND `item_id` = 22123;
--- lootdrop_id(106233) = Iron Oxide 
+-- lootdrop_id(106233) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106233 AND `item_id` = 22124;
--- lootdrop_id(106233) = Charcoal 
+-- lootdrop_id(106233) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106233 AND `item_id` = 22125;
--- lootdrop_id(106260) = Lava Rock 
+-- lootdrop_id(106260) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106260 AND `item_id` = 22521;
--- lootdrop_id(106268) = Ivory 
+-- lootdrop_id(106268) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106268 AND `item_id` = 22504;
--- lootdrop_id(106275) = Dwarven Blood 
+-- lootdrop_id(106275) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106275 AND `item_id` = 22516;
--- lootdrop_id(106385) = Human Blood 
+-- lootdrop_id(106385) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106385 AND `item_id` = 22514;
--- lootdrop_id(106395) = Human Blood 
+-- lootdrop_id(106395) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106395 AND `item_id` = 22514;
--- lootdrop_id(106410) = Rain Water 
+-- lootdrop_id(106410) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106410 AND `item_id` = 28022;
--- lootdrop_id(106426) = Rain Water 
+-- lootdrop_id(106426) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106426 AND `item_id` = 28022;
--- lootdrop_id(106428) = Human Blood 
+-- lootdrop_id(106428) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106428 AND `item_id` = 22514;
--- lootdrop_id(106432) = Human Blood 
+-- lootdrop_id(106432) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106432 AND `item_id` = 22514;
--- lootdrop_id(106580) = Human Blood 
+-- lootdrop_id(106580) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106580 AND `item_id` = 22514;
--- lootdrop_id(106606) = Rain Water 
+-- lootdrop_id(106606) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106606 AND `item_id` = 28022;
--- lootdrop_id(106614) = Human Blood 
+-- lootdrop_id(106614) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106614 AND `item_id` = 22514;
--- lootdrop_id(106617) = Human Blood 
+-- lootdrop_id(106617) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106617 AND `item_id` = 22514;
--- lootdrop_id(106640) = Jack-O-Lantern Fungus 
+-- lootdrop_id(106640) = Jack-O-Lantern Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 106640 AND `item_id` = 22122;
--- lootdrop_id(106645) = Human Blood 
+-- lootdrop_id(106645) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106645 AND `item_id` = 22514;
--- lootdrop_id(106658) = Human Blood 
+-- lootdrop_id(106658) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106658 AND `item_id` = 22514;
--- lootdrop_id(106861) = Rain Water 
+-- lootdrop_id(106861) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106861 AND `item_id` = 28022;
--- lootdrop_id(106867) = Rain Water 
+-- lootdrop_id(106867) = Rain Water
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106867 AND `item_id` = 28022;
--- lootdrop_id(106966) = Human Blood 
+-- lootdrop_id(106966) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 106966 AND `item_id` = 22514;
--- lootdrop_id(107007) = Human Blood 
+-- lootdrop_id(107007) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107007 AND `item_id` = 22514;
--- lootdrop_id(107303) = Ivory 
+-- lootdrop_id(107303) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107303 AND `item_id` = 22504;
--- lootdrop_id(107341) = Ivory 
+-- lootdrop_id(107341) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107341 AND `item_id` = 22504;
--- lootdrop_id(107372) = Human Blood 
+-- lootdrop_id(107372) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107372 AND `item_id` = 22514;
--- lootdrop_id(107448) = Human Blood 
+-- lootdrop_id(107448) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107448 AND `item_id` = 22514;
--- lootdrop_id(107517) = Russet Oxide 
+-- lootdrop_id(107517) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107517 AND `item_id` = 22123;
--- lootdrop_id(107517) = Iron Oxide 
+-- lootdrop_id(107517) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107517 AND `item_id` = 22124;
--- lootdrop_id(107517) = Charcoal 
+-- lootdrop_id(107517) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107517 AND `item_id` = 22125;
--- lootdrop_id(107517) = Lava Rock 
+-- lootdrop_id(107517) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107517 AND `item_id` = 22521;
--- lootdrop_id(107543) = Ivory 
+-- lootdrop_id(107543) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107543 AND `item_id` = 22504;
--- lootdrop_id(107545) = Human Blood 
+-- lootdrop_id(107545) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107545 AND `item_id` = 22514;
--- lootdrop_id(107548) = Human Blood 
+-- lootdrop_id(107548) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107548 AND `item_id` = 22514;
--- lootdrop_id(107559) = Human Blood 
+-- lootdrop_id(107559) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107559 AND `item_id` = 22514;
--- lootdrop_id(107565) = Human Blood 
+-- lootdrop_id(107565) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107565 AND `item_id` = 22514;
--- lootdrop_id(107566) = Human Blood 
+-- lootdrop_id(107566) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107566 AND `item_id` = 22514;
--- lootdrop_id(107896) = Green Froglok Skin 
+-- lootdrop_id(107896) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107896 AND `item_id` = 22134;
--- lootdrop_id(107898) = Green Froglok Skin 
+-- lootdrop_id(107898) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107898 AND `item_id` = 22134;
--- lootdrop_id(107898) = Ivory 
+-- lootdrop_id(107898) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107898 AND `item_id` = 22504;
--- lootdrop_id(107900) = Ivory 
+-- lootdrop_id(107900) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107900 AND `item_id` = 22504;
--- lootdrop_id(107903) = Green Froglok Skin 
+-- lootdrop_id(107903) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107903 AND `item_id` = 22134;
--- lootdrop_id(107904) = Ivory 
+-- lootdrop_id(107904) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 107904 AND `item_id` = 22504;
--- lootdrop_id(107997) = Dwarven Blood 
+-- lootdrop_id(107997) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 107997 AND `item_id` = 22516;
--- lootdrop_id(108029) = Green Froglok Skin 
+-- lootdrop_id(108029) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108029 AND `item_id` = 22134;
--- lootdrop_id(108030) = Green Froglok Skin 
+-- lootdrop_id(108030) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108030 AND `item_id` = 22134;
--- lootdrop_id(108033) = Green Froglok Skin 
+-- lootdrop_id(108033) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108033 AND `item_id` = 22134;
--- lootdrop_id(108035) = Green Froglok Skin 
+-- lootdrop_id(108035) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108035 AND `item_id` = 22134;
--- lootdrop_id(108068) = Human Blood 
+-- lootdrop_id(108068) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108068 AND `item_id` = 22514;
--- lootdrop_id(108086) = Elven Blood 
+-- lootdrop_id(108086) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108086 AND `item_id` = 22515;
--- lootdrop_id(108088) = Dwarven Blood 
+-- lootdrop_id(108088) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108088 AND `item_id` = 22516;
--- lootdrop_id(108094) = Green Froglok Skin 
+-- lootdrop_id(108094) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108094 AND `item_id` = 22134;
--- lootdrop_id(108152) = Griffenne Blood 
+-- lootdrop_id(108152) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108152 AND `item_id` = 22526;
--- lootdrop_id(108177) = Ivory 
+-- lootdrop_id(108177) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108177 AND `item_id` = 22504;
--- lootdrop_id(108179) = Ivory 
+-- lootdrop_id(108179) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108179 AND `item_id` = 22504;
--- lootdrop_id(108183) = Ivory 
+-- lootdrop_id(108183) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108183 AND `item_id` = 22504;
--- lootdrop_id(108188) = Ivory 
+-- lootdrop_id(108188) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108188 AND `item_id` = 22504;
--- lootdrop_id(108210) = Ivory 
+-- lootdrop_id(108210) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108210 AND `item_id` = 22504;
--- lootdrop_id(108224) = Ivory 
+-- lootdrop_id(108224) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108224 AND `item_id` = 22504;
--- lootdrop_id(108229) = Russet Oxide 
+-- lootdrop_id(108229) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108229 AND `item_id` = 22123;
--- lootdrop_id(108229) = Iron Oxide 
+-- lootdrop_id(108229) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108229 AND `item_id` = 22124;
--- lootdrop_id(108229) = Charcoal 
+-- lootdrop_id(108229) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108229 AND `item_id` = 22125;
--- lootdrop_id(108232) = Ivory 
+-- lootdrop_id(108232) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108232 AND `item_id` = 22504;
--- lootdrop_id(108233) = Ivory 
+-- lootdrop_id(108233) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108233 AND `item_id` = 22504;
--- lootdrop_id(108439) = Russet Oxide 
+-- lootdrop_id(108439) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108439 AND `item_id` = 22123;
--- lootdrop_id(108439) = Iron Oxide 
+-- lootdrop_id(108439) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108439 AND `item_id` = 22124;
--- lootdrop_id(108439) = Charcoal 
+-- lootdrop_id(108439) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108439 AND `item_id` = 22125;
--- lootdrop_id(108480) = Green Froglok Skin 
+-- lootdrop_id(108480) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108480 AND `item_id` = 22134;
--- lootdrop_id(108501) = Green Froglok Skin 
+-- lootdrop_id(108501) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108501 AND `item_id` = 22134;
--- lootdrop_id(108504) = Green Froglok Skin 
+-- lootdrop_id(108504) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108504 AND `item_id` = 22134;
--- lootdrop_id(108597) = Green Froglok Skin 
+-- lootdrop_id(108597) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108597 AND `item_id` = 22134;
--- lootdrop_id(108608) = Green Froglok Skin 
+-- lootdrop_id(108608) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108608 AND `item_id` = 22134;
--- lootdrop_id(108611) = Green Froglok Skin 
+-- lootdrop_id(108611) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108611 AND `item_id` = 22134;
--- lootdrop_id(108624) = Green Froglok Skin 
+-- lootdrop_id(108624) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108624 AND `item_id` = 22134;
--- lootdrop_id(108629) = Green Froglok Skin 
+-- lootdrop_id(108629) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108629 AND `item_id` = 22134;
--- lootdrop_id(108634) = Green Froglok Skin 
+-- lootdrop_id(108634) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108634 AND `item_id` = 22134;
--- lootdrop_id(108637) = Green Froglok Skin 
+-- lootdrop_id(108637) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108637 AND `item_id` = 22134;
--- lootdrop_id(108640) = Green Froglok Skin 
+-- lootdrop_id(108640) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108640 AND `item_id` = 22134;
--- lootdrop_id(108644) = Green Froglok Skin 
+-- lootdrop_id(108644) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108644 AND `item_id` = 22134;
--- lootdrop_id(108647) = Green Froglok Skin 
+-- lootdrop_id(108647) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108647 AND `item_id` = 22134;
--- lootdrop_id(108650) = Green Froglok Skin 
+-- lootdrop_id(108650) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108650 AND `item_id` = 22134;
--- lootdrop_id(108656) = Green Froglok Skin 
+-- lootdrop_id(108656) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108656 AND `item_id` = 22134;
--- lootdrop_id(108659) = Green Froglok Skin 
+-- lootdrop_id(108659) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108659 AND `item_id` = 22134;
--- lootdrop_id(108670) = Green Froglok Skin 
+-- lootdrop_id(108670) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108670 AND `item_id` = 22134;
--- lootdrop_id(108673) = Green Froglok Skin 
+-- lootdrop_id(108673) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 108673 AND `item_id` = 22134;
--- lootdrop_id(108871) = Green Froglok Skin 
+-- lootdrop_id(108871) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 108871 AND `item_id` = 22134;
--- lootdrop_id(109022) = Wild Lord's Sleeves 
+-- lootdrop_id(109022) = Wild Lord's Sleeves
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 109022 AND `item_id` = 5462;
--- lootdrop_id(109222) = Griffenne Blood 
+-- lootdrop_id(109222) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109222 AND `item_id` = 22526;
--- lootdrop_id(109328) = Essence of Winter 
+-- lootdrop_id(109328) = Essence of Winter
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109328 AND `item_id` = 22532;
--- lootdrop_id(109393) = Wild Lord's Gauntlets 
+-- lootdrop_id(109393) = Wild Lord's Gauntlets
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 109393 AND `item_id` = 5464;
--- lootdrop_id(109430) = Wild Lord's Sandals 
+-- lootdrop_id(109430) = Wild Lord's Sandals
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 109430 AND `item_id` = 5466;
--- lootdrop_id(109522) = Essence of Sunlight 
+-- lootdrop_id(109522) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109522 AND `item_id` = 22527;
--- lootdrop_id(109530) = Essence of Sunlight 
+-- lootdrop_id(109530) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109530 AND `item_id` = 22527;
--- lootdrop_id(109552) = Lava Rock 
+-- lootdrop_id(109552) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109552 AND `item_id` = 22521;
--- lootdrop_id(109557) = Lava Rock 
+-- lootdrop_id(109557) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109557 AND `item_id` = 22521;
--- lootdrop_id(109561) = Lava Rock 
+-- lootdrop_id(109561) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109561 AND `item_id` = 22521;
--- lootdrop_id(109574) = Iron Oxide 
+-- lootdrop_id(109574) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109574 AND `item_id` = 22124;
--- lootdrop_id(109574) = Charcoal 
+-- lootdrop_id(109574) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109574 AND `item_id` = 22125;
--- lootdrop_id(109574) = Drop of Mercury 
+-- lootdrop_id(109574) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109574 AND `item_id` = 22517;
--- lootdrop_id(109578) = Charcoal 
+-- lootdrop_id(109578) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109578 AND `item_id` = 22125;
--- lootdrop_id(109578) = Drop of Mercury 
+-- lootdrop_id(109578) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109578 AND `item_id` = 22517;
--- lootdrop_id(109601) = Russet Oxide 
+-- lootdrop_id(109601) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109601 AND `item_id` = 22123;
--- lootdrop_id(109601) = Iron Oxide 
+-- lootdrop_id(109601) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109601 AND `item_id` = 22124;
--- lootdrop_id(109601) = Charcoal 
+-- lootdrop_id(109601) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109601 AND `item_id` = 22125;
--- lootdrop_id(109601) = Drop of Mercury 
+-- lootdrop_id(109601) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 109601 AND `item_id` = 22517;
--- lootdrop_id(109639) = Green Froglok Skin 
+-- lootdrop_id(109639) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109639 AND `item_id` = 22134;
--- lootdrop_id(109647) = Green Froglok Skin 
+-- lootdrop_id(109647) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109647 AND `item_id` = 22134;
--- lootdrop_id(109668) = Human Blood 
+-- lootdrop_id(109668) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109668 AND `item_id` = 22514;
--- lootdrop_id(109670) = Human Blood 
+-- lootdrop_id(109670) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109670 AND `item_id` = 22514;
--- lootdrop_id(109730) = Human Blood 
+-- lootdrop_id(109730) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109730 AND `item_id` = 22514;
--- lootdrop_id(110060) = Ivory 
+-- lootdrop_id(110060) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110060 AND `item_id` = 22504;
--- lootdrop_id(110084) = Ivory 
+-- lootdrop_id(110084) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110084 AND `item_id` = 22504;
--- lootdrop_id(110140) = Ivory 
+-- lootdrop_id(110140) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110140 AND `item_id` = 22504;
--- lootdrop_id(110520) = Ivory 
+-- lootdrop_id(110520) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110520 AND `item_id` = 22504;
--- lootdrop_id(110854) = Ivory 
+-- lootdrop_id(110854) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110854 AND `item_id` = 22504;
--- lootdrop_id(110857) = Ivory 
+-- lootdrop_id(110857) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110857 AND `item_id` = 22504;
--- lootdrop_id(110859) = Ivory 
+-- lootdrop_id(110859) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110859 AND `item_id` = 22504;
--- lootdrop_id(110861) = Ivory 
+-- lootdrop_id(110861) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110861 AND `item_id` = 22504;
--- lootdrop_id(110865) = Ivory 
+-- lootdrop_id(110865) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110865 AND `item_id` = 22504;
--- lootdrop_id(110868) = Ivory 
+-- lootdrop_id(110868) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110868 AND `item_id` = 22504;
--- lootdrop_id(110872) = Ivory 
+-- lootdrop_id(110872) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110872 AND `item_id` = 22504;
--- lootdrop_id(110875) = Ivory 
+-- lootdrop_id(110875) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110875 AND `item_id` = 22504;
--- lootdrop_id(110878) = Ivory 
+-- lootdrop_id(110878) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110878 AND `item_id` = 22504;
--- lootdrop_id(110884) = Ivory 
+-- lootdrop_id(110884) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110884 AND `item_id` = 22504;
--- lootdrop_id(110893) = Ivory 
+-- lootdrop_id(110893) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110893 AND `item_id` = 22504;
--- lootdrop_id(110897) = Ivory 
+-- lootdrop_id(110897) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 110897 AND `item_id` = 22504;
--- lootdrop_id(111890) = Ivory 
+-- lootdrop_id(111890) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111890 AND `item_id` = 22504;
--- lootdrop_id(111913) = Ivory 
+-- lootdrop_id(111913) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111913 AND `item_id` = 22504;
--- lootdrop_id(111916) = Ivory 
+-- lootdrop_id(111916) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111916 AND `item_id` = 22504;
--- lootdrop_id(111955) = Ivory 
+-- lootdrop_id(111955) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111955 AND `item_id` = 22504;
--- lootdrop_id(111991) = Ivory 
+-- lootdrop_id(111991) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111991 AND `item_id` = 22504;
--- lootdrop_id(111994) = Ivory 
+-- lootdrop_id(111994) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 111994 AND `item_id` = 22504;
--- lootdrop_id(112007) = Essence of Sunlight 
+-- lootdrop_id(112007) = Essence of Sunlight
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 112007 AND `item_id` = 22527;
--- lootdrop_id(112190) = Ivory 
+-- lootdrop_id(112190) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 112190 AND `item_id` = 22504;
--- lootdrop_id(112934) = Ivory 
+-- lootdrop_id(112934) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 112934 AND `item_id` = 22504;
--- lootdrop_id(112984) = Human Blood 
+-- lootdrop_id(112984) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 112984 AND `item_id` = 22514;
--- lootdrop_id(112997) = Ivory 
+-- lootdrop_id(112997) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 112997 AND `item_id` = 22504;
--- lootdrop_id(113121) = Russet Oxide 
+-- lootdrop_id(113121) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113121 AND `item_id` = 22123;
--- lootdrop_id(113121) = Iron Oxide 
+-- lootdrop_id(113121) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113121 AND `item_id` = 22124;
--- lootdrop_id(113121) = Charcoal 
+-- lootdrop_id(113121) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113121 AND `item_id` = 22125;
--- lootdrop_id(113187) = Russet Oxide 
+-- lootdrop_id(113187) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113187 AND `item_id` = 22123;
--- lootdrop_id(113187) = Iron Oxide 
+-- lootdrop_id(113187) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113187 AND `item_id` = 22124;
--- lootdrop_id(113187) = Charcoal 
+-- lootdrop_id(113187) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113187 AND `item_id` = 22125;
--- lootdrop_id(113190) = Russet Oxide 
+-- lootdrop_id(113190) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113190 AND `item_id` = 22123;
--- lootdrop_id(113190) = Iron Oxide 
+-- lootdrop_id(113190) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113190 AND `item_id` = 22124;
--- lootdrop_id(113190) = Charcoal 
+-- lootdrop_id(113190) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113190 AND `item_id` = 22125;
--- lootdrop_id(113450) = Russet Oxide 
+-- lootdrop_id(113450) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113450 AND `item_id` = 22123;
--- lootdrop_id(113450) = Iron Oxide 
+-- lootdrop_id(113450) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113450 AND `item_id` = 22124;
--- lootdrop_id(113450) = Charcoal 
+-- lootdrop_id(113450) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113450 AND `item_id` = 22125;
--- lootdrop_id(113616) = Swirling Mist 
+-- lootdrop_id(113616) = Swirling Mist
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113616 AND `item_id` = 22523;
--- lootdrop_id(113657) = Russet Oxide 
+-- lootdrop_id(113657) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113657 AND `item_id` = 22123;
--- lootdrop_id(113657) = Iron Oxide 
+-- lootdrop_id(113657) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113657 AND `item_id` = 22124;
--- lootdrop_id(113657) = Charcoal 
+-- lootdrop_id(113657) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113657 AND `item_id` = 22125;
--- lootdrop_id(113657) = Lava Rock 
+-- lootdrop_id(113657) = Lava Rock
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 113657 AND `item_id` = 22521;
--- lootdrop_id(113662) = Essence of Wind 
+-- lootdrop_id(113662) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113662 AND `item_id` = 10229;
--- lootdrop_id(113665) = Essence of Wind 
+-- lootdrop_id(113665) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113665 AND `item_id` = 10229;
--- lootdrop_id(113668) = Essence of Wind 
+-- lootdrop_id(113668) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113668 AND `item_id` = 10229;
--- lootdrop_id(113669) = Essence of Wind 
+-- lootdrop_id(113669) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113669 AND `item_id` = 10229;
--- lootdrop_id(113670) = Russet Oxide 
+-- lootdrop_id(113670) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113670 AND `item_id` = 22123;
--- lootdrop_id(113670) = Iron Oxide 
+-- lootdrop_id(113670) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113670 AND `item_id` = 22124;
--- lootdrop_id(113670) = Charcoal 
+-- lootdrop_id(113670) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113670 AND `item_id` = 22125;
--- lootdrop_id(113670) = Drop of Mercury 
+-- lootdrop_id(113670) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 113670 AND `item_id` = 22517;
--- lootdrop_id(113672) = Essence of Wind 
+-- lootdrop_id(113672) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113672 AND `item_id` = 10229;
--- lootdrop_id(113693) = Essence of Wind 
+-- lootdrop_id(113693) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113693 AND `item_id` = 10229;
--- lootdrop_id(113696) = Essence of Wind 
+-- lootdrop_id(113696) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113696 AND `item_id` = 10229;
--- lootdrop_id(113711) = Essence of Wind 
+-- lootdrop_id(113711) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113711 AND `item_id` = 10229;
--- lootdrop_id(113988) = Ivory 
+-- lootdrop_id(113988) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 113988 AND `item_id` = 22504;
--- lootdrop_id(113989) = Essence of Wind 
+-- lootdrop_id(113989) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 113989 AND `item_id` = 10229;
--- lootdrop_id(113991) = Ivory 
+-- lootdrop_id(113991) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 113991 AND `item_id` = 22504;
--- lootdrop_id(114022) = Ivory 
+-- lootdrop_id(114022) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114022 AND `item_id` = 22504;
--- lootdrop_id(114023) = Essence of Wind 
+-- lootdrop_id(114023) = Essence of Wind
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 114023 AND `item_id` = 10229;
--- lootdrop_id(114050) = Ivory 
+-- lootdrop_id(114050) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114050 AND `item_id` = 22504;
--- lootdrop_id(114123) = Ivory 
+-- lootdrop_id(114123) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114123 AND `item_id` = 22504;
--- lootdrop_id(114166) = Ivory 
+-- lootdrop_id(114166) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114166 AND `item_id` = 22504;
--- lootdrop_id(114197) = Ivory 
+-- lootdrop_id(114197) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114197 AND `item_id` = 22504;
--- lootdrop_id(114203) = Ivory 
+-- lootdrop_id(114203) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114203 AND `item_id` = 22504;
--- lootdrop_id(114216) = Ivory 
+-- lootdrop_id(114216) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114216 AND `item_id` = 22504;
--- lootdrop_id(114218) = Ivory 
+-- lootdrop_id(114218) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 114218 AND `item_id` = 22504;
--- lootdrop_id(114219) = Griffenne Blood 
+-- lootdrop_id(114219) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114219 AND `item_id` = 22526;
--- lootdrop_id(114220) = Griffenne Blood 
+-- lootdrop_id(114220) = Griffenne Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114220 AND `item_id` = 22526;
--- lootdrop_id(114368) = Russet Oxide 
+-- lootdrop_id(114368) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114368 AND `item_id` = 22123;
--- lootdrop_id(114368) = Iron Oxide 
+-- lootdrop_id(114368) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114368 AND `item_id` = 22124;
--- lootdrop_id(114368) = Charcoal 
+-- lootdrop_id(114368) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114368 AND `item_id` = 22125;
--- lootdrop_id(114370) = Russet Oxide 
+-- lootdrop_id(114370) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114370 AND `item_id` = 22123;
--- lootdrop_id(114370) = Iron Oxide 
+-- lootdrop_id(114370) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114370 AND `item_id` = 22124;
--- lootdrop_id(114370) = Charcoal 
+-- lootdrop_id(114370) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114370 AND `item_id` = 22125;
--- lootdrop_id(114372) = Russet Oxide 
+-- lootdrop_id(114372) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114372 AND `item_id` = 22123;
--- lootdrop_id(114372) = Iron Oxide 
+-- lootdrop_id(114372) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114372 AND `item_id` = 22124;
--- lootdrop_id(114372) = Charcoal 
+-- lootdrop_id(114372) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114372 AND `item_id` = 22125;
--- lootdrop_id(114378) = Russet Oxide 
+-- lootdrop_id(114378) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114378 AND `item_id` = 22123;
--- lootdrop_id(114378) = Iron Oxide 
+-- lootdrop_id(114378) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114378 AND `item_id` = 22124;
--- lootdrop_id(114378) = Charcoal 
+-- lootdrop_id(114378) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114378 AND `item_id` = 22125;
--- lootdrop_id(114426) = Human Blood 
+-- lootdrop_id(114426) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 114426 AND `item_id` = 22514;
--- lootdrop_id(115383) = Human Blood 
+-- lootdrop_id(115383) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115383 AND `item_id` = 22514;
--- lootdrop_id(115506) = Human Blood 
+-- lootdrop_id(115506) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115506 AND `item_id` = 22514;
--- lootdrop_id(115593) = Human Blood 
+-- lootdrop_id(115593) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115593 AND `item_id` = 22514;
--- lootdrop_id(115626) = Human Blood 
+-- lootdrop_id(115626) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115626 AND `item_id` = 22514;
--- lootdrop_id(115633) = Human Blood 
+-- lootdrop_id(115633) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115633 AND `item_id` = 22514;
--- lootdrop_id(115634) = Human Blood 
+-- lootdrop_id(115634) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115634 AND `item_id` = 22514;
--- lootdrop_id(115765) = Sarcoscypha Fungus 
+-- lootdrop_id(115765) = Sarcoscypha Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115765 AND `item_id` = 22120;
--- lootdrop_id(115770) = Sarcoscypha Fungus 
+-- lootdrop_id(115770) = Sarcoscypha Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115770 AND `item_id` = 22120;
--- lootdrop_id(115784) = Human Blood 
+-- lootdrop_id(115784) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115784 AND `item_id` = 22514;
--- lootdrop_id(115789) = Human Blood 
+-- lootdrop_id(115789) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115789 AND `item_id` = 22514;
--- lootdrop_id(115794) = Human Blood 
+-- lootdrop_id(115794) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115794 AND `item_id` = 22514;
--- lootdrop_id(115795) = Dwarven Blood 
+-- lootdrop_id(115795) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115795 AND `item_id` = 22516;
--- lootdrop_id(115834) = Elven Blood 
+-- lootdrop_id(115834) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115834 AND `item_id` = 22515;
--- lootdrop_id(115880) = Russet Oxide 
+-- lootdrop_id(115880) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115880 AND `item_id` = 22123;
--- lootdrop_id(115880) = Iron Oxide 
+-- lootdrop_id(115880) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115880 AND `item_id` = 22124;
--- lootdrop_id(115880) = Charcoal 
+-- lootdrop_id(115880) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115880 AND `item_id` = 22125;
--- lootdrop_id(115880) = Drop of Mercury 
+-- lootdrop_id(115880) = Drop of Mercury
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 115880 AND `item_id` = 22517;
--- lootdrop_id(115988) = Human Blood 
+-- lootdrop_id(115988) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 115988 AND `item_id` = 22514;
--- lootdrop_id(116028) = Ivory 
+-- lootdrop_id(116028) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 116028 AND `item_id` = 22504;
--- lootdrop_id(116029) = Green Froglok Skin 
+-- lootdrop_id(116029) = Green Froglok Skin
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 116029 AND `item_id` = 22134;
--- lootdrop_id(116033) = Ivory 
+-- lootdrop_id(116033) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 116033 AND `item_id` = 22504;
--- lootdrop_id(116038) = Human Blood 
+-- lootdrop_id(116038) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116038 AND `item_id` = 22514;
--- lootdrop_id(116058) = Morning Dew 
+-- lootdrop_id(116058) = Morning Dew
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 116058 AND `item_id` = 16594;
--- lootdrop_id(116102) = Elven Blood 
+-- lootdrop_id(116102) = Elven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116102 AND `item_id` = 22515;
--- lootdrop_id(116104) = Human Blood 
+-- lootdrop_id(116104) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116104 AND `item_id` = 22514;
--- lootdrop_id(116262) = Ivory 
+-- lootdrop_id(116262) = Ivory
 UPDATE lootdrop_entries SET `min_expansion` = 1 WHERE `lootdrop_id` = 116262 AND `item_id` = 22504;
--- lootdrop_id(116281) = Jack-O-Lantern Fungus 
+-- lootdrop_id(116281) = Jack-O-Lantern Fungus
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116281 AND `item_id` = 22122;
--- lootdrop_id(116299) = Charcoal 
+-- lootdrop_id(116299) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116299 AND `item_id` = 22125;
--- lootdrop_id(116312) = Ice Goblin Blood 
+-- lootdrop_id(116312) = Ice Goblin Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116312 AND `item_id` = 22533;
--- lootdrop_id(116326) = Human Blood 
+-- lootdrop_id(116326) = Human Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116326 AND `item_id` = 22514;
--- lootdrop_id(116342) = Dwarven Blood 
+-- lootdrop_id(116342) = Dwarven Blood
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116342 AND `item_id` = 22516;
--- lootdrop_id(116405) = Russet Oxide 
+-- lootdrop_id(116405) = Russet Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116405 AND `item_id` = 22123;
--- lootdrop_id(116405) = Iron Oxide 
+-- lootdrop_id(116405) = Iron Oxide
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116405 AND `item_id` = 22124;
--- lootdrop_id(116405) = Charcoal 
+-- lootdrop_id(116405) = Charcoal
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 116405 AND `item_id` = 22125;
--- loottable_id(92630)  
+-- loottable_id(92630) = Array
 UPDATE loottable_entries SET `mindrop` = 0 WHERE `loottable_id` = 92630 AND `lootdrop_id` = 103267;
--- loottable_id(94568)  
+-- loottable_id(94568) = Array
 UPDATE loottable_entries SET `droplimit` = 0 WHERE `loottable_id` = 94568 AND `lootdrop_id` = 108778;
--- id(6) = Default Cleric List/Reckoning 
+-- id(6) = Default Cleric List/Reckoning
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 6;
--- id(7) = Default Cleric List/Judgement 
+-- id(7) = Default Cleric List/Judgement
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 7;
--- id(11) = Default Cleric List/Upheaval 
+-- id(11) = Default Cleric List/Upheaval
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 11;
--- id(12) = Default Cleric List/Catastrophe 
+-- id(12) = Default Cleric List/Catastrophe
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 12;
--- id(18) = Default Cleric List/The Unspoken Word 
+-- id(18) = Default Cleric List/The Unspoken Word
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18;
--- id(28) = Default Cleric List/Annul Magic 
+-- id(28) = Default Cleric List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 28;
--- id(37) = Default Cleric List/Remedy 
+-- id(37) = Default Cleric List/Remedy
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 37;
--- id(38) = Default Cleric List/Divine Light 
+-- id(38) = Default Cleric List/Divine Light
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 38;
--- id(39) = Default Cleric List/Ethereal Light 
+-- id(39) = Default Cleric List/Ethereal Light
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 39;
--- id(54) = Default Cleric List/Heroism 
+-- id(54) = Default Cleric List/Heroism
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 54;
--- id(88) = Default Cleric List/Symbol of Marzin 
+-- id(88) = Default Cleric List/Symbol of Marzin
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 88;
--- id(89) = Default Cleric List/Symbol of Kazad 
+-- id(89) = Default Cleric List/Symbol of Kazad
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 89;
--- id(91) = Default Cleric List/Armor of Protection 
+-- id(91) = Default Cleric List/Armor of Protection
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 91;
--- id(92) = Default Cleric List/Armor of the Faithful 
+-- id(92) = Default Cleric List/Armor of the Faithful
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 92;
--- id(93) = Default Cleric List/Blessed Armor of the Risen 
+-- id(93) = Default Cleric List/Blessed Armor of the Risen
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 93;
--- id(183) = Default Necromancer List/Conglaciation of Bone 
+-- id(183) = Default Necromancer List/Conglaciation of Bone
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 183;
--- id(186) = Default Necromancer List/Torbas' Acid Blast 
+-- id(186) = Default Necromancer List/Torbas' Acid Blast
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 186;
--- id(187) = Default Necromancer List/Torbas' Poison Blast 
+-- id(187) = Default Necromancer List/Torbas' Poison Blast
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 187;
--- id(188) = Default Necromancer List/Torbas' Venom Blast 
+-- id(188) = Default Necromancer List/Torbas' Venom Blast
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 188;
--- id(191) = Default Necromancer List/Paralyzing Earth 
+-- id(191) = Default Necromancer List/Paralyzing Earth
 UPDATE npc_spells_entries SET `maxlevel` = 62 WHERE `id` = 191;
--- id(194) = Default Necromancer List/Greater Immobilize 
+-- id(194) = Default Necromancer List/Greater Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 194;
--- id(208) = Default Necromancer List/Manaskin 
+-- id(208) = Default Necromancer List/Manaskin
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 208;
--- id(209) = Default Necromancer List/Force Shield 
+-- id(209) = Default Necromancer List/Force Shield
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 209;
--- id(235) = Default Necromancer List/Deflux 
+-- id(235) = Default Necromancer List/Deflux
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 235;
--- id(236) = Default Necromancer List/Touch of Night 
+-- id(236) = Default Necromancer List/Touch of Night
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 236;
--- id(237) = Default Necromancer List/Gangrenous Touch of Zum`uul 
+-- id(237) = Default Necromancer List/Gangrenous Touch of Zum`uul
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 237;
--- id(238) = Default Necromancer List/Touch of Mujaki 
+-- id(238) = Default Necromancer List/Touch of Mujaki
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 238;
--- id(243) = Default Necromancer List/Devouring Darkness 
+-- id(243) = Default Necromancer List/Devouring Darkness
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 243;
--- id(244) = Default Necromancer List/Embracing Darkness 
+-- id(244) = Default Necromancer List/Embracing Darkness
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 244;
--- id(248) = Default Necromancer List/Blood of Thule 
+-- id(248) = Default Necromancer List/Blood of Thule
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 248;
--- id(252) = Default Necromancer List/Pyrocruor 
+-- id(252) = Default Necromancer List/Pyrocruor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 252;
--- id(257) = Default Necromancer List/Dark Plague 
+-- id(257) = Default Necromancer List/Dark Plague
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 257;
--- id(259) = Default Necromancer List/Chilling Embrace 
+-- id(259) = Default Necromancer List/Chilling Embrace
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 259;
--- id(261) = Default Necromancer List/Vexing Mordinia 
+-- id(261) = Default Necromancer List/Vexing Mordinia
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 261;
--- id(262) = Default Necromancer List/Cessation of Cor 
+-- id(262) = Default Necromancer List/Cessation of Cor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 262;
--- id(263) = Default Necromancer List/Neurotoxin 
+-- id(263) = Default Necromancer List/Neurotoxin
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 263;
--- id(264) = Default Necromancer List/Saryrn's Kiss 
+-- id(264) = Default Necromancer List/Saryrn's Kiss
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 264;
--- id(272) = Default Magician List/Char 
+-- id(272) = Default Magician List/Char
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 272;
--- id(273) = Default Magician List/Scars of Sigil 
+-- id(273) = Default Magician List/Scars of Sigil
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 273;
--- id(275) = Default Magician List/Shock of Fiery Blades 
+-- id(275) = Default Magician List/Shock of Fiery Blades
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 275;
--- id(277) = Default Magician List/Sun Vortex 
+-- id(277) = Default Magician List/Sun Vortex
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 277;
--- id(281) = Default Magician List/Shock of Steel 
+-- id(281) = Default Magician List/Shock of Steel
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 281;
--- id(282) = Default Magician List/Black Steel 
+-- id(282) = Default Magician List/Black Steel
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 282;
--- id(286) = Default Magician List/Sirocco 
+-- id(286) = Default Magician List/Sirocco
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 286;
--- id(287) = Default Magician List/Sun Storm 
+-- id(287) = Default Magician List/Sun Storm
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 287;
--- id(291) = Default Magician List/Manastorm 
+-- id(291) = Default Magician List/Manastorm
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 291;
--- id(292) = Default Magician List/Maelstrom of Electricity 
+-- id(292) = Default Magician List/Maelstrom of Electricity
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 292;
--- id(293) = Default Magician List/Maelstrom of Thunder 
+-- id(293) = Default Magician List/Maelstrom of Thunder
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 293;
--- id(294) = Default Magician List/Elemental Maelstrom 
+-- id(294) = Default Magician List/Elemental Maelstrom
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 294;
--- id(295) = Default Magician List/Wrath of the Elements 
+-- id(295) = Default Magician List/Wrath of the Elements
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 295;
--- id(296) = Default Magician List/Malaise 
+-- id(296) = Default Magician List/Malaise
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 296;
--- id(297) = Default Magician List/Malaisement 
+-- id(297) = Default Magician List/Malaisement
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 297;
--- id(298) = Default Magician List/Malosi 
+-- id(298) = Default Magician List/Malosi
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 298;
--- id(299) = Default Magician List/Malosini 
+-- id(299) = Default Magician List/Malosini
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 299;
--- id(300) = Default Magician List/Mala 
+-- id(300) = Default Magician List/Mala
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 300;
--- id(301) = Default Magician List/Malosinia 
+-- id(301) = Default Magician List/Malosinia
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 301;
--- id(304) = Default Magician List/Annul Magic 
+-- id(304) = Default Magician List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 304;
--- id(323) = Default Magician List/Cadeau of Flame 
+-- id(323) = Default Magician List/Cadeau of Flame
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 323;
--- id(324) = Default Magician List/Flameshield of Ro 
+-- id(324) = Default Magician List/Flameshield of Ro
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 324;
--- id(522) = Default Shaman List/Ice Strike 
+-- id(522) = Default Shaman List/Ice Strike
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 522;
--- id(523) = Default Shaman List/Velium Strike 
+-- id(523) = Default Shaman List/Velium Strike
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 523;
--- id(525) = Default Shaman List/Shock of the Tainted 
+-- id(525) = Default Shaman List/Shock of the Tainted
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 525;
--- id(527) = Default Shaman List/Blast of Poison 
+-- id(527) = Default Shaman List/Blast of Poison
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 527;
--- id(528) = Default Shaman List/Shock of Venom 
+-- id(528) = Default Shaman List/Shock of Venom
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 528;
--- id(529) = Default Shaman List/Blast of Venom 
+-- id(529) = Default Shaman List/Blast of Venom
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 529;
--- id(530) = Default Shaman List/Torrent of Poison 
+-- id(530) = Default Shaman List/Torrent of Poison
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 530;
--- id(531) = Default Shaman List/Spear of Torment 
+-- id(531) = Default Shaman List/Spear of Torment
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 531;
--- id(532) = Default Shaman List/Tears of Saryrn 
+-- id(532) = Default Shaman List/Tears of Saryrn
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 532;
--- id(539) = Default Shaman List/Pox of Bertoxxulous 
+-- id(539) = Default Shaman List/Pox of Bertoxxulous
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 539;
--- id(540) = Default Shaman List/Breath of Ultor 
+-- id(540) = Default Shaman List/Breath of Ultor
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 540;
--- id(545) = Default Shaman List/Bane of Nife 
+-- id(545) = Default Shaman List/Bane of Nife
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 545;
--- id(547) = Default Shaman List/Blood of Saryrn 
+-- id(547) = Default Shaman List/Blood of Saryrn
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 547;
--- id(551) = Default Shaman List/Malosini 
+-- id(551) = Default Shaman List/Malosini
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 551;
--- id(552) = Default Shaman List/Malo 
+-- id(552) = Default Shaman List/Malo
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 552;
--- id(554) = Default Shaman List/Malos 
+-- id(554) = Default Shaman List/Malos
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 554;
--- id(559) = Default Shaman List/Turgur's Insects 
+-- id(559) = Default Shaman List/Turgur's Insects
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 559;
--- id(560) = Default Shaman List/Tigir's Insects 
+-- id(560) = Default Shaman List/Tigir's Insects
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 560;
--- id(564) = Default Shaman List/Cripple 
+-- id(564) = Default Shaman List/Cripple
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 564;
--- id(567) = Default Shaman List/Insidious Decay 
+-- id(567) = Default Shaman List/Insidious Decay
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 567;
--- id(568) = Default Shaman List/Malicious Decay 
+-- id(568) = Default Shaman List/Malicious Decay
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 568;
--- id(571) = Default Shaman List/Annul Magic 
+-- id(571) = Default Shaman List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 571;
--- id(578) = Default Shaman List/Immobilize 
+-- id(578) = Default Shaman List/Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 578;
--- id(579) = Default Shaman List/Paralyzing Earth 
+-- id(579) = Default Shaman List/Paralyzing Earth
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 579;
--- id(580) = Default Shaman List/Greater Immobilize 
+-- id(580) = Default Shaman List/Greater Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 580;
--- id(581) = Default Shaman List/Petrifying Earth 
+-- id(581) = Default Shaman List/Petrifying Earth
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 581;
--- id(582) = Default Shaman List/Inner Fire 
+-- id(582) = Default Shaman List/Inner Fire
 UPDATE npc_spells_entries SET `maxlevel` = 255 WHERE `id` = 582;
--- id(588) = Default Shaman List/Shroud of the Spirits 
+-- id(588) = Default Shaman List/Shroud of the Spirits
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 588;
--- id(589) = Default Shaman List/Ancestral Guard 
+-- id(589) = Default Shaman List/Ancestral Guard
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 589;
--- id(635) = Default Shaman List/Celerity 
+-- id(635) = Default Shaman List/Celerity
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 635;
--- id(636) = Default Shaman List/Swift like the Wind 
+-- id(636) = Default Shaman List/Swift like the Wind
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 636;
--- id(650) = Default Shaman List/Superior Healing 
+-- id(650) = Default Shaman List/Superior Healing
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 650;
--- id(651) = Default Shaman List/Tnarg`s Mending 
+-- id(651) = Default Shaman List/Tnarg`s Mending
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 651;
--- id(2128) = Default  Pet  Wizard List/Draught of Fire 
+-- id(2128) = Default  Pet  Wizard List/Draught of Fire
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2128;
--- id(2129) = Default  Pet  Wizard List/Voltaic Draught 
+-- id(2129) = Default  Pet  Wizard List/Voltaic Draught
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2129;
--- id(2130) = Default  Pet  Wizard List/Draught of Jiva 
+-- id(2130) = Default  Pet  Wizard List/Draught of Jiva
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2130;
--- id(2131) = Default  Pet  Wizard List/Draught of Ice 
+-- id(2131) = Default  Pet  Wizard List/Draught of Ice
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2131;
--- id(2132) = Default  Pet  Wizard List/Ice Spear of Solist 
+-- id(2132) = Default  Pet  Wizard List/Ice Spear of Solist
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2132;
--- id(2133) = Default  Pet  Wizard List/Sunstrike 
+-- id(2133) = Default  Pet  Wizard List/Sunstrike
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2133;
--- id(2134) = Default  Pet  Wizard List/Garrison's Superior Sundering 
+-- id(2134) = Default  Pet  Wizard List/Garrison's Superior Sundering
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2134;
--- id(2135) = Default  Pet  Wizard List/Agnarr's Thunder 
+-- id(2135) = Default  Pet  Wizard List/Agnarr's Thunder
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2135;
--- id(2145) = Default  Pet  Wizard List/Inferno of Al'Kabor 
+-- id(2145) = Default  Pet  Wizard List/Inferno of Al'Kabor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2145;
--- id(2146) = Default  Pet  Wizard List/Pillar of Lightning 
+-- id(2146) = Default  Pet  Wizard List/Pillar of Lightning
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2146;
--- id(2147) = Default  Pet  Wizard List/Retribution of Al'Kabor 
+-- id(2147) = Default  Pet  Wizard List/Retribution of Al'Kabor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2147;
--- id(2148) = Default  Pet  Wizard List/Pillar of Flame 
+-- id(2148) = Default  Pet  Wizard List/Pillar of Flame
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2148;
--- id(2149) = Default  Pet  Wizard List/Vengeance of Al'Kabor 
+-- id(2149) = Default  Pet  Wizard List/Vengeance of Al'Kabor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2149;
--- id(2150) = Default  Pet  Wizard List/Tears of Ro 
+-- id(2150) = Default  Pet  Wizard List/Tears of Ro
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2150;
--- id(2151) = Default  Pet  Wizard List/Tears of Marr 
+-- id(2151) = Default  Pet  Wizard List/Tears of Marr
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2151;
--- id(2153) = Default  Pet  Wizard List/Invert Gravity 
+-- id(2153) = Default  Pet  Wizard List/Invert Gravity
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2153;
--- id(2156) = Default  Pet  Wizard List/Tishan's Discord 
+-- id(2156) = Default  Pet  Wizard List/Tishan's Discord
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2156;
--- id(2157) = Default  Pet  Wizard List/Markar's Discord 
+-- id(2157) = Default  Pet  Wizard List/Markar's Discord
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2157;
--- id(2158) = Default  Pet  Wizard List/Telekin 
+-- id(2158) = Default  Pet  Wizard List/Telekin
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2158;
--- id(2163) = Default  Pet  Wizard List/Fetter 
+-- id(2163) = Default  Pet  Wizard List/Fetter
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2163;
--- id(2164) = Default  Pet  Wizard List/Greater Fetter 
+-- id(2164) = Default  Pet  Wizard List/Greater Fetter
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2164;
--- id(2167) = Default  Pet  Wizard List/Annul Magic 
+-- id(2167) = Default  Pet  Wizard List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2167;
--- id(2181) = Default  Pet  Wizard List/Manaskin 
+-- id(2181) = Default  Pet  Wizard List/Manaskin
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2181;
--- id(2182) = Default  Pet  Wizard List/Force Shield 
+-- id(2182) = Default  Pet  Wizard List/Force Shield
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2182;
--- id(2190) = Default  Pet  Wizard List/Resistant Armor 
+-- id(2190) = Default  Pet  Wizard List/Resistant Armor
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2190;
--- id(2192) = Default  Pet  Wizard List/Flaming Sword of Xuzl 
+-- id(2192) = Default  Pet  Wizard List/Flaming Sword of Xuzl
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2192;
--- id(2193) = Default  Pet  Wizard List/Minor Familiar 
+-- id(2193) = Default  Pet  Wizard List/Minor Familiar
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2193;
--- id(2194) = Default  Pet  Wizard List/Lesser Familiar 
+-- id(2194) = Default  Pet  Wizard List/Lesser Familiar
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2194;
--- id(2195) = Default  Pet  Wizard List/Familiar 
+-- id(2195) = Default  Pet  Wizard List/Familiar
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2195;
--- id(2196) = Default  Pet  Wizard List/Greater Familiar 
+-- id(2196) = Default  Pet  Wizard List/Greater Familiar
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2196;
--- id(2197) = Default  Pet  Necromancer List/Conglaciation of Bone 
+-- id(2197) = Default  Pet  Necromancer List/Conglaciation of Bone
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2197;
--- id(2200) = Default  Pet  Necromancer List/Torbas' Acid Blast 
+-- id(2200) = Default  Pet  Necromancer List/Torbas' Acid Blast
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2200;
--- id(2201) = Default  Pet  Necromancer List/Torbas' Poison Blast 
+-- id(2201) = Default  Pet  Necromancer List/Torbas' Poison Blast
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2201;
--- id(2202) = Default  Pet  Necromancer List/Torbas' Venom Blast 
+-- id(2202) = Default  Pet  Necromancer List/Torbas' Venom Blast
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2202;
--- id(2205) = Default  Pet  Necromancer List/Paralyzing Earth 
+-- id(2205) = Default  Pet  Necromancer List/Paralyzing Earth
 UPDATE npc_spells_entries SET `maxlevel` = 62 WHERE `id` = 2205;
--- id(2208) = Default  Pet  Necromancer List/Greater Immobilize 
+-- id(2208) = Default  Pet  Necromancer List/Greater Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2208;
--- id(2222) = Default  Pet  Necromancer List/Manaskin 
+-- id(2222) = Default  Pet  Necromancer List/Manaskin
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2222;
--- id(2223) = Default  Pet  Necromancer List/Force Shield 
+-- id(2223) = Default  Pet  Necromancer List/Force Shield
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2223;
--- id(2236) = Default  Pet  Necromancer List/Minion of Shadows 
+-- id(2236) = Default  Pet  Necromancer List/Minion of Shadows
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2236;
--- id(2237) = Default  Pet  Necromancer List/Servant of Bones 
+-- id(2237) = Default  Pet  Necromancer List/Servant of Bones
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2237;
--- id(2238) = Default  Pet  Necromancer List/Emissary of Thule 
+-- id(2238) = Default  Pet  Necromancer List/Emissary of Thule
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2238;
--- id(2239) = Default  Pet  Necromancer List/Legacy of Zek 
+-- id(2239) = Default  Pet  Necromancer List/Legacy of Zek
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2239;
--- id(2240) = Default  Pet  Necromancer List/Saryrn's Companion 
+-- id(2240) = Default  Pet  Necromancer List/Saryrn's Companion
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2240;
--- id(2241) = Default  Pet  Necromancer List/Child of Bertoxxulous 
+-- id(2241) = Default  Pet  Necromancer List/Child of Bertoxxulous
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2241;
--- id(2249) = Default  Pet  Necromancer List/Deflux 
+-- id(2249) = Default  Pet  Necromancer List/Deflux
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2249;
--- id(2250) = Default  Pet  Necromancer List/Touch of Night 
+-- id(2250) = Default  Pet  Necromancer List/Touch of Night
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2250;
--- id(2251) = Default  Pet  Necromancer List/Gangrenous Touch of Zum`uul 
+-- id(2251) = Default  Pet  Necromancer List/Gangrenous Touch of Zum`uul
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2251;
--- id(2252) = Default  Pet  Necromancer List/Touch of Mujaki 
+-- id(2252) = Default  Pet  Necromancer List/Touch of Mujaki
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2252;
--- id(2257) = Default  Pet  Necromancer List/Devouring Darkness 
+-- id(2257) = Default  Pet  Necromancer List/Devouring Darkness
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2257;
--- id(2258) = Default  Pet  Necromancer List/Embracing Darkness 
+-- id(2258) = Default  Pet  Necromancer List/Embracing Darkness
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2258;
--- id(2261) = Default  Pet  Necromancer List/Envenomed Bolt 
+-- id(2261) = Default  Pet  Necromancer List/Envenomed Bolt
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2261;
--- id(2262) = Default  Pet  Necromancer List/Blood of Thule 
+-- id(2262) = Default  Pet  Necromancer List/Blood of Thule
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2262;
--- id(2266) = Default  Pet  Necromancer List/Pyrocruor 
+-- id(2266) = Default  Pet  Necromancer List/Pyrocruor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2266;
--- id(2270) = Default  Pet  Necromancer List/Plague 
+-- id(2270) = Default  Pet  Necromancer List/Plague
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2270;
--- id(2271) = Default  Pet  Necromancer List/Dark Plague 
+-- id(2271) = Default  Pet  Necromancer List/Dark Plague
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2271;
--- id(2273) = Default  Pet  Necromancer List/Chilling Embrace 
+-- id(2273) = Default  Pet  Necromancer List/Chilling Embrace
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2273;
--- id(2275) = Default  Pet  Necromancer List/Vexing Mordinia 
+-- id(2275) = Default  Pet  Necromancer List/Vexing Mordinia
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2275;
--- id(2276) = Default  Pet  Necromancer List/Cessation of Cor 
+-- id(2276) = Default  Pet  Necromancer List/Cessation of Cor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2276;
--- id(2277) = Default  Pet  Necromancer List/Neurotoxin 
+-- id(2277) = Default  Pet  Necromancer List/Neurotoxin
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2277;
--- id(2278) = Default  Pet  Necromancer List/Saryrn's Kiss 
+-- id(2278) = Default  Pet  Necromancer List/Saryrn's Kiss
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2278;
--- id(2286) = Default  Pet  Magician List/Char 
+-- id(2286) = Default  Pet  Magician List/Char
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2286;
--- id(2287) = Default  Pet  Magician List/Scars of Sigil 
+-- id(2287) = Default  Pet  Magician List/Scars of Sigil
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2287;
--- id(2289) = Default  Pet  Magician List/Shock of Fiery Blades 
+-- id(2289) = Default  Pet  Magician List/Shock of Fiery Blades
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2289;
--- id(2291) = Default  Pet  Magician List/Sun Vortex 
+-- id(2291) = Default  Pet  Magician List/Sun Vortex
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2291;
--- id(2295) = Default  Pet  Magician List/Shock of Steel 
+-- id(2295) = Default  Pet  Magician List/Shock of Steel
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2295;
--- id(2296) = Default  Pet  Magician List/Black Steel 
+-- id(2296) = Default  Pet  Magician List/Black Steel
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2296;
--- id(2300) = Default  Pet  Magician List/Sirocco 
+-- id(2300) = Default  Pet  Magician List/Sirocco
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2300;
--- id(2301) = Default  Pet  Magician List/Sun Storm 
+-- id(2301) = Default  Pet  Magician List/Sun Storm
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2301;
--- id(2305) = Default  Pet  Magician List/Manastorm 
+-- id(2305) = Default  Pet  Magician List/Manastorm
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2305;
--- id(2306) = Default  Pet  Magician List/Maelstrom of Electricity 
+-- id(2306) = Default  Pet  Magician List/Maelstrom of Electricity
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 2306;
--- id(2307) = Default  Pet  Magician List/Maelstrom of Thunder 
+-- id(2307) = Default  Pet  Magician List/Maelstrom of Thunder
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2307;
--- id(2308) = Default  Pet  Magician List/Elemental Maelstrom 
+-- id(2308) = Default  Pet  Magician List/Elemental Maelstrom
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2308;
--- id(2309) = Default  Pet  Magician List/Wrath of the Elements 
+-- id(2309) = Default  Pet  Magician List/Wrath of the Elements
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2309;
--- id(2310) = Default  Pet  Magician List/Malaise 
+-- id(2310) = Default  Pet  Magician List/Malaise
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 2310;
--- id(2311) = Default  Pet  Magician List/Malaisement 
+-- id(2311) = Default  Pet  Magician List/Malaisement
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 2311;
--- id(2312) = Default  Pet  Magician List/Malosi 
+-- id(2312) = Default  Pet  Magician List/Malosi
 UPDATE npc_spells_entries SET `type` = 16384 WHERE `id` = 2312;
--- id(2313) = Default  Pet  Magician List/Malosini 
+-- id(2313) = Default  Pet  Magician List/Malosini
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2313;
--- id(2314) = Default  Pet  Magician List/Mala 
+-- id(2314) = Default  Pet  Magician List/Mala
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2314;
--- id(2315) = Default  Pet  Magician List/Malosinia 
+-- id(2315) = Default  Pet  Magician List/Malosinia
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2315;
--- id(2318) = Default  Pet  Magician List/Annul Magic 
+-- id(2318) = Default  Pet  Magician List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2318;
--- id(2337) = Default  Pet  Magician List/Cadeau of Flame 
+-- id(2337) = Default  Pet  Magician List/Cadeau of Flame
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2337;
--- id(2338) = Default  Pet  Magician List/Flameshield of Ro 
+-- id(2338) = Default  Pet  Magician List/Flameshield of Ro
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2338;
--- id(2383) = Default  Pet  Magician List/Vocarate: Earth 
+-- id(2383) = Default  Pet  Magician List/Vocarate: Earth
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2383;
--- id(2384) = Default  Pet  Magician List/Vocarate: Fire 
+-- id(2384) = Default  Pet  Magician List/Vocarate: Fire
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2384;
--- id(2385) = Default  Pet  Magician List/Vocarate: Air 
+-- id(2385) = Default  Pet  Magician List/Vocarate: Air
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2385;
--- id(2386) = Default  Pet  Magician List/Vocarate: Water 
+-- id(2386) = Default  Pet  Magician List/Vocarate: Water
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2386;
--- id(2387) = Default  Pet  Magician List/Greater Vocaration: Earth 
+-- id(2387) = Default  Pet  Magician List/Greater Vocaration: Earth
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2387;
--- id(2388) = Default  Pet  Magician List/Greater Vocaration: Fire 
+-- id(2388) = Default  Pet  Magician List/Greater Vocaration: Fire
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2388;
--- id(2389) = Default  Pet  Magician List/Greater Vocaration: Air 
+-- id(2389) = Default  Pet  Magician List/Greater Vocaration: Air
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2389;
--- id(2390) = Default  Pet  Magician List/Greater Vocaration: Water 
+-- id(2390) = Default  Pet  Magician List/Greater Vocaration: Water
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2390;
--- id(2425) = Default  Pet  Enchanter List/Greater Fetter 
+-- id(2425) = Default  Pet  Enchanter List/Greater Fetter
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2425;
--- id(2443) = Default  Pet  Enchanter List/Howl of Tashan 
+-- id(2443) = Default  Pet  Enchanter List/Howl of Tashan
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2443;
--- id(2470) = Default  Pet  Enchanter List/Arcane Rune 
+-- id(2470) = Default  Pet  Enchanter List/Arcane Rune
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2470;
--- id(2517) = Default  Pet  Enchanter List/Aeldorb's Animation 
+-- id(2517) = Default  Pet  Enchanter List/Aeldorb's Animation
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2517;
--- id(2536) = Default  Pet  Shaman List/Ice Strike 
+-- id(2536) = Default  Pet  Shaman List/Ice Strike
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2536;
--- id(2537) = Default  Pet  Shaman List/Velium Strike 
+-- id(2537) = Default  Pet  Shaman List/Velium Strike
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2537;
--- id(2539) = Default  Pet  Shaman List/Shock of the Tainted 
+-- id(2539) = Default  Pet  Shaman List/Shock of the Tainted
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2539;
--- id(2541) = Default  Pet  Shaman List/Blast of Poison 
+-- id(2541) = Default  Pet  Shaman List/Blast of Poison
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 2541;
--- id(2542) = Default  Pet  Shaman List/Shock of Venom 
+-- id(2542) = Default  Pet  Shaman List/Shock of Venom
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2542;
--- id(2543) = Default  Pet  Shaman List/Blast of Venom 
+-- id(2543) = Default  Pet  Shaman List/Blast of Venom
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2543;
--- id(2544) = Default  Pet  Shaman List/Torrent of Poison 
+-- id(2544) = Default  Pet  Shaman List/Torrent of Poison
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2544;
--- id(2545) = Default  Pet  Shaman List/Spear of Torment 
+-- id(2545) = Default  Pet  Shaman List/Spear of Torment
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2545;
--- id(2546) = Default  Pet  Shaman List/Tears of Saryrn 
+-- id(2546) = Default  Pet  Shaman List/Tears of Saryrn
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2546;
--- id(2553) = Default  Pet  Shaman List/Pox of Bertoxxulous 
+-- id(2553) = Default  Pet  Shaman List/Pox of Bertoxxulous
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2553;
--- id(2554) = Default  Pet  Shaman List/Breath of Ultor 
+-- id(2554) = Default  Pet  Shaman List/Breath of Ultor
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2554;
--- id(2559) = Default  Pet  Shaman List/Bane of Nife 
+-- id(2559) = Default  Pet  Shaman List/Bane of Nife
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2559;
--- id(2561) = Default  Pet  Shaman List/Blood of Saryrn 
+-- id(2561) = Default  Pet  Shaman List/Blood of Saryrn
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2561;
--- id(2565) = Default  Pet  Shaman List/Malosini 
+-- id(2565) = Default  Pet  Shaman List/Malosini
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2565;
--- id(2566) = Default  Pet  Shaman List/Malo 
+-- id(2566) = Default  Pet  Shaman List/Malo
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2566;
--- id(2568) = Default  Pet  Shaman List/Malos 
+-- id(2568) = Default  Pet  Shaman List/Malos
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2568;
--- id(2573) = Default  Pet  Shaman List/Turgur's Insects 
+-- id(2573) = Default  Pet  Shaman List/Turgur's Insects
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2573;
--- id(2574) = Default  Pet  Shaman List/Tigir's Insects 
+-- id(2574) = Default  Pet  Shaman List/Tigir's Insects
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2574;
--- id(2578) = Default  Pet  Shaman List/Cripple 
+-- id(2578) = Default  Pet  Shaman List/Cripple
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2578;
--- id(2581) = Default  Pet  Shaman List/Insidious Decay 
+-- id(2581) = Default  Pet  Shaman List/Insidious Decay
 UPDATE npc_spells_entries SET `type` = 16384, `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2581;
--- id(2582) = Default  Pet  Shaman List/Malicious Decay 
+-- id(2582) = Default  Pet  Shaman List/Malicious Decay
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2582;
--- id(2585) = Default  Pet  Shaman List/Annul Magic 
+-- id(2585) = Default  Pet  Shaman List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2585;
--- id(2592) = Default  Pet  Shaman List/Immobilize 
+-- id(2592) = Default  Pet  Shaman List/Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2592;
--- id(2593) = Default  Pet  Shaman List/Paralyzing Earth 
+-- id(2593) = Default  Pet  Shaman List/Paralyzing Earth
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2593;
--- id(2594) = Default  Pet  Shaman List/Greater Immobilize 
+-- id(2594) = Default  Pet  Shaman List/Greater Immobilize
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2594;
--- id(2595) = Default  Pet  Shaman List/Petrifying Earth 
+-- id(2595) = Default  Pet  Shaman List/Petrifying Earth
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2595;
--- id(2596) = Default  Pet  Shaman List/Inner Fire 
+-- id(2596) = Default  Pet  Shaman List/Inner Fire
 UPDATE npc_spells_entries SET `maxlevel` = 255 WHERE `id` = 2596;
--- id(2602) = Default  Pet  Shaman List/Shroud of the Spirits 
+-- id(2602) = Default  Pet  Shaman List/Shroud of the Spirits
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2602;
--- id(2603) = Default  Pet  Shaman List/Ancestral Guard 
+-- id(2603) = Default  Pet  Shaman List/Ancestral Guard
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2603;
--- id(2649) = Default  Pet  Shaman List/Celerity 
+-- id(2649) = Default  Pet  Shaman List/Celerity
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2649;
--- id(2650) = Default  Pet  Shaman List/Swift like the Wind 
+-- id(2650) = Default  Pet  Shaman List/Swift like the Wind
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2650;
--- id(2664) = Default  Pet  Shaman List/Superior Healing 
+-- id(2664) = Default  Pet  Shaman List/Superior Healing
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2664;
--- id(2665) = Default  Pet  Shaman List/Tnarg`s Mending 
+-- id(2665) = Default  Pet  Shaman List/Tnarg`s Mending
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2665;
--- id(2673) = Default  Pet  Shaman List/Spirit of the Howler 
+-- id(2673) = Default  Pet  Shaman List/Spirit of the Howler
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 2673;
--- id(2674) = Default  Pet  Shaman List/True Spirit 
+-- id(2674) = Default  Pet  Shaman List/True Spirit
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 2674;
--- id(3174) = Default Wizard List/O'keils Embers 
+-- id(3174) = Default Wizard List/O'keils Embers
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 3174;
--- id(4628) = Default Paladin List/Yaulp 
+-- id(4628) = Default Paladin List/Yaulp
 UPDATE npc_spells_entries SET `type` = 8, `recast_delay` = 315 WHERE `id` = 4628;
--- id(4629) = Default Paladin List/Yaulp II 
+-- id(4629) = Default Paladin List/Yaulp II
 UPDATE npc_spells_entries SET `type` = 8, `recast_delay` = 315 WHERE `id` = 4629;
--- id(4630) = Default Paladin List/Yaulp III 
+-- id(4630) = Default Paladin List/Yaulp III
 UPDATE npc_spells_entries SET `type` = 8, `recast_delay` = 315 WHERE `id` = 4630;
--- id(4631) = Default Paladin List/Yaulp IV 
+-- id(4631) = Default Paladin List/Yaulp IV
 UPDATE npc_spells_entries SET `type` = 8, `recast_delay` = 315 WHERE `id` = 4631;
--- id(18846) = Default Wizard List/Elnerick's Entombment of Ice 
+-- id(18846) = Default Wizard List/Elnerick's Entombment of Ice
 UPDATE npc_spells_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `id` = 18846;
--- id(18902) = Default Cleric List/Faith 
+-- id(18902) = Default Cleric List/Faith
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 18902;
--- id(19677) = Default Wizard List/O'Keils Flickering Flame 
+-- id(19677) = Default Wizard List/O'Keils Flickering Flame
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 19677;
--- id(19693) = Default Cleric List/Fortitude 
+-- id(19693) = Default Cleric List/Fortitude
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 19693;
--- id(10162) = Lydl_the_Great 
+-- id(10162) = Lydl_the_Great
 UPDATE npc_types SET `special_abilities` = "23,1" WHERE `id` = 10162;
--- id(71000) = an_undine_spirit 
+-- id(71000) = an_undine_spirit
 UPDATE npc_types SET `npc_faction_id` = 1001, `special_abilities` = "10,1^23,1", `aggroradius` = 35 WHERE `id` = 71000;
--- id(108509) = Silverwing 
+-- id(108509) = Silverwing
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108509;
--- id(108510) = Phara_Dar 
+-- id(108510) = Phara_Dar
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108510;
--- id(108511) = Xygoz 
+-- id(108511) = Xygoz
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108511;
--- id(108512) = Druushk 
+-- id(108512) = Druushk
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108512;
--- id(108513) = Nexona 
+-- id(108513) = Nexona
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^43,1^44,1" WHERE `id` = 108513;
--- id(108517) = Hoshkar 
+-- id(108517) = Hoshkar
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108517;
--- id(202115) = Guardian_Drendle 
+-- id(202115) = Guardian_Drendle
 UPDATE npc_types SET `emoteid` = 1 WHERE `id` = 202115;
--- id(365110)  
+-- id(365110) = Array
 UPDATE spawn2 SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 365110;
--- spawngroupID(13078) = Zahal_the_Vile 
+-- spawngroupID(13078) = Zahal_the_Vile
 UPDATE spawnentry SET `chance` = 100 WHERE `spawngroupID` = 13078 AND `npcID` = 13006;
--- spawngroupID(13078) = Zahal_the_Vile 
+-- spawngroupID(13078) = Zahal_the_Vile
 UPDATE spawnentry SET `chance` = 100 WHERE `spawngroupID` = 13078 AND `npcID` = 13078;

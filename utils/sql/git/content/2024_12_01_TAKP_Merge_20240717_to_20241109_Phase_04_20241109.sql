@@ -2634,1839 +2634,1839 @@ INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, 
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448219, "chardok_448219", 0, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 0);
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448220, "kithicor_448220", 0, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 1);
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448221, "kithicor_448221", 0, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 1);
--- id(1398) = lfaydark 
+-- id(1398) = lfaydark
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0 WHERE `id` = 1398;
--- id(1917) = qcat 
+-- id(1917) = qcat
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0 WHERE `id` = 1917;
--- id(2407) = tox 
+-- id(2407) = tox
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0 WHERE `id` = 2407;
--- id(6229) = neriakc 
+-- id(6229) = neriakc
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0 WHERE `id` = 6229;
--- id(92) = Wolf 
+-- id(92) = Wolf
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 92;
--- id(96) = Imp 
+-- id(96) = Imp
 UPDATE faction_list SET `base` = -1000 WHERE `id` = 96;
--- id(151) = Efreeti 
+-- id(151) = Efreeti
 UPDATE faction_list SET `base` = -1000, `see_illusion` = 0 WHERE `id` = 151;
--- id(169) = Saber-toothed Cat 
+-- id(169) = Saber-toothed Cat
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 169;
--- id(184) = Mosquito 
+-- id(184) = Mosquito
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 184;
--- id(185) = Rhino 
+-- id(185) = Rhino
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 185;
--- id(251) = Frogloks of Guk 
+-- id(251) = Frogloks of Guk
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 251;
--- id(347) = Shark 
+-- id(347) = Shark
 UPDATE faction_list SET `base` = -1000, `see_illusion` = 0 WHERE `id` = 347;
--- id(388) = Fairie 
+-- id(388) = Fairie
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 388;
--- id(435) = Velketor 
+-- id(435) = Velketor
 UPDATE faction_list SET `base` = -751 WHERE `id` = 435;
--- id(441) = Legion of Cabilis 
+-- id(441) = Legion of Cabilis
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 441;
--- id(445) = Scaled Mystics 
+-- id(445) = Scaled Mystics
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 445;
--- id(460) = Citizens of Froststone 
+-- id(460) = Citizens of Froststone
 UPDATE faction_list SET `see_illusion` = 0 WHERE `id` = 460;
--- id(5018) = KOS_animal 
+-- id(5018) = KOS_animal
 UPDATE faction_list SET `base` = -750 WHERE `id` = 5018;
--- id(1298) = KOS_animal 
+-- id(1298) = KOS_animal
 UPDATE faction_list_mod SET `mod` = -750 WHERE `id` = 1298;
--- id(1389) = KOS_animal 
+-- id(1389) = KOS_animal
 UPDATE faction_list_mod SET `mod` = 900 WHERE `id` = 1389;
--- id(1391) = KOS_animal 
+-- id(1391) = KOS_animal
 UPDATE faction_list_mod SET `mod` = 900 WHERE `id` = 1391;
--- id(1400) = KOS_animal 
+-- id(1400) = KOS_animal
 UPDATE faction_list_mod SET `mod` = 900 WHERE `id` = 1400;
--- id(1402) = KOS_animal 
+-- id(1402) = KOS_animal
 UPDATE faction_list_mod SET `mod` = 900 WHERE `id` = 1402;
--- id(24) = Unjeweled Dragon Head Hilt 
+-- id(24) = Unjeweled Dragon Head Hilt
 UPDATE ground_spawns SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 24;
--- Name(Wristband of the Brood) = 19701 
+-- Name(Wristband of the Brood) = 19701
 UPDATE items SET `nodrop` = 1, `norent` = 1, `comment` = "updated to remove double effect", `proceffect` = 0, `worneffect` = 478 WHERE `id` = 19701;
--- id(108379) =  
+-- id(108379) = 
 UPDATE lootdrop SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 108379;
--- id(109270) =  
+-- id(109270) = 
 UPDATE lootdrop SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 109270;
--- lootdrop_id(91647) = Sarnak Blood 
+-- lootdrop_id(91647) = Sarnak Blood
 UPDATE lootdrop_entries SET `multiplier` = 1 WHERE `lootdrop_id` = 91647 AND `item_id` = 22519;
--- lootdrop_id(100620) = Giant Wood Spider Femur 
+-- lootdrop_id(100620) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 100620 AND `item_id` = 19659;
--- lootdrop_id(100621) = Spider Silk 
+-- lootdrop_id(100621) = Spider Silk
 UPDATE lootdrop_entries SET `chance` = 50, `multiplier` = 4 WHERE `lootdrop_id` = 100621 AND `item_id` = 13041;
--- lootdrop_id(100621) = Giant Wood Spider Thorax 
+-- lootdrop_id(100621) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 100621 AND `item_id` = 19660;
--- lootdrop_id(100677) = Giant Wood Spider Femur 
+-- lootdrop_id(100677) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 100677 AND `item_id` = 19659;
--- lootdrop_id(100678) = Spider Silk 
+-- lootdrop_id(100678) = Spider Silk
 UPDATE lootdrop_entries SET `chance` = 50, `multiplier` = 4 WHERE `lootdrop_id` = 100678 AND `item_id` = 13041;
--- lootdrop_id(100678) = Giant Wood Spider Thorax 
+-- lootdrop_id(100678) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 100678 AND `item_id` = 19660;
--- lootdrop_id(100690) = Greenscale Emerald 
+-- lootdrop_id(100690) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 100690 AND `item_id` = 28073;
--- lootdrop_id(100690) = Tambourine of Rituals 
+-- lootdrop_id(100690) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 100690 AND `item_id` = 28074;
--- lootdrop_id(101705) = Greenscale Emerald 
+-- lootdrop_id(101705) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 101705 AND `item_id` = 28073;
--- lootdrop_id(101705) = Tambourine of Rituals 
+-- lootdrop_id(101705) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 101705 AND `item_id` = 28074;
--- lootdrop_id(104108) = Greenscale Emerald 
+-- lootdrop_id(104108) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 104108 AND `item_id` = 28073;
--- lootdrop_id(104108) = Tambourine of Rituals 
+-- lootdrop_id(104108) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 104108 AND `item_id` = 28074;
--- lootdrop_id(104284) = Decayed Helm 
+-- lootdrop_id(104284) = Decayed Helm
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12283;
--- lootdrop_id(104284) = Decayed Visor 
+-- lootdrop_id(104284) = Decayed Visor
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12284;
--- lootdrop_id(104284) = Decayed Breastplate 
+-- lootdrop_id(104284) = Decayed Breastplate
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12285;
--- lootdrop_id(104284) = Decayed Chainmail 
+-- lootdrop_id(104284) = Decayed Chainmail
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12286;
--- lootdrop_id(104284) = Decayed Right Vambrace 
+-- lootdrop_id(104284) = Decayed Right Vambrace
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12287;
--- lootdrop_id(104284) = Decayed Left Vambrace 
+-- lootdrop_id(104284) = Decayed Left Vambrace
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12288;
--- lootdrop_id(104284) = Decayed Right Bracer 
+-- lootdrop_id(104284) = Decayed Right Bracer
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12289;
--- lootdrop_id(104284) = Decayed Left Bracer 
+-- lootdrop_id(104284) = Decayed Left Bracer
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12290;
--- lootdrop_id(104284) = Decayed Right Gauntlet 
+-- lootdrop_id(104284) = Decayed Right Gauntlet
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12291;
--- lootdrop_id(104284) = Decayed Left Gauntlet 
+-- lootdrop_id(104284) = Decayed Left Gauntlet
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12292;
--- lootdrop_id(104284) = Decayed Right Legplate 
+-- lootdrop_id(104284) = Decayed Right Legplate
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12293;
--- lootdrop_id(104284) = Decayed Left Legplate 
+-- lootdrop_id(104284) = Decayed Left Legplate
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12294;
--- lootdrop_id(104284) = Decayed Right Boot 
+-- lootdrop_id(104284) = Decayed Right Boot
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12295;
--- lootdrop_id(104284) = Decayed Left Boot 
+-- lootdrop_id(104284) = Decayed Left Boot
 UPDATE lootdrop_entries SET `chance` = 9 WHERE `lootdrop_id` = 104284 AND `item_id` = 12296;
--- lootdrop_id(105611) = Greenscale Emerald 
+-- lootdrop_id(105611) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 105611 AND `item_id` = 28073;
--- lootdrop_id(105611) = Tambourine of Rituals 
+-- lootdrop_id(105611) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 105611 AND `item_id` = 28074;
--- lootdrop_id(105665) = Greenscale Emerald 
+-- lootdrop_id(105665) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 105665 AND `item_id` = 28073;
--- lootdrop_id(105665) = Tambourine of Rituals 
+-- lootdrop_id(105665) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 105665 AND `item_id` = 28074;
--- lootdrop_id(107471) = Giant Wood Spider Femur 
+-- lootdrop_id(107471) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107471 AND `item_id` = 19659;
--- lootdrop_id(107471) = Giant Wood Spider Thorax 
+-- lootdrop_id(107471) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107471 AND `item_id` = 19660;
--- lootdrop_id(107474) = Giant Wood Spider Femur 
+-- lootdrop_id(107474) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107474 AND `item_id` = 19659;
--- lootdrop_id(107474) = Giant Wood Spider Thorax 
+-- lootdrop_id(107474) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107474 AND `item_id` = 19660;
--- lootdrop_id(107477) = Giant Wood Spider Femur 
+-- lootdrop_id(107477) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107477 AND `item_id` = 19659;
--- lootdrop_id(107477) = Giant Wood Spider Thorax 
+-- lootdrop_id(107477) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107477 AND `item_id` = 19660;
--- lootdrop_id(107801) = Giant Wood Spider Femur 
+-- lootdrop_id(107801) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107801 AND `item_id` = 19659;
--- lootdrop_id(107801) = Giant Wood Spider Thorax 
+-- lootdrop_id(107801) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107801 AND `item_id` = 19660;
--- lootdrop_id(107813) = Giant Wood Spider Femur 
+-- lootdrop_id(107813) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107813 AND `item_id` = 19659;
--- lootdrop_id(107813) = Giant Wood Spider Thorax 
+-- lootdrop_id(107813) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107813 AND `item_id` = 19660;
--- lootdrop_id(107816) = Giant Wood Spider Femur 
+-- lootdrop_id(107816) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107816 AND `item_id` = 19659;
--- lootdrop_id(107816) = Giant Wood Spider Thorax 
+-- lootdrop_id(107816) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107816 AND `item_id` = 19660;
--- lootdrop_id(107851) = Giant Wood Spider Femur 
+-- lootdrop_id(107851) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107851 AND `item_id` = 19659;
--- lootdrop_id(107851) = Giant Wood Spider Thorax 
+-- lootdrop_id(107851) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107851 AND `item_id` = 19660;
--- lootdrop_id(107854) = Giant Wood Spider Femur 
+-- lootdrop_id(107854) = Giant Wood Spider Femur
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107854 AND `item_id` = 19659;
--- lootdrop_id(107854) = Giant Wood Spider Thorax 
+-- lootdrop_id(107854) = Giant Wood Spider Thorax
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 107854 AND `item_id` = 19660;
--- lootdrop_id(108785) = Greenscale Emerald 
+-- lootdrop_id(108785) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108785 AND `item_id` = 28073;
--- lootdrop_id(108785) = Tambourine of Rituals 
+-- lootdrop_id(108785) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108785 AND `item_id` = 28074;
--- lootdrop_id(108791) = Greenscale Emerald 
+-- lootdrop_id(108791) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108791 AND `item_id` = 28073;
--- lootdrop_id(108791) = Tambourine of Rituals 
+-- lootdrop_id(108791) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108791 AND `item_id` = 28074;
--- lootdrop_id(108797) = Greenscale Emerald 
+-- lootdrop_id(108797) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108797 AND `item_id` = 28073;
--- lootdrop_id(108801) = Tambourine of Rituals 
+-- lootdrop_id(108801) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108801 AND `item_id` = 28074;
--- lootdrop_id(108831) = Tambourine of Rituals 
+-- lootdrop_id(108831) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108831 AND `item_id` = 28074;
--- lootdrop_id(108864) = Greenscale Emerald 
+-- lootdrop_id(108864) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108864 AND `item_id` = 28073;
--- lootdrop_id(108864) = Tambourine of Rituals 
+-- lootdrop_id(108864) = Tambourine of Rituals
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 108864 AND `item_id` = 28074;
--- lootdrop_id(109013) = Worn Shai`din Naginata 
+-- lootdrop_id(109013) = Worn Shai`din Naginata
 UPDATE lootdrop_entries SET `chance` = 40 WHERE `lootdrop_id` = 109013 AND `item_id` = 5709;
--- lootdrop_id(109013) = Polished Shai`din Naginata 
+-- lootdrop_id(109013) = Polished Shai`din Naginata
 UPDATE lootdrop_entries SET `chance` = 10 WHERE `lootdrop_id` = 109013 AND `item_id` = 5710;
--- lootdrop_id(109111) = Sarnak Blood 
+-- lootdrop_id(109111) = Sarnak Blood
 UPDATE lootdrop_entries SET `multiplier` = 1 WHERE `lootdrop_id` = 109111 AND `item_id` = 22519;
--- lootdrop_id(109172) = Chokidai Hide Spaulders 
+-- lootdrop_id(109172) = Chokidai Hide Spaulders
 UPDATE lootdrop_entries SET `chance` = 0.333 WHERE `lootdrop_id` = 109172 AND `item_id` = 4919;
--- lootdrop_id(109178) = Chokidai Hide Spaulders 
+-- lootdrop_id(109178) = Chokidai Hide Spaulders
 UPDATE lootdrop_entries SET `chance` = 0.5 WHERE `lootdrop_id` = 109178 AND `item_id` = 4919;
--- lootdrop_id(109178) = Chokidai Hide 
+-- lootdrop_id(109178) = Chokidai Hide
 UPDATE lootdrop_entries SET `chance` = 15 WHERE `lootdrop_id` = 109178 AND `item_id` = 5525;
--- lootdrop_id(109178) = Jagged Chokidai Spine 
+-- lootdrop_id(109178) = Jagged Chokidai Spine
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 109178 AND `item_id` = 7253;
--- lootdrop_id(109218) = Crystallized Sulfur 
+-- lootdrop_id(109218) = Crystallized Sulfur
 UPDATE lootdrop_entries SET `chance` = 7.5 WHERE `lootdrop_id` = 109218 AND `item_id` = 16976;
--- lootdrop_id(109252) = Glowing Fine Steel Short Sword 
+-- lootdrop_id(109252) = Glowing Fine Steel Short Sword
 UPDATE lootdrop_entries SET `chance` = 0.05 WHERE `lootdrop_id` = 109252 AND `item_id` = 5654;
--- lootdrop_id(109254) = Sarnak Blood 
+-- lootdrop_id(109254) = Sarnak Blood
 UPDATE lootdrop_entries SET `multiplier` = 1 WHERE `lootdrop_id` = 109254 AND `item_id` = 22519;
--- lootdrop_id(109260) = Sarnak Blood 
+-- lootdrop_id(109260) = Sarnak Blood
 UPDATE lootdrop_entries SET `multiplier` = 1 WHERE `lootdrop_id` = 109260 AND `item_id` = 22519;
--- lootdrop_id(109264) = Argent Protector 
+-- lootdrop_id(109264) = Argent Protector
 UPDATE lootdrop_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 109264 AND `item_id` = 5840;
--- lootdrop_id(109269) = Incarnadine Boots 
+-- lootdrop_id(109269) = Incarnadine Boots
 UPDATE lootdrop_entries SET `chance` = 33 WHERE `lootdrop_id` = 109269 AND `item_id` = 4138;
--- lootdrop_id(109269) = Palladium Axe 
+-- lootdrop_id(109269) = Palladium Axe
 UPDATE lootdrop_entries SET `chance` = 33 WHERE `lootdrop_id` = 109269 AND `item_id` = 5624;
--- lootdrop_id(109269) = Di'zok Imperial Katana 
+-- lootdrop_id(109269) = Di'zok Imperial Katana
 UPDATE lootdrop_entries SET `chance` = 33, `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 109269 AND `item_id` = 5708;
--- lootdrop_id(109273) = Shard of Night 
+-- lootdrop_id(109273) = Shard of Night
 UPDATE lootdrop_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 109273 AND `item_id` = 5841;
--- lootdrop_id(109276) = Sarnak Battlehammer 
+-- lootdrop_id(109276) = Sarnak Battlehammer
 UPDATE lootdrop_entries SET `chance` = 0.1 WHERE `lootdrop_id` = 109276 AND `item_id` = 6647;
--- lootdrop_id(109276) = Sarnak Blood 
+-- lootdrop_id(109276) = Sarnak Blood
 UPDATE lootdrop_entries SET `multiplier` = 1 WHERE `lootdrop_id` = 109276 AND `item_id` = 22519;
--- lootdrop_id(109727) = Stained Parchment Top 
+-- lootdrop_id(109727) = Stained Parchment Top
 UPDATE lootdrop_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `lootdrop_id` = 109727 AND `item_id` = 28010;
--- lootdrop_id(116180) = Greenscale Emerald 
+-- lootdrop_id(116180) = Greenscale Emerald
 UPDATE lootdrop_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `lootdrop_id` = 116180 AND `item_id` = 28073;
--- id(97030) =  
+-- id(97030) = 
 UPDATE loottable SET `mincash` = 1, `maxcash` = 2400 WHERE `id` = 97030;
--- loottable_id(90817)  
+-- loottable_id(90817) = Array
 UPDATE loottable_entries SET `mindrop` = 1 WHERE `loottable_id` = 90817 AND `lootdrop_id` = 91740;
--- loottable_id(92235)  
+-- loottable_id(92235) = Array
 UPDATE loottable_entries SET `droplimit` = 0 WHERE `loottable_id` = 92235 AND `lootdrop_id` = 100621;
--- loottable_id(94403)  
+-- loottable_id(94403) = Array
 UPDATE loottable_entries SET `droplimit` = 1, `mindrop` = 1 WHERE `loottable_id` = 94403 AND `lootdrop_id` = 108306;
--- loottable_id(94657)  
+-- loottable_id(94657) = Array
 UPDATE loottable_entries SET `droplimit` = 1 WHERE `loottable_id` = 94657 AND `lootdrop_id` = 108150;
--- loottable_id(94659)  
+-- loottable_id(94659) = Array
 UPDATE loottable_entries SET `mindrop` = 1 WHERE `loottable_id` = 94659 AND `lootdrop_id` = 109048;
--- loottable_id(94716)  
+-- loottable_id(94716) = Array
 UPDATE loottable_entries SET `droplimit` = 1 WHERE `loottable_id` = 94716 AND `lootdrop_id` = 109184;
--- merchantid(1101) =  
+-- merchantid(1101) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 1101 AND `slot` = 8;
--- merchantid(10065) =  
+-- merchantid(10065) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 10065 AND `slot` = 8;
--- merchantid(10067) =  
+-- merchantid(10067) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 10067 AND `slot` = 8;
--- merchantid(19082) =  
+-- merchantid(19082) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 19082 AND `slot` = 8;
--- merchantid(19083) =  
+-- merchantid(19083) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 19083 AND `slot` = 8;
--- merchantid(21068) =  
+-- merchantid(21068) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 21068 AND `slot` = 8;
--- merchantid(29074) =  
+-- merchantid(29074) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 29074 AND `slot` = 8;
--- merchantid(34054) =  
+-- merchantid(34054) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 34054 AND `slot` = 8;
--- merchantid(41069) =  
+-- merchantid(41069) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 41069 AND `slot` = 8;
--- merchantid(55097) =  
+-- merchantid(55097) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 55097 AND `slot` = 8;
--- merchantid(61041) =  
+-- merchantid(61041) = 
 UPDATE merchantlist SET `min_expansion` = 1, `max_expansion` = 99 WHERE `merchantid` = 61041 AND `slot` = 8;
--- npc_faction_id(318) = KaranaResidents10/Giant Snake 
+-- npc_faction_id(318) = KaranaResidents10/Giant Snake
 UPDATE npc_faction_entries SET `sort_order` = 13 WHERE `npc_faction_id` = 318 AND `faction_id` = 87;
--- id(2672) = Default  Pet  Shaman List/Frenzied Spirit 
+-- id(2672) = Default  Pet  Shaman List/Frenzied Spirit
 UPDATE npc_spells_entries SET `maxlevel` = 99 WHERE `id` = 2672;
--- id(2673) = Default  Pet  Shaman List/Spirit of the Howler 
+-- id(2673) = Default  Pet  Shaman List/Spirit of the Howler
 UPDATE npc_spells_entries SET `maxlevel` = 99 WHERE `id` = 2673;
--- id(18515) = Trakanon Spells/Blinding Fear 
+-- id(18515) = Trakanon Spells/Blinding Fear
 UPDATE npc_spells_entries SET `minlevel` = 0 WHERE `id` = 18515;
--- id(10167) = a_shark 
+-- id(10167) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 10167;
--- id(15034) = Theoris_Bladespur 
+-- id(15034) = Theoris_Bladespur
 UPDATE npc_types SET `special_abilities` = "10,1^16,1" WHERE `id` = 15034;
--- id(15099) = an_undead_reaver 
+-- id(15099) = an_undead_reaver
 UPDATE npc_types SET `npc_faction_id` = 1604, `npc_aggro` = 1 WHERE `id` = 15099;
--- id(24058) = a_sand_shark 
+-- id(24058) = a_sand_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 24058;
--- id(24105) = a_shark 
+-- id(24105) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 24105;
--- id(24120) = a_diseased_shark 
+-- id(24120) = a_diseased_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 24120;
--- id(25436) = Dragoon_X`Lottl 
+-- id(25436) = Dragoon_X`Lottl
 UPDATE npc_types SET `see_invis` = 25 WHERE `id` = 25436;
--- id(25437) = Dragoon_V`tai 
+-- id(25437) = Dragoon_V`tai
 UPDATE npc_types SET `see_invis` = 25 WHERE `id` = 25437;
--- id(27000) = a_fire_imp 
+-- id(27000) = a_fire_imp
 UPDATE npc_types SET `npc_faction_id` = 1607 WHERE `id` = 27000;
--- id(31085) = reckless_efreeti 
+-- id(31085) = reckless_efreeti
 UPDATE npc_types SET `npc_faction_id` = 1608 WHERE `id` = 31085;
--- id(35021) = a_cistern_asp 
+-- id(35021) = a_cistern_asp
 UPDATE npc_types SET `npc_faction_id` = 623 WHERE `id` = 35021;
--- id(37048) = a_cistern_asp 
+-- id(37048) = a_cistern_asp
 UPDATE npc_types SET `npc_faction_id` = 623 WHERE `id` = 37048;
--- id(45018) = a_shark 
+-- id(45018) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1606 WHERE `id` = 45018;
--- id(69054) = a_reef_shark 
+-- id(69054) = a_reef_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 69054;
--- id(69069) = a_shark 
+-- id(69069) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 69069;
--- id(98003) = a_killer_shark 
+-- id(98003) = a_killer_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 98003;
--- id(98007) = a_shark 
+-- id(98007) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 98007;
--- id(98028) = a_plague_shark 
+-- id(98028) = a_plague_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 98028;
--- id(103037) = Korocust 
+-- id(103037) = Korocust
 UPDATE npc_types SET `npc_spells_id` = 1654 WHERE `id` = 103037;
--- id(103080) = Prince_Selrach_Di`zok 
+-- id(103080) = Prince_Selrach_Di`zok
 UPDATE npc_types SET `hp` = 24000 WHERE `id` = 103080;
--- id(103084) = a_Sarnak_myrmidon 
+-- id(103084) = a_Sarnak_myrmidon
 UPDATE npc_types SET `hp` = 9510 WHERE `id` = 103084;
--- id(103086) = a_chardoki_golem 
+-- id(103086) = a_chardoki_golem
 UPDATE npc_types SET `level` = 45, `hp` = 6506, `mindmg` = 31, `maxdmg` = 130, `AC` = 170, `maxlevel` = 47 WHERE `id` = 103086;
--- id(103124) = a_Sarnak_accoucheur 
+-- id(103124) = a_Sarnak_accoucheur
 UPDATE npc_types SET `level` = 48, `hp` = 9530, `mana` = 1980, `mindmg` = 45, `maxdmg` = 140, `AC` = 182 WHERE `id` = 103124;
--- id(103125) = Niblek 
+-- id(103125) = Niblek
 UPDATE npc_types SET `hp` = 240 WHERE `id` = 103125;
--- id(103126) = a_Sarnak_aruspex 
+-- id(103126) = a_Sarnak_aruspex
 UPDATE npc_types SET `hp` = 7179, `maxlevel` = 49 WHERE `id` = 103126;
--- id(103127) = a_chokidai_mangler 
+-- id(103127) = a_chokidai_mangler
 UPDATE npc_types SET `see_invis` = 25, `maxlevel` = 48 WHERE `id` = 103127;
--- id(103151) = sorcerer_of_Di`zok 
+-- id(103151) = sorcerer_of_Di`zok
 UPDATE npc_types SET `hp` = 9510 WHERE `id` = 103151;
--- id(112000) = a_blizzard_spider 
+-- id(112000) = a_blizzard_spider
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112000;
--- id(112001) = a_crystalline_watcher 
+-- id(112001) = a_crystalline_watcher
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112001;
--- id(112002) = a_shard_spider 
+-- id(112002) = a_shard_spider
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112002;
--- id(112003) = #Gregendek_Icepaw 
+-- id(112003) = #Gregendek_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112003;
--- id(112004) = a_crystalline_devourer 
+-- id(112004) = a_crystalline_devourer
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112004;
--- id(112005) = a_crystal_statue 
+-- id(112005) = a_crystal_statue
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112005;
--- id(112006) = #Marlek_Icepaw 
+-- id(112006) = #Marlek_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112006;
--- id(112007) = Icepaw_kobold 
+-- id(112007) = Icepaw_kobold
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112007;
--- id(112008) = an_Icepaw_kobold_warrior 
+-- id(112008) = an_Icepaw_kobold_warrior
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112008;
--- id(112011) = an_ice_paw_sorcerer 
+-- id(112011) = an_ice_paw_sorcerer
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112011;
--- id(112012) = an_Icepaw_kobold 
+-- id(112012) = an_Icepaw_kobold
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112012;
--- id(112013) = Bled 
+-- id(112013) = Bled
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112013;
--- id(112014) = an_Icepaw_kobold_priest 
+-- id(112014) = an_Icepaw_kobold_priest
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112014;
--- id(112015) = an_Icepaw_cleric 
+-- id(112015) = an_Icepaw_cleric
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112015;
--- id(112016) = Kerd 
+-- id(112016) = Kerd
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112016;
--- id(112017) = #Errkak_Icepaw 
+-- id(112017) = #Errkak_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112017;
--- id(112019) = a_velium_stalker 
+-- id(112019) = a_velium_stalker
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112019;
--- id(112026) = an_icy_watcher 
+-- id(112026) = an_icy_watcher
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112026;
--- id(112027) = a_velium_broodling 
+-- id(112027) = a_velium_broodling
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112027;
--- id(112028) = a_velium_hunter 
+-- id(112028) = a_velium_hunter
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112028;
--- id(112029) = Icy_Guardian 
+-- id(112029) = Icy_Guardian
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112029;
--- id(112039) = an_Icepaw_champion 
+-- id(112039) = an_Icepaw_champion
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112039;
--- id(112040) = an_Icepaw_prophet 
+-- id(112040) = an_Icepaw_prophet
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112040;
--- id(112043) = a_crystalline_statue 
+-- id(112043) = a_crystalline_statue
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112043;
--- id(112044) = a_crystalline_hunter 
+-- id(112044) = a_crystalline_hunter
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112044;
--- id(112045) = #Kalik_Icepaw 
+-- id(112045) = #Kalik_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112045;
--- id(112046) = #Laryk_Icepaw 
+-- id(112046) = #Laryk_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112046;
--- id(112047) = #Rowwek_Icepaw 
+-- id(112047) = #Rowwek_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112047;
--- id(112048) = #Tpos_Icepaw 
+-- id(112048) = #Tpos_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112048;
--- id(112049) = Lord_Doljonijiarnimorinar 
+-- id(112049) = Lord_Doljonijiarnimorinar
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112049;
--- id(112050) = #Ular_Icepaw 
+-- id(112050) = #Ular_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112050;
--- id(112052) = #Venar_Icepaw 
+-- id(112052) = #Venar_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112052;
--- id(112053) = Crystal_Eyes 
+-- id(112053) = Crystal_Eyes
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112053;
--- id(112054) = a_Frenzied_Velium_Broodling 
+-- id(112054) = a_Frenzied_Velium_Broodling
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112054;
--- id(112055) = a_Frenzied_Velium_Stalker 
+-- id(112055) = a_Frenzied_Velium_Stalker
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112055;
--- id(112056) = Crystal_Fang 
+-- id(112056) = Crystal_Fang
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112056;
--- id(112057) = Khelkar_Icepaw 
+-- id(112057) = Khelkar_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112057;
--- id(112058) = The_Brood_Master 
+-- id(112058) = The_Brood_Master
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112058;
--- id(112059) = The_Brood_Mother 
+-- id(112059) = The_Brood_Mother
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112059;
--- id(112064) = a_blizzard_hunter 
+-- id(112064) = a_blizzard_hunter
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112064;
--- id(112073) = a_frost_spectre 
+-- id(112073) = a_frost_spectre
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112073;
--- id(112076) = a_crystal_shard 
+-- id(112076) = a_crystal_shard
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112076;
--- id(112077) = a_large_crystal_shard 
+-- id(112077) = a_large_crystal_shard
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112077;
--- id(112098) = a_crystalline_shard 
+-- id(112098) = a_crystalline_shard
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112098;
--- id(112193) = an_Icepaw_kobold 
+-- id(112193) = an_Icepaw_kobold
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112193;
--- id(112194) = #Jelek_Icepaw 
+-- id(112194) = #Jelek_Icepaw
 UPDATE npc_types SET `npc_faction_id` = 1396 WHERE `id` = 112194;
--- id(117028) = a_shark 
+-- id(117028) = a_shark
 UPDATE npc_types SET `npc_faction_id` = 1605 WHERE `id` = 117028;
--- id(327216)  
+-- id(327216) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327216;
--- id(327217)  
+-- id(327217) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327217;
--- id(327218)  
+-- id(327218) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327218;
--- id(327219)  
+-- id(327219) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327219;
--- id(327220)  
+-- id(327220) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327220;
--- id(327221)  
+-- id(327221) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327221;
--- id(327222)  
+-- id(327222) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327222;
--- id(327223)  
+-- id(327223) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327223;
--- id(327224)  
+-- id(327224) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327224;
--- id(327225)  
+-- id(327225) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327225;
--- id(327226)  
+-- id(327226) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327226;
--- id(327227)  
+-- id(327227) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327227;
--- id(327228)  
+-- id(327228) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327228;
--- id(327229)  
+-- id(327229) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327229;
--- id(327230)  
+-- id(327230) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327230;
--- id(327231)  
+-- id(327231) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327231;
--- id(327232)  
+-- id(327232) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327232;
--- id(327233)  
+-- id(327233) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327233;
--- id(327234)  
+-- id(327234) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327234;
--- id(327235)  
+-- id(327235) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327235;
--- id(327236)  
+-- id(327236) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327236;
--- id(327237)  
+-- id(327237) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327237;
--- id(327238)  
+-- id(327238) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327238;
--- id(327239)  
+-- id(327239) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327239;
--- id(327240)  
+-- id(327240) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327240;
--- id(327241)  
+-- id(327241) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327241;
--- id(327242)  
+-- id(327242) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327242;
--- id(327243)  
+-- id(327243) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327243;
--- id(327244)  
+-- id(327244) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327244;
--- id(327245)  
+-- id(327245) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327245;
--- id(327246)  
+-- id(327246) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327246;
--- id(327247)  
+-- id(327247) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327247;
--- id(327248)  
+-- id(327248) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327248;
--- id(327249)  
+-- id(327249) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327249;
--- id(327250)  
+-- id(327250) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327250;
--- id(327251)  
+-- id(327251) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327251;
--- id(327252)  
+-- id(327252) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327252;
--- id(327253)  
+-- id(327253) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327253;
--- id(327254)  
+-- id(327254) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327254;
--- id(327255)  
+-- id(327255) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327255;
--- id(327256)  
+-- id(327256) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327256;
--- id(327257)  
+-- id(327257) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327257;
--- id(327258)  
+-- id(327258) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327258;
--- id(327259)  
+-- id(327259) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327259;
--- id(327260)  
+-- id(327260) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327260;
--- id(327261)  
+-- id(327261) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327261;
--- id(327262)  
+-- id(327262) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327262;
--- id(327263)  
+-- id(327263) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327263;
--- id(327264)  
+-- id(327264) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327264;
--- id(327265)  
+-- id(327265) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327265;
--- id(327266)  
+-- id(327266) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327266;
--- id(327267)  
+-- id(327267) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327267;
--- id(327268)  
+-- id(327268) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327268;
--- id(327269)  
+-- id(327269) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327269;
--- id(327270)  
+-- id(327270) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327270;
--- id(327271)  
+-- id(327271) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327271;
--- id(327272)  
+-- id(327272) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327272;
--- id(327273)  
+-- id(327273) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327273;
--- id(327274)  
+-- id(327274) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327274;
--- id(327275)  
+-- id(327275) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327275;
--- id(327276)  
+-- id(327276) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327276;
--- id(327277)  
+-- id(327277) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327277;
--- id(327278)  
+-- id(327278) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327278;
--- id(327279)  
+-- id(327279) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327279;
--- id(327280)  
+-- id(327280) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327280;
--- id(327281)  
+-- id(327281) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327281;
--- id(327282)  
+-- id(327282) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327282;
--- id(327283)  
+-- id(327283) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327283;
--- id(327284)  
+-- id(327284) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327284;
--- id(327285)  
+-- id(327285) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327285;
--- id(327286)  
+-- id(327286) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327286;
--- id(327287)  
+-- id(327287) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327287;
--- id(327288)  
+-- id(327288) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327288;
--- id(327289)  
+-- id(327289) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327289;
--- id(327290)  
+-- id(327290) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327290;
--- id(327291)  
+-- id(327291) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327291;
--- id(327292)  
+-- id(327292) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327292;
--- id(327293)  
+-- id(327293) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327293;
--- id(327294)  
+-- id(327294) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327294;
--- id(327295)  
+-- id(327295) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327295;
--- id(327296)  
+-- id(327296) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327296;
--- id(327297)  
+-- id(327297) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327297;
--- id(327298)  
+-- id(327298) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327298;
--- id(327299)  
+-- id(327299) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327299;
--- id(327300)  
+-- id(327300) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327300;
--- id(327301)  
+-- id(327301) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327301;
--- id(327302)  
+-- id(327302) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327302;
--- id(327303)  
+-- id(327303) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327303;
--- id(327304)  
+-- id(327304) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327304;
--- id(327305)  
+-- id(327305) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327305;
--- id(327306)  
+-- id(327306) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327306;
--- id(327307)  
+-- id(327307) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327307;
--- id(327308)  
+-- id(327308) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327308;
--- id(327309)  
+-- id(327309) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327309;
--- id(327310)  
+-- id(327310) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327310;
--- id(327311)  
+-- id(327311) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327311;
--- id(327312)  
+-- id(327312) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327312;
--- id(327313)  
+-- id(327313) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327313;
--- id(327314)  
+-- id(327314) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327314;
--- id(327315)  
+-- id(327315) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327315;
--- id(327316)  
+-- id(327316) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327316;
--- id(327317)  
+-- id(327317) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327317;
--- id(327318)  
+-- id(327318) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327318;
--- id(327319)  
+-- id(327319) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327319;
--- id(327320)  
+-- id(327320) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327320;
--- id(327321)  
+-- id(327321) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327321;
--- id(327322)  
+-- id(327322) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327322;
--- id(327323)  
+-- id(327323) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327323;
--- id(327324)  
+-- id(327324) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327324;
--- id(327325)  
+-- id(327325) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327325;
--- id(327326)  
+-- id(327326) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327326;
--- id(327327)  
+-- id(327327) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327327;
--- id(327328)  
+-- id(327328) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327328;
--- id(327329)  
+-- id(327329) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327329;
--- id(327330)  
+-- id(327330) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327330;
--- id(327331)  
+-- id(327331) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327331;
--- id(327332)  
+-- id(327332) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327332;
--- id(327333)  
+-- id(327333) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327333;
--- id(327334)  
+-- id(327334) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327334;
--- id(327335)  
+-- id(327335) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327335;
--- id(327336)  
+-- id(327336) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327336;
--- id(327337)  
+-- id(327337) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327337;
--- id(327338)  
+-- id(327338) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327338;
--- id(327339)  
+-- id(327339) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327339;
--- id(327340)  
+-- id(327340) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327340;
--- id(327341)  
+-- id(327341) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327341;
--- id(327342)  
+-- id(327342) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327342;
--- id(327343)  
+-- id(327343) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327343;
--- id(327344)  
+-- id(327344) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327344;
--- id(327345)  
+-- id(327345) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327345;
--- id(327346)  
+-- id(327346) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327346;
--- id(327347)  
+-- id(327347) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327347;
--- id(327348)  
+-- id(327348) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327348;
--- id(327349)  
+-- id(327349) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327349;
--- id(327350)  
+-- id(327350) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327350;
--- id(327351)  
+-- id(327351) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327351;
--- id(327352)  
+-- id(327352) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327352;
--- id(327353)  
+-- id(327353) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327353;
--- id(327354)  
+-- id(327354) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327354;
--- id(327355)  
+-- id(327355) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327355;
--- id(327356)  
+-- id(327356) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327356;
--- id(327357)  
+-- id(327357) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327357;
--- id(327358)  
+-- id(327358) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327358;
--- id(327359)  
+-- id(327359) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327359;
--- id(327360)  
+-- id(327360) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327360;
--- id(327361)  
+-- id(327361) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327361;
--- id(327362)  
+-- id(327362) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327362;
--- id(327363)  
+-- id(327363) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327363;
--- id(327364)  
+-- id(327364) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327364;
--- id(327365)  
+-- id(327365) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327365;
--- id(327366)  
+-- id(327366) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327366;
--- id(327367)  
+-- id(327367) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327367;
--- id(327368)  
+-- id(327368) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327368;
--- id(327369)  
+-- id(327369) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327369;
--- id(327370)  
+-- id(327370) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327370;
--- id(327371)  
+-- id(327371) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327371;
--- id(327372)  
+-- id(327372) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327372;
--- id(327373)  
+-- id(327373) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327373;
--- id(327374)  
+-- id(327374) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327374;
--- id(327375)  
+-- id(327375) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327375;
--- id(327376)  
+-- id(327376) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327376;
--- id(327377)  
+-- id(327377) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327377;
--- id(327378)  
+-- id(327378) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327378;
--- id(327379)  
+-- id(327379) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327379;
--- id(327380)  
+-- id(327380) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327380;
--- id(327381)  
+-- id(327381) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327381;
--- id(327382)  
+-- id(327382) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327382;
--- id(327383)  
+-- id(327383) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327383;
--- id(327384)  
+-- id(327384) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327384;
--- id(327385)  
+-- id(327385) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327385;
--- id(327390)  
+-- id(327390) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327390;
--- id(327391)  
+-- id(327391) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327391;
--- id(327392)  
+-- id(327392) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327392;
--- id(327393)  
+-- id(327393) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327393;
--- id(327394)  
+-- id(327394) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327394;
--- id(327395)  
+-- id(327395) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327395;
--- id(327396)  
+-- id(327396) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327396;
--- id(327397)  
+-- id(327397) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327397;
--- id(327398)  
+-- id(327398) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327398;
--- id(327399)  
+-- id(327399) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327399;
--- id(327400)  
+-- id(327400) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327400;
--- id(327401)  
+-- id(327401) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327401;
--- id(327402)  
+-- id(327402) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327402;
--- id(327403)  
+-- id(327403) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327403;
--- id(327404)  
+-- id(327404) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327404;
--- id(327405)  
+-- id(327405) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327405;
--- id(327406)  
+-- id(327406) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327406;
--- id(327407)  
+-- id(327407) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327407;
--- id(327408)  
+-- id(327408) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327408;
--- id(327409)  
+-- id(327409) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327409;
--- id(327410)  
+-- id(327410) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327410;
--- id(327411)  
+-- id(327411) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327411;
--- id(327412)  
+-- id(327412) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327412;
--- id(327413)  
+-- id(327413) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327413;
--- id(327414)  
+-- id(327414) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327414;
--- id(327415)  
+-- id(327415) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327415;
--- id(327416)  
+-- id(327416) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327416;
--- id(327417)  
+-- id(327417) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327417;
--- id(327418)  
+-- id(327418) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327418;
--- id(327419)  
+-- id(327419) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327419;
--- id(327420)  
+-- id(327420) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327420;
--- id(327421)  
+-- id(327421) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327421;
--- id(327422)  
+-- id(327422) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327422;
--- id(327423)  
+-- id(327423) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327423;
--- id(327424)  
+-- id(327424) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327424;
--- id(327425)  
+-- id(327425) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327425;
--- id(327426)  
+-- id(327426) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327426;
--- id(327427)  
+-- id(327427) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327427;
--- id(327428)  
+-- id(327428) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327428;
--- id(327429)  
+-- id(327429) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327429;
--- id(327430)  
+-- id(327430) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327430;
--- id(327431)  
+-- id(327431) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327431;
--- id(327432)  
+-- id(327432) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327432;
--- id(327433)  
+-- id(327433) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327433;
--- id(327434)  
+-- id(327434) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327434;
--- id(327435)  
+-- id(327435) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327435;
--- id(327436)  
+-- id(327436) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327436;
--- id(327437)  
+-- id(327437) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327437;
--- id(327438)  
+-- id(327438) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327438;
--- id(327439) =  
+-- id(327439) = 
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327439;
--- id(327440) =  
+-- id(327440) = 
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327440;
--- id(327441) =  
+-- id(327441) = 
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327441;
--- id(327442) =  
+-- id(327442) = 
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327442;
--- id(327443)  
+-- id(327443) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327443;
--- id(327444)  
+-- id(327444) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327444;
--- id(327445)  
+-- id(327445) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327445;
--- id(327446)  
+-- id(327446) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327446;
--- id(327447)  
+-- id(327447) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327447;
--- id(327448)  
+-- id(327448) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327448;
--- id(327449)  
+-- id(327449) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327449;
--- id(327450)  
+-- id(327450) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327450;
--- id(327451)  
+-- id(327451) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327451;
--- id(327452)  
+-- id(327452) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327452;
--- id(327453)  
+-- id(327453) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327453;
--- id(327454)  
+-- id(327454) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327454;
--- id(327455)  
+-- id(327455) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327455;
--- id(327456)  
+-- id(327456) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327456;
--- id(327457)  
+-- id(327457) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327457;
--- id(327458)  
+-- id(327458) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327458;
--- id(327459)  
+-- id(327459) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327459;
--- id(327460)  
+-- id(327460) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327460;
--- id(327461)  
+-- id(327461) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327461;
--- id(327462)  
+-- id(327462) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327462;
--- id(327463)  
+-- id(327463) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327463;
--- id(327464)  
+-- id(327464) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327464;
--- id(327465)  
+-- id(327465) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327465;
--- id(327466)  
+-- id(327466) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327466;
--- id(327467)  
+-- id(327467) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327467;
--- id(327468)  
+-- id(327468) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327468;
--- id(327469)  
+-- id(327469) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327469;
--- id(327470)  
+-- id(327470) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327470;
--- id(327471)  
+-- id(327471) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327471;
--- id(327472)  
+-- id(327472) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327472;
--- id(327473)  
+-- id(327473) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327473;
--- id(327474)  
+-- id(327474) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327474;
--- id(327475)  
+-- id(327475) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327475;
--- id(327476)  
+-- id(327476) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327476;
--- id(327477)  
+-- id(327477) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327477;
--- id(327478)  
+-- id(327478) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327478;
--- id(327479)  
+-- id(327479) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327479;
--- id(327480)  
+-- id(327480) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327480;
--- id(327481)  
+-- id(327481) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327481;
--- id(327482)  
+-- id(327482) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327482;
--- id(327483)  
+-- id(327483) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327483;
--- id(327484)  
+-- id(327484) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327484;
--- id(327485)  
+-- id(327485) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327485;
--- id(327486)  
+-- id(327486) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327486;
--- id(327487)  
+-- id(327487) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327487;
--- id(327488)  
+-- id(327488) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327488;
--- id(327489)  
+-- id(327489) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327489;
--- id(327490)  
+-- id(327490) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327490;
--- id(327491)  
+-- id(327491) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327491;
--- id(327492)  
+-- id(327492) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327492;
--- id(327493)  
+-- id(327493) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327493;
--- id(327494)  
+-- id(327494) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327494;
--- id(327495)  
+-- id(327495) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327495;
--- id(327496)  
+-- id(327496) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327496;
--- id(327497)  
+-- id(327497) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327497;
--- id(327498)  
+-- id(327498) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327498;
--- id(327499)  
+-- id(327499) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327499;
--- id(327500)  
+-- id(327500) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327500;
--- id(327501)  
+-- id(327501) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327501;
--- id(327502)  
+-- id(327502) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327502;
--- id(327503)  
+-- id(327503) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327503;
--- id(327504)  
+-- id(327504) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327504;
--- id(327505)  
+-- id(327505) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327505;
--- id(327506)  
+-- id(327506) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327506;
--- id(327507)  
+-- id(327507) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327507;
--- id(327508)  
+-- id(327508) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327508;
--- id(327509)  
+-- id(327509) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327509;
--- id(327510)  
+-- id(327510) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327510;
--- id(327511)  
+-- id(327511) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327511;
--- id(327512)  
+-- id(327512) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327512;
--- id(327513)  
+-- id(327513) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327513;
--- id(327514)  
+-- id(327514) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327514;
--- id(327515)  
+-- id(327515) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327515;
--- id(327516)  
+-- id(327516) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327516;
--- id(327517)  
+-- id(327517) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327517;
--- id(327518)  
+-- id(327518) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327518;
--- id(327519)  
+-- id(327519) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327519;
--- id(327520)  
+-- id(327520) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327520;
--- id(327521)  
+-- id(327521) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327521;
--- id(327522)  
+-- id(327522) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327522;
--- id(327523)  
+-- id(327523) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327523;
--- id(327524)  
+-- id(327524) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327524;
--- id(327525)  
+-- id(327525) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327525;
--- id(327526)  
+-- id(327526) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327526;
--- id(327527)  
+-- id(327527) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327527;
--- id(327528)  
+-- id(327528) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327528;
--- id(327529)  
+-- id(327529) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327529;
--- id(327530)  
+-- id(327530) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327530;
--- id(327531)  
+-- id(327531) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327531;
--- id(327532)  
+-- id(327532) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327532;
--- id(327533)  
+-- id(327533) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327533;
--- id(327534)  
+-- id(327534) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327534;
--- id(327535)  
+-- id(327535) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327535;
--- id(327536)  
+-- id(327536) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327536;
--- id(327537)  
+-- id(327537) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327537;
--- id(327538)  
+-- id(327538) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327538;
--- id(327539)  
+-- id(327539) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327539;
--- id(327540)  
+-- id(327540) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327540;
--- id(327541)  
+-- id(327541) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327541;
--- id(327542)  
+-- id(327542) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327542;
--- id(327543)  
+-- id(327543) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327543;
--- id(327544)  
+-- id(327544) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327544;
--- id(327545)  
+-- id(327545) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327545;
--- id(327546)  
+-- id(327546) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327546;
--- id(327547)  
+-- id(327547) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327547;
--- id(327549)  
+-- id(327549) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327549;
--- id(327550)  
+-- id(327550) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327550;
--- id(327551)  
+-- id(327551) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327551;
--- id(327552)  
+-- id(327552) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327552;
--- id(327553)  
+-- id(327553) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327553;
--- id(327554)  
+-- id(327554) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327554;
--- id(327555)  
+-- id(327555) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327555;
--- id(327556)  
+-- id(327556) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327556;
--- id(327558)  
+-- id(327558) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327558;
--- id(327559)  
+-- id(327559) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327559;
--- id(327560)  
+-- id(327560) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327560;
--- id(327561)  
+-- id(327561) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327561;
--- id(327562)  
+-- id(327562) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327562;
--- id(327563)  
+-- id(327563) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327563;
--- id(327564)  
+-- id(327564) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327564;
--- id(327565)  
+-- id(327565) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327565;
--- id(327566)  
+-- id(327566) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327566;
--- id(327567)  
+-- id(327567) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327567;
--- id(327568)  
+-- id(327568) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327568;
--- id(327569)  
+-- id(327569) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327569;
--- id(327570)  
+-- id(327570) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327570;
--- id(327571)  
+-- id(327571) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327571;
--- id(327572)  
+-- id(327572) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327572;
--- id(327573)  
+-- id(327573) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327573;
--- id(327574)  
+-- id(327574) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327574;
--- id(327575)  
+-- id(327575) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327575;
--- id(327576)  
+-- id(327576) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327576;
--- id(327577)  
+-- id(327577) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327577;
--- id(327578)  
+-- id(327578) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327578;
--- id(327579)  
+-- id(327579) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327579;
--- id(327580)  
+-- id(327580) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327580;
--- id(327581)  
+-- id(327581) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327581;
--- id(327582)  
+-- id(327582) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327582;
--- id(327583)  
+-- id(327583) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327583;
--- id(327584)  
+-- id(327584) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327584;
--- id(327585)  
+-- id(327585) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327585;
--- id(327586)  
+-- id(327586) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327586;
--- id(327587)  
+-- id(327587) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327587;
--- id(327588)  
+-- id(327588) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327588;
--- id(327589)  
+-- id(327589) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327589;
--- id(327590)  
+-- id(327590) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327590;
--- id(327591)  
+-- id(327591) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327591;
--- id(327592)  
+-- id(327592) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327592;
--- id(327593)  
+-- id(327593) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 327593;
--- id(331016)  
+-- id(331016) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331016;
--- id(331020)  
+-- id(331020) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331020;
--- id(331021)  
+-- id(331021) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331021;
--- id(331022)  
+-- id(331022) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331022;
--- id(331023)  
+-- id(331023) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331023;
--- id(331084)  
+-- id(331084) = Array
 UPDATE spawn2 SET `respawntime` = 410 WHERE `id` = 331084;
--- id(339002)  
+-- id(339002) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339002;
--- id(339003)  
+-- id(339003) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339003;
--- id(339004)  
+-- id(339004) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 339004;
--- id(339032) =  
+-- id(339032) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339032;
--- id(339033) =  
+-- id(339033) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339033;
--- id(339034) =  
+-- id(339034) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339034;
--- id(339036) =  
+-- id(339036) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339036;
--- id(339037) =  
+-- id(339037) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339037;
--- id(339038)  
+-- id(339038) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339038;
--- id(339039)  
+-- id(339039) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339039;
--- id(339040)  
+-- id(339040) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339040;
--- id(339041)  
+-- id(339041) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339041;
--- id(339042) =  
+-- id(339042) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339042;
--- id(339043) =  
+-- id(339043) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339043;
--- id(339044)  
+-- id(339044) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339044;
--- id(339045) =  
+-- id(339045) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339045;
--- id(339046) =  
+-- id(339046) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339046;
--- id(339047)  
+-- id(339047) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339047;
--- id(339048)  
+-- id(339048) = Array
 UPDATE spawn2 SET `spawngroupID` = 20034, `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339048;
--- id(339049)  
+-- id(339049) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339049;
--- id(339050)  
+-- id(339050) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339050;
--- id(339051)  
+-- id(339051) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339051;
--- id(339052)  
+-- id(339052) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339052;
--- id(339053)  
+-- id(339053) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339053;
--- id(339054)  
+-- id(339054) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339054;
--- id(339055)  
+-- id(339055) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339055;
--- id(339056)  
+-- id(339056) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339056;
--- id(339057)  
+-- id(339057) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339057;
--- id(339058) =  
+-- id(339058) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339058;
--- id(339059) =  
+-- id(339059) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339059;
--- id(339061)  
+-- id(339061) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339061;
--- id(339062)  
+-- id(339062) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339062;
--- id(339064)  
+-- id(339064) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339064;
--- id(339065) =  
+-- id(339065) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339065;
--- id(339066)  
+-- id(339066) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339066;
--- id(339067) =  
+-- id(339067) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339067;
--- id(339068) =  
+-- id(339068) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339068;
--- id(339069) =  
+-- id(339069) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339069;
--- id(339070) =  
+-- id(339070) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339070;
--- id(339071)  
+-- id(339071) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339071;
--- id(339072) =  
+-- id(339072) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339072;
--- id(339073) =  
+-- id(339073) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339073;
--- id(339074)  
+-- id(339074) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339074;
--- id(339075)  
+-- id(339075) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339075;
--- id(339076)  
+-- id(339076) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339076;
--- id(339077)  
+-- id(339077) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339077;
--- id(339078)  
+-- id(339078) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339078;
--- id(339079)  
+-- id(339079) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339079;
--- id(339080)  
+-- id(339080) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339080;
--- id(339081)  
+-- id(339081) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339081;
--- id(339082)  
+-- id(339082) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339082;
--- id(339083) =  
+-- id(339083) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339083;
--- id(339084) =  
+-- id(339084) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339084;
--- id(339085)  
+-- id(339085) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339085;
--- id(339086)  
+-- id(339086) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339086;
--- id(339087) =  
+-- id(339087) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339087;
--- id(339088) =  
+-- id(339088) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339088;
--- id(339090)  
+-- id(339090) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339090;
--- id(339091)  
+-- id(339091) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339091;
--- id(339092)  
+-- id(339092) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339092;
--- id(339093)  
+-- id(339093) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339093;
--- id(339094)  
+-- id(339094) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339094;
--- id(339095)  
+-- id(339095) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339095;
--- id(339096)  
+-- id(339096) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339096;
--- id(339097)  
+-- id(339097) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339097;
--- id(339098) =  
+-- id(339098) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339098;
--- id(339099) =  
+-- id(339099) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339099;
--- id(339100)  
+-- id(339100) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339100;
--- id(339101) =  
+-- id(339101) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339101;
--- id(339102) =  
+-- id(339102) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339102;
--- id(339103)  
+-- id(339103) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339103;
--- id(339104)  
+-- id(339104) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339104;
--- id(339105)  
+-- id(339105) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339105;
--- id(339106)  
+-- id(339106) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339106;
--- id(339107)  
+-- id(339107) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339107;
--- id(339108)  
+-- id(339108) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339108;
--- id(339109) =  
+-- id(339109) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339109;
--- id(339110)  
+-- id(339110) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339110;
--- id(339111)  
+-- id(339111) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339111;
--- id(339112)  
+-- id(339112) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339112;
--- id(339113) =  
+-- id(339113) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339113;
--- id(339114)  
+-- id(339114) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339114;
--- id(339115)  
+-- id(339115) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339115;
--- id(339116)  
+-- id(339116) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339116;
--- id(339117)  
+-- id(339117) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339117;
--- id(339118) =  
+-- id(339118) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339118;
--- id(339119)  
+-- id(339119) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339119;
--- id(339120)  
+-- id(339120) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339120;
--- id(339121)  
+-- id(339121) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339121;
--- id(339122) =  
+-- id(339122) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339122;
--- id(339123)  
+-- id(339123) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339123;
--- id(339124)  
+-- id(339124) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339124;
--- id(339125)  
+-- id(339125) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339125;
--- id(339126)  
+-- id(339126) = Array
 UPDATE spawn2 SET `spawngroupID` = 20034, `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339126;
--- id(339127)  
+-- id(339127) = Array
 UPDATE spawn2 SET `spawngroupID` = 20034, `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339127;
--- id(339128)  
+-- id(339128) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339128;
--- id(339129) =  
+-- id(339129) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339129;
--- id(339130) =  
+-- id(339130) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339130;
--- id(339131)  
+-- id(339131) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339131;
--- id(339132)  
+-- id(339132) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339132;
--- id(339133)  
+-- id(339133) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339133;
--- id(339134) =  
+-- id(339134) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339134;
--- id(339135)  
+-- id(339135) = Array
 UPDATE spawn2 SET `spawngroupID` = 20034, `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339135;
--- id(339136) =  
+-- id(339136) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339136;
--- id(339137)  
+-- id(339137) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339137;
--- id(339138)  
+-- id(339138) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339138;
--- id(339139) =  
+-- id(339139) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339139;
--- id(339141)  
+-- id(339141) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339141;
--- id(339143)  
+-- id(339143) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339143;
--- id(339144)  
+-- id(339144) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339144;
--- id(339145)  
+-- id(339145) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339145;
--- id(339146)  
+-- id(339146) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339146;
--- id(339147)  
+-- id(339147) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339147;
--- id(339148)  
+-- id(339148) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339148;
--- id(339149)  
+-- id(339149) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339149;
--- id(339150)  
+-- id(339150) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339150;
--- id(339151) =  
+-- id(339151) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339151;
--- id(339152) =  
+-- id(339152) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339152;
--- id(339153)  
+-- id(339153) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339153;
--- id(339154)  
+-- id(339154) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339154;
--- id(339155)  
+-- id(339155) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339155;
--- id(339156)  
+-- id(339156) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339156;
--- id(339157)  
+-- id(339157) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339157;
--- id(339158)  
+-- id(339158) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339158;
--- id(339161) =  
+-- id(339161) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339161;
--- id(339162)  
+-- id(339162) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339162;
--- id(339163)  
+-- id(339163) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339163;
--- id(339164)  
+-- id(339164) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339164;
--- id(339165)  
+-- id(339165) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339165;
--- id(339166)  
+-- id(339166) = Array
 UPDATE spawn2 SET `pathgrid` = 14, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339166;
--- id(339167) =  
+-- id(339167) = 
 UPDATE spawn2 SET `spawngroupID` = 448220, `pathgrid` = 15, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339167;
--- id(339168)  
+-- id(339168) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339168;
--- id(339169)  
+-- id(339169) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339169;
--- id(339170)  
+-- id(339170) = Array
 UPDATE spawn2 SET `pathgrid` = 17, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339170;
--- id(339171)  
+-- id(339171) = Array
 UPDATE spawn2 SET `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339171;
--- id(339172)  
+-- id(339172) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 16, `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339172;
--- id(339193)  
+-- id(339193) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339193;
--- id(339194)  
+-- id(339194) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339194;
--- id(339195)  
+-- id(339195) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339195;
--- id(339196)  
+-- id(339196) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339196;
--- id(339197)  
+-- id(339197) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339197;
--- id(339198)  
+-- id(339198) = Array
 UPDATE spawn2 SET `content_flags` = "OldPlane_Hate_Sky" WHERE `id` = 339198;
--- id(358943) =  
+-- id(358943) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358943;
--- id(358944) =  
+-- id(358944) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358944;
--- id(358945)  
+-- id(358945) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358945;
--- id(358946) =  
+-- id(358946) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358946;
--- id(358947)  
+-- id(358947) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358947;
--- id(358948)  
+-- id(358948) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358948;
--- id(358949)  
+-- id(358949) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358949;
--- id(358950) =  
+-- id(358950) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358950;
--- id(358951)  
+-- id(358951) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358951;
--- id(358952)  
+-- id(358952) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358952;
--- id(358953) =  
+-- id(358953) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358953;
--- id(358954) =  
+-- id(358954) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358954;
--- id(358955) =  
+-- id(358955) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358955;
--- id(358956)  
+-- id(358956) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358956;
--- id(358957)  
+-- id(358957) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358957;
--- id(358958) =  
+-- id(358958) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358958;
--- id(358959) =  
+-- id(358959) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358959;
--- id(358960)  
+-- id(358960) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358960;
--- id(358961)  
+-- id(358961) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358961;
--- id(358962)  
+-- id(358962) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358962;
--- id(358963) =  
+-- id(358963) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358963;
--- id(358964) =  
+-- id(358964) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358964;
--- id(358965) =  
+-- id(358965) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358965;
--- id(358966)  
+-- id(358966) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358966;
--- id(358967)  
+-- id(358967) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358967;
--- id(358968)  
+-- id(358968) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358968;
--- id(358969)  
+-- id(358969) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358969;
--- id(358970) =  
+-- id(358970) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358970;
--- id(358971)  
+-- id(358971) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358971;
--- id(358972)  
+-- id(358972) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17, `_condition` = 2 WHERE `id` = 358972;
--- id(358974)  
+-- id(358974) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358974;
--- id(358975)  
+-- id(358975) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358975;
--- id(358978)  
+-- id(358978) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 358978;
--- id(358979) =  
+-- id(358979) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358979;
--- id(358980)  
+-- id(358980) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358980;
--- id(358984)  
+-- id(358984) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 358984;
--- id(358985)  
+-- id(358985) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358985;
--- id(358987)  
+-- id(358987) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358987;
--- id(358988)  
+-- id(358988) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358988;
--- id(358989)  
+-- id(358989) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358989;
--- id(358990) =  
+-- id(358990) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358990;
--- id(358991) =  
+-- id(358991) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358991;
--- id(358992) =  
+-- id(358992) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358992;
--- id(358993)  
+-- id(358993) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358993;
--- id(358994) =  
+-- id(358994) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 358994;
--- id(358995)  
+-- id(358995) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358995;
--- id(358996)  
+-- id(358996) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358996;
--- id(358997)  
+-- id(358997) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358997;
--- id(358998)  
+-- id(358998) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 358998;
--- id(358999)  
+-- id(358999) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 358999;
--- id(359000) =  
+-- id(359000) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359000;
--- id(359001)  
+-- id(359001) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 359001;
--- id(359002)  
+-- id(359002) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359002;
--- id(359003) =  
+-- id(359003) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359003;
--- id(359004) =  
+-- id(359004) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359004;
--- id(359005)  
+-- id(359005) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359005;
--- id(359006) =  
+-- id(359006) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359006;
--- id(359007)  
+-- id(359007) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 359007;
--- id(359009) =  
+-- id(359009) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359009;
--- id(359010)  
+-- id(359010) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359010;
--- id(359011)  
+-- id(359011) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359011;
--- id(359012) =  
+-- id(359012) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359012;
--- id(359089) =  
+-- id(359089) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359089;
--- id(359106) =  
+-- id(359106) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359106;
--- id(359109)  
+-- id(359109) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359109;
--- id(359111) =  
+-- id(359111) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359111;
--- id(359112) =  
+-- id(359112) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359112;
--- id(359113)  
+-- id(359113) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359113;
--- id(359114)  
+-- id(359114) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359114;
--- id(359120) =  
+-- id(359120) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359120;
--- id(359122)  
+-- id(359122) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359122;
--- id(359123) =  
+-- id(359123) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359123;
--- id(359124)  
+-- id(359124) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359124;
--- id(359125) =  
+-- id(359125) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359125;
--- id(359126)  
+-- id(359126) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359126;
--- id(359127) =  
+-- id(359127) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359127;
--- id(359128) =  
+-- id(359128) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359128;
--- id(359130)  
+-- id(359130) = Array
 UPDATE spawn2 SET `spawngroupID` = 20213, `pathgrid` = 16 WHERE `id` = 359130;
--- id(359131)  
+-- id(359131) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359131;
--- id(359133) =  
+-- id(359133) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359133;
--- id(359134) =  
+-- id(359134) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359134;
--- id(359135)  
+-- id(359135) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359135;
--- id(359136) =  
+-- id(359136) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359136;
--- id(359137) =  
+-- id(359137) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359137;
--- id(359138)  
+-- id(359138) = Array
 UPDATE spawn2 SET `spawngroupID` = 20093, `pathgrid` = 17 WHERE `id` = 359138;
--- id(359139)  
+-- id(359139) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359139;
--- id(359140) =  
+-- id(359140) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359140;
--- id(359141)  
+-- id(359141) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 359141;
--- id(359142) =  
+-- id(359142) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359142;
--- id(359143)  
+-- id(359143) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359143;
--- id(359147)  
+-- id(359147) = Array
 UPDATE spawn2 SET `spawngroupID` = 20213, `pathgrid` = 16 WHERE `id` = 359147;
--- id(359148) =  
+-- id(359148) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359148;
--- id(359149)  
+-- id(359149) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359149;
--- id(359150)  
+-- id(359150) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359150;
--- id(359152) =  
+-- id(359152) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359152;
--- id(359155) =  
+-- id(359155) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359155;
--- id(359158) =  
+-- id(359158) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359158;
--- id(359170)  
+-- id(359170) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359170;
--- id(359171)  
+-- id(359171) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359171;
--- id(359172) =  
+-- id(359172) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359172;
--- id(359173)  
+-- id(359173) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359173;
--- id(359175)  
+-- id(359175) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359175;
--- id(359176)  
+-- id(359176) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359176;
--- id(359177) =  
+-- id(359177) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359177;
--- id(359178)  
+-- id(359178) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359178;
--- id(359183)  
+-- id(359183) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359183;
--- id(359184)  
+-- id(359184) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359184;
--- id(359185) =  
+-- id(359185) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359185;
--- id(359188)  
+-- id(359188) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359188;
--- id(359189) =  
+-- id(359189) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359189;
--- id(359190) =  
+-- id(359190) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359190;
--- id(359191)  
+-- id(359191) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359191;
--- id(359192)  
+-- id(359192) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359192;
--- id(359193) =  
+-- id(359193) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359193;
--- id(359194) =  
+-- id(359194) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359194;
--- id(359200)  
+-- id(359200) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359200;
--- id(359204) =  
+-- id(359204) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359204;
--- id(359205) =  
+-- id(359205) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359205;
--- id(359206) =  
+-- id(359206) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359206;
--- id(359207) =  
+-- id(359207) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359207;
--- id(359208)  
+-- id(359208) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359208;
--- id(359209) =  
+-- id(359209) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359209;
--- id(359211)  
+-- id(359211) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 359211;
--- id(359212)  
+-- id(359212) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359212;
--- id(359213) =  
+-- id(359213) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359213;
--- id(359214) =  
+-- id(359214) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359214;
--- id(359216) =  
+-- id(359216) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359216;
--- id(359217) =  
+-- id(359217) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359217;
--- id(359218) =  
+-- id(359218) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359218;
--- id(359219) =  
+-- id(359219) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359219;
--- id(359220) =  
+-- id(359220) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359220;
--- id(359221) =  
+-- id(359221) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359221;
--- id(359222)  
+-- id(359222) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359222;
--- id(359223)  
+-- id(359223) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359223;
--- id(359224) =  
+-- id(359224) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359224;
--- id(359226)  
+-- id(359226) = Array
 UPDATE spawn2 SET `pathgrid` = 14 WHERE `id` = 359226;
--- id(359227) =  
+-- id(359227) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359227;
--- id(359228) =  
+-- id(359228) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359228;
--- id(359230)  
+-- id(359230) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359230;
--- id(359231) =  
+-- id(359231) = 
 UPDATE spawn2 SET `spawngroupID` = 448221, `pathgrid` = 15 WHERE `id` = 359231;
--- id(359232)  
+-- id(359232) = Array
 UPDATE spawn2 SET `pathgrid` = 17 WHERE `id` = 359232;
--- id(359233)  
+-- id(359233) = Array
 UPDATE spawn2 SET `pathgrid` = 16 WHERE `id` = 359233;
--- id(359234)  
+-- id(359234) = Array
 UPDATE spawn2 SET `spawngroupID` = 20404, `pathgrid` = 17 WHERE `id` = 359234;
--- id(368289)  
+-- id(368289) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 368289;
--- id(368290)  
+-- id(368290) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 368290;
--- id(368291)  
+-- id(368291) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 368291;
--- id(368292)  
+-- id(368292) = Array
 UPDATE spawn2 SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 368292;
--- id(369639)  
+-- id(369639) = Array
 UPDATE spawn2 SET `respawntime` = 600 WHERE `id` = 369639;
--- spawngroupID(20034) = a_Klaknak_drone 
+-- spawngroupID(20034) = a_Klaknak_drone
 UPDATE spawnentry SET `chance` = 8 WHERE `spawngroupID` = 20034 AND `npcID` = 20018;
--- spawngroupID(20034) = a_Klaknak_warrior 
+-- spawngroupID(20034) = a_Klaknak_warrior
 UPDATE spawnentry SET `chance` = 8 WHERE `spawngroupID` = 20034 AND `npcID` = 20019;
--- spawngroupID(20034) = a_mangy_rat 
+-- spawngroupID(20034) = a_mangy_rat
 UPDATE spawnentry SET `chance` = 8 WHERE `spawngroupID` = 20034 AND `npcID` = 20021;
--- spawngroupID(20034) = a_fire_beetle 
+-- spawngroupID(20034) = a_fire_beetle
 UPDATE spawnentry SET `chance` = 8 WHERE `spawngroupID` = 20034 AND `npcID` = 20032;
--- spawngroupID(20034) = a_bat 
+-- spawngroupID(20034) = a_bat
 UPDATE spawnentry SET `chance` = 8 WHERE `spawngroupID` = 20034 AND `npcID` = 20034;
--- spawngroupID(20034) = a_moss_snake 
+-- spawngroupID(20034) = a_moss_snake
 UPDATE spawnentry SET `chance` = 9 WHERE `spawngroupID` = 20034 AND `npcID` = 20039;
--- spawngroupID(20034) = a_large_rat 
+-- spawngroupID(20034) = a_large_rat
 UPDATE spawnentry SET `chance` = 9 WHERE `spawngroupID` = 20034 AND `npcID` = 20049;
--- spawngroupID(20034) = a_spiderling 
+-- spawngroupID(20034) = a_spiderling
 UPDATE spawnentry SET `chance` = 9 WHERE `spawngroupID` = 20034 AND `npcID` = 20167;
--- spawngroupID(20093) = a_giant_spider 
+-- spawngroupID(20093) = a_giant_spider
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20013;
--- spawngroupID(20093) = a_young_kodiak 
+-- spawngroupID(20093) = a_young_kodiak
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20031;
--- spawngroupID(20093) = a_darkweed_snake 
+-- spawngroupID(20093) = a_darkweed_snake
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20035;
--- spawngroupID(20093) = an_orc_warrior 
+-- spawngroupID(20093) = an_orc_warrior
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20048;
--- spawngroupID(20093) = a_black_wolf 
+-- spawngroupID(20093) = a_black_wolf
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20051;
--- spawngroupID(20093) = a_giant_scarab 
+-- spawngroupID(20093) = a_giant_scarab
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20093;
--- spawngroupID(20093) = an_orc_raider 
+-- spawngroupID(20093) = an_orc_raider
 UPDATE spawnentry SET `chance` = 7 WHERE `spawngroupID` = 20093 AND `npcID` = 20115;
--- spawngroupID(20135) = risen_commander 
+-- spawngroupID(20135) = risen_commander
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20135 AND `npcID` = 20006;
--- spawngroupID(20135) = decaying_commander 
+-- spawngroupID(20135) = decaying_commander
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20135 AND `npcID` = 20135;
--- spawngroupID(20135) = rotting_knight 
+-- spawngroupID(20135) = rotting_knight
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20135 AND `npcID` = 20141;
--- spawngroupID(20135) = wandering_warrior 
+-- spawngroupID(20135) = wandering_warrior
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20135 AND `npcID` = 20218;
--- spawngroupID(20135) = decaying_footman 
+-- spawngroupID(20135) = decaying_footman
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20135 AND `npcID` = 20221;
--- spawngroupID(20135) = tormented_corporal 
+-- spawngroupID(20135) = tormented_corporal
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20135 AND `npcID` = 20239;
--- spawngroupID(20135) = decaying_trooper 
+-- spawngroupID(20135) = decaying_trooper
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20135 AND `npcID` = 20253;
--- spawngroupID(20135) = fallen_warrior 
+-- spawngroupID(20135) = fallen_warrior
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20135 AND `npcID` = 20257;
--- spawngroupID(20135) = decaying_warrior 
+-- spawngroupID(20135) = decaying_warrior
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20135 AND `npcID` = 20499;
--- spawngroupID(20213) = infected_officer 
+-- spawngroupID(20213) = infected_officer
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20213 AND `npcID` = 20008;
--- spawngroupID(20213) = undead_advisor 
+-- spawngroupID(20213) = undead_advisor
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20213 AND `npcID` = 20011;
--- spawngroupID(20213) = skeleton_trooper 
+-- spawngroupID(20213) = skeleton_trooper
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20213 AND `npcID` = 20223;
--- spawngroupID(20213) = zombie_infantry 
+-- spawngroupID(20213) = zombie_infantry
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20213 AND `npcID` = 20229;
--- spawngroupID(20213) = skeleton_advisor 
+-- spawngroupID(20213) = skeleton_advisor
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20234;
--- spawngroupID(20213) = undead_mendicant 
+-- spawngroupID(20213) = undead_mendicant
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20247;
--- spawngroupID(20213) = rotting_officer 
+-- spawngroupID(20213) = rotting_officer
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20260;
--- spawngroupID(20213) = zombie_advisor 
+-- spawngroupID(20213) = zombie_advisor
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20278;
--- spawngroupID(20213) = revenging_knight 
+-- spawngroupID(20213) = revenging_knight
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20404;
--- spawngroupID(20213) = skeleton_infantry 
+-- spawngroupID(20213) = skeleton_infantry
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20213 AND `npcID` = 20464;
--- spawngroupID(20404) = infected_officer 
+-- spawngroupID(20404) = infected_officer
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20404 AND `npcID` = 20008;
--- spawngroupID(20404) = undead_advisor 
+-- spawngroupID(20404) = undead_advisor
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20404 AND `npcID` = 20011;
--- spawngroupID(20404) = rotted_tactician 
+-- spawngroupID(20404) = rotted_tactician
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20404 AND `npcID` = 20213;
--- spawngroupID(20404) = skeleton_trooper 
+-- spawngroupID(20404) = skeleton_trooper
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20404 AND `npcID` = 20223;
--- spawngroupID(20404) = skeleton_advisor 
+-- spawngroupID(20404) = skeleton_advisor
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20404 AND `npcID` = 20234;
--- spawngroupID(20404) = undead_mendicant 
+-- spawngroupID(20404) = undead_mendicant
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20404 AND `npcID` = 20247;
--- spawngroupID(20404) = rotting_officer 
+-- spawngroupID(20404) = rotting_officer
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20404 AND `npcID` = 20260;
--- spawngroupID(20404) = zombie_advisor 
+-- spawngroupID(20404) = zombie_advisor
 UPDATE spawnentry SET `chance` = 5 WHERE `spawngroupID` = 20404 AND `npcID` = 20278;
--- spawngroupID(20404) = revenging_knight 
+-- spawngroupID(20404) = revenging_knight
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20404 AND `npcID` = 20404;
--- spawngroupID(20404) = skeleton_infantry 
+-- spawngroupID(20404) = skeleton_infantry
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 20404 AND `npcID` = 20464;
--- spawngroupID(225868) = Feddi_Dooger 
+-- spawngroupID(225868) = Feddi_Dooger
 UPDATE spawnentry SET `chance` = 25 WHERE `spawngroupID` = 225868 AND `npcID` = 56330;
--- id(20034) = kithicor_a_bat105 
+-- id(20034) = kithicor_a_bat105
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `delay` = 0, `mindelay` = 0, `rand_respawntime` = 0, `wp_spawns` = 1 WHERE `id` = 20034;
--- id(20093) = kithicor_a_giant_scarab79 
+-- id(20093) = kithicor_a_giant_scarab79
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `delay` = 0, `mindelay` = 0, `despawn_timer` = 0, `rand_respawntime` = 0, `wp_spawns` = 1 WHERE `id` = 20093;
--- id(20135) = kithicor_decaying_commander6811 
+-- id(20135) = kithicor_decaying_commander6811
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `delay` = 0, `mindelay` = 0, `despawn_timer` = 0, `rand_respawntime` = 0, `wp_spawns` = 1 WHERE `id` = 20135;
--- id(20213) = kithicor_rotted_tactician16611 
+-- id(20213) = kithicor_rotted_tactician16611
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `delay` = 0, `mindelay` = 0, `despawn_timer` = 0, `rand_respawntime` = 0, `wp_spawns` = 1 WHERE `id` = 20213;
--- id(20404) = kithicor_revenging_knight2611 
+-- id(20404) = kithicor_revenging_knight2611
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `delay` = 0, `mindelay` = 0, `despawn_timer` = 0, `rand_respawntime` = 0, `wp_spawns` = 1 WHERE `id` = 20404;
--- id(4434) =  
+-- id(4434) = 
 UPDATE tradeskill_recipe SET `trivial` = 163 WHERE `id` = 4434;

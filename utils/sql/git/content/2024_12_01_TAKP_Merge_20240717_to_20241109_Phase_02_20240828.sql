@@ -887,7 +887,7 @@ INSERT INTO grid_entries (`gridid`, `zoneid`, `number`, `x`, `y`, `z`, `heading`
 INSERT INTO grid_entries (`gridid`, `zoneid`, `number`, `x`, `y`, `z`, `heading`, `pause`, `centerpoint`) VALUES (28, 83, 97, -2395, -873, -28.7, -1, 30, 0);
 INSERT INTO grid_entries (`gridid`, `zoneid`, `number`, `x`, `y`, `z`, `heading`, `pause`, `centerpoint`) VALUES (28, 83, 98, -2422, -694, -20.7, -1, 30, 0);
 INSERT INTO grid_entries (`gridid`, `zoneid`, `number`, `x`, `y`, `z`, `heading`, `pause`, `centerpoint`) VALUES (28, 83, 99, -2332, -605, 3, -1, 30, 0);
-INSERT INTO lootdrop (`id`, `name`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116444, "97414_a_lizard_fanatic_", -1, -1, NULL, NULL);
+REPLACE INTO lootdrop (`id`, `name`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116444, "97414_a_lizard_fanatic_", -1, -1, NULL, NULL);
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (23434, 1602, 1, 1, 10, 0, 255, 1, 0, -1, -1, "OldVP", NULL);
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (23434, 10849, 1, 1, 10, 0, 255, 1, 0, -1, -1, "OldVP", NULL);
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (23435, 10858, 1, 1, 12.5, 0, 255, 1, 0, -1, -1, "OldVP", NULL);
@@ -914,7 +914,7 @@ INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_i
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116427, 10911, 1, 1, 9, 0, 255, 1, 0, -1, -1, "OldVP", NULL);
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116427, 10914, 1, 1, 9, 0, 255, 1, 0, 3, 99, NULL, NULL);
 INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116427, 32615, 1, 1, 9, 0, 255, 1, 0, -1, -1, "OldVP", NULL);
-INSERT INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116444, 10559, 1, 0, 12.5, 0, 255, 1, 0, -1, -1, NULL, NULL);
+REPLACE INTO lootdrop_entries (`lootdrop_id`, `item_id`, `item_charges`, `equip_item`, `chance`, `minlevel`, `maxlevel`, `multiplier`, `disabled_chance`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (116444, 10559, 1, 0, 12.5, 0, 255, 1, 0, -1, -1, NULL, NULL);
 INSERT INTO loottable (`id`, `name`, `mincash`, `maxcash`, `avgcoin`, `done`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (97605, "Deye_Coolbreeze", 1, 1000, 0, 0, -1, -1, NULL, NULL);
 INSERT INTO loottable (`id`, `name`, `mincash`, `maxcash`, `avgcoin`, `done`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (97606, "a_lizard_zealot", 50, 2500, 0, 0, -1, -1, NULL, NULL);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (92389, 107715, 1, 20, 1, 0, 0);
@@ -926,7 +926,7 @@ INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `pro
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (94279, 107933, 1, 100, 1, 0, 0);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (94279, 107934, 1, 100, 0, 0, 0);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97406, 115863, 1, 12, 0, 0, 0);
-INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97414, 116444, 1, 100, 0, 0, 0);
+REPLACE INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97414, 116444, 1, 100, 0, 0, 0);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97606, 105875, 1, 100, 1, 0, 0);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97606, 105945, 1, 100, 1, 0, 0);
 INSERT INTO loottable_entries (`loottable_id`, `lootdrop_id`, `multiplier`, `probability`, `droplimit`, `mindrop`, `multiplier_min`) VALUES (97606, 106887, 1, 100, 1, 0, 0);
@@ -952,2491 +952,2491 @@ INSERT INTO spawnentry (`spawngroupID`, `npcID`, `chance`, `mintime`, `maxtime`,
 INSERT INTO spawnentry (`spawngroupID`, `npcID`, `chance`, `mintime`, `maxtime`, `min_expansion`, `max_expansion`, `content_flags`, `content_flags_disabled`) VALUES (448205, 48029, 100, 0, 0, -1, -1, NULL, NULL);
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448204, "permafrost_448204", 0, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 0);
 INSERT INTO spawngroup (`id`, `name`, `spawn_limit`, `max_x`, `min_x`, `max_y`, `min_y`, `delay`, `mindelay`, `despawn`, `despawn_timer`, `rand_spawns`, `rand_respawntime`, `rand_variance`, `rand_condition_`, `wp_spawns`) VALUES (448205, "cazicthule_448205", 0, 0, 0, 0, 0, 0, 15000, 0, 100, 0, 1200, 0, 0, 0);
--- id(145) = blackburrow 
+-- id(145) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 145;
--- id(146) = blackburrow 
+-- id(146) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 146;
--- id(147) = blackburrow 
+-- id(147) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 147;
--- id(148) = blackburrow 
+-- id(148) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 148;
--- id(149) = blackburrow 
+-- id(149) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 149;
--- id(150) = blackburrow 
+-- id(150) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 150;
--- id(151) = blackburrow 
+-- id(151) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 151;
--- id(152) = blackburrow 
+-- id(152) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 152;
--- id(153) = blackburrow 
+-- id(153) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 153;
--- id(154) = blackburrow 
+-- id(154) = blackburrow
 UPDATE doors SET `dest_zone` = "NONE", `dest_x` = 0, `dest_y` = 0, `dest_z` = 0, `dest_heading` = 0, `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 154;
--- id(123) = cazicthule/an_alligator; an_alligator 
+-- id(123) = cazicthule/an_alligator; an_alligator
 UPDATE grid SET `type` = 2 WHERE `zoneid` = 48 AND `id` = 123;
--- gridid(116) = cazicthule/1 
+-- gridid(116) = cazicthule/1
 UPDATE grid_entries SET `x` = -515, `y` = 152, `z` = -205, `pause` = 45 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 1;
--- gridid(116) = cazicthule/2 
+-- gridid(116) = cazicthule/2
 UPDATE grid_entries SET `x` = -524, `y` = 158, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 2;
--- gridid(116) = cazicthule/3 
+-- gridid(116) = cazicthule/3
 UPDATE grid_entries SET `x` = -537, `y` = 165, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 3;
--- gridid(116) = cazicthule/4 
+-- gridid(116) = cazicthule/4
 UPDATE grid_entries SET `x` = -552, `y` = 170, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 4;
--- gridid(116) = cazicthule/5 
+-- gridid(116) = cazicthule/5
 UPDATE grid_entries SET `x` = -575, `y` = 177, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 5;
--- gridid(116) = cazicthule/6 
+-- gridid(116) = cazicthule/6
 UPDATE grid_entries SET `x` = -581, `y` = 162, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 6;
--- gridid(116) = cazicthule/7 
+-- gridid(116) = cazicthule/7
 UPDATE grid_entries SET `x` = -582, `y` = 135, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 7;
--- gridid(116) = cazicthule/8 
+-- gridid(116) = cazicthule/8
 UPDATE grid_entries SET `x` = -576, `y` = 109, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 8;
--- gridid(116) = cazicthule/9 
+-- gridid(116) = cazicthule/9
 UPDATE grid_entries SET `x` = -570, `y` = 80, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 9;
--- gridid(116) = cazicthule/10 
+-- gridid(116) = cazicthule/10
 UPDATE grid_entries SET `x` = -559, `y` = 60, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 10;
--- gridid(116) = cazicthule/11 
+-- gridid(116) = cazicthule/11
 UPDATE grid_entries SET `x` = -522, `y` = 28, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 11;
--- gridid(116) = cazicthule/12 
+-- gridid(116) = cazicthule/12
 UPDATE grid_entries SET `x` = -494, `y` = 7, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 12;
--- gridid(116) = cazicthule/13 
+-- gridid(116) = cazicthule/13
 UPDATE grid_entries SET `x` = -464, `y` = -2, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 13;
--- gridid(116) = cazicthule/14 
+-- gridid(116) = cazicthule/14
 UPDATE grid_entries SET `x` = -433, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 14;
--- gridid(116) = cazicthule/15 
+-- gridid(116) = cazicthule/15
 UPDATE grid_entries SET `x` = -403, `y` = -22, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 15;
--- gridid(116) = cazicthule/16 
+-- gridid(116) = cazicthule/16
 UPDATE grid_entries SET `x` = -369, `y` = -33, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 16;
--- gridid(116) = cazicthule/17 
+-- gridid(116) = cazicthule/17
 UPDATE grid_entries SET `x` = -333, `y` = -45, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 17;
--- gridid(116) = cazicthule/18 
+-- gridid(116) = cazicthule/18
 UPDATE grid_entries SET `x` = -290, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 18;
--- gridid(116) = cazicthule/19 
+-- gridid(116) = cazicthule/19
 UPDATE grid_entries SET `x` = -274, `y` = -37, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 19;
--- gridid(116) = cazicthule/20 
+-- gridid(116) = cazicthule/20
 UPDATE grid_entries SET `x` = -272, `y` = -26, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 20;
--- gridid(116) = cazicthule/21 
+-- gridid(116) = cazicthule/21
 UPDATE grid_entries SET `x` = -273, `y` = 10, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 21;
--- gridid(116) = cazicthule/22 
+-- gridid(116) = cazicthule/22
 UPDATE grid_entries SET `x` = -273, `y` = 33, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 22;
--- gridid(116) = cazicthule/23 
+-- gridid(116) = cazicthule/23
 UPDATE grid_entries SET `x` = -272, `y` = 46, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 23;
--- gridid(116) = cazicthule/24 
+-- gridid(116) = cazicthule/24
 UPDATE grid_entries SET `x` = -262, `y` = 71, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 24;
--- gridid(116) = cazicthule/25 
+-- gridid(116) = cazicthule/25
 UPDATE grid_entries SET `x` = -249, `y` = 90, `z` = -205 WHERE `zoneid` = 48 AND `gridid` = 116 AND `number` = 25;
--- Name(Solist's Robe of Abrogation) = 1604 
+-- Name(Solist's Robe of Abrogation) = 1604
 UPDATE items SET `races` = 16383 WHERE `id` = 1604;
--- Name(Skullcrusher) = 6601 
+-- Name(Skullcrusher) = 6601
 UPDATE items SET `magic` = 1 WHERE `id` = 6601;
--- Name(Bracer of the Inferno) = 21993 
+-- Name(Bracer of the Inferno) = 21993
 UPDATE items SET `clicktype` = 0, `norent` = 1, `worneffect` = 144, `worntype` = 2 WHERE `id` = 21993;
--- Name(Earthen Bracer of Fortitude) = 32100 
+-- Name(Earthen Bracer of Fortitude) = 32100
 UPDATE items SET `clicktype` = 0, `norent` = 1, `worneffect` = 144, `worntype` = 2 WHERE `id` = 32100;
--- Name(Fatebringer) = 32615 
+-- Name(Fatebringer) = 32615
 UPDATE items SET `magic` = 1 WHERE `id` = 32615;
--- id(23434) =  
+-- id(23434) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 23434;
--- id(23435) =  
+-- id(23435) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 23435;
--- id(23437) =  
+-- id(23437) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 23437;
--- id(23438) =  
+-- id(23438) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 23438;
--- id(116169) =  
+-- id(116169) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 116169;
--- id(116426) =  
+-- id(116426) = 
 UPDATE lootdrop SET `min_expansion` = 0 WHERE `id` = 116426;
--- id(116427) =  
+-- id(116427) = 
 UPDATE lootdrop SET `min_expansion` = -1, `max_expansion` = -1 WHERE `id` = 116427;
--- lootdrop_id(7828) = Spell: Sha's Restoration 
+-- lootdrop_id(7828) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 7828 AND `item_id` = 7724;
--- lootdrop_id(23434) = Robe of Smothering 
+-- lootdrop_id(23434) = Robe of Smothering
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23434 AND `item_id` = 24604;
--- lootdrop_id(23434) = Blued Flower Katana 
+-- lootdrop_id(23434) = Blued Flower Katana
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23434 AND `item_id` = 24606;
--- lootdrop_id(23435) = Sword of Rile 
+-- lootdrop_id(23435) = Sword of Rile
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23435 AND `item_id` = 24648;
--- lootdrop_id(23437) = Skullcrusher of Kragg 
+-- lootdrop_id(23437) = Skullcrusher of Kragg
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24635;
--- lootdrop_id(23437) = Blood Orchid Katana 
+-- lootdrop_id(23437) = Blood Orchid Katana
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24636;
--- lootdrop_id(23437) = Shissar Focus Staff 
+-- lootdrop_id(23437) = Shissar Focus Staff
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24637;
--- lootdrop_id(23437) = Maelstrom 
+-- lootdrop_id(23437) = Maelstrom
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24639;
--- lootdrop_id(23437) = Shissar Deathspeaker Staff 
+-- lootdrop_id(23437) = Shissar Deathspeaker Staff
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24640;
--- lootdrop_id(23437) = Katana of Endurance 
+-- lootdrop_id(23437) = Katana of Endurance
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24641;
--- lootdrop_id(23437) = Sarnak Summoner's Staff 
+-- lootdrop_id(23437) = Sarnak Summoner's Staff
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23437 AND `item_id` = 24642;
--- lootdrop_id(23438) = Howling Cutlass 
+-- lootdrop_id(23438) = Howling Cutlass
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23438 AND `item_id` = 5638;
--- lootdrop_id(23438) = Ykeshan Broad Axe 
+-- lootdrop_id(23438) = Ykeshan Broad Axe
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23438 AND `item_id` = 24618;
--- lootdrop_id(23438) = Robe of Adversity 
+-- lootdrop_id(23438) = Robe of Adversity
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 23438 AND `item_id` = 24623;
--- lootdrop_id(91720) = Spell: Omakin's Alacrity 
+-- lootdrop_id(91720) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 91720 AND `item_id` = 7725;
--- lootdrop_id(91720) = Spell: Spirit of the Storm 
+-- lootdrop_id(91720) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 91720 AND `item_id` = 7741;
--- lootdrop_id(91754) = Spell: Omakin's Alacrity 
+-- lootdrop_id(91754) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 91754 AND `item_id` = 7725;
--- lootdrop_id(91754) = Spell: Spirit of the Storm 
+-- lootdrop_id(91754) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 91754 AND `item_id` = 7741;
--- lootdrop_id(93175) = Spell: Sha's Lethargy 
+-- lootdrop_id(93175) = Spell: Sha's Lethargy
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 93175 AND `item_id` = 7734;
--- lootdrop_id(102902) = Desert Tarantula Chitin 
+-- lootdrop_id(102902) = Desert Tarantula Chitin
 UPDATE lootdrop_entries SET `min_expansion` = -1, `max_expansion` = -1 WHERE `lootdrop_id` = 102902 AND `item_id` = 20901;
--- lootdrop_id(102905) = Desert Tarantula Chitin 
+-- lootdrop_id(102905) = Desert Tarantula Chitin
 UPDATE lootdrop_entries SET `min_expansion` = -1, `max_expansion` = -1 WHERE `lootdrop_id` = 102905 AND `item_id` = 20901;
--- lootdrop_id(104756) = Iksar Bandit Mask 
+-- lootdrop_id(104756) = Iksar Bandit Mask
 UPDATE lootdrop_entries SET `chance` = 33.333 WHERE `lootdrop_id` = 104756 AND `item_id` = 12428;
--- lootdrop_id(104756) = First Half of Torn Note 
+-- lootdrop_id(104756) = First Half of Torn Note
 UPDATE lootdrop_entries SET `chance` = 7.5 WHERE `lootdrop_id` = 104756 AND `item_id` = 18232;
--- lootdrop_id(104756) = Second Half of Torn Note 
+-- lootdrop_id(104756) = Second Half of Torn Note
 UPDATE lootdrop_entries SET `chance` = 7.5 WHERE `lootdrop_id` = 104756 AND `item_id` = 18233;
--- lootdrop_id(107933) = Rusty Shan`Tok 
+-- lootdrop_id(107933) = Rusty Shan`Tok
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5072;
--- lootdrop_id(107933) = Tarnished Shan`Tok 
+-- lootdrop_id(107933) = Tarnished Shan`Tok
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5073;
--- lootdrop_id(107933) = Rusty Fer`Esh 
+-- lootdrop_id(107933) = Rusty Fer`Esh
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5074;
--- lootdrop_id(107933) = Tarnished Fer`Esh 
+-- lootdrop_id(107933) = Tarnished Fer`Esh
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5075;
--- lootdrop_id(107933) = Rusty Sheer Blade 
+-- lootdrop_id(107933) = Rusty Sheer Blade
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5076;
--- lootdrop_id(107933) = Tarnished Sheer Blade 
+-- lootdrop_id(107933) = Tarnished Sheer Blade
 UPDATE lootdrop_entries SET `chance` = 2 WHERE `lootdrop_id` = 107933 AND `item_id` = 5077;
--- lootdrop_id(107934) = Iksar Targ Shield 
+-- lootdrop_id(107934) = Iksar Targ Shield
 UPDATE lootdrop_entries SET `chance` = 3 WHERE `lootdrop_id` = 107934 AND `item_id` = 9029;
--- lootdrop_id(108126) = Water Dragon Meat 
+-- lootdrop_id(108126) = Water Dragon Meat
 UPDATE lootdrop_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 108126 AND `item_id` = 22812;
--- lootdrop_id(108126) = Sea Dragon Meat 
+-- lootdrop_id(108126) = Sea Dragon Meat
 UPDATE lootdrop_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 108126 AND `item_id` = 22813;
--- lootdrop_id(108275) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108275) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108275 AND `item_id` = 7725;
--- lootdrop_id(108275) = Spell: Spirit of the Storm 
+-- lootdrop_id(108275) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108275 AND `item_id` = 7741;
--- lootdrop_id(108286) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108286) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108286 AND `item_id` = 7725;
--- lootdrop_id(108286) = Spell: Spirit of the Storm 
+-- lootdrop_id(108286) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108286 AND `item_id` = 7741;
--- lootdrop_id(108294) = Spell: Spirit of the Storm 
+-- lootdrop_id(108294) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108294 AND `item_id` = 7741;
--- lootdrop_id(108296) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108296) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108296 AND `item_id` = 7725;
--- lootdrop_id(108296) = Spell: Spirit of the Storm 
+-- lootdrop_id(108296) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108296 AND `item_id` = 7741;
--- lootdrop_id(108307) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108307) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108307 AND `item_id` = 7725;
--- lootdrop_id(108307) = Spell: Spirit of the Storm 
+-- lootdrop_id(108307) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108307 AND `item_id` = 7741;
--- lootdrop_id(108309) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108309) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108309 AND `item_id` = 7725;
--- lootdrop_id(108312) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108312) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108312 AND `item_id` = 7725;
--- lootdrop_id(108312) = Spell: Spirit of the Storm 
+-- lootdrop_id(108312) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108312 AND `item_id` = 7741;
--- lootdrop_id(108328) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108328) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108328 AND `item_id` = 7725;
--- lootdrop_id(108328) = Spell: Spirit of the Storm 
+-- lootdrop_id(108328) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108328 AND `item_id` = 7741;
--- lootdrop_id(108333) = Spell: Omakin's Alacrity 
+-- lootdrop_id(108333) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108333 AND `item_id` = 7725;
--- lootdrop_id(108333) = Spell: Spirit of the Storm 
+-- lootdrop_id(108333) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 108333 AND `item_id` = 7741;
--- lootdrop_id(109123) = Spell: Omakin's Alacrity 
+-- lootdrop_id(109123) = Spell: Omakin's Alacrity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 109123 AND `item_id` = 7725;
--- lootdrop_id(109123) = Spell: Spirit of the Storm 
+-- lootdrop_id(109123) = Spell: Spirit of the Storm
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 109123 AND `item_id` = 7741;
--- lootdrop_id(110500) = Spell: Sha's Restoration 
+-- lootdrop_id(110500) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 110500 AND `item_id` = 7724;
--- lootdrop_id(110586) = Spell: Spiritual Purity 
+-- lootdrop_id(110586) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 110586 AND `item_id` = 7729;
--- lootdrop_id(112074) = Spell: Sha's Lethargy 
+-- lootdrop_id(112074) = Spell: Sha's Lethargy
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112074 AND `item_id` = 7734;
--- lootdrop_id(112099) = Spell: Sha's Lethargy 
+-- lootdrop_id(112099) = Spell: Sha's Lethargy
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112099 AND `item_id` = 7734;
--- lootdrop_id(112109) = Spell: Sha's Lethargy 
+-- lootdrop_id(112109) = Spell: Sha's Lethargy
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112109 AND `item_id` = 7734;
--- lootdrop_id(112112) = Spell: Sha's Lethargy 
+-- lootdrop_id(112112) = Spell: Sha's Lethargy
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112112 AND `item_id` = 7734;
--- lootdrop_id(112168) = Spell: Spiritual Purity 
+-- lootdrop_id(112168) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112168 AND `item_id` = 7729;
--- lootdrop_id(112249) = Spell: Sha's Restoration 
+-- lootdrop_id(112249) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112249 AND `item_id` = 7724;
--- lootdrop_id(112249) = Spell: Spiritual Purity 
+-- lootdrop_id(112249) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112249 AND `item_id` = 7729;
--- lootdrop_id(112253) = Spell: Sha's Restoration 
+-- lootdrop_id(112253) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112253 AND `item_id` = 7724;
--- lootdrop_id(112259) = Spell: Sha's Restoration 
+-- lootdrop_id(112259) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112259 AND `item_id` = 7724;
--- lootdrop_id(112264) = Spell: Spiritual Purity 
+-- lootdrop_id(112264) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112264 AND `item_id` = 7729;
--- lootdrop_id(112272) = Spell: Spiritual Purity 
+-- lootdrop_id(112272) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112272 AND `item_id` = 7729;
--- lootdrop_id(112278) = Spell: Sha's Restoration 
+-- lootdrop_id(112278) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112278 AND `item_id` = 7724;
--- lootdrop_id(112294) = Spell: Spiritual Purity 
+-- lootdrop_id(112294) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112294 AND `item_id` = 7729;
--- lootdrop_id(112306) = Spell: Sha's Restoration 
+-- lootdrop_id(112306) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112306 AND `item_id` = 7724;
--- lootdrop_id(112306) = Spell: Spiritual Purity 
+-- lootdrop_id(112306) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112306 AND `item_id` = 7729;
--- lootdrop_id(112322) = Spell: Sha's Restoration 
+-- lootdrop_id(112322) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112322 AND `item_id` = 7724;
--- lootdrop_id(112327) = Spell: Sha's Restoration 
+-- lootdrop_id(112327) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112327 AND `item_id` = 7724;
--- lootdrop_id(112327) = Spell: Spiritual Purity 
+-- lootdrop_id(112327) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112327 AND `item_id` = 7729;
--- lootdrop_id(112338) = Spell: Sha's Restoration 
+-- lootdrop_id(112338) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112338 AND `item_id` = 7724;
--- lootdrop_id(112338) = Spell: Spiritual Purity 
+-- lootdrop_id(112338) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112338 AND `item_id` = 7729;
--- lootdrop_id(112359) = Spell: Sha's Restoration 
+-- lootdrop_id(112359) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112359 AND `item_id` = 7724;
--- lootdrop_id(112359) = Spell: Spiritual Purity 
+-- lootdrop_id(112359) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112359 AND `item_id` = 7729;
--- lootdrop_id(112370) = Spell: Sha's Restoration 
+-- lootdrop_id(112370) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112370 AND `item_id` = 7724;
--- lootdrop_id(112374) = Spell: Spiritual Purity 
+-- lootdrop_id(112374) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112374 AND `item_id` = 7729;
--- lootdrop_id(112380) = Spell: Sha's Restoration 
+-- lootdrop_id(112380) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112380 AND `item_id` = 7724;
--- lootdrop_id(112380) = Spell: Spiritual Purity 
+-- lootdrop_id(112380) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112380 AND `item_id` = 7729;
--- lootdrop_id(112385) = Spell: Sha's Restoration 
+-- lootdrop_id(112385) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112385 AND `item_id` = 7724;
--- lootdrop_id(112391) = Spell: Sha's Restoration 
+-- lootdrop_id(112391) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112391 AND `item_id` = 7724;
--- lootdrop_id(112391) = Spell: Spiritual Purity 
+-- lootdrop_id(112391) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112391 AND `item_id` = 7729;
--- lootdrop_id(112395) = Spell: Spiritual Purity 
+-- lootdrop_id(112395) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112395 AND `item_id` = 7729;
--- lootdrop_id(112408) = Spell: Sha's Restoration 
+-- lootdrop_id(112408) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112408 AND `item_id` = 7724;
--- lootdrop_id(112408) = Spell: Spiritual Purity 
+-- lootdrop_id(112408) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112408 AND `item_id` = 7729;
--- lootdrop_id(112414) = Spell: Sha's Restoration 
+-- lootdrop_id(112414) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112414 AND `item_id` = 7724;
--- lootdrop_id(112419) = Spell: Sha's Restoration 
+-- lootdrop_id(112419) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112419 AND `item_id` = 7724;
--- lootdrop_id(112419) = Spell: Spiritual Purity 
+-- lootdrop_id(112419) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112419 AND `item_id` = 7729;
--- lootdrop_id(112425) = Spell: Sha's Restoration 
+-- lootdrop_id(112425) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112425 AND `item_id` = 7724;
--- lootdrop_id(112425) = Spell: Spiritual Purity 
+-- lootdrop_id(112425) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112425 AND `item_id` = 7729;
--- lootdrop_id(112430) = Spell: Sha's Restoration 
+-- lootdrop_id(112430) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112430 AND `item_id` = 7724;
--- lootdrop_id(112430) = Spell: Spiritual Purity 
+-- lootdrop_id(112430) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112430 AND `item_id` = 7729;
--- lootdrop_id(112435) = Spell: Sha's Restoration 
+-- lootdrop_id(112435) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112435 AND `item_id` = 7724;
--- lootdrop_id(112441) = Spell: Sha's Restoration 
+-- lootdrop_id(112441) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112441 AND `item_id` = 7724;
--- lootdrop_id(112441) = Spell: Spiritual Purity 
+-- lootdrop_id(112441) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112441 AND `item_id` = 7729;
--- lootdrop_id(112446) = Spell: Sha's Restoration 
+-- lootdrop_id(112446) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112446 AND `item_id` = 7724;
--- lootdrop_id(112446) = Spell: Spiritual Purity 
+-- lootdrop_id(112446) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112446 AND `item_id` = 7729;
--- lootdrop_id(112451) = Spell: Sha's Restoration 
+-- lootdrop_id(112451) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112451 AND `item_id` = 7724;
--- lootdrop_id(112460) = Spell: Sha's Restoration 
+-- lootdrop_id(112460) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112460 AND `item_id` = 7724;
--- lootdrop_id(112488) = Spell: Sha's Restoration 
+-- lootdrop_id(112488) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112488 AND `item_id` = 7724;
--- lootdrop_id(112488) = Spell: Spiritual Purity 
+-- lootdrop_id(112488) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112488 AND `item_id` = 7729;
--- lootdrop_id(112501) = Spell: Sha's Restoration 
+-- lootdrop_id(112501) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112501 AND `item_id` = 7724;
--- lootdrop_id(112501) = Spell: Spiritual Purity 
+-- lootdrop_id(112501) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112501 AND `item_id` = 7729;
--- lootdrop_id(112505) = Spell: Sha's Restoration 
+-- lootdrop_id(112505) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112505 AND `item_id` = 7724;
--- lootdrop_id(112505) = Spell: Spiritual Purity 
+-- lootdrop_id(112505) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112505 AND `item_id` = 7729;
--- lootdrop_id(112513) = Spell: Sha's Restoration 
+-- lootdrop_id(112513) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112513 AND `item_id` = 7724;
--- lootdrop_id(112519) = Spell: Sha's Restoration 
+-- lootdrop_id(112519) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112519 AND `item_id` = 7724;
--- lootdrop_id(112519) = Spell: Spiritual Purity 
+-- lootdrop_id(112519) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112519 AND `item_id` = 7729;
--- lootdrop_id(112525) = Spell: Sha's Restoration 
+-- lootdrop_id(112525) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112525 AND `item_id` = 7724;
--- lootdrop_id(112528) = Spell: Sha's Restoration 
+-- lootdrop_id(112528) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112528 AND `item_id` = 7724;
--- lootdrop_id(112532) = Spell: Sha's Restoration 
+-- lootdrop_id(112532) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112532 AND `item_id` = 7724;
--- lootdrop_id(112532) = Spell: Spiritual Purity 
+-- lootdrop_id(112532) = Spell: Spiritual Purity
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112532 AND `item_id` = 7729;
--- lootdrop_id(112536) = Spell: Sha's Restoration 
+-- lootdrop_id(112536) = Spell: Sha's Restoration
 UPDATE lootdrop_entries SET `min_expansion` = 3, `max_expansion` = 99 WHERE `lootdrop_id` = 112536 AND `item_id` = 7724;
--- lootdrop_id(116426) = Robe of Invocation 
+-- lootdrop_id(116426) = Robe of Invocation
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116426 AND `item_id` = 24627;
--- lootdrop_id(116426) = Staff of Null 
+-- lootdrop_id(116426) = Staff of Null
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116426 AND `item_id` = 24628;
--- lootdrop_id(116426) = Left Eye of Xygoz 
+-- lootdrop_id(116426) = Left Eye of Xygoz
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116426 AND `item_id` = 24629;
--- lootdrop_id(116426) = Malevolent Runeblade 
+-- lootdrop_id(116426) = Malevolent Runeblade
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116426 AND `item_id` = 24631;
--- lootdrop_id(116426) = Razor Sharp Short Sword 
+-- lootdrop_id(116426) = Razor Sharp Short Sword
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116426 AND `item_id` = 24633;
--- lootdrop_id(116427) = Shissar Apothic Staff 
+-- lootdrop_id(116427) = Shissar Apothic Staff
 UPDATE lootdrop_entries SET `min_expansion` = 0, `max_expansion` = 2 WHERE `lootdrop_id` = 116427 AND `item_id` = 10892;
--- lootdrop_id(116427) = Green Dragon Scales 
+-- lootdrop_id(116427) = Green Dragon Scales
 UPDATE lootdrop_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `lootdrop_id` = 116427 AND `item_id` = 11582;
--- lootdrop_id(116427) = Fatesealer 
+-- lootdrop_id(116427) = Fatesealer
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24609;
--- lootdrop_id(116427) = Robe of Burning Rage 
+-- lootdrop_id(116427) = Robe of Burning Rage
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24610;
--- lootdrop_id(116427) = Veldrak's Shortblade 
+-- lootdrop_id(116427) = Veldrak's Shortblade
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24613;
--- lootdrop_id(116427) = Shissar Elementalist`s Cane 
+-- lootdrop_id(116427) = Shissar Elementalist`s Cane
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24615;
--- lootdrop_id(116427) = Grey Suede Boots 
+-- lootdrop_id(116427) = Grey Suede Boots
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24616;
--- lootdrop_id(116427) = Sword of the Shissar 
+-- lootdrop_id(116427) = Sword of the Shissar
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24617;
--- lootdrop_id(116427) = Katana of Endurance 
+-- lootdrop_id(116427) = Katana of Endurance
 UPDATE lootdrop_entries SET `content_flags_disabled` = "OldVP" WHERE `lootdrop_id` = 116427 AND `item_id` = 24641;
--- id(91890) =  
+-- id(91890) = 
 UPDATE loottable SET `maxcash` = 4000 WHERE `id` = 91890;
--- id(91932) =  
+-- id(91932) = 
 UPDATE loottable SET `maxcash` = 7000 WHERE `id` = 91932;
--- id(95914) =  
+-- id(95914) = 
 UPDATE loottable SET `maxcash` = 7000 WHERE `id` = 95914;
--- loottable_id(92583)  
+-- loottable_id(92583) = Array
 UPDATE loottable_entries SET `droplimit` = 1 WHERE `loottable_id` = 92583 AND `lootdrop_id` = 102824;
--- loottable_id(93040)  
+-- loottable_id(93040) = Array
 UPDATE loottable_entries SET `droplimit` = 1 WHERE `loottable_id` = 93040 AND `lootdrop_id` = 104092;
--- loottable_id(94280)  
+-- loottable_id(94280) = Array
 UPDATE loottable_entries SET `probability` = 5 WHERE `loottable_id` = 94280 AND `lootdrop_id` = 107123;
--- loottable_id(97372)  
+-- loottable_id(97372) = Array
 UPDATE loottable_entries SET `mindrop` = 1 WHERE `loottable_id` = 97372 AND `lootdrop_id` = 116164;
--- loottable_id(97374)  
+-- loottable_id(97374) = Array
 UPDATE loottable_entries SET `multiplier_min` = 1 WHERE `loottable_id` = 97374 AND `lootdrop_id` = 116169;
--- loottable_id(97415)  
+-- loottable_id(97415) = Array
 UPDATE loottable_entries SET `droplimit` = 2, `mindrop` = 2, `multiplier_min` = 1 WHERE `loottable_id` = 97415 AND `lootdrop_id` = 104284;
--- id(1297) = AfterDeath/say 
+-- id(1297) = AfterDeath/say
 UPDATE npc_emotes SET `text` = "Unngh.. Why you kill me?? Probably for dumb bracers guard give to me. Dey not even Ratraz's.. You now cross da Dark Bargainers and all Neriak be gettin' revenge for Ratraz.." WHERE `id` = 1297;
--- id(4000) = EnterCombat/say 
+-- id(4000) = EnterCombat/say
 UPDATE npc_emotes SET `text` = "Silent and deadly are the daggers of the Ebon Mask!!" WHERE `id` = 4000;
--- id(4005) = AfterDeath/say 
+-- id(4005) = AfterDeath/say
 UPDATE npc_emotes SET `text` = "The Dead shall avenge my death!!" WHERE `id` = 4005;
--- id(114) = Default Wizard List/Draught of Fire 
+-- id(114) = Default Wizard List/Draught of Fire
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 114;
--- id(115) = Default Wizard List/Voltaic Draught 
+-- id(115) = Default Wizard List/Voltaic Draught
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 115;
--- id(116) = Default Wizard List/Draught of Jiva 
+-- id(116) = Default Wizard List/Draught of Jiva
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 116;
--- id(117) = Default Wizard List/Draught of Ice 
+-- id(117) = Default Wizard List/Draught of Ice
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 117;
--- id(118) = Default Wizard List/Ice Spear of Solist 
+-- id(118) = Default Wizard List/Ice Spear of Solist
 UPDATE npc_spells_entries SET `min_expansion` = 2, `max_expansion` = 99 WHERE `id` = 118;
--- id(119) = Default Wizard List/Sunstrike 
+-- id(119) = Default Wizard List/Sunstrike
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 119;
--- id(131) = Default Wizard List/Inferno of Al'Kabor 
+-- id(131) = Default Wizard List/Inferno of Al'Kabor
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 131;
--- id(132) = Default Wizard List/Pillar of Lightning 
+-- id(132) = Default Wizard List/Pillar of Lightning
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 132;
--- id(134) = Default Wizard List/Pillar of Flame 
+-- id(134) = Default Wizard List/Pillar of Flame
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 134;
--- id(139) = Default Wizard List/Invert Gravity 
+-- id(139) = Default Wizard List/Invert Gravity
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 139;
--- id(142) = Default Wizard List/Tishan's Discord 
+-- id(142) = Default Wizard List/Tishan's Discord
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 142;
--- id(143) = Default Wizard List/Markar's Discord 
+-- id(143) = Default Wizard List/Markar's Discord
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 143;
--- id(149) = Default Wizard List/Fetter 
+-- id(149) = Default Wizard List/Fetter
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 149;
--- id(150) = Default Wizard List/Greater Fetter 
+-- id(150) = Default Wizard List/Greater Fetter
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 150;
--- id(153) = Default Wizard List/Annul Magic 
+-- id(153) = Default Wizard List/Annul Magic
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 153;
--- id(167) = Default Wizard List/Manaskin 
+-- id(167) = Default Wizard List/Manaskin
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 167;
--- id(168) = Default Wizard List/Force Shield 
+-- id(168) = Default Wizard List/Force Shield
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 168;
--- id(6649) = Default Wizard List/Shock of Magic 
+-- id(6649) = Default Wizard List/Shock of Magic
 UPDATE npc_spells_entries SET `min_expansion` = 4, `max_expansion` = 99 WHERE `id` = 6649;
--- id(18502) = Default Wizard List/Pillar of Frost 
+-- id(18502) = Default Wizard List/Pillar of Frost
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18502;
--- id(18827) = Default Wizard List/Atol's Spectral Shackles 
+-- id(18827) = Default Wizard List/Atol's Spectral Shackles
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18827;
--- id(18843) = Default Wizard List/Lure of Ice 
+-- id(18843) = Default Wizard List/Lure of Ice
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18843;
--- id(18844) = Default Wizard List/Lure of Frost 
+-- id(18844) = Default Wizard List/Lure of Frost
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18844;
--- id(18845) = Default Wizard List/Lure of Flame 
+-- id(18845) = Default Wizard List/Lure of Flame
 UPDATE npc_spells_entries SET `min_expansion` = 1, `max_expansion` = 99 WHERE `id` = 18845;
--- id(615) = skel_pet_5_ 
+-- id(615) = skel_pet_5_
 UPDATE npc_types SET `hp` = 90 WHERE `id` = 615;
--- id(616) = skel_pet_9_ 
+-- id(616) = skel_pet_9_
 UPDATE npc_types SET `hp` = 210 WHERE `id` = 616;
--- id(617) = skel_pet_11_ 
+-- id(617) = skel_pet_11_
 UPDATE npc_types SET `hp` = 260 WHERE `id` = 617;
--- id(618) = skel_pet_16_ 
+-- id(618) = skel_pet_16_
 UPDATE npc_types SET `hp` = 420 WHERE `id` = 618;
--- id(619) = skel_pet_19_ 
+-- id(619) = skel_pet_19_
 UPDATE npc_types SET `hp` = 530 WHERE `id` = 619;
--- id(620) = skel_pet_22_ 
+-- id(620) = skel_pet_22_
 UPDATE npc_types SET `hp` = 650 WHERE `id` = 620;
--- id(621) = skel_pet_25_ 
+-- id(621) = skel_pet_25_
 UPDATE npc_types SET `hp` = 770 WHERE `id` = 621;
--- id(622) = skel_pet_29_ 
+-- id(622) = skel_pet_29_
 UPDATE npc_types SET `hp` = 900 WHERE `id` = 622;
--- id(623) = skel_pet_33_ 
+-- id(623) = skel_pet_33_
 UPDATE npc_types SET `hp` = 1050 WHERE `id` = 623;
--- id(624) = skel_pet_37_ 
+-- id(624) = skel_pet_37_
 UPDATE npc_types SET `hp` = 1250 WHERE `id` = 624;
--- id(625) = skel_pet_41_ 
+-- id(625) = skel_pet_41_
 UPDATE npc_types SET `hp` = 2219 WHERE `id` = 625;
--- id(628) = skel_pet_47_ 
+-- id(628) = skel_pet_47_
 UPDATE npc_types SET `texture` = 1, `size` = 7 WHERE `id` = 628;
--- id(631) = skel_pet_65_ 
+-- id(631) = skel_pet_65_
 UPDATE npc_types SET `size` = 7 WHERE `id` = 631;
--- id(42040) = Spice 
+-- id(42040) = Spice
 UPDATE npc_types SET `emoteid` = 2035 WHERE `id` = 42040;
--- id(42086) = Draan_N`Ryt 
+-- id(42086) = Draan_N`Ryt
 UPDATE npc_types SET `npc_faction_id` = 1479 WHERE `id` = 42086;
--- id(48003) = Avatar_of_Fear 
+-- id(48003) = Avatar_of_Fear
 UPDATE npc_types SET `npc_spells_id` = 1653, `special_abilities` = "10,1", `aggroradius` = 35, `MR` = 115, `FR` = 50, `see_invis` = 50 WHERE `id` = 48003;
--- id(48004) = a_lizard_crusader 
+-- id(48004) = a_lizard_crusader
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48004;
--- id(48008) = a_lizard_warrior 
+-- id(48008) = a_lizard_warrior
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48008;
--- id(48009) = a_lizard_zealot 
+-- id(48009) = a_lizard_zealot
 UPDATE npc_types SET `loottable_id` = 97606 WHERE `id` = 48009;
--- id(48010) = Tae_Ew_Diviner 
+-- id(48010) = Tae_Ew_Diviner
 UPDATE npc_types SET `see_invis` = 1 WHERE `id` = 48010;
--- id(48011) = Tae_Ew_Templar 
+-- id(48011) = Tae_Ew_Templar
 UPDATE npc_types SET `see_invis` = 1 WHERE `id` = 48011;
--- id(48012) = Tae_Ew_Archon 
+-- id(48012) = Tae_Ew_Archon
 UPDATE npc_types SET `see_invis` = 1 WHERE `id` = 48012;
--- id(48013) = a_lizard_defender 
+-- id(48013) = a_lizard_defender
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48013;
--- id(48029) = an_alligator 
+-- id(48029) = an_alligator
 UPDATE npc_types SET `npc_faction_id` = 1603, `aggroradius` = 1, `maxlevel` = 24 WHERE `id` = 48029;
--- id(48031) = a_lizard_broodling 
+-- id(48031) = a_lizard_broodling
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48031;
--- id(48039) = a_lizard_page 
+-- id(48039) = a_lizard_page
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48039;
--- id(48042) = a_lizard_proselyte 
+-- id(48042) = a_lizard_proselyte
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48042;
--- id(48047) = a_lizard_warder 
+-- id(48047) = a_lizard_warder
 UPDATE npc_types SET `aggroradius` = 35 WHERE `id` = 48047;
--- id(48051) = an_alligator 
+-- id(48051) = an_alligator
 UPDATE npc_types SET `level` = 28, `npc_faction_id` = 1603, `aggroradius` = 35, `see_invis` = 5, `maxlevel` = 30 WHERE `id` = 48051;
--- id(48052) = an_alligator 
+-- id(48052) = an_alligator
 UPDATE npc_types SET `level` = 31, `npc_faction_id` = 1603, `aggroradius` = 35, `see_invis` = 5, `maxlevel` = 33 WHERE `id` = 48052;
--- id(48053) = an_alligator 
+-- id(48053) = an_alligator
 UPDATE npc_types SET `level` = 25, `npc_faction_id` = 1603, `aggroradius` = 1, `maxlevel` = 27 WHERE `id` = 48053;
--- id(57025) = Saben_Tucross 
+-- id(57025) = Saben_Tucross
 UPDATE npc_types SET `emoteid` = 2032 WHERE `id` = 57025;
--- id(57067) = a_bandit 
+-- id(57067) = a_bandit
 UPDATE npc_types SET `emoteid` = 2033 WHERE `id` = 57067;
--- id(57231) = a_bandit 
+-- id(57231) = a_bandit
 UPDATE npc_types SET `emoteid` = 2033 WHERE `id` = 57231;
--- id(72001) = a_fetid_fiend 
+-- id(72001) = a_fetid_fiend
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72001;
--- id(72022) = a_worry_wraith 
+-- id(72022) = a_worry_wraith
 UPDATE npc_types SET `special_abilities` = "10,1^23,1" WHERE `id` = 72022;
--- id(72031) = a_gorgon 
+-- id(72031) = a_gorgon
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72031;
--- id(72036) = a_boogeyman 
+-- id(72036) = a_boogeyman
 UPDATE npc_types SET `special_abilities` = "10,1^21,1^42,1" WHERE `id` = 72036;
--- id(72052) = a_samhain 
+-- id(72052) = a_samhain
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72052;
--- id(72055) = a_turmoil_toad 
+-- id(72055) = a_turmoil_toad
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72055;
--- id(72058) = a_spinechiller_spider 
+-- id(72058) = a_spinechiller_spider
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72058;
--- id(72061) = a_tentacle_tormentor 
+-- id(72061) = a_tentacle_tormentor
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72061;
--- id(72065) = a_fetid_fiend 
+-- id(72065) = a_fetid_fiend
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72065;
--- id(72067) = a_shiverback 
+-- id(72067) = a_shiverback
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72067;
--- id(72076) = a_glare_lord 
+-- id(72076) = a_glare_lord
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72076;
--- id(72081) = a_frightfinger 
+-- id(72081) = a_frightfinger
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72081;
--- id(72094) = a_scareling 
+-- id(72094) = a_scareling
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72094;
--- id(72102) = a_phantasm 
+-- id(72102) = a_phantasm
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72102;
--- id(72103) = a_decrepit_warder 
+-- id(72103) = a_decrepit_warder
 UPDATE npc_types SET `special_abilities` = "10,1^23,1^42,1" WHERE `id` = 72103;
--- id(78108) = an_Iksar_footpad 
+-- id(78108) = an_Iksar_footpad
 UPDATE npc_types SET `loottable_id` = 94279 WHERE `id` = 78108;
--- id(79064) = an_Iksar_bandit 
+-- id(79064) = an_Iksar_bandit
 UPDATE npc_types SET `loottable_id` = 94280 WHERE `id` = 79064;
--- id(81469) = an_Iksar_slave 
+-- id(81469) = an_Iksar_slave
 UPDATE npc_types SET `npc_aggro` = 1 WHERE `id` = 81469;
--- id(83108) = an_Iksar_manslayer 
+-- id(83108) = an_Iksar_manslayer
 UPDATE npc_types SET `loottable_id` = 93040 WHERE `id` = 83108;
--- id(83190) = an_Iksar_marauder 
+-- id(83190) = an_Iksar_marauder
 UPDATE npc_types SET `loottable_id` = 93284 WHERE `id` = 83190;
--- id(83192) = an_Iksar_outcast 
+-- id(83192) = an_Iksar_outcast
 UPDATE npc_types SET `loottable_id` = 94850 WHERE `id` = 83192;
--- id(86000) = Gorenaire 
+-- id(86000) = Gorenaire
 UPDATE npc_types SET `hp_regen_rate` = 500, `combat_hp_regen` = 10, `combat_mana_regen` = 10 WHERE `id` = 86000;
--- id(93090) = Xlixinar_Arcut 
+-- id(93090) = Xlixinar_Arcut
 UPDATE npc_types SET `mindmg` = 44, `maxdmg` = 137 WHERE `id` = 93090;
--- id(93091) = Drixiv_Arcut 
+-- id(93091) = Drixiv_Arcut
 UPDATE npc_types SET `mindmg` = 44, `maxdmg` = 137 WHERE `id` = 93091;
--- id(93142) = Stishovite 
+-- id(93142) = Stishovite
 UPDATE npc_types SET `npc_faction_id` = 846, `special_abilities` = "10,1^14,1", `MR` = 150, `CR` = 100, `DR` = 100, `FR` = 100, `PR` = 100 WHERE `id` = 93142;
--- id(93143) = Tektite 
+-- id(93143) = Tektite
 UPDATE npc_types SET `npc_faction_id` = 846, `special_abilities` = "10,1^14,1", `MR` = 150, `CR` = 100, `DR` = 100, `FR` = 100, `PR` = 100 WHERE `id` = 93143;
--- id(93144) = Tourmaline 
+-- id(93144) = Tourmaline
 UPDATE npc_types SET `npc_faction_id` = 846, `special_abilities` = "10,1^14,1", `MR` = 150, `CR` = 100, `DR` = 100, `FR` = 100, `PR` = 100 WHERE `id` = 93144;
--- id(93145) = Corundium 
+-- id(93145) = Corundium
 UPDATE npc_types SET `npc_faction_id` = 846, `special_abilities` = "10,1^14,1", `MR` = 150, `CR` = 100, `DR` = 100, `FR` = 100, `PR` = 100 WHERE `id` = 93145;
--- id(94002) = Severilous 
+-- id(94002) = Severilous
 UPDATE npc_types SET `hp_regen_rate` = 500, `combat_hp_regen` = 10, `combat_mana_regen` = 10 WHERE `id` = 94002;
--- id(96320) = Rinmark 
+-- id(96320) = Rinmark
 UPDATE npc_types SET `emoteid` = 2034 WHERE `id` = 96320;
--- id(108509) = Silverwing 
+-- id(108509) = Silverwing
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108509;
--- id(108510) = Phara_Dar 
+-- id(108510) = Phara_Dar
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108510;
--- id(108511) = Xygoz 
+-- id(108511) = Xygoz
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108511;
--- id(108512) = Druushk 
+-- id(108512) = Druushk
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1" WHERE `id` = 108512;
--- id(108513) = Nexona 
+-- id(108513) = Nexona
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^43,1^44,1" WHERE `id` = 108513;
--- id(108517) = Hoshkar 
+-- id(108517) = Hoshkar
 UPDATE npc_types SET `special_abilities` = "1,1^10,1^13,1^14,1^15,1^17,1^21,1^23,1^26,1^28,1^31,1^42,1^43,1^44,1", `combat_mana_regen` = 15 WHERE `id` = 108517;
--- skillid(7) =  
+-- skillid(7) = 
 UPDATE skill_difficulty SET `difficulty` = 4 WHERE `skillid` = 7;
--- skillid(11) =  
+-- skillid(11) = 
 UPDATE skill_difficulty SET `difficulty` = 12 WHERE `skillid` = 11;
--- skillid(12) =  
+-- skillid(12) = 
 UPDATE skill_difficulty SET `difficulty` = 20 WHERE `skillid` = 12;
--- skillid(13) =  
+-- skillid(13) = 
 UPDATE skill_difficulty SET `difficulty` = 7 WHERE `skillid` = 13;
--- skillid(16) =  
+-- skillid(16) = 
 UPDATE skill_difficulty SET `difficulty` = 2 WHERE `skillid` = 16;
--- skillid(17) =  
+-- skillid(17) = 
 UPDATE skill_difficulty SET `difficulty` = 20 WHERE `skillid` = 17;
--- skillid(19) =  
+-- skillid(19) = 
 UPDATE skill_difficulty SET `difficulty` = 12 WHERE `skillid` = 19;
--- skillid(21) =  
+-- skillid(21) = 
 UPDATE skill_difficulty SET `difficulty` = 9 WHERE `skillid` = 21;
--- skillid(23) =  
+-- skillid(23) = 
 UPDATE skill_difficulty SET `difficulty` = 9 WHERE `skillid` = 23;
--- skillid(25) =  
+-- skillid(25) = 
 UPDATE skill_difficulty SET `difficulty` = 8 WHERE `skillid` = 25;
--- skillid(27) =  
+-- skillid(27) = 
 UPDATE skill_difficulty SET `difficulty` = 16 WHERE `skillid` = 27;
--- skillid(29) =  
+-- skillid(29) = 
 UPDATE skill_difficulty SET `difficulty` = 4 WHERE `skillid` = 29;
--- skillid(30) =  
+-- skillid(30) = 
 UPDATE skill_difficulty SET `difficulty` = 8 WHERE `skillid` = 30;
--- skillid(31) =  
+-- skillid(31) = 
 UPDATE skill_difficulty SET `difficulty` = 10 WHERE `skillid` = 31;
--- skillid(32) =  
+-- skillid(32) = 
 UPDATE skill_difficulty SET `difficulty` = 4 WHERE `skillid` = 32;
--- skillid(34) =  
+-- skillid(34) = 
 UPDATE skill_difficulty SET `difficulty` = 12 WHERE `skillid` = 34;
--- skillid(66) =  
+-- skillid(66) = 
 UPDATE skill_difficulty SET `difficulty` = 1 WHERE `skillid` = 66;
--- id(335231)  
+-- id(335231) = Array
 UPDATE spawn2 SET `min_expansion` = 1 WHERE `id` = 335231;
--- id(335908)  
+-- id(335908) = Array
 UPDATE spawn2 SET `spawngroupID` = 222283 WHERE `id` = 335908;
--- id(336094)  
+-- id(336094) = Array
 UPDATE spawn2 SET `min_expansion` = 1 WHERE `id` = 336094;
--- id(338136)  
+-- id(338136) = Array
 UPDATE spawn2 SET `spawngroupID` = 222719 WHERE `id` = 338136;
--- id(343192)  
+-- id(343192) = Array
 UPDATE spawn2 SET `min_expansion` = 1 WHERE `id` = 343192;
--- id(354383)  
+-- id(354383) = Array
 UPDATE spawn2 SET `x` = -790, `y` = 69, `z` = -19, `respawntime` = 6, `pathgrid` = 24 WHERE `id` = 354383;
--- id(368210)  
+-- id(368210) = Array
 UPDATE spawn2 SET `x` = 2533, `y` = -1909, `z` = -11.7, `respawntime` = 6, `pathgrid` = 26 WHERE `id` = 368210;
--- id(368211)  
+-- id(368211) = Array
 UPDATE spawn2 SET `x` = 1057, `y` = -33, `z` = -15, `respawntime` = 6, `pathgrid` = 27 WHERE `id` = 368211;
--- id(11448707) =  
+-- id(11448707) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448707;
--- id(11448708) =  
+-- id(11448708) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448708;
--- id(11448709) =  
+-- id(11448709) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448709;
--- id(11448710) =  
+-- id(11448710) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448710;
--- id(11448712) =  
+-- id(11448712) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448712;
--- id(11448714) =  
+-- id(11448714) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448714;
--- id(11448718)  
+-- id(11448718) = Array
 UPDATE spawn2 SET `spawngroupID` = 448147 WHERE `id` = 11448718;
--- id(11448719)  
+-- id(11448719) = Array
 UPDATE spawn2 SET `pathgrid` = 117 WHERE `id` = 11448719;
--- id(11448722)  
+-- id(11448722) = Array
 UPDATE spawn2 SET `spawngroupID` = 448147 WHERE `id` = 11448722;
--- id(11448723)  
+-- id(11448723) = Array
 UPDATE spawn2 SET `spawngroupID` = 448147 WHERE `id` = 11448723;
--- id(11448726) =  
+-- id(11448726) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448726;
--- id(11448727) =  
+-- id(11448727) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448727;
--- id(11448730) =  
+-- id(11448730) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448730;
--- id(11448731) =  
+-- id(11448731) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448731;
--- id(11448733) =  
+-- id(11448733) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448733;
--- id(11448734) =  
+-- id(11448734) = 
 UPDATE spawn2 SET `spawngroupID` = 448205 WHERE `id` = 11448734;
--- id(11448803)  
+-- id(11448803) = Array
 UPDATE spawn2 SET `spawngroupID` = 448147 WHERE `id` = 11448803;
--- id(11448820)  
+-- id(11448820) = Array
 UPDATE spawn2 SET `spawngroupID` = 448147 WHERE `id` = 11448820;
--- id(11448855)  
+-- id(11448855) = Array
 UPDATE spawn2 SET `pathgrid` = 8 WHERE `id` = 11448855;
--- spawngroupID(83155) = _ 
+-- spawngroupID(83155) = _
 UPDATE spawnentry SET `min_expansion` = 3, `max_expansion` = 99 WHERE `spawngroupID` = 83155 AND `npcID` = 83155;
--- spawngroupID(448087) = a_lizard_crusader 
+-- spawngroupID(448087) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448087 AND `npcID` = 48004;
--- spawngroupID(448087) = a_lizard_zealot 
+-- spawngroupID(448087) = a_lizard_zealot
 UPDATE spawnentry SET `chance` = 31 WHERE `spawngroupID` = 448087 AND `npcID` = 48009;
--- spawngroupID(448087) = a_lizard_protector 
+-- spawngroupID(448087) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 31 WHERE `spawngroupID` = 448087 AND `npcID` = 48021;
--- spawngroupID(448087) = a_lizard_fanatic 
+-- spawngroupID(448087) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 32 WHERE `spawngroupID` = 448087 AND `npcID` = 48022;
--- spawngroupID(448093) = a_lizard_crusader 
+-- spawngroupID(448093) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448093 AND `npcID` = 48004;
--- spawngroupID(448093) = a_lizard_judicator 
+-- spawngroupID(448093) = a_lizard_judicator
 UPDATE spawnentry SET `chance` = 20 WHERE `spawngroupID` = 448093 AND `npcID` = 48006;
--- spawngroupID(448093) = a_lizard_zealot 
+-- spawngroupID(448093) = a_lizard_zealot
 UPDATE spawnentry SET `chance` = 18 WHERE `spawngroupID` = 448093 AND `npcID` = 48009;
--- spawngroupID(448093) = a_lizard_herald 
+-- spawngroupID(448093) = a_lizard_herald
 UPDATE spawnentry SET `chance` = 20 WHERE `spawngroupID` = 448093 AND `npcID` = 48020;
--- spawngroupID(448093) = a_lizard_protector 
+-- spawngroupID(448093) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 18 WHERE `spawngroupID` = 448093 AND `npcID` = 48021;
--- spawngroupID(448093) = a_lizard_fanatic 
+-- spawngroupID(448093) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 18 WHERE `spawngroupID` = 448093 AND `npcID` = 48022;
--- spawngroupID(448130) = a_lizard_crusader 
+-- spawngroupID(448130) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448130 AND `npcID` = 48004;
--- spawngroupID(448130) = a_lizard_protector 
+-- spawngroupID(448130) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 47 WHERE `spawngroupID` = 448130 AND `npcID` = 48021;
--- spawngroupID(448130) = a_lizard_fanatic 
+-- spawngroupID(448130) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 47 WHERE `spawngroupID` = 448130 AND `npcID` = 48022;
--- spawngroupID(448133) = a_lizard_crusader 
+-- spawngroupID(448133) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448133 AND `npcID` = 48004;
--- spawngroupID(448133) = a_lizard_herald 
+-- spawngroupID(448133) = a_lizard_herald
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448133 AND `npcID` = 48020;
--- spawngroupID(448133) = a_lizard_protector 
+-- spawngroupID(448133) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448133 AND `npcID` = 48021;
--- spawngroupID(448133) = a_lizard_fanatic 
+-- spawngroupID(448133) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448133 AND `npcID` = 48022;
--- spawngroupID(448133) = a_lizard_justicar 
+-- spawngroupID(448133) = a_lizard_justicar
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448133 AND `npcID` = 48023;
--- spawngroupID(448136) = a_lizard_crusader 
+-- spawngroupID(448136) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448136 AND `npcID` = 48004;
--- spawngroupID(448136) = a_lizard_judicator 
+-- spawngroupID(448136) = a_lizard_judicator
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448136 AND `npcID` = 48006;
--- spawngroupID(448136) = a_lizard_protector 
+-- spawngroupID(448136) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448136 AND `npcID` = 48021;
--- spawngroupID(448136) = a_lizard_fanatic 
+-- spawngroupID(448136) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448136 AND `npcID` = 48022;
--- spawngroupID(448136) = a_lizard_justicar 
+-- spawngroupID(448136) = a_lizard_justicar
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448136 AND `npcID` = 48023;
--- spawngroupID(448138) = a_lizard_crusader 
+-- spawngroupID(448138) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448138 AND `npcID` = 48004;
--- spawngroupID(448138) = a_lizard_herald 
+-- spawngroupID(448138) = a_lizard_herald
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448138 AND `npcID` = 48020;
--- spawngroupID(448138) = a_lizard_protector 
+-- spawngroupID(448138) = a_lizard_protector
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448138 AND `npcID` = 48021;
--- spawngroupID(448138) = a_lizard_fanatic 
+-- spawngroupID(448138) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448138 AND `npcID` = 48022;
--- spawngroupID(448138) = a_lizard_justicar 
+-- spawngroupID(448138) = a_lizard_justicar
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448138 AND `npcID` = 48023;
--- spawngroupID(448139) = a_lizard_crusader 
+-- spawngroupID(448139) = a_lizard_crusader
 UPDATE spawnentry SET `chance` = 6 WHERE `spawngroupID` = 448139 AND `npcID` = 48004;
--- spawngroupID(448139) = a_lizard_judicator 
+-- spawngroupID(448139) = a_lizard_judicator
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448139 AND `npcID` = 48006;
--- spawngroupID(448139) = a_lizard_zealot 
+-- spawngroupID(448139) = a_lizard_zealot
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448139 AND `npcID` = 48009;
--- spawngroupID(448139) = a_lizard_fanatic 
+-- spawngroupID(448139) = a_lizard_fanatic
 UPDATE spawnentry SET `chance` = 23 WHERE `spawngroupID` = 448139 AND `npcID` = 48022;
--- spawngroupID(448139) = a_lizard_justicar 
+-- spawngroupID(448139) = a_lizard_justicar
 UPDATE spawnentry SET `chance` = 24 WHERE `spawngroupID` = 448139 AND `npcID` = 48023;
--- spawngroupID(448147) = an_alligator 
+-- spawngroupID(448147) = an_alligator
 UPDATE spawnentry SET `chance` = 100 WHERE `spawngroupID` = 448147 AND `npcID` = 48053;
--- id(222675) = swampofnohope_222675 
+-- id(222675) = swampofnohope_222675
 UPDATE spawngroup SET `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `wp_spawns` = 1 WHERE `id` = 222675;
--- id(222679) = swampofnohope_222679 
+-- id(222679) = swampofnohope_222679
 UPDATE spawngroup SET `spawn_limit` = 2, `max_x` = 0, `min_x` = 0, `max_y` = 0, `min_y` = 0, `wp_spawns` = 1 WHERE `id` = 222679;
--- id(4501) = Precision Discipline 
+-- id(4501) = Precision Discipline
 UPDATE spells_new SET `effect_base_value1` = 50, `effect_base_value2` = -33 WHERE `id` = 4501;
--- id(4503) = Evasive Discipline 
+-- id(4503) = Evasive Discipline
 UPDATE spells_new SET `effect_base_value1` = 50, `effect_base_value2` = -33 WHERE `id` = 4503;
--- id(1) = qeynos/qeynos2 
+-- id(1) = qeynos/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1;
--- id(3) = qeynos/qeynos2 
+-- id(3) = qeynos/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 3;
--- id(7) = qeynos2/qeytoqrg 
+-- id(7) = qeynos2/qeytoqrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 7;
--- id(10) = feerrott/fearplane 
+-- id(10) = feerrott/fearplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 10;
--- id(11) = feerrott/poknowledge 
+-- id(11) = feerrott/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 11;
--- id(13) = acrylia/grimling 
+-- id(13) = acrylia/grimling
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 13;
--- id(14) = commons/nexus 
+-- id(14) = commons/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 14;
--- id(17) = qey2hh1/northkarana 
+-- id(17) = qey2hh1/northkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 17;
--- id(18) = northkarana/qey2hh1 
+-- id(18) = northkarana/qey2hh1
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 18;
--- id(19) = northkarana/eastkarana 
+-- id(19) = northkarana/eastkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 19;
--- id(20) = eastkarana/northkarana 
+-- id(20) = eastkarana/northkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 20;
--- id(21) = northkarana/southkarana 
+-- id(21) = northkarana/southkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 21;
--- id(23) = eastkarana/beholder 
+-- id(23) = eastkarana/beholder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 23;
--- id(24) = beholder/eastkarana 
+-- id(24) = beholder/eastkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 24;
--- id(25) = eastkarana/highpass 
+-- id(25) = eastkarana/highpass
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 25;
--- id(27) = southkarana/paw 
+-- id(27) = southkarana/paw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 27;
--- id(31) = beholder/runnyeye 
+-- id(31) = beholder/runnyeye
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 31;
--- id(38) = highkeep/highpass 
+-- id(38) = highkeep/highpass
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 38;
--- id(40) = commons/kithicor 
+-- id(40) = commons/kithicor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 40;
--- id(41) = kithicor/commons 
+-- id(41) = kithicor/commons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 41;
--- id(45) = commons/ecommons 
+-- id(45) = commons/ecommons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 45;
--- id(47) = commons/befallen 
+-- id(47) = commons/befallen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 47;
--- id(49) = ecommons/commons 
+-- id(49) = ecommons/commons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 49;
--- id(51) = ecommons/freportw 
+-- id(51) = ecommons/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 51;
--- id(53) = ecommons/nektulos 
+-- id(53) = ecommons/nektulos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 53;
--- id(71) = gukbottom/guktop 
+-- id(71) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 71;
--- id(77) = guktop/gukbottom 
+-- id(77) = guktop/gukbottom
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 77;
--- id(94) = feerrott/innothule 
+-- id(94) = feerrott/innothule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 94;
--- id(97) = feerrott/rathemtn 
+-- id(97) = feerrott/rathemtn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 97;
--- id(99) = feerrott/oggok 
+-- id(99) = feerrott/oggok
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 99;
--- id(101) = feerrott/cazicthule 
+-- id(101) = feerrott/cazicthule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 101;
--- id(108) = southkarana/northkarana 
+-- id(108) = southkarana/northkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 108;
--- id(121) = erudsxing/erudnext 
+-- id(121) = erudsxing/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 121;
--- id(126) = felwithea/gfaydark 
+-- id(126) = felwithea/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 126;
--- id(148) = akanon/steamfont 
+-- id(148) = akanon/steamfont
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 148;
--- id(156) = warslikswoods/cabwest 
+-- id(156) = warslikswoods/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 156;
--- id(181) = erudnint/erudnint 
+-- id(181) = erudnint/erudnint
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 181;
--- id(182) = erudnint/erudnext 
+-- id(182) = erudnint/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 182;
--- id(186) = butcher/oot 
+-- id(186) = butcher/oot
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 186;
--- id(187) = oasis/overthere 
+-- id(187) = oasis/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 187;
--- id(197) = highkeep/highpass 
+-- id(197) = highkeep/highpass
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 197;
--- id(336) = felwithea/felwitheb 
+-- id(336) = felwithea/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 336;
--- id(337) = felwithea/gfaydark 
+-- id(337) = felwithea/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 337;
--- id(338) = gfaydark/felwithea 
+-- id(338) = gfaydark/felwithea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 338;
--- id(339) = gfaydark/lfaydark 
+-- id(339) = gfaydark/lfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 339;
--- id(340) = gfaydark/butcher 
+-- id(340) = gfaydark/butcher
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 340;
--- id(341) = gfaydark/crushbone 
+-- id(341) = gfaydark/crushbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 341;
--- id(342) = gfaydark/poknowledge 
+-- id(342) = gfaydark/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 342;
--- id(343) = gfaydark/poknowledge 
+-- id(343) = gfaydark/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 343;
--- id(345) = crushbone/gfaydark 
+-- id(345) = crushbone/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 345;
--- id(370) = felwitheb/felwithea 
+-- id(370) = felwitheb/felwithea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 370;
--- id(371) = felwitheb/felwitheb 
+-- id(371) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 371;
--- id(372) = felwitheb/felwitheb 
+-- id(372) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 372;
--- id(373) = felwitheb/felwitheb 
+-- id(373) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 373;
--- id(374) = felwitheb/felwitheb 
+-- id(374) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 374;
--- id(375) = felwitheb/felwitheb 
+-- id(375) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 375;
--- id(376) = felwitheb/felwitheb 
+-- id(376) = felwitheb/felwitheb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 376;
--- id(377) = freporte/freportw 
+-- id(377) = freporte/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 377;
--- id(378) = freporte/freportw 
+-- id(378) = freporte/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 378;
--- id(379) = freporte/nro 
+-- id(379) = freporte/nro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 379;
--- id(380) = freporte/freportw 
+-- id(380) = freporte/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 380;
--- id(381) = freportw/freportw 
+-- id(381) = freportw/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 381;
--- id(382) = freportw/freportw 
+-- id(382) = freportw/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 382;
--- id(383) = freportw/freportn 
+-- id(383) = freportw/freportn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 383;
--- id(384) = freportw/freportn 
+-- id(384) = freportw/freportn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 384;
--- id(385) = freportw/freporte 
+-- id(385) = freportw/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 385;
--- id(386) = freportw/freporte 
+-- id(386) = freportw/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 386;
--- id(387) = freportw/ecommons 
+-- id(387) = freportw/ecommons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 387;
--- id(388) = freportw/freportn 
+-- id(388) = freportw/freportn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 388;
--- id(389) = freportw/freportn 
+-- id(389) = freportw/freportn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 389;
--- id(390) = freportw/freporte 
+-- id(390) = freportw/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 390;
--- id(391) = freportw/poknowledge 
+-- id(391) = freportw/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 391;
--- id(392) = freportn/freportw 
+-- id(392) = freportn/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 392;
--- id(393) = freportn/freportw 
+-- id(393) = freportn/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 393;
--- id(394) = freportn/freportw 
+-- id(394) = freportn/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 394;
--- id(395) = freportn/freportw 
+-- id(395) = freportn/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 395;
--- id(396) = grobb/innothule 
+-- id(396) = grobb/innothule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 396;
--- id(397) = halas/everfrost 
+-- id(397) = halas/everfrost
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 397;
--- id(398) = kaladima/butcher 
+-- id(398) = kaladima/butcher
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 398;
--- id(399) = kaladima/kaladimb 
+-- id(399) = kaladima/kaladimb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 399;
--- id(400) = kaladima/kaladimb 
+-- id(400) = kaladima/kaladimb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 400;
--- id(401) = kaladimb/kaladima 
+-- id(401) = kaladimb/kaladima
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 401;
--- id(402) = kaladimb/kaladima 
+-- id(402) = kaladimb/kaladima
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 402;
--- id(403) = katta/tenebrous 
+-- id(403) = katta/tenebrous
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 403;
--- id(404) = katta/twilight 
+-- id(404) = katta/twilight
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 404;
--- id(405) = katta/twilight 
+-- id(405) = katta/twilight
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 405;
--- id(407) = katta/katta 
+-- id(407) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 407;
--- id(408) = katta/katta 
+-- id(408) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 408;
--- id(409) = katta/katta 
+-- id(409) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 409;
--- id(410) = katta/katta 
+-- id(410) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 410;
--- id(411) = katta/katta 
+-- id(411) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 411;
--- id(412) = katta/katta 
+-- id(412) = katta/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 412;
--- id(413) = neriaka/neriakb 
+-- id(413) = neriaka/neriakb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 413;
--- id(414) = neriaka/neriakb 
+-- id(414) = neriaka/neriakb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 414;
--- id(415) = neriaka/nektulos 
+-- id(415) = neriaka/nektulos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 415;
--- id(416) = neriakb/neriaka 
+-- id(416) = neriakb/neriaka
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 416;
--- id(417) = neriakb/neriaka 
+-- id(417) = neriakb/neriaka
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 417;
--- id(418) = neriakb/neriakc 
+-- id(418) = neriakb/neriakc
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 418;
--- id(419) = neriakc/neriakb 
+-- id(419) = neriakc/neriakb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 419;
--- id(420) = neriakc/lfaydark 
+-- id(420) = neriakc/lfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 420;
--- id(425) = nexus/greatdivide 
+-- id(425) = nexus/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 425;
--- id(426) = nexus/netherbian 
+-- id(426) = nexus/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 426;
--- id(427) = nexus/shadowhaven 
+-- id(427) = nexus/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 427;
--- id(429) = nexus/shadeweaver 
+-- id(429) = nexus/shadeweaver
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 429;
--- id(430) = nexus/hollowshade 
+-- id(430) = nexus/hollowshade
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 430;
--- id(431) = nexus/sseru 
+-- id(431) = nexus/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 431;
--- id(432) = nexus/shadowhaven 
+-- id(432) = nexus/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 432;
--- id(433) = nexus/katta 
+-- id(433) = nexus/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 433;
--- id(434) = nexus/northkarana 
+-- id(434) = nexus/northkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 434;
--- id(435) = nexus/dreadlands 
+-- id(435) = nexus/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 435;
--- id(436) = nexus/shadowhaven 
+-- id(436) = nexus/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 436;
--- id(437) = nexus/twilight 
+-- id(437) = nexus/twilight
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 437;
--- id(438) = nexus/letalis 
+-- id(438) = nexus/letalis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 438;
--- id(439) = nexus/poknowledge 
+-- id(439) = nexus/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 439;
--- id(440) = oggok/feerrott 
+-- id(440) = oggok/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 440;
--- id(452) = poknowledge/misty 
+-- id(452) = poknowledge/misty
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 452;
--- id(453) = poknowledge/gfaydark 
+-- id(453) = poknowledge/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 453;
--- id(454) = poknowledge/butcher 
+-- id(454) = poknowledge/butcher
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 454;
--- id(455) = poknowledge/everfrost 
+-- id(455) = poknowledge/everfrost
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 455;
--- id(456) = poknowledge/gfaydark 
+-- id(456) = poknowledge/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 456;
--- id(457) = poknowledge/tox 
+-- id(457) = poknowledge/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 457;
--- id(458) = poknowledge/nexus 
+-- id(458) = poknowledge/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 458;
--- id(459) = poknowledge/greatdivide 
+-- id(459) = poknowledge/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 459;
--- id(460) = poknowledge/shadeweaver 
+-- id(460) = poknowledge/shadeweaver
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 460;
--- id(461) = poknowledge/qeynos2 
+-- id(461) = poknowledge/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 461;
--- id(462) = poknowledge/potranquility 
+-- id(462) = poknowledge/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 462;
--- id(463) = poknowledge/firiona 
+-- id(463) = poknowledge/firiona
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 463;
--- id(464) = poknowledge/freportw 
+-- id(464) = poknowledge/freportw
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 464;
--- id(465) = poknowledge/steamfont 
+-- id(465) = poknowledge/steamfont
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 465;
--- id(466) = poknowledge/fieldofbone 
+-- id(466) = poknowledge/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 466;
--- id(467) = poknowledge/innothule 
+-- id(467) = poknowledge/innothule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 467;
--- id(468) = poknowledge/nektulos 
+-- id(468) = poknowledge/nektulos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 468;
--- id(469) = poknowledge/feerrott 
+-- id(469) = poknowledge/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 469;
--- id(470) = poknowledge/overthere 
+-- id(470) = poknowledge/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 470;
--- id(471) = poknowledge/tox 
+-- id(471) = poknowledge/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 471;
--- id(472) = qeynos/qcat 
+-- id(472) = qeynos/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 472;
--- id(473) = qeynos/qcat 
+-- id(473) = qeynos/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 473;
--- id(474) = qeynos/qcat 
+-- id(474) = qeynos/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 474;
--- id(475) = qeynos/qcat 
+-- id(475) = qeynos/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 475;
--- id(476) = qeynos2/qeynos2 
+-- id(476) = qeynos2/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 476;
--- id(477) = qeynos2/qeynos2 
+-- id(477) = qeynos2/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 477;
--- id(478) = qeynos2/qcat 
+-- id(478) = qeynos2/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 478;
--- id(479) = qeynos2/qcat 
+-- id(479) = qeynos2/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 479;
--- id(480) = qeynos2/qcat 
+-- id(480) = qeynos2/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 480;
--- id(481) = qeynos2/qeynos2 
+-- id(481) = qeynos2/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 481;
--- id(482) = qeynos2/poknowledge 
+-- id(482) = qeynos2/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 482;
--- id(483) = qeynos2/qcat 
+-- id(483) = qeynos2/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 483;
--- id(484) = qcat/qeynos 
+-- id(484) = qcat/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 484;
--- id(485) = qcat/qeynos 
+-- id(485) = qcat/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 485;
--- id(486) = qcat/qeynos 
+-- id(486) = qcat/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 486;
--- id(487) = qcat/qeynos 
+-- id(487) = qcat/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 487;
--- id(488) = qcat/qeynos2 
+-- id(488) = qcat/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 488;
--- id(489) = qcat/qeynos2 
+-- id(489) = qcat/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 489;
--- id(490) = qcat/tox 
+-- id(490) = qcat/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 490;
--- id(491) = qcat/qeynos2 
+-- id(491) = qcat/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 491;
--- id(492) = rivervale/kithicor 
+-- id(492) = rivervale/kithicor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 492;
--- id(493) = rivervale/misty 
+-- id(493) = rivervale/misty
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 493;
--- id(494) = sseru/mseru 
+-- id(494) = sseru/mseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 494;
--- id(495) = sseru/dawnshroud 
+-- id(495) = sseru/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 495;
--- id(496) = sseru/dawnshroud 
+-- id(496) = sseru/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 496;
--- id(497) = sseru/nexus 
+-- id(497) = sseru/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 497;
--- id(498) = sseru/sseru 
+-- id(498) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 498;
--- id(499) = sseru/sseru 
+-- id(499) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 499;
--- id(500) = sseru/sseru 
+-- id(500) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 500;
--- id(501) = sseru/sseru 
+-- id(501) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 501;
--- id(502) = sseru/sseru 
+-- id(502) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 502;
--- id(503) = sseru/sseru 
+-- id(503) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 503;
--- id(504) = sseru/sseru 
+-- id(504) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 504;
--- id(505) = sseru/sseru 
+-- id(505) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 505;
--- id(506) = sseru/sseru 
+-- id(506) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 506;
--- id(507) = sseru/sseru 
+-- id(507) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 507;
--- id(508) = sseru/sseru 
+-- id(508) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 508;
--- id(509) = sseru/sseru 
+-- id(509) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 509;
--- id(510) = sseru/sseru 
+-- id(510) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 510;
--- id(511) = sseru/sseru 
+-- id(511) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 511;
--- id(512) = sseru/sseru 
+-- id(512) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 512;
--- id(513) = sseru/sseru 
+-- id(513) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 513;
--- id(514) = sseru/sseru 
+-- id(514) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 514;
--- id(515) = sseru/sseru 
+-- id(515) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 515;
--- id(516) = sseru/sseru 
+-- id(516) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 516;
--- id(517) = sseru/sseru 
+-- id(517) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 517;
--- id(518) = sseru/sseru 
+-- id(518) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 518;
--- id(519) = sseru/sseru 
+-- id(519) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 519;
--- id(520) = sseru/sseru 
+-- id(520) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 520;
--- id(521) = sseru/sseru 
+-- id(521) = sseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 521;
--- id(522) = shadowhaven/nexus 
+-- id(522) = shadowhaven/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 522;
--- id(523) = shadowhaven/echo 
+-- id(523) = shadowhaven/echo
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 523;
--- id(524) = shadowhaven/echo 
+-- id(524) = shadowhaven/echo
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 524;
--- id(525) = shadowhaven/paludal 
+-- id(525) = shadowhaven/paludal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 525;
--- id(526) = shadowhaven/shadowhaven 
+-- id(526) = shadowhaven/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 526;
--- id(527) = shadowhaven/shadowhaven 
+-- id(527) = shadowhaven/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 527;
--- id(530) = shadowhaven/echo 
+-- id(530) = shadowhaven/echo
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 530;
--- id(531) = shadowhaven/paludal 
+-- id(531) = shadowhaven/paludal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 531;
--- id(533) = sharvahl/shadeweaver 
+-- id(533) = sharvahl/shadeweaver
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 533;
--- id(534) = sharvahl/hollowshade 
+-- id(534) = sharvahl/hollowshade
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 534;
--- id(535) = sharvahl/nexus 
+-- id(535) = sharvahl/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 535;
--- id(537) = qrg/qeytoqrg 
+-- id(537) = qrg/qeytoqrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 537;
--- id(538) = qrg/jaggedpine 
+-- id(538) = qrg/jaggedpine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 538;
--- id(539) = thurgadina/greatdivide 
+-- id(539) = thurgadina/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 539;
--- id(540) = thurgadina/thurgadinb 
+-- id(540) = thurgadina/thurgadinb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 540;
--- id(541) = thurgadina/thurgadinb 
+-- id(541) = thurgadina/thurgadinb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 541;
--- id(542) = thurgadinb/thurgadina 
+-- id(542) = thurgadinb/thurgadina
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 542;
--- id(543) = thurgadinb/greatdivide 
+-- id(543) = thurgadinb/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 543;
--- id(544) = thurgadinb/thurgadina 
+-- id(544) = thurgadinb/thurgadina
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 544;
--- id(549) = butcher/gfaydark 
+-- id(549) = butcher/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 549;
--- id(550) = butcher/kaladima 
+-- id(550) = butcher/kaladima
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 550;
--- id(551) = butcher/cauldron 
+-- id(551) = butcher/cauldron
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 551;
--- id(552) = butcher/poknowledge 
+-- id(552) = butcher/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 552;
--- id(555) = cobaltscar/sirens 
+-- id(555) = cobaltscar/sirens
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 555;
--- id(556) = cobaltscar/skyshrine 
+-- id(556) = cobaltscar/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 556;
--- id(557) = cauldron/butcher 
+-- id(557) = cauldron/butcher
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 557;
--- id(558) = cauldron/kedge 
+-- id(558) = cauldron/kedge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 558;
--- id(559) = cauldron/unrest 
+-- id(559) = cauldron/unrest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 559;
--- id(560) = dawnshroud/sseru 
+-- id(560) = dawnshroud/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 560;
--- id(561) = dawnshroud/netherbian 
+-- id(561) = dawnshroud/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 561;
--- id(562) = dawnshroud/griegsend 
+-- id(562) = dawnshroud/griegsend
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 562;
--- id(563) = dawnshroud/maiden 
+-- id(563) = dawnshroud/maiden
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 563;
--- id(564) = dawnshroud/sseru 
+-- id(564) = dawnshroud/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 564;
--- id(565) = dawnshroud/netherbian 
+-- id(565) = dawnshroud/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 565;
--- id(575) = ecommons/nro 
+-- id(575) = ecommons/nro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 575;
--- id(581) = eastwastes/iceclad 
+-- id(581) = eastwastes/iceclad
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 581;
--- id(582) = eastwastes/kael 
+-- id(582) = eastwastes/kael
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 582;
--- id(583) = eastwastes/greatdivide 
+-- id(583) = eastwastes/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 583;
--- id(584) = eastwastes/crystal 
+-- id(584) = eastwastes/crystal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 584;
--- id(585) = eastwastes/sleeper 
+-- id(585) = eastwastes/sleeper
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 585;
--- id(590) = everfrost/halas 
+-- id(590) = everfrost/halas
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 590;
--- id(591) = everfrost/blackburrow 
+-- id(591) = everfrost/blackburrow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 591;
--- id(592) = everfrost/permafrost 
+-- id(592) = everfrost/permafrost
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 592;
--- id(594) = everfrost/poknowledge 
+-- id(594) = everfrost/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 594;
--- id(615) = greatdivide/nexus 
+-- id(615) = greatdivide/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 615;
--- id(616) = greatdivide/eastwastes 
+-- id(616) = greatdivide/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 616;
--- id(617) = greatdivide/thurgadina 
+-- id(617) = greatdivide/thurgadina
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 617;
--- id(618) = greatdivide/velketor 
+-- id(618) = greatdivide/velketor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 618;
--- id(620) = greatdivide/poknowledge 
+-- id(620) = greatdivide/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 620;
--- id(621) = thegrey/letalis 
+-- id(621) = thegrey/letalis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 621;
--- id(622) = thegrey/ssratemple 
+-- id(622) = thegrey/ssratemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 622;
--- id(623) = thegrey/scarlet 
+-- id(623) = thegrey/scarlet
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 623;
--- id(624) = grimling/acrylia 
+-- id(624) = grimling/acrylia
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 624;
--- id(625) = grimling/hollowshade 
+-- id(625) = grimling/hollowshade
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 625;
--- id(626) = grimling/tenebrous 
+-- id(626) = grimling/tenebrous
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 626;
--- id(633) = hollowshade/sharvahl 
+-- id(633) = hollowshade/sharvahl
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 633;
--- id(634) = hollowshade/grimling 
+-- id(634) = hollowshade/grimling
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 634;
--- id(635) = hollowshade/paludal 
+-- id(635) = hollowshade/paludal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 635;
--- id(637) = iceclad/eastwastes 
+-- id(637) = iceclad/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 637;
--- id(638) = iceclad/frozenshadow 
+-- id(638) = iceclad/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 638;
--- id(639) = iceclad/nro 
+-- id(639) = iceclad/nro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 639;
--- id(640) = innothule/sro 
+-- id(640) = innothule/sro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 640;
--- id(641) = innothule/feerrott 
+-- id(641) = innothule/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 641;
--- id(642) = innothule/grobb 
+-- id(642) = innothule/grobb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 642;
--- id(643) = innothule/guktop 
+-- id(643) = innothule/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 643;
--- id(644) = innothule/poknowledge 
+-- id(644) = innothule/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 644;
--- id(647) = kerraridge/tox 
+-- id(647) = kerraridge/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 647;
--- id(648) = kithicor/highpass 
+-- id(648) = kithicor/highpass
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 648;
--- id(649) = kithicor/rivervale 
+-- id(649) = kithicor/rivervale
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 649;
--- id(663) = lfaydark/steamfont 
+-- id(663) = lfaydark/steamfont
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 663;
--- id(664) = lfaydark/gfaydark 
+-- id(664) = lfaydark/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 664;
--- id(665) = lfaydark/mistmoore 
+-- id(665) = lfaydark/mistmoore
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 665;
--- id(666) = lfaydark/neriakc 
+-- id(666) = lfaydark/neriakc
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 666;
--- id(667) = maiden/dawnshroud 
+-- id(667) = maiden/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 667;
--- id(668) = maiden/akheva 
+-- id(668) = maiden/akheva
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 668;
--- id(669) = maiden/akheva 
+-- id(669) = maiden/akheva
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 669;
--- id(670) = maiden/umbral 
+-- id(670) = maiden/umbral
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 670;
--- id(671) = mseru/sseru 
+-- id(671) = mseru/sseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 671;
--- id(672) = mseru/netherbian 
+-- id(672) = mseru/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 672;
--- id(673) = mseru/letalis 
+-- id(673) = mseru/letalis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 673;
--- id(674) = mseru/netherbian 
+-- id(674) = mseru/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 674;
--- id(675) = misty/runnyeye 
+-- id(675) = misty/runnyeye
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 675;
--- id(676) = misty/rivervale 
+-- id(676) = misty/rivervale
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 676;
--- id(677) = misty/poknowledge 
+-- id(677) = misty/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 677;
--- id(678) = letalis/thegrey 
+-- id(678) = letalis/thegrey
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 678;
--- id(679) = letalis/mseru 
+-- id(679) = letalis/mseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 679;
--- id(680) = letalis/nexus 
+-- id(680) = letalis/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 680;
--- id(686) = nro/freporte 
+-- id(686) = nro/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 686;
--- id(687) = nro/oasis 
+-- id(687) = nro/oasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 687;
--- id(688) = nro/ecommons 
+-- id(688) = nro/ecommons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 688;
--- id(689) = nro/iceclad 
+-- id(689) = nro/iceclad
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 689;
--- id(690) = northkarana/nexus 
+-- id(690) = northkarana/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 690;
--- id(691) = northkarana/nexus 
+-- id(691) = northkarana/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 691;
--- id(692) = oasis/nro 
+-- id(692) = oasis/nro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 692;
--- id(693) = oasis/sro 
+-- id(693) = oasis/sro
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 693;
--- id(700) = qeytoqrg/qeynos2 
+-- id(700) = qeytoqrg/qeynos2
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 700;
--- id(701) = qeytoqrg/qey2hh1 
+-- id(701) = qeytoqrg/qey2hh1
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 701;
--- id(703) = qeytoqrg/blackburrow 
+-- id(703) = qeytoqrg/blackburrow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 703;
--- id(704) = qeytoqrg/qrg 
+-- id(704) = qeytoqrg/qrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 704;
--- id(725) = rathemtn/lakerathe 
+-- id(725) = rathemtn/lakerathe
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 725;
--- id(726) = rathemtn/feerrott 
+-- id(726) = rathemtn/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 726;
--- id(727) = scarlet/griegsend 
+-- id(727) = scarlet/griegsend
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 727;
--- id(728) = scarlet/twilight 
+-- id(728) = scarlet/twilight
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 728;
--- id(729) = scarlet/thegrey 
+-- id(729) = scarlet/thegrey
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 729;
--- id(730) = shadeweaver/sharvahl 
+-- id(730) = shadeweaver/sharvahl
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 730;
--- id(731) = shadeweaver/paludal 
+-- id(731) = shadeweaver/paludal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 731;
--- id(732) = shadeweaver/nexus 
+-- id(732) = shadeweaver/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 732;
--- id(733) = shadeweaver/poknowledge 
+-- id(733) = shadeweaver/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 733;
--- id(738) = sro/oasis 
+-- id(738) = sro/oasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 738;
--- id(739) = sro/innothule 
+-- id(739) = sro/innothule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 739;
--- id(740) = southkarana/lakerathe 
+-- id(740) = southkarana/lakerathe
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 740;
--- id(741) = steamfont/akanon 
+-- id(741) = steamfont/akanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 741;
--- id(742) = steamfont/lfaydark 
+-- id(742) = steamfont/lfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 742;
--- id(743) = steamfont/poknowledge 
+-- id(743) = steamfont/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 743;
--- id(753) = tenebrous/grimling 
+-- id(753) = tenebrous/grimling
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 753;
--- id(754) = tenebrous/katta 
+-- id(754) = tenebrous/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 754;
--- id(769) = tox/nexus 
+-- id(769) = tox/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 769;
--- id(770) = tox/erudnext 
+-- id(770) = tox/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 770;
--- id(771) = tox/paineel 
+-- id(771) = tox/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 771;
--- id(772) = tox/kerraridge 
+-- id(772) = tox/kerraridge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 772;
--- id(773) = tox/qcat 
+-- id(773) = tox/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 773;
--- id(774) = tox/poknowledge 
+-- id(774) = tox/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 774;
--- id(775) = tox/poknowledge 
+-- id(775) = tox/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 775;
--- id(779) = twilight/katta 
+-- id(779) = twilight/katta
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 779;
--- id(780) = twilight/scarlet 
+-- id(780) = twilight/scarlet
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 780;
--- id(782) = twilight/nexus 
+-- id(782) = twilight/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 782;
--- id(783) = umbral/umbral 
+-- id(783) = umbral/umbral
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 783;
--- id(784) = umbral/maiden 
+-- id(784) = umbral/maiden
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 784;
--- id(785) = umbral/vexthal 
+-- id(785) = umbral/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 785;
--- id(786) = wakening/skyshrine 
+-- id(786) = wakening/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 786;
--- id(787) = wakening/kael 
+-- id(787) = wakening/kael
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 787;
--- id(788) = wakening/growthplane 
+-- id(788) = wakening/growthplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 788;
--- id(796) = westwastes/sirens 
+-- id(796) = westwastes/sirens
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 796;
--- id(797) = westwastes/necropolis 
+-- id(797) = westwastes/necropolis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 797;
--- id(798) = westwastes/templeveeshan 
+-- id(798) = westwastes/templeveeshan
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 798;
--- id(799) = qey2hh1/qeytoqrg 
+-- id(799) = qey2hh1/qeytoqrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 799;
--- id(801) = befallen/commons 
+-- id(801) = befallen/commons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 801;
--- id(802) = blackburrow/qeytoqrg 
+-- id(802) = blackburrow/qeytoqrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 802;
--- id(803) = blackburrow/everfrost 
+-- id(803) = blackburrow/everfrost
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 803;
--- id(804) = blackburrow/jaggedpine 
+-- id(804) = blackburrow/jaggedpine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 804;
--- id(806) = lakerathe/rathemtn 
+-- id(806) = lakerathe/rathemtn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 806;
--- id(807) = lakerathe/arena 
+-- id(807) = lakerathe/arena
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 807;
--- id(808) = lakerathe/southkarana 
+-- id(808) = lakerathe/southkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 808;
--- id(811) = crystal/eastwastes 
+-- id(811) = crystal/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 811;
--- id(812) = crystal/eastwastes 
+-- id(812) = crystal/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 812;
--- id(816) = thedeep/ssratemple 
+-- id(816) = thedeep/ssratemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 816;
--- id(817) = thedeep/echo 
+-- id(817) = thedeep/echo
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 817;
--- id(821) = echo/shadowhaven 
+-- id(821) = echo/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 821;
--- id(822) = echo/fungusgrove 
+-- id(822) = echo/fungusgrove
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 822;
--- id(823) = echo/thedeep 
+-- id(823) = echo/thedeep
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 823;
--- id(824) = echo/shadowhaven 
+-- id(824) = echo/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 824;
--- id(825) = echo/fungusgrove 
+-- id(825) = echo/fungusgrove
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 825;
--- id(826) = frozenshadow/frozenshadow 
+-- id(826) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 826;
--- id(827) = frozenshadow/frozenshadow 
+-- id(827) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 827;
--- id(828) = frozenshadow/frozenshadow 
+-- id(828) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 828;
--- id(829) = frozenshadow/frozenshadow 
+-- id(829) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 829;
--- id(830) = frozenshadow/frozenshadow 
+-- id(830) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 830;
--- id(831) = frozenshadow/frozenshadow 
+-- id(831) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 831;
--- id(832) = frozenshadow/frozenshadow 
+-- id(832) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 832;
--- id(833) = frozenshadow/frozenshadow 
+-- id(833) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 833;
--- id(834) = frozenshadow/frozenshadow 
+-- id(834) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 834;
--- id(835) = frozenshadow/frozenshadow 
+-- id(835) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 835;
--- id(836) = frozenshadow/frozenshadow 
+-- id(836) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 836;
--- id(837) = frozenshadow/frozenshadow 
+-- id(837) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 837;
--- id(838) = frozenshadow/frozenshadow 
+-- id(838) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 838;
--- id(839) = frozenshadow/frozenshadow 
+-- id(839) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 839;
--- id(840) = frozenshadow/frozenshadow 
+-- id(840) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 840;
--- id(841) = frozenshadow/frozenshadow 
+-- id(841) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 841;
--- id(842) = frozenshadow/frozenshadow 
+-- id(842) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 842;
--- id(843) = frozenshadow/frozenshadow 
+-- id(843) = frozenshadow/frozenshadow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 843;
--- id(844) = frozenshadow/iceclad 
+-- id(844) = frozenshadow/iceclad
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 844;
--- id(845) = fungusgrove/echo 
+-- id(845) = fungusgrove/echo
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 845;
--- id(846) = fungusgrove/twilight 
+-- id(846) = fungusgrove/twilight
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 846;
--- id(847) = griegsend/scarlet 
+-- id(847) = griegsend/scarlet
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 847;
--- id(848) = griegsend/dawnshroud 
+-- id(848) = griegsend/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 848;
--- id(849) = griegsend/griegsend 
+-- id(849) = griegsend/griegsend
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 849;
--- id(850) = griegsend/griegsend 
+-- id(850) = griegsend/griegsend
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 850;
--- id(851) = guktop/gukbottom 
+-- id(851) = guktop/gukbottom
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 851;
--- id(852) = guktop/gukbottom 
+-- id(852) = guktop/gukbottom
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 852;
--- id(853) = guktop/gukbottom 
+-- id(853) = guktop/gukbottom
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 853;
--- id(854) = guktop/gukbottom 
+-- id(854) = guktop/gukbottom
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 854;
--- id(855) = guktop/innothule 
+-- id(855) = guktop/innothule
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 855;
--- id(857) = gukbottom/guktop 
+-- id(857) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 857;
--- id(858) = gukbottom/guktop 
+-- id(858) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 858;
--- id(860) = gukbottom/guktop 
+-- id(860) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 860;
--- id(861) = gukbottom/guktop 
+-- id(861) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 861;
--- id(862) = gukbottom/guktop 
+-- id(862) = gukbottom/guktop
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 862;
--- id(879) = kael/wakening 
+-- id(879) = kael/wakening
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 879;
--- id(880) = kael/eastwastes 
+-- id(880) = kael/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 880;
--- id(888) = mistmoore/lfaydark 
+-- id(888) = mistmoore/lfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 888;
--- id(890) = necropolis/westwastes 
+-- id(890) = necropolis/westwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 890;
--- id(891) = netherbian/nexus 
+-- id(891) = netherbian/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 891;
--- id(892) = netherbian/netherbian 
+-- id(892) = netherbian/netherbian
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 892;
--- id(893) = netherbian/mseru 
+-- id(893) = netherbian/mseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 893;
--- id(894) = netherbian/mseru 
+-- id(894) = netherbian/mseru
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 894;
--- id(895) = netherbian/dawnshroud 
+-- id(895) = netherbian/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 895;
--- id(896) = netherbian/dawnshroud 
+-- id(896) = netherbian/dawnshroud
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 896;
--- id(902) = paludal/shadeweaver 
+-- id(902) = paludal/shadeweaver
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 902;
--- id(903) = paludal/shadowhaven 
+-- id(903) = paludal/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 903;
--- id(904) = paludal/hollowshade 
+-- id(904) = paludal/hollowshade
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 904;
--- id(905) = permafrost/everfrost 
+-- id(905) = permafrost/everfrost
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 905;
--- id(908) = sirens/cobaltscar 
+-- id(908) = sirens/cobaltscar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 908;
--- id(909) = sirens/westwastes 
+-- id(909) = sirens/westwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 909;
--- id(911) = soldunga/soldungb 
+-- id(911) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 911;
--- id(912) = soldunga/soldungb 
+-- id(912) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 912;
--- id(913) = soldunga/soldungb 
+-- id(913) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 913;
--- id(914) = soldunga/soldungb 
+-- id(914) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 914;
--- id(915) = soldunga/soldungb 
+-- id(915) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 915;
--- id(916) = soldunga/soldungb 
+-- id(916) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 916;
--- id(917) = soldunga/soldungb 
+-- id(917) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 917;
--- id(919) = soldunga/soldungb 
+-- id(919) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 919;
--- id(920) = soldunga/soldungb 
+-- id(920) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 920;
--- id(921) = soldunga/soldungb 
+-- id(921) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 921;
--- id(922) = skyshrine/skyshrine 
+-- id(922) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 922;
--- id(923) = skyshrine/skyshrine 
+-- id(923) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 923;
--- id(924) = skyshrine/skyshrine 
+-- id(924) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 924;
--- id(925) = skyshrine/skyshrine 
+-- id(925) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 925;
--- id(926) = skyshrine/skyshrine 
+-- id(926) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 926;
--- id(927) = skyshrine/skyshrine 
+-- id(927) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 927;
--- id(928) = skyshrine/skyshrine 
+-- id(928) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 928;
--- id(929) = skyshrine/skyshrine 
+-- id(929) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 929;
--- id(930) = skyshrine/skyshrine 
+-- id(930) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 930;
--- id(931) = skyshrine/skyshrine 
+-- id(931) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 931;
--- id(932) = skyshrine/skyshrine 
+-- id(932) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 932;
--- id(933) = skyshrine/skyshrine 
+-- id(933) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 933;
--- id(934) = skyshrine/skyshrine 
+-- id(934) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 934;
--- id(935) = skyshrine/skyshrine 
+-- id(935) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 935;
--- id(936) = skyshrine/skyshrine 
+-- id(936) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 936;
--- id(937) = skyshrine/skyshrine 
+-- id(937) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 937;
--- id(938) = skyshrine/skyshrine 
+-- id(938) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 938;
--- id(939) = skyshrine/skyshrine 
+-- id(939) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 939;
--- id(940) = skyshrine/skyshrine 
+-- id(940) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 940;
--- id(941) = skyshrine/skyshrine 
+-- id(941) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 941;
--- id(942) = skyshrine/skyshrine 
+-- id(942) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 942;
--- id(943) = skyshrine/skyshrine 
+-- id(943) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 943;
--- id(944) = skyshrine/skyshrine 
+-- id(944) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 944;
--- id(945) = skyshrine/skyshrine 
+-- id(945) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 945;
--- id(946) = skyshrine/wakening 
+-- id(946) = skyshrine/wakening
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 946;
--- id(947) = skyshrine/cobaltscar 
+-- id(947) = skyshrine/cobaltscar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 947;
--- id(948) = skyshrine/skyshrine 
+-- id(948) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 948;
--- id(949) = skyshrine/skyshrine 
+-- id(949) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 949;
--- id(950) = skyshrine/kael 
+-- id(950) = skyshrine/kael
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 950;
--- id(951) = skyshrine/skyshrine 
+-- id(951) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 951;
--- id(952) = skyshrine/skyshrine 
+-- id(952) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 952;
--- id(953) = skyshrine/skyshrine 
+-- id(953) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 953;
--- id(954) = skyshrine/skyshrine 
+-- id(954) = skyshrine/skyshrine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 954;
--- id(970) = paw/southkarana 
+-- id(970) = paw/southkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 970;
--- id(971) = unrest/cauldron 
+-- id(971) = unrest/cauldron
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 971;
--- id(972) = velketor/greatdivide 
+-- id(972) = velketor/greatdivide
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 972;
--- id(977) = qeynos2/qeynos 
+-- id(977) = qeynos2/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 977;
--- id(978) = qeynos2/qeynos 
+-- id(978) = qeynos2/qeynos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 978;
--- id(979) = nedaria/jaggedpine 
+-- id(979) = nedaria/jaggedpine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 979;
--- id(983) = bothunder/bothunder 
+-- id(983) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 983;
--- id(984) = bothunder/bothunder 
+-- id(984) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 984;
--- id(985) = bothunder/bothunder 
+-- id(985) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 985;
--- id(986) = bothunder/bothunder 
+-- id(986) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 986;
--- id(987) = bothunder/bothunder 
+-- id(987) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 987;
--- id(988) = bothunder/bothunder 
+-- id(988) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 988;
--- id(989) = bothunder/bothunder 
+-- id(989) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 989;
--- id(990) = bothunder/bothunder 
+-- id(990) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 990;
--- id(991) = bothunder/bothunder 
+-- id(991) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 991;
--- id(992) = bothunder/bothunder 
+-- id(992) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 992;
--- id(993) = bothunder/bothunder 
+-- id(993) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 993;
--- id(994) = bothunder/bothunder 
+-- id(994) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 994;
--- id(995) = bothunder/bothunder 
+-- id(995) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 995;
--- id(996) = bothunder/bothunder 
+-- id(996) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 996;
--- id(997) = bothunder/bothunder 
+-- id(997) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 997;
--- id(998) = bothunder/bothunder 
+-- id(998) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 998;
--- id(999) = bothunder/bothunder 
+-- id(999) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 999;
--- id(1000) = bothunder/bothunder 
+-- id(1000) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1000;
--- id(1001) = bothunder/bothunder 
+-- id(1001) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1001;
--- id(1002) = bothunder/bothunder 
+-- id(1002) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1002;
--- id(1003) = bothunder/bothunder 
+-- id(1003) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1003;
--- id(1004) = bothunder/bothunder 
+-- id(1004) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1004;
--- id(1005) = bothunder/bothunder 
+-- id(1005) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1005;
--- id(1006) = bothunder/bothunder 
+-- id(1006) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1006;
--- id(1007) = bothunder/bothunder 
+-- id(1007) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1007;
--- id(1008) = bothunder/bothunder 
+-- id(1008) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1008;
--- id(1009) = bothunder/bothunder 
+-- id(1009) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1009;
--- id(1010) = bothunder/bothunder 
+-- id(1010) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1010;
--- id(1011) = bothunder/bothunder 
+-- id(1011) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1011;
--- id(1012) = bothunder/bothunder 
+-- id(1012) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1012;
--- id(1013) = bothunder/bothunder 
+-- id(1013) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1013;
--- id(1014) = bothunder/bothunder 
+-- id(1014) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1014;
--- id(1015) = bothunder/bothunder 
+-- id(1015) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1015;
--- id(1016) = bothunder/bothunder 
+-- id(1016) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1016;
--- id(1017) = bothunder/bothunder 
+-- id(1017) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1017;
--- id(1018) = bothunder/bothunder 
+-- id(1018) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1018;
--- id(1019) = bothunder/bothunder 
+-- id(1019) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1019;
--- id(1020) = bothunder/bothunder 
+-- id(1020) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1020;
--- id(1021) = bothunder/bothunder 
+-- id(1021) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1021;
--- id(1022) = bothunder/bothunder 
+-- id(1022) = bothunder/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1022;
--- id(1023) = bothunder/potranquility 
+-- id(1023) = bothunder/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1023;
--- id(1024) = povalor/povalor 
+-- id(1024) = povalor/povalor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1024;
--- id(1025) = povalor/potranquility 
+-- id(1025) = povalor/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1025;
--- id(1026) = povalor/hohonora 
+-- id(1026) = povalor/hohonora
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1026;
--- id(1027) = codecay/potranquility 
+-- id(1027) = codecay/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1027;
--- id(1028) = codecay/codecay 
+-- id(1028) = codecay/codecay
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1028;
--- id(1029) = hohonora/hohonorb 
+-- id(1029) = hohonora/hohonorb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1029;
--- id(1030) = hohonora/potranquility 
+-- id(1030) = hohonora/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1030;
--- id(1031) = hohonorb/hohonora 
+-- id(1031) = hohonorb/hohonora
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1031;
--- id(1032) = poair/poair 
+-- id(1032) = poair/poair
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1032;
--- id(1033) = poair/potranquility 
+-- id(1033) = poair/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1033;
--- id(1034) = poair/potranquility 
+-- id(1034) = poair/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1034;
--- id(1035) = podisease/codecay 
+-- id(1035) = podisease/codecay
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1035;
--- id(1036) = podisease/potranquility 
+-- id(1036) = podisease/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1036;
--- id(1037) = poearthb/poeartha 
+-- id(1037) = poearthb/poeartha
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1037;
--- id(1038) = poearthb/potranquility 
+-- id(1038) = poearthb/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1038;
--- id(1039) = poeartha/poearthb 
+-- id(1039) = poeartha/poearthb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1039;
--- id(1040) = poeartha/poearthb 
+-- id(1040) = poeartha/poearthb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1040;
--- id(1041) = poeartha/potranquility 
+-- id(1041) = poeartha/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1041;
--- id(1042) = poeartha/potranquility 
+-- id(1042) = poeartha/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1042;
--- id(1043) = poinnovation/potranquility 
+-- id(1043) = poinnovation/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1043;
--- id(1044) = poinnovation/poinnovation 
+-- id(1044) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1044;
--- id(1045) = poinnovation/poinnovation 
+-- id(1045) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1045;
--- id(1046) = poinnovation/poinnovation 
+-- id(1046) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1046;
--- id(1047) = poinnovation/poinnovation 
+-- id(1047) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1047;
--- id(1048) = poinnovation/poinnovation 
+-- id(1048) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1048;
--- id(1049) = poinnovation/potimea 
+-- id(1049) = poinnovation/potimea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1049;
--- id(1050) = poinnovation/poinnovation 
+-- id(1050) = poinnovation/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1050;
--- id(1051) = pojustice/pojustice 
+-- id(1051) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1051;
--- id(1052) = pojustice/pojustice 
+-- id(1052) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1052;
--- id(1053) = pojustice/pojustice 
+-- id(1053) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1053;
--- id(1054) = pojustice/pojustice 
+-- id(1054) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1054;
--- id(1055) = pojustice/pojustice 
+-- id(1055) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1055;
--- id(1056) = pojustice/pojustice 
+-- id(1056) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1056;
--- id(1057) = pojustice/pojustice 
+-- id(1057) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1057;
--- id(1058) = pojustice/pojustice 
+-- id(1058) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1058;
--- id(1059) = pojustice/pojustice 
+-- id(1059) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1059;
--- id(1060) = pojustice/pojustice 
+-- id(1060) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1060;
--- id(1061) = pojustice/pojustice 
+-- id(1061) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1061;
--- id(1062) = pojustice/pojustice 
+-- id(1062) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1062;
--- id(1063) = pojustice/pojustice 
+-- id(1063) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1063;
--- id(1064) = pojustice/pojustice 
+-- id(1064) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1064;
--- id(1065) = pojustice/pojustice 
+-- id(1065) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1065;
--- id(1066) = pojustice/pojustice 
+-- id(1066) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1066;
--- id(1067) = pojustice/pojustice 
+-- id(1067) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1067;
--- id(1068) = pojustice/pojustice 
+-- id(1068) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1068;
--- id(1069) = pojustice/pojustice 
+-- id(1069) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1069;
--- id(1070) = pojustice/pojustice 
+-- id(1070) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1070;
--- id(1071) = pojustice/pojustice 
+-- id(1071) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1071;
--- id(1072) = pojustice/pojustice 
+-- id(1072) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1072;
--- id(1073) = pojustice/pojustice 
+-- id(1073) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1073;
--- id(1074) = pojustice/pojustice 
+-- id(1074) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1074;
--- id(1075) = pojustice/pojustice 
+-- id(1075) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1075;
--- id(1076) = pojustice/pojustice 
+-- id(1076) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1076;
--- id(1077) = pojustice/pojustice 
+-- id(1077) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1077;
--- id(1078) = pojustice/pojustice 
+-- id(1078) = pojustice/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1078;
--- id(1079) = pojustice/potranquility 
+-- id(1079) = pojustice/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1079;
--- id(1080) = postorms/bothunder 
+-- id(1080) = postorms/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1080;
--- id(1081) = postorms/postorms 
+-- id(1081) = postorms/postorms
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1081;
--- id(1082) = postorms/postorms 
+-- id(1082) = postorms/postorms
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1082;
--- id(1083) = postorms/potranquility 
+-- id(1083) = postorms/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1083;
--- id(1084) = potorment/potorment 
+-- id(1084) = potorment/potorment
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1084;
--- id(1085) = potorment/potranquility 
+-- id(1085) = potorment/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1085;
--- id(1086) = potranquility/potimea 
+-- id(1086) = potranquility/potimea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1086;
--- id(1087) = potranquility/neriakd 
+-- id(1087) = potranquility/neriakd
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1087;
--- id(1088) = potranquility/povalor 
+-- id(1088) = potranquility/povalor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1088;
--- id(1089) = potranquility/podisease 
+-- id(1089) = potranquility/podisease
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1089;
--- id(1090) = potranquility/potorment 
+-- id(1090) = potranquility/potorment
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1090;
--- id(1091) = potranquility/codecay 
+-- id(1091) = potranquility/codecay
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1091;
--- id(1092) = potranquility/potactics 
+-- id(1092) = potranquility/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1092;
--- id(1094) = potranquility/povalor 
+-- id(1094) = potranquility/povalor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1094;
--- id(1095) = potranquility/postorms 
+-- id(1095) = potranquility/postorms
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1095;
--- id(1096) = potranquility/bothunder 
+-- id(1096) = potranquility/bothunder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1096;
--- id(1097) = potranquility/solrotower 
+-- id(1097) = potranquility/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1097;
--- id(1098) = potranquility/powater 
+-- id(1098) = potranquility/powater
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1098;
--- id(1099) = potranquility/poair 
+-- id(1099) = potranquility/poair
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1099;
--- id(1100) = potranquility/pofire 
+-- id(1100) = potranquility/pofire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1100;
--- id(1101) = potranquility/poeartha 
+-- id(1101) = potranquility/poeartha
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1101;
--- id(1102) = potranquility/poinnovation 
+-- id(1102) = potranquility/poinnovation
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1102;
--- id(1103) = potranquility/pojustice 
+-- id(1103) = potranquility/pojustice
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1103;
--- id(1104) = potranquility/ponightmare 
+-- id(1104) = potranquility/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1104;
--- id(1105) = potranquility/poknowledge 
+-- id(1105) = potranquility/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1105;
--- id(1106) = powater/potranquility 
+-- id(1106) = powater/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1106;
--- id(1107) = solrotower/pofire 
+-- id(1107) = solrotower/pofire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1107;
--- id(1108) = solrotower/solrotower 
+-- id(1108) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1108;
--- id(1109) = solrotower/solrotower 
+-- id(1109) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1109;
--- id(1110) = solrotower/solrotower 
+-- id(1110) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1110;
--- id(1111) = solrotower/solrotower 
+-- id(1111) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1111;
--- id(1112) = solrotower/solrotower 
+-- id(1112) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1112;
--- id(1113) = solrotower/solrotower 
+-- id(1113) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1113;
--- id(1114) = solrotower/solrotower 
+-- id(1114) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1114;
--- id(1115) = solrotower/solrotower 
+-- id(1115) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1115;
--- id(1116) = solrotower/solrotower 
+-- id(1116) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1116;
--- id(1117) = solrotower/solrotower 
+-- id(1117) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1117;
--- id(1118) = solrotower/solrotower 
+-- id(1118) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1118;
--- id(1119) = solrotower/solrotower 
+-- id(1119) = solrotower/solrotower
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1119;
--- id(1120) = potactics/potactics 
+-- id(1120) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1120;
--- id(1121) = potactics/potactics 
+-- id(1121) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1121;
--- id(1122) = potactics/potranquility 
+-- id(1122) = potactics/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1122;
--- id(1123) = potactics/potactics 
+-- id(1123) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1123;
--- id(1124) = potactics/paineel 
+-- id(1124) = potactics/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1124;
--- id(1125) = potactics/potactics 
+-- id(1125) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1125;
--- id(1126) = potactics/potactics 
+-- id(1126) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1126;
--- id(1127) = potactics/potactics 
+-- id(1127) = potactics/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1127;
--- id(1128) = potactics/fearplane 
+-- id(1128) = potactics/fearplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1128;
--- id(1129) = potactics/airplane 
+-- id(1129) = potactics/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1129;
--- id(1130) = potactics/hateplane 
+-- id(1130) = potactics/hateplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1130;
--- id(1131) = potactics/kedge 
+-- id(1131) = potactics/kedge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1131;
--- id(1132) = ponightmare/potranquility 
+-- id(1132) = ponightmare/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1132;
--- id(1133) = ponightmare/ponightmare 
+-- id(1133) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1133;
--- id(1134) = ponightmare/ponightmare 
+-- id(1134) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1134;
--- id(1135) = ponightmare/ponightmare 
+-- id(1135) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1135;
--- id(1136) = ponightmare/ponightmare 
+-- id(1136) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1136;
--- id(1137) = ponightmare/ponightmare 
+-- id(1137) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1137;
--- id(1138) = ponightmare/ponightmare 
+-- id(1138) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1138;
--- id(1139) = ponightmare/ponightmare 
+-- id(1139) = ponightmare/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1139;
--- id(1140) = ponightmare/potranquility 
+-- id(1140) = ponightmare/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1140;
--- id(1141) = ponightmare/nightmareb 
+-- id(1141) = ponightmare/nightmareb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1141;
--- id(1142) = kedge/cauldron 
+-- id(1142) = kedge/cauldron
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1142;
--- id(1145) = highpass/eastkarana 
+-- id(1145) = highpass/eastkarana
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1145;
--- id(1146) = highpass/kithicor 
+-- id(1146) = highpass/kithicor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1146;
--- id(1148) = soldungb/soldunga 
+-- id(1148) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1148;
--- id(1149) = soldungb/soldunga 
+-- id(1149) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1149;
--- id(1150) = soldungb/qcat 
+-- id(1150) = soldungb/qcat
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1150;
--- id(1151) = soldungb/soldunga 
+-- id(1151) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1151;
--- id(1152) = soldungb/soldunga 
+-- id(1152) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1152;
--- id(1153) = soldungb/soldunga 
+-- id(1153) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1153;
--- id(1154) = soldungb/soldunga 
+-- id(1154) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1154;
--- id(1156) = soldungb/soldunga 
+-- id(1156) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1156;
--- id(1157) = soldungb/soldunga 
+-- id(1157) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1157;
--- id(1158) = runnyeye/beholder 
+-- id(1158) = runnyeye/beholder
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1158;
--- id(1159) = runnyeye/misty 
+-- id(1159) = runnyeye/misty
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1159;
--- id(1160) = erudnext/erudnext 
+-- id(1160) = erudnext/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1160;
--- id(1161) = erudnext/erudnext 
+-- id(1161) = erudnext/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1161;
--- id(1162) = erudnext/tox 
+-- id(1162) = erudnext/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1162;
--- id(1163) = airplane/oasis 
+-- id(1163) = airplane/oasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1163;
--- id(1164) = airplane/airplane 
+-- id(1164) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1164;
--- id(1165) = airplane/airplane 
+-- id(1165) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1165;
--- id(1166) = airplane/airplane 
+-- id(1166) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1166;
--- id(1167) = airplane/airplane 
+-- id(1167) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1167;
--- id(1168) = airplane/airplane 
+-- id(1168) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1168;
--- id(1169) = airplane/airplane 
+-- id(1169) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1169;
--- id(1170) = airplane/airplane 
+-- id(1170) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1170;
--- id(1171) = airplane/airplane 
+-- id(1171) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1171;
--- id(1172) = airplane/freporte 
+-- id(1172) = airplane/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1172;
--- id(1173) = airplane/airplane 
+-- id(1173) = airplane/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1173;
--- id(1174) = cazicthule/feerrott 
+-- id(1174) = cazicthule/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1174;
--- id(1175) = burningwood/dreadlands 
+-- id(1175) = burningwood/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1175;
--- id(1176) = burningwood/skyfire 
+-- id(1176) = burningwood/skyfire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1176;
--- id(1177) = burningwood/frontiermtns 
+-- id(1177) = burningwood/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1177;
--- id(1178) = burningwood/chardok 
+-- id(1178) = burningwood/chardok
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1178;
--- id(1179) = cabeast/fieldofbone 
+-- id(1179) = cabeast/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1179;
--- id(1180) = cabeast/fieldofbone 
+-- id(1180) = cabeast/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1180;
--- id(1181) = cabeast/swampofnohope 
+-- id(1181) = cabeast/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1181;
--- id(1182) = cabeast/swampofnohope 
+-- id(1182) = cabeast/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1182;
--- id(1183) = cabeast/cabeast 
+-- id(1183) = cabeast/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1183;
--- id(1184) = cabeast/cabeast 
+-- id(1184) = cabeast/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1184;
--- id(1185) = cabeast/cabwest 
+-- id(1185) = cabeast/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1185;
--- id(1186) = cabeast/cabwest 
+-- id(1186) = cabeast/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1186;
--- id(1187) = cabwest/lakeofillomen 
+-- id(1187) = cabwest/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1187;
--- id(1188) = cabwest/lakeofillomen 
+-- id(1188) = cabwest/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1188;
--- id(1189) = cabwest/warslikswood 
+-- id(1189) = cabwest/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1189;
--- id(1190) = cabwest/warslikswood 
+-- id(1190) = cabwest/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1190;
--- id(1191) = cabwest/cabeast 
+-- id(1191) = cabwest/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1191;
--- id(1192) = charasis/charasis 
+-- id(1192) = charasis/charasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1192;
--- id(1193) = charasis/charasis 
+-- id(1193) = charasis/charasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1193;
--- id(1194) = charasis/charasis 
+-- id(1194) = charasis/charasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1194;
--- id(1195) = charasis/overthere 
+-- id(1195) = charasis/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1195;
--- id(1196) = charasis/overthere 
+-- id(1196) = charasis/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1196;
--- id(1197) = chardok/burningwood 
+-- id(1197) = chardok/burningwood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1197;
--- id(1199) = citymist/emeraldjungle 
+-- id(1199) = citymist/emeraldjungle
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1199;
--- id(1200) = citymist/emeraldjungle 
+-- id(1200) = citymist/emeraldjungle
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1200;
--- id(1201) = dalnir/warslikswood 
+-- id(1201) = dalnir/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1201;
--- id(1202) = dalnir/warslikswood 
+-- id(1202) = dalnir/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1202;
--- id(1203) = dalnir/warslikswood 
+-- id(1203) = dalnir/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1203;
--- id(1204) = dreadlands/nexus 
+-- id(1204) = dreadlands/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1204;
--- id(1205) = dreadlands/firiona 
+-- id(1205) = dreadlands/firiona
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1205;
--- id(1206) = dreadlands/burningwood 
+-- id(1206) = dreadlands/burningwood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1206;
--- id(1207) = dreadlands/frontiermtns 
+-- id(1207) = dreadlands/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1207;
--- id(1208) = dreadlands/karnor 
+-- id(1208) = dreadlands/karnor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1208;
--- id(1209) = dreadlands/karnor 
+-- id(1209) = dreadlands/karnor
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1209;
--- id(1210) = dreadlands/nexus 
+-- id(1210) = dreadlands/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1210;
--- id(1211) = droga/frontiermtns 
+-- id(1211) = droga/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1211;
--- id(1212) = droga/nurga 
+-- id(1212) = droga/nurga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1212;
--- id(1213) = droga/nurga 
+-- id(1213) = droga/nurga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1213;
--- id(1214) = emeraldjungle/fieldofbone 
+-- id(1214) = emeraldjungle/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1214;
--- id(1215) = emeraldjungle/citymist 
+-- id(1215) = emeraldjungle/citymist
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1215;
--- id(1216) = emeraldjungle/citymist 
+-- id(1216) = emeraldjungle/citymist
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1216;
--- id(1217) = emeraldjungle/trakanon 
+-- id(1217) = emeraldjungle/trakanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1217;
--- id(1218) = fearplane/feerrott 
+-- id(1218) = fearplane/feerrott
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1218;
--- id(1219) = fieldofbone/cabeast 
+-- id(1219) = fieldofbone/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1219;
--- id(1220) = fieldofbone/cabeast 
+-- id(1220) = fieldofbone/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1220;
--- id(1221) = fieldofbone/kaesora 
+-- id(1221) = fieldofbone/kaesora
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1221;
--- id(1222) = fieldofbone/kurn 
+-- id(1222) = fieldofbone/kurn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1222;
--- id(1223) = fieldofbone/kurn 
+-- id(1223) = fieldofbone/kurn
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1223;
--- id(1224) = fieldofbone/warslikswood 
+-- id(1224) = fieldofbone/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1224;
--- id(1225) = fieldofbone/swampofnohope 
+-- id(1225) = fieldofbone/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1225;
--- id(1226) = fieldofbone/emeraldjungle 
+-- id(1226) = fieldofbone/emeraldjungle
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1226;
--- id(1227) = fieldofbone/poknowledge 
+-- id(1227) = fieldofbone/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1227;
--- id(1228) = firiona/dreadlands 
+-- id(1228) = firiona/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1228;
--- id(1229) = firiona/swampofnohope 
+-- id(1229) = firiona/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1229;
--- id(1230) = firiona/swampofnohope 
+-- id(1230) = firiona/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1230;
--- id(1231) = firiona/lakeofillomen 
+-- id(1231) = firiona/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1231;
--- id(1232) = firiona/poknowledge 
+-- id(1232) = firiona/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1232;
--- id(1233) = frontiermtns/lakeofillomen 
+-- id(1233) = frontiermtns/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1233;
--- id(1234) = frontiermtns/dreadlands 
+-- id(1234) = frontiermtns/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1234;
--- id(1235) = frontiermtns/burningwood 
+-- id(1235) = frontiermtns/burningwood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1235;
--- id(1236) = frontiermtns/nurga 
+-- id(1236) = frontiermtns/nurga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1236;
--- id(1237) = frontiermtns/droga 
+-- id(1237) = frontiermtns/droga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1237;
--- id(1238) = frontiermtns/overthere 
+-- id(1238) = frontiermtns/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1238;
--- id(1239) = hole/paineel 
+-- id(1239) = hole/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1239;
--- id(1243) = jaggedpine/qrg 
+-- id(1243) = jaggedpine/qrg
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1243;
--- id(1244) = jaggedpine/jaggedpine 
+-- id(1244) = jaggedpine/jaggedpine
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1244;
--- id(1245) = jaggedpine/blackburrow 
+-- id(1245) = jaggedpine/blackburrow
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1245;
--- id(1246) = kaesora/fieldofbone 
+-- id(1246) = kaesora/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1246;
--- id(1247) = karnor/dreadlands 
+-- id(1247) = karnor/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1247;
--- id(1248) = karnor/dreadlands 
+-- id(1248) = karnor/dreadlands
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1248;
--- id(1249) = kurn/fieldofbone 
+-- id(1249) = kurn/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1249;
--- id(1250) = kurn/fieldofbone 
+-- id(1250) = kurn/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1250;
--- id(1252) = lakeofillomen/frontiermtns 
+-- id(1252) = lakeofillomen/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1252;
--- id(1255) = lakeofillomen/firiona 
+-- id(1255) = lakeofillomen/firiona
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1255;
--- id(1256) = lakeofillomen/warslikswood 
+-- id(1256) = lakeofillomen/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1256;
--- id(1257) = lakeofillomen/cabwest 
+-- id(1257) = lakeofillomen/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1257;
--- id(1258) = lakeofillomen/cabwest 
+-- id(1258) = lakeofillomen/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1258;
--- id(1259) = nurga/frontiermtns 
+-- id(1259) = nurga/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1259;
--- id(1260) = nurga/droga 
+-- id(1260) = nurga/droga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1260;
--- id(1261) = nurga/droga 
+-- id(1261) = nurga/droga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1261;
--- id(1262) = overthere/warslikswood 
+-- id(1262) = overthere/warslikswood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1262;
--- id(1263) = overthere/frontiermtns 
+-- id(1263) = overthere/frontiermtns
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1263;
--- id(1264) = overthere/skyfire 
+-- id(1264) = overthere/skyfire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1264;
--- id(1265) = overthere/skyfire 
+-- id(1265) = overthere/skyfire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1265;
--- id(1266) = overthere/charasis 
+-- id(1266) = overthere/charasis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1266;
--- id(1267) = overthere/poknowledge 
+-- id(1267) = overthere/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1267;
--- id(1268) = paineel/tox 
+-- id(1268) = paineel/tox
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1268;
--- id(1269) = paineel/hole 
+-- id(1269) = paineel/hole
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1269;
--- id(1271) = paineel/hole 
+-- id(1271) = paineel/hole
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1271;
--- id(1272) = paineel/paineel 
+-- id(1272) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1272;
--- id(1273) = paineel/paineel 
+-- id(1273) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1273;
--- id(1274) = paineel/paineel 
+-- id(1274) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1274;
--- id(1275) = paineel/paineel 
+-- id(1275) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1275;
--- id(1276) = paineel/paineel 
+-- id(1276) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1276;
--- id(1277) = paineel/paineel 
+-- id(1277) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1277;
--- id(1279) = sebilis/trakanon 
+-- id(1279) = sebilis/trakanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1279;
--- id(1280) = sebilis/trakanon 
+-- id(1280) = sebilis/trakanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1280;
--- id(1281) = skyfire/burningwood 
+-- id(1281) = skyfire/burningwood
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1281;
--- id(1282) = skyfire/overthere 
+-- id(1282) = skyfire/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1282;
--- id(1283) = skyfire/overthere 
+-- id(1283) = skyfire/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1283;
--- id(1284) = skyfire/veeshan 
+-- id(1284) = skyfire/veeshan
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1284;
--- id(1285) = stonebrunt/warrens 
+-- id(1285) = stonebrunt/warrens
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1285;
--- id(1287) = swampofnohope/firiona 
+-- id(1287) = swampofnohope/firiona
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1287;
--- id(1288) = swampofnohope/firiona 
+-- id(1288) = swampofnohope/firiona
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1288;
--- id(1289) = swampofnohope/trakanon 
+-- id(1289) = swampofnohope/trakanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1289;
--- id(1290) = swampofnohope/cabeast 
+-- id(1290) = swampofnohope/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1290;
--- id(1291) = swampofnohope/cabeast 
+-- id(1291) = swampofnohope/cabeast
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1291;
--- id(1292) = swampofnohope/fieldofbone 
+-- id(1292) = swampofnohope/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1292;
--- id(1293) = timorous/cabwest 
+-- id(1293) = timorous/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1293;
--- id(1294) = timorous/freporte 
+-- id(1294) = timorous/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1294;
--- id(1295) = timorous/halas 
+-- id(1295) = timorous/halas
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1295;
--- id(1296) = timorous/felwithea 
+-- id(1296) = timorous/felwithea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1296;
--- id(1297) = timorous/gfaydark 
+-- id(1297) = timorous/gfaydark
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1297;
--- id(1298) = timorous/neriakb 
+-- id(1298) = timorous/neriakb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1298;
--- id(1299) = timorous/erudnext 
+-- id(1299) = timorous/erudnext
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1299;
--- id(1300) = timorous/oggok 
+-- id(1300) = timorous/oggok
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1300;
--- id(1301) = timorous/grobb 
+-- id(1301) = timorous/grobb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1301;
--- id(1302) = timorous/rivervale 
+-- id(1302) = timorous/rivervale
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1302;
--- id(1303) = timorous/akanon 
+-- id(1303) = timorous/akanon
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1303;
--- id(1304) = timorous/kaladima 
+-- id(1304) = timorous/kaladima
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1304;
--- id(1305) = trakanon/swampofnohope 
+-- id(1305) = trakanon/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1305;
--- id(1306) = trakanon/emeraldjungle 
+-- id(1306) = trakanon/emeraldjungle
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1306;
--- id(1307) = trakanon/sebilis 
+-- id(1307) = trakanon/sebilis
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1307;
--- id(1308) = veeshan/airplane 
+-- id(1308) = veeshan/airplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1308;
--- id(1309) = veeshan/freporte 
+-- id(1309) = veeshan/freporte
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1309;
--- id(1310) = veeshan/skyfire 
+-- id(1310) = veeshan/skyfire
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1310;
--- id(1311) = veeshan/swampofnohope 
+-- id(1311) = veeshan/swampofnohope
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1311;
--- id(1312) = veksar/lakeofillomen 
+-- id(1312) = veksar/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1312;
--- id(1313) = veksar/lakeofillomen 
+-- id(1313) = veksar/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1313;
--- id(1314) = warrens/stonebrunt 
+-- id(1314) = warrens/stonebrunt
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1314;
--- id(1315) = warrens/paineel 
+-- id(1315) = warrens/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1315;
--- id(1316) = warslikswood/fieldofbone 
+-- id(1316) = warslikswood/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1316;
--- id(1317) = warslikswood/overthere 
+-- id(1317) = warslikswood/overthere
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1317;
--- id(1318) = warslikswood/cabwest 
+-- id(1318) = warslikswood/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1318;
--- id(1319) = warslikswood/cabwest 
+-- id(1319) = warslikswood/cabwest
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1319;
--- id(1320) = warslikswood/dalnir 
+-- id(1320) = warslikswood/dalnir
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1320;
--- id(1321) = warslikswood/lakeofillomen 
+-- id(1321) = warslikswood/lakeofillomen
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1321;
--- id(1322) = ssratemple/thegrey 
+-- id(1322) = ssratemple/thegrey
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1322;
--- id(1323) = ssratemple/thedeep 
+-- id(1323) = ssratemple/thedeep
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1323;
--- id(1324) = ssratemple/ssratemple 
+-- id(1324) = ssratemple/ssratemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1324;
--- id(1325) = ssratemple/ssratemple 
+-- id(1325) = ssratemple/ssratemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1325;
--- id(1326) = twilight/fungusgrove 
+-- id(1326) = twilight/fungusgrove
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1326;
--- id(1327) = erudnext/erudnint 
+-- id(1327) = erudnext/erudnint
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1327;
--- id(1328) = highpass/highkeep 
+-- id(1328) = highpass/highkeep
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1328;
--- id(1329) = highpass/highkeep 
+-- id(1329) = highpass/highkeep
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1329;
--- id(1330) = akheva/maiden 
+-- id(1330) = akheva/maiden
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1330;
--- id(1331) = akheva/maiden 
+-- id(1331) = akheva/maiden
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1331;
--- id(1348) = pofire/potranquility 
+-- id(1348) = pofire/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1348;
--- id(1349) = potimea/potimeb 
+-- id(1349) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1349;
--- id(1350) = potimea/potimeb 
+-- id(1350) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1350;
--- id(1351) = potimea/potimeb 
+-- id(1351) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1351;
--- id(1352) = potimea/potimeb 
+-- id(1352) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1352;
--- id(1353) = potimea/potimeb 
+-- id(1353) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1353;
--- id(1354) = potimea/potimeb 
+-- id(1354) = potimea/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1354;
--- id(1355) = potimea/potranquility 
+-- id(1355) = potimea/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1355;
--- id(1356) = potimeb/potimea 
+-- id(1356) = potimeb/potimea
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1356;
--- id(1357) = potimeb/potimeb 
+-- id(1357) = potimeb/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1357;
--- id(1358) = potimeb/potimeb 
+-- id(1358) = potimeb/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1358;
--- id(1359) = potimeb/potimeb 
+-- id(1359) = potimeb/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1359;
--- id(1360) = potimeb/potranquility 
+-- id(1360) = potimeb/potranquility
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1360;
--- id(1361) = potimeb/ponightmare 
+-- id(1361) = potimeb/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1361;
--- id(1362) = potimeb/potorment 
+-- id(1362) = potimeb/potorment
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1362;
--- id(1363) = potimeb/potactics 
+-- id(1363) = potimeb/potactics
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1363;
--- id(1364) = potimeb/podisease 
+-- id(1364) = potimeb/podisease
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1364;
--- id(1365) = potimeb/fearplane 
+-- id(1365) = potimeb/fearplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1365;
--- id(1366) = potimeb/potimeb 
+-- id(1366) = potimeb/potimeb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1366;
--- id(1444) = nektulos/neriaka 
+-- id(1444) = nektulos/neriaka
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1444;
--- id(1445) = nektulos/ecommons 
+-- id(1445) = nektulos/ecommons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1445;
--- id(1447) = nektulos/poknowledge 
+-- id(1447) = nektulos/poknowledge
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1447;
--- id(1454) = templeveeshan/westwastes 
+-- id(1454) = templeveeshan/westwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1454;
--- id(1455) = templeveeshan/westwastes 
+-- id(1455) = templeveeshan/westwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1455;
--- id(1456) = templeveeshan/westwastes 
+-- id(1456) = templeveeshan/westwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1456;
--- id(1457) = templeveeshan/mischiefplane 
+-- id(1457) = templeveeshan/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1457;
--- id(1478) = nektulos/ecommons 
+-- id(1478) = nektulos/ecommons
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1478;
--- id(1479) = nektulos/neriaka 
+-- id(1479) = nektulos/neriaka
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1479;
--- id(1872) = arena/lakerathe 
+-- id(1872) = arena/lakerathe
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1872;
--- id(1886) = sleeper/eastwastes 
+-- id(1886) = sleeper/eastwastes
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1886;
--- id(1887) = nightmareb/ponightmare 
+-- id(1887) = nightmareb/ponightmare
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 1887;
--- id(2215) = bazaar/shadowhaven 
+-- id(2215) = bazaar/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2215;
--- id(2216) = bazaar/shadowhaven 
+-- id(2216) = bazaar/shadowhaven
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2216;
--- id(2217) = bazaar/nexus 
+-- id(2217) = bazaar/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2217;
--- id(2219) = shadowhaven/bazaar 
+-- id(2219) = shadowhaven/bazaar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2219;
--- id(2220) = shadowhaven/bazaar 
+-- id(2220) = shadowhaven/bazaar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2220;
--- id(2243) = paineel/paineel 
+-- id(2243) = paineel/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2243;
--- id(2295) = kurn/fieldofbone 
+-- id(2295) = kurn/fieldofbone
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2295;
--- id(2296) = lavastorm/soldunga 
+-- id(2296) = lavastorm/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2296;
--- id(2297) = lavastorm/nektulos 
+-- id(2297) = lavastorm/nektulos
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2297;
--- id(2298) = lavastorm/najena 
+-- id(2298) = lavastorm/najena
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2298;
--- id(2299) = lavastorm/soldungb 
+-- id(2299) = lavastorm/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2299;
--- id(2300) = lavastorm/lavastorm 
+-- id(2300) = lavastorm/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2300;
--- id(2301) = najena/lavastorm 
+-- id(2301) = najena/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2301;
--- id(2302) = nektulos/lavastorm 
+-- id(2302) = nektulos/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2302;
--- id(2303) = soldunga/lavastorm 
+-- id(2303) = soldunga/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2303;
--- id(2304) = soldungb/lavastorm 
+-- id(2304) = soldungb/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2304;
--- id(2305) = soltemple/lavastorm 
+-- id(2305) = soltemple/lavastorm
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2305;
--- id(2306) = nexus/bazaar 
+-- id(2306) = nexus/bazaar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2306;
--- id(2307) = paineel/warrens 
+-- id(2307) = paineel/warrens
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2307;
--- id(2308) = vexthal/vexthal 
+-- id(2308) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2308;
--- id(2309) = vexthal/vexthal 
+-- id(2309) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2309;
--- id(2310) = vexthal/vexthal 
+-- id(2310) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2310;
--- id(2311) = vexthal/vexthal 
+-- id(2311) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2311;
--- id(2312) = vexthal/vexthal 
+-- id(2312) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2312;
--- id(2313) = vexthal/vexthal 
+-- id(2313) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2313;
--- id(2314) = vexthal/vexthal 
+-- id(2314) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2314;
--- id(2315) = vexthal/vexthal 
+-- id(2315) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2315;
--- id(2316) = vexthal/vexthal 
+-- id(2316) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2316;
--- id(2317) = vexthal/vexthal 
+-- id(2317) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2317;
--- id(2318) = vexthal/vexthal 
+-- id(2318) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2318;
--- id(2319) = vexthal/vexthal 
+-- id(2319) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2319;
--- id(2320) = vexthal/vexthal 
+-- id(2320) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2320;
--- id(2321) = vexthal/umbral 
+-- id(2321) = vexthal/umbral
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2321;
--- id(2322) = vexthal/vexthal 
+-- id(2322) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2322;
--- id(2323) = vexthal/vexthal 
+-- id(2323) = vexthal/vexthal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2323;
--- id(2324) = lavastorm/soltemple 
+-- id(2324) = lavastorm/soltemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2324;
--- id(2325) = lavastorm/soltemple 
+-- id(2325) = lavastorm/soltemple
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2325;
--- id(2326) = mischiefplane/mischiefplane 
+-- id(2326) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2326;
--- id(2327) = mischiefplane/mischiefplane 
+-- id(2327) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2327;
--- id(2328) = mischiefplane/mischiefplane 
+-- id(2328) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2328;
--- id(2329) = mischiefplane/mischiefplane 
+-- id(2329) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2329;
--- id(2330) = mischiefplane/mischiefplane 
+-- id(2330) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2330;
--- id(2331) = mischiefplane/mischiefplane 
+-- id(2331) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2331;
--- id(2332) = mischiefplane/mischiefplane 
+-- id(2332) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2332;
--- id(2333) = mischiefplane/mischiefplane 
+-- id(2333) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2333;
--- id(2334) = mischiefplane/cobaltscar 
+-- id(2334) = mischiefplane/cobaltscar
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2334;
--- id(2335) = mischiefplane/mischiefplane 
+-- id(2335) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2335;
--- id(2336) = mischiefplane/mischiefplane 
+-- id(2336) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2336;
--- id(2337) = mischiefplane/mischiefplane 
+-- id(2337) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2337;
--- id(2338) = mischiefplane/mischiefplane 
+-- id(2338) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2338;
--- id(2339) = mischiefplane/mischiefplane 
+-- id(2339) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2339;
--- id(2340) = mischiefplane/mischiefplane 
+-- id(2340) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2340;
--- id(2341) = mischiefplane/mischiefplane 
+-- id(2341) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2341;
--- id(2342) = mischiefplane/mischiefplane 
+-- id(2342) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2342;
--- id(2343) = mischiefplane/mischiefplane 
+-- id(2343) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2343;
--- id(2344) = mischiefplane/mischiefplane 
+-- id(2344) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2344;
--- id(2345) = mischiefplane/mischiefplane 
+-- id(2345) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2345;
--- id(2346) = mischiefplane/mischiefplane 
+-- id(2346) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2346;
--- id(2347) = mischiefplane/mischiefplane 
+-- id(2347) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2347;
--- id(2348) = mischiefplane/mischiefplane 
+-- id(2348) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2348;
--- id(2349) = mischiefplane/mischiefplane 
+-- id(2349) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2349;
--- id(2350) = mischiefplane/mischiefplane 
+-- id(2350) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2350;
--- id(2351) = mischiefplane/mischiefplane 
+-- id(2351) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2351;
--- id(2352) = mischiefplane/mischiefplane 
+-- id(2352) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2352;
--- id(2353) = mischiefplane/mischiefplane 
+-- id(2353) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2353;
--- id(2354) = mischiefplane/mischiefplane 
+-- id(2354) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2354;
--- id(2355) = mischiefplane/mischiefplane 
+-- id(2355) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2355;
--- id(2356) = mischiefplane/mischiefplane 
+-- id(2356) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2356;
--- id(2357) = mischiefplane/mischiefplane 
+-- id(2357) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2357;
--- id(2358) = mischiefplane/mischiefplane 
+-- id(2358) = mischiefplane/mischiefplane
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2358;
--- id(2359) = shadowhaven/paludal 
+-- id(2359) = shadowhaven/paludal
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2359;
--- id(2360) = katta/nexus 
+-- id(2360) = katta/nexus
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2360;
--- id(2361) = acrylia/acrylia 
+-- id(2361) = acrylia/acrylia
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2361;
--- id(2362) = potranquility/hohonora 
+-- id(2362) = potranquility/hohonora
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2362;
--- id(2363) = soldunga/soldungb 
+-- id(2363) = soldunga/soldungb
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2363;
--- id(2364) = soldungb/soldunga 
+-- id(2364) = soldungb/soldunga
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2364;
--- id(2365) = hole/paineel 
+-- id(2365) = hole/paineel
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2365;
--- id(2366) = hole/neriakc 
+-- id(2366) = hole/neriakc
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2366;
--- id(2367) = hole/erudnint 
+-- id(2367) = hole/erudnint
 UPDATE zone_points SET `is_virtual` = 0, `height` = 0, `width` = 0 WHERE `id` = 2367;
