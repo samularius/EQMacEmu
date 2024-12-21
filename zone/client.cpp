@@ -2612,10 +2612,10 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id)
 		}
 	}
 	if(m_epp.e_times_rebirthed > 0)
-		return std::min(tmp_skill, this->GetMaxSkillAfterSpecializationRules(skill_id, MaxSkill(skill_id, GetClass(), GetLevel())));
+		return std::min(tmp_skill, this->GetMaxSkillAfterSpecializationRules(skill_id, MaxSkill(skill_id, GetClass(), RuleI(Character, MaxLevel))));
 	
 	if (GetBaseClass() == 0)
-		return std::min((uint16)200, MaxSkill(skill_id, 1, GetLevel()));
+		return std::min((uint16)200, MaxSkill(skill_id, 1, RuleI(Character, MaxLevel)));
 
 	return tmp_skill;
 }
