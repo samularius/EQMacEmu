@@ -308,6 +308,7 @@ public:
 	Corpse*		SummonBuriedCharacterCorpses(uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
 	Corpse*		SummonCharacterCorpse(uint32 corpse_id, uint32 char_id, uint32 dest_zoneid, uint32 dest_zoneguildid, const glm::vec4& position);
 	void		MarkCorpseAsRezzed(uint32 dbid);
+	void		MarkAllCharacterCorpsesNotRezzable(uint32 charid);
 	bool		BuryCharacterCorpse(uint32 dbid);
 	bool		BuryAllCharacterCorpses(uint32 charid);
 	bool		DeleteCharacterCorpse(uint32 dbid);

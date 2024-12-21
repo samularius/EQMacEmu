@@ -3069,6 +3069,11 @@ void ZoneDatabase::MarkCorpseAsRezzed(uint32 db_id) {
 	auto results = QueryDatabase(query);
 }
 
+void ZoneDatabase::MarkAllCharacterCorpsesNotRezzable(uint32 character_id) {
+	std::string query = StringFormat("UPDATE `character_corpses` SET `rezzable` = 0 WHERE `charid` = %u", character_id);
+	auto results = QueryDatabase(query);
+}
+
 uint32 ZoneDatabase::SaveCharacterCorpse(uint32 charid, const char* charname, uint32 zoneid, uint32 zoneguildid, CharacterCorpseEntry* corpse, const glm::vec4& position) {
 	/* Dump Basic Corpse Data */
 	std::string query = StringFormat("INSERT INTO `character_corpses` SET \n"
