@@ -796,5 +796,6 @@ bool IsInstrumentModdableSpellEffect(uint16 spell_id, int effect_index);
 bool IsSplurtFormulaSpell(uint16 spell_id);
 bool IsMGBCompatibleSpell(uint16 spell_id);
 bool IsDispellableSpell(uint16 spell_id);
+bool SpellPersistsThroughDeath(uint16 spell_id);
 
 #endif

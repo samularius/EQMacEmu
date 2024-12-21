@@ -3509,14 +3509,19 @@ void Mob::BuffFadeAll(bool skiprez, bool message)
 	CalcBonuses();
 }
 
-void Mob::BuffFadeNonPersistDeath()
+void Mob::BuffFadeNonPersistDeath(bool skiprez)
 {
 	int buff_count = GetMaxTotalSlots();
 	for (int j = 0; j < buff_count; j++) {
 		if (buffs[j].spellid != SPELL_UNKNOWN)
 		{
-			if (spells[buffs[j].spellid].persist_through_death != 1)
-				BuffFadeBySlot(j, false, false);
+			if (skiprez && IsResurrectionEffects(buffs[j].spellid))
+				continue;
+			
+			if (SpellPersistsThroughDeath(buffs[j].spellid))
+				continue;
+			
+			BuffFadeBySlot(j, false, false);
 		}
 	}
 	//we tell BuffFadeBySlot not to recalc, so we can do it only once when were done

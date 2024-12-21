@@ -167,7 +167,7 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 	}
 
 	if (target_zone_id == Zones::AIRPLANE)
-		BuffFadeAll(true);
+		BuffFadeNonPersistDeath(true);
 
 	std::string export_string = fmt::format(
 		"{} {}",

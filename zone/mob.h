@@ -277,7 +277,7 @@ public:
 	void BuffFadeBySpellID(uint16 spell_id, bool message = true);
 	void BuffFadeByEffect(int effectid, int skipslot = -1);
 	void BuffFadeAll(bool skiprez = false, bool message = false);
-	void BuffFadeNonPersistDeath();
+	void BuffFadeNonPersistDeath(bool skiprez = false);
 	void BuffFadeDetrimental();
 	void BuffFadeBySlot(int slot, bool iRecalcBonuses = true, bool message = true, bool update = true);
 	void BuffFadeDetrimentalByCaster(Mob *caster);

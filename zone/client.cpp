@@ -3522,7 +3522,7 @@ void Client::Sacrifice(Client *caster)
 			Client* killer = caster ? caster : nullptr;
 			GenerateDeathPackets(killer, 0, 1768, EQ::skills::SkillAlteration, false, Killed_Sac);
 
-			BuffFadeAll();
+			BuffFadeNonPersistDeath();
 			UnmemSpellAll();
 			Group *g = GetGroup();
 			if(g){
