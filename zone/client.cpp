@@ -2617,7 +2617,7 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id)
 	}
 
 	if (GetBaseClass() == 0)
-		return std::min((uint16)200, MaxSkill(skill_id, 1, RuleI(Character, MaxLevel)));
+		return std::min((uint16)200, MaxSkill(skill_id, 1, GetLevel()));
 
 	return tmp_skill;
 }
