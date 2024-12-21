@@ -7,7 +7,7 @@
 
 #include "../client.h"
 
-void command_permastats(Client* c, const Seperator* sep) {
+void command_ngpermastats(Client* c, const Seperator* sep) {
 
 	Client* t = c;
 	if (c->GetTarget() && c->GetTarget()->IsClient()) {

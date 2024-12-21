@@ -107,7 +107,7 @@ int find_racial_city(std::string& input)
 	return -1;
 }
 
-void command_permarace(Client *c, const Seperator *sep){
+void command_ngpermarace(Client *c, const Seperator *sep){
 
 	Client *t = c;
 	if (c->GetTarget() && c->GetTarget()->IsClient())
