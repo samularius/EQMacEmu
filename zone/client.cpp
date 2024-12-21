@@ -2595,9 +2595,17 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id)
 	uint16 tmp_skill = 0;
 	if (skill_id <= EQ::skills::HIGHEST_SKILL)
 	{
+		tmp_skill = m_pp.skills[skill_id];
+
+		// Cap skill based on current level if de-leveled
+		if (GetLevel() < GetLevel2())
+		{
+			tmp_skill = std::min(tmp_skill, GetMaxSkillAfterSpecializationRules(skill_id, MaxSkill(skill_id, GetClass(), GetLevel())));
+		}
+
 		if (itembonuses.skillmod[skill_id] > 0)
 		{
-			tmp_skill = m_pp.skills[skill_id] * (100 + itembonuses.skillmod[skill_id]) / 100;
+			tmp_skill = tmp_skill * (100 + itembonuses.skillmod[skill_id]) / 100;
 
 			// Hard skill cap for our era is 252.  
 			// Link Reference: https://mboards.eqtraders.com/eq/forum/tradeskills/general-trade-skill-discussion/17185-get-the-gm-skill-to-mean-something
@@ -2606,14 +2614,8 @@ uint16 Client::GetSkill(EQ::skills::SkillType skill_id)
 				tmp_skill = HARD_SKILL_CAP;
 			}
 		}
-		else
-		{
-			tmp_skill = m_pp.skills[skill_id];
-		}
 	}
-	if(m_epp.e_times_rebirthed > 0)
-		return std::min(tmp_skill, this->GetMaxSkillAfterSpecializationRules(skill_id, MaxSkill(skill_id, GetClass(), RuleI(Character, MaxLevel))));
-	
+
 	if (GetBaseClass() == 0)
 		return std::min((uint16)200, MaxSkill(skill_id, 1, RuleI(Character, MaxLevel)));
 
@@ -6558,8 +6560,10 @@ void Client::SetRaceStartingSkills()
 	}
 	case DARK_ELF:
 	{
-		m_pp.skills[EQ::skills::SkillHide] = 50;
-		database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
+		if (m_pp.skills[EQ::skills::SkillHide] < 50) {
+			m_pp.skills[EQ::skills::SkillHide] = 50;
+			database.SaveCharacterSkill(CharacterID(), EQ::skills::SkillHide, 50);
+		}
 		break;
 	}
 	case GNOME:
