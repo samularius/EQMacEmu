@@ -2547,23 +2547,41 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 		{
 			if (buffs[j].spellid == spid)
 			{
+				// we need to remove the buff and reapply it in the first empty slot to stay in sync with client
+				Buffs_Struct savedbuff = Buffs_Struct(buffs[j]); // save a copy before removing it
+				BuffFadeBySlot(j, false);				
+
+				// reapply buff server-side
+				int emptyslot = -1;
+				FindAffectSlot(this, spid, &emptyslot, 1);
+				buffs[emptyslot] = savedbuff;
+				CalcBonuses();
+
+				// reapply buff client-side
 				auto action_packet = new EQApplicationPacket(OP_Action, sizeof(Action_Struct));
 				Action_Struct* action = (Action_Struct*)action_packet->pBuffer;
+				action->target = GetID();
 				action->source = GetID();
-
-				action->level = buffs[j].casterlevel;	// effective level, used for potions
+				action->level = buffs[emptyslot].casterlevel;	// effective level, used for potions
 				action->type = 231;	// 231 means a spell
 				action->spell = spid;
 				action->sequence = (GetHeading() * 2.0f);	// heading
-				action->instrument_mod = buffs[j].instrumentmod;
+				action->instrument_mod = buffs[emptyslot].instrumentmod;
 				action->buff_unknown = 0x04;	// this is a success flag
+				
 				QueuePacket(action_packet);
 				safe_delete(action_packet);
-				SendBuffDurationPacket(spid, buffs[j].ticsremaining, buffs[j].casterlevel, j, buffs[j].instrumentmod);
+				SendBuffDurationPacket(spid, buffs[emptyslot].ticsremaining, buffs[emptyslot].casterlevel, emptyslot, buffs[emptyslot].instrumentmod);		
+				
+				if (spells[spid].goodEffect == 0)
+				{
+					Log(Logs::General, Logs::Error, "HACKER: %s (account: %s) attempted to remove a detrimental effect (spell id: %d) which they shouldn't be able to remove!",
+						CastToClient()->GetCleanName(), CastToClient()->AccountName(), spid);
+					database.SetHackerFlag(CastToClient()->AccountName(), CastToClient()->GetCleanName(), "Manually removed detrimental spell effect.");					
+				}
 			}
 		}
 	}
-
 	return;
 }
 
