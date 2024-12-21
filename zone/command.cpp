@@ -275,9 +275,6 @@ int command_init(void)
 		command_add("optest", "solar's private test command.", AccountStatus::GMCoder, command_optest) ||
 
 		command_add("path", "view and edit pathing.", AccountStatus::GMImpossible, command_path) ||
-		command_add("peekinv", "[worn/inv/cursor/bank/trade/world/all] - Print out contents of your player target's inventory.", AccountStatus::EQSupport, command_peekinv) ||
-		command_add("permaclass", "[classnum] - Change your or your player target's class (target is disconnected).", AccountStatus::GMMgmt, command_permaclass) ||
-		command_add("permagender", "[gendernum] - Change your or your player target's gender (zone to take effect).", AccountStatus::GMMgmt, command_permagender) ||
 		command_add("ngpermarace", "[race] [deity] [home city] - Change your or your target's race, deity, and home city (zone to take effect).", AccountStatus::GMMgmt, command_ngpermarace) ||
 		command_add("ngpermastats", "[stats list] - Change your or your target's starting stat point allocation (zone to take effect).", AccountStatus::GMMgmt, command_ngpermastats) ||
 		command_add("petition", "Handles everything petition related. Use with no args or with 'help' for how to use.", AccountStatus::ApprenticeGuide, command_petition) ||

@@ -20,6 +20,7 @@
 #include "../common/zone_store.h"
 #include "../common/content/world_content_service.h"
 #include "../common/skill_caps.h"
+#include "../common/char_create_data.h"
 
 #include "client.h"
 #include "worlddb.h"
@@ -30,7 +31,6 @@
 #include "zonelist.h"
 #include "clientlist.h"
 #include "wguild_mgr.h"
-#include "char_create_data.h"
 
 #include <iostream>
 #include <iomanip>
