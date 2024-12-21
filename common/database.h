@@ -132,7 +132,7 @@ public:
 	bool	AddGMIP(char* ip_address, char* name);
 	bool	CheckBannedIPs(std::string login_ip); //Check incoming connection against banned IP table.
 	bool	CheckGMIPs(std::string login_ip, uint32 account_id);
-	bool	CheckNameFilter(std::string name, bool surname = false);
+	bool	CheckNameFilter(const char* name, bool surname = false);
 	bool	CheckUsedName(std::string name, uint32 charid = 0);
 	bool	NoRentExpired(const char* name);
 

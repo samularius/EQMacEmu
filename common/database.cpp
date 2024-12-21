@@ -1453,7 +1453,6 @@ bool Database::CheckNameFilter(const char* name, bool surname) {
 
 		if (str_name.find(current_row) != std::string::npos)
 			return false;
-		}
 	}
 
 	// If the name has passed all the checks, return true.
