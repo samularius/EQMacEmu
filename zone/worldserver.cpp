@@ -1884,11 +1884,12 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 			}
 			break;
 		}
-		case ServerOP_ReloadBlockedSpells:
-		{
+		case ServerOP_ReloadBlockedSpells: {
+			if (zone && zone->IsLoaded()) {
 			zone->SendReloadMessage("Blocked Spells");
 			zone->ClearBlockedSpells();
 			zone->LoadZoneBlockedSpells();
+			}
 			break;
 		}
 		case ServerOP_ReloadCommands: {

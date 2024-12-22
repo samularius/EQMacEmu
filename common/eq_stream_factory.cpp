@@ -50,9 +50,9 @@ void EQStreamFactory::Close()
 		ReaderThread.join();
 	}
 
-	//if (WriterNewThread.joinable()) {
-	//	WriterNewThread.join();
-	//}
+	if (WriterNewThread.joinable()) {
+		WriterNewThread.join();
+	}
 
 	if (WriterOldThread.joinable()) {
 		WriterOldThread.join();
@@ -124,7 +124,7 @@ bool EQStreamFactory::Open()
 #endif
 
 	ReaderThread = std::thread(&EQStreamFactory::ReaderLoop, this);
-	//WriterNewThread = std::thread(&EQStreamFactory::WriterLoopNew, this);
+	WriterNewThread = std::thread(&EQStreamFactory::WriterLoopNew, this);
 	WriterOldThread = std::thread(&EQStreamFactory::WriterLoopOld, this);
 	return true;
 }
@@ -237,33 +237,31 @@ void EQStreamFactory::ReaderLoop()
 				std::unique_lock<std::mutex> old_streams_lock(MOldStreams, std::defer_lock);
 				std::lock(streams_lock, old_streams_lock); //lock both mutexes (in order to avoid deadlock)
 
-				//stream_iter = Streams.find(streamKey);
+				stream_iter = Streams.find(streamKey);
 				oldstream_iter = OldStreams.find(streamKey);
-				//bool hasNewStream = stream_iter != Streams.end();
+				bool hasNewStream = stream_iter != Streams.end();
 				bool hasOldStream = oldstream_iter != OldStreams.end();
 
-				if (/*hasNewStream == false && */ hasOldStream == false) {
-	/*				if (buffer[1] == OP_SessionRequest) {
+				if (hasNewStream == false && hasOldStream == false) {
+					if (buffer[1] == OP_SessionRequest) {
 						RecvBuffer data = RecvBuffer(true, length, buffer, streamKey, from);
 						ProcessLoopNew(data, stream_iter);
 					}
-					else {*/
-					if (buffer[1] != OP_SessionRequest)
-					{
+					else {
 						RecvBuffer data = RecvBuffer(true, length, buffer, streamKey, from);
 						ProcessLoopOld(data, oldstream_iter);
 					}
 					//}
 				}
 				else {
-					//if (hasNewStream) {
-						//RecvBuffer data = RecvBuffer(false, length, buffer, streamKey, from);
-						//ProcessLoopNew(data, stream_iter);
-					//}
-				//	else if (hasOldStream) {
+					if (hasNewStream) {
+						RecvBuffer data = RecvBuffer(false, length, buffer, streamKey, from);
+						ProcessLoopNew(data, stream_iter);
+					}
+					else if (hasOldStream) {
 						RecvBuffer data = RecvBuffer(false, length, buffer, streamKey, from);
 						ProcessLoopOld(data, oldstream_iter);
-					//}
+					}
 				}
 			}
 
