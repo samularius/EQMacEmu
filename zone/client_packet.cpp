@@ -2571,14 +2571,7 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 				
 				QueuePacket(action_packet);
 				safe_delete(action_packet);
-				SendBuffDurationPacket(spid, buffs[emptyslot].ticsremaining, buffs[emptyslot].casterlevel, emptyslot, buffs[emptyslot].instrumentmod);		
-				
-				if (spells[spid].goodEffect == 0)
-				{
-					Log(Logs::General, Logs::Error, "HACKER: %s (account: %s) attempted to remove a detrimental effect (spell id: %d) which they shouldn't be able to remove!",
-						CastToClient()->GetCleanName(), CastToClient()->AccountName(), spid);
-					database.SetHackerFlag(CastToClient()->AccountName(), CastToClient()->GetCleanName(), "Manually removed detrimental spell effect.");					
-				}
+				SendBuffDurationPacket(spid, buffs[emptyslot].ticsremaining, buffs[emptyslot].casterlevel, emptyslot, buffs[emptyslot].instrumentmod);
 			}
 		}
 	}
