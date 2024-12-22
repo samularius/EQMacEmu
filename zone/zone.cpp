@@ -1172,6 +1172,7 @@ void Zone::ReloadStaticData() {
 
 	LogInfo("Reloading static zone points...");
 	zone_point_list.Clear();
+
 	if (!database.LoadStaticZonePoints(&zone_point_list, GetShortName())) {
 		LogError("Loading static zone points failed.");
 	}
@@ -1183,13 +1184,14 @@ void Zone::ReloadStaticData() {
 		LogError("Reloading traps failed.");
 	}
 
+	entity_list.RemoveAllObjects();
+
 	LogInfo("Reloading ground spawns...");
 	if (!LoadGroundSpawns())
 	{
 		LogError("Reloading ground spawns failed. continuing.");
 	}
 
-	entity_list.RemoveAllObjects();
 	LogInfo("Reloading World Objects from DB...");
 	if (!LoadZoneObjects())
 	{
