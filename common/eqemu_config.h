@@ -53,15 +53,9 @@ class EQEmuConfig
 		bool Locked;
 		uint16 WorldTCPPort;
 		std::string WorldIP;
-		uint16 TelnetTCPPort;
-		std::string TelnetIP;
 		bool TelnetEnabled;
 		int32 MaxClients;
-		bool WorldHTTPEnabled;
-		uint16 WorldHTTPPort;
-		std::string WorldHTTPMimeFile;
 		std::string SharedKey;
-		bool DisableConfigChecks;
 
 		// From <chatserver/>
 		std::string ChatHost;
@@ -91,7 +85,6 @@ class EQEmuConfig
 		std::string QuestDir;
 		std::string LuaModuleDir;
 		std::string PatchDir;
-		std::string OpcodeDir;
 		std::string SharedMemDir;
 		std::string LogDir;
 

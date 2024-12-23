@@ -35,7 +35,6 @@
 #define SPELL_CINDAS_CHARISMATIC_CARILLON 708
 #define SPELL_CASSINDRAS_CHORUS_OF_CLARITY 723
 #define SPELL_RESURRECTION_EFFECTS 756
-#define SPELL_MISTWALKER 759
 #define SPELL_DRAGON_CHARM 841
 #define SPELL_NPC_HARM_TOUCH 929		// this is only used by a single NPC that I can see from logs (Nortlav)
 #define SPELL_MANA_CONVERT 940          // manastone click effect
@@ -43,7 +42,6 @@
 #define SPELL_DIMENSIONAL_RETURN 1133
 #define SPELL_CASSINDRAS_CHANT_OF_CLARITY 1287
 #define SPELL_GREENMIST 1363
-#define SPELL_DEATH_PEACE 1460
 #define SPELL_MODULATION 1502
 #define SPELL_TORPOR 1576
 #define SPELL_WIND_OF_THE_NORTH 1736
@@ -583,7 +581,7 @@ struct SPDat_Spell_Struct
 /* 101 */	int8 zonetype; // 01=Outdoors, 02=dungeons, ff=Any
 /* 102 */	int8 EnvironmentType;
 /* 103 */	int8 TimeOfDay;
-/* 104 */	uint8 classes[Class::PLAYER_CLASS_COUNT]; // Classes, and their min levels
+/* 104 */	uint8 classes[PLAYER_CLASS_COUNT]; // Classes, and their min levels
 /* 119 */	uint8 CastingAnim;
 /* 120 */	uint8 TargetAnim;
 /* 121 */	uint32 TravelType;

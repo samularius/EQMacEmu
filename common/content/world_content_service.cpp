@@ -28,6 +28,7 @@
 
 WorldContentService::WorldContentService()
 {
+	m_database = nullptr;
 	SetCurrentExpansion(Expansion::EXPANSION_ALL);
 }
 

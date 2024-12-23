@@ -14,15 +14,11 @@ SET(world_sources
 	main.cpp
 	queryserv.cpp
 	ucs.cpp
-	web_interface.cpp
-	web_interface_eqw.cpp
 	wguild_mgr.cpp
 	world_event_scheduler.cpp
 	world_config.cpp
-	world_console_connection.cpp
 	world_server_cli.cpp
 	worlddb.cpp
-	world_boot.cpp
 	zonelist.cpp
 	zoneserver.cpp
 )
@@ -41,15 +37,11 @@ SET(world_headers
 	main.h
 	queryserv.h
 	ucs.h
-	web_interface.h
-	web_interface_eqw.h
 	wguild_mgr.h
 	world_config.h
-	world_console_connection.h
 	world_tcp_connection.h
 	world_server_cli.h
 	worlddb.h
-	world_boot.h
 	world_event_scheduler.h
 	zonelist.h
 	zoneserver.h

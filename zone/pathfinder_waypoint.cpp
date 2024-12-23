@@ -836,7 +836,6 @@ void PathfinderWaypoint::ShowNode(const Node &n)
 	auto npc = new NPC(npc_type, nullptr, position, GravityBehavior::Flying);
 
 	entity_list.AddNPC(npc, true, true);
-	safe_delete(npc_type);
 }
 
 auto path_compare = [](const PathNodeSortStruct& a, const PathNodeSortStruct& b)

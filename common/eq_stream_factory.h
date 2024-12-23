@@ -84,7 +84,7 @@ class EQStreamFactory : private Timeoutable {
 		std::unordered_map<std::pair<uint32, uint32>, std::shared_ptr<EQOldStream>, stream_pair_hash> OldStreams;
 
 		std::thread ReaderThread;
-		std::thread WriterNewThread;
+		//std::thread WriterNewThread;
 		std::thread WriterOldThread;
 
 		virtual void CheckTimeout();

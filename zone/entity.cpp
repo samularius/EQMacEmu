@@ -29,7 +29,6 @@
 #include "../common/unix.h"
 #endif
 
-#include "../common/misc_functions.h"
 #include "../common/features.h"
 #include "../common/guilds.h"
 
@@ -244,7 +243,6 @@ const Encounter* Entity::CastToEncounter() const
 {
 	return static_cast<const Encounter *>(this);
 }
-
 EntityList::EntityList()
 	:
 	object_timer(5000),
@@ -562,6 +560,7 @@ void EntityList::MobProcess()
 				in.s_addr = mob->CastToClient()->GetIP();
 				Log(Logs::General, Logs::ZoneServer, "Dropping client: Process=false, ip=%s port=%u", inet_ntoa(in), mob->CastToClient()->GetPort());
 #endif
+				zone->StartShutdownTimer();
 				Group *g = GetGroupByMob(mob);
 				if(g) {
 					Log(Logs::General, Logs::Error, "About to delete a client still in a group.");
@@ -680,7 +679,7 @@ void EntityList::AddCorpse(Corpse *corpse, uint32 in_id)
 		corpse->SetID(in_id);
 
 	corpse->CalcCorpseName();
-	corpse_list.emplace(std::pair<uint16, Corpse *>(corpse->GetID(), corpse));
+	corpse_list.insert(std::pair<uint16, Corpse *>(corpse->GetID(), corpse));
 
 	// we are a new corpse, so update distances to us for clients.
 	float mydist = 0;
@@ -757,7 +756,7 @@ void EntityList::AddObject(Object *obj, bool SendSpawnPacket)
 		safe_delete_array(app.pBuffer);
 	}
 
-	object_list.emplace(std::pair<uint16, Object *>(obj->GetID(), obj));
+	object_list.insert(std::pair<uint16, Object *>(obj->GetID(), obj));
 
 	if (!object_timer.Enabled())
 		object_timer.Start();
@@ -766,7 +765,7 @@ void EntityList::AddObject(Object *obj, bool SendSpawnPacket)
 void EntityList::AddDoor(Doors *door)
 {
 	door->SetEntityID(GetFreeID());
-	door_list.emplace(std::pair<uint16, Doors *>(door->GetEntityID(), door));
+	door_list.insert(std::pair<uint16, Doors *>(door->GetEntityID(), door));
 
 	if (!door_timer.Enabled())
 		door_timer.Start();
@@ -775,7 +774,7 @@ void EntityList::AddDoor(Doors *door)
 void EntityList::AddTrap(Trap *trap)
 {
 	trap->SetID(GetFreeID());
-	trap_list.emplace(std::pair<uint16, Trap *>(trap->GetID(), trap));
+	trap_list.insert(std::pair<uint16, Trap *>(trap->GetID(), trap));
 	if (!trap_timer.Enabled())
 		trap_timer.Start();
 }
@@ -783,13 +782,13 @@ void EntityList::AddTrap(Trap *trap)
 void EntityList::AddBeacon(Beacon *beacon)
 {
 	beacon->SetID(GetFreeID());
-	beacon_list.emplace(std::pair<uint16, Beacon *>(beacon->GetID(), beacon));
+	beacon_list.insert(std::pair<uint16, Beacon *>(beacon->GetID(), beacon));
 }
 
 void EntityList::AddEncounter(Encounter *encounter)
 {
 	encounter->SetID(GetFreeID());
-	encounter_list.emplace(std::pair<uint16, Encounter*>(encounter->GetID(), encounter));
+	encounter_list.insert(std::pair<uint16, Encounter *>(encounter->GetID(), encounter));
 }
 
 void EntityList::AddToSpawnQueue(uint16 entityid, NewSpawn_Struct **ns)
@@ -1311,7 +1310,7 @@ uint16 EntityList::GetFreeID()
 // if no language skill is specified, sent with 100 skill
 void EntityList::ChannelMessage(Mob *from, uint8 chan_num, uint8 language, const char *message, ...)
 {
-	ChannelMessage(from, chan_num, language, Language::MaxValue, message);
+	ChannelMessage(from, chan_num, language, 100, message);
 }
 
 void EntityList::ChannelMessage(Mob *from, uint8 chan_num, uint8 language,
@@ -1768,18 +1767,6 @@ Client *EntityList::GetClientByWID(uint32 iWID)
 	return nullptr;
 }
 
-Client* EntityList::GetClientByLSID(uint32 iLSID)
-{
-	auto it = client_list.begin();
-	while (it != client_list.end()) {
-		if (it->second->LSAccountID() == iLSID) {
-			return it->second;
-		}
-		++it;
-	}
-	return nullptr;
-}
-
 Client *EntityList::GetRandomClient(const glm::vec3& location, float Distance, Client *ExcludeClient)
 {
 	std::vector<Client *> ClientsInRange;
@@ -2219,10 +2206,6 @@ void EntityList::RemoveAllMobs()
 {
 	auto it = mob_list.begin();
 	while (it != mob_list.end()) {
-		if (!it->second) {
-			++it;
-			continue;
-		}
 		safe_delete(it->second);
 		free_ids.push(it->first);
 		it = mob_list.erase(it);
@@ -2245,9 +2228,8 @@ void EntityList::RemoveAllNPCs()
 void EntityList::RemoveAllGroups()
 {
 	while (!group_list.empty()) {
-		auto group = group_list.front();
+		safe_delete(group_list.front());
 		group_list.pop_front();
-		safe_delete(group);
 	}
 #if EQDEBUG >= 5
 	CheckGroupList (__FILE__, __LINE__);
@@ -2257,9 +2239,8 @@ void EntityList::RemoveAllGroups()
 void EntityList::RemoveAllRaids()
 {
 	while (!raid_list.empty()) {
-		auto raid = raid_list.front();
+		safe_delete(raid_list.front());
 		raid_list.pop_front();
-		safe_delete(raid);
 	}
 }
 
@@ -2341,25 +2322,18 @@ void EntityList::RemoveAllEncounters()
 
 bool EntityList::RemoveMob(uint16 delete_id)
 {
-	if (delete_id == 0) {
+	if (delete_id == 0)
 		return true;
-	}
 
 	auto it = mob_list.find(delete_id);
 	if (it != mob_list.end()) {
-		if (!it->second) {
-			return false;
-		}
-		if (npc_list.count(delete_id)) {
+		if (npc_list.count(delete_id))
 			entity_list.RemoveNPC(delete_id);
-		}
-		else if (client_list.count(delete_id)) {
+		else if (client_list.count(delete_id))
 			entity_list.RemoveClient(delete_id);
-		}
 		safe_delete(it->second);
-		if (!corpse_list.count(delete_id)) {
+		if (!corpse_list.count(delete_id))
 			free_ids.push(it->first);
-		}
 		mob_list.erase(it);
 		return true;
 	}
@@ -2390,14 +2364,13 @@ bool EntityList::RemoveNPC(uint16 delete_id)
 {
 	auto it = npc_list.find(delete_id);
 	if (it != npc_list.end()) {
-		NPC* npc = it->second;
+		// make sure its proximity is removed
 		RemoveProximity(delete_id);
+		// remove from the list
 		npc_list.erase(it);
-		
-		if (npc_limit_list.count(delete_id)) {
+		// remove from limit list if needed
+		if (npc_limit_list.count(delete_id))
 			npc_limit_list.erase(delete_id);
-		}
-
 		return true;
 	}
 	return false;
@@ -2650,7 +2623,7 @@ void EntityList::SendIllusionedPlayers(Client *client)
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
 		illusion = it->second;
-		if (!illusion->GMHideMe(client) && (illusion->GetRace() == Race::MinorIllusion || illusion->GetRace() == Race::Tree))
+		if (!illusion->GMHideMe(client) && (illusion->GetRace() == MINOR_ILLUSION || illusion->GetRace() == TREEFORM))
 		{
 			illusion->SendIllusionPacket(
 				illusion->GetRace(),
@@ -2969,20 +2942,6 @@ void EntityList::ListPlayerCorpses(Client *client)
 	}
 }
 
-void EntityList::DespawnGridNodes(int32 grid_id) {
-	for (auto m : mob_list) {
-		Mob* mob = m.second;
-		if (
-			mob->IsNPC() &&
-			mob->GetRace() == Race::Tribunal &&
-			mob->EntityVariableExists("grid_id") &&
-			Strings::ToInt(mob->GetEntityVariable("grid_id")) == grid_id)
-		{
-			mob->Depop();
-		}
-	}
-}
-
 // returns the number of corpses deleted. A negative number indicates an error code.
 uint32 EntityList::DeleteNPCCorpses()
 {
@@ -3173,7 +3132,7 @@ void EntityList::ClearFeignAggro(Mob *targ)
 	auto it = npc_list.begin();
 	while (it != npc_list.end()) {
 		if (it->second->CheckAggro(targ)) {
-			if (it->second->GetSpecialAbility(SpecialAbility::FeignDeathImmunity)) {
+			if (it->second->GetSpecialAbility(IMMUNE_FEIGN_DEATH)) {
 				++it;
 				continue;
 			}
@@ -3206,7 +3165,7 @@ void EntityList::ClearFeignAggro(Mob *targ)
 				if (it->second->GetLevel() < 35 || zone->random.Roll(35))
 				{
 					it->second->RemoveFromHateList(targ);
-					if (it->second->GetSpecialAbility(SpecialAbility::Rampage))
+					if (it->second->GetSpecialAbility(SPECATK_RAMPAGE))
 						it->second->RemoveFromRampageList(targ, true);
 				}
 				else 
@@ -3292,7 +3251,7 @@ void EntityList::AddHealAggro(Mob *target, Mob *caster, uint16 hate)
 		cur = it->second;
 
 		if (cur->IsPet() || !cur->CheckAggro(target) || cur->IsFeared() 
-			|| (target->IsClient() && target->CastToClient()->IsFeigned() && !cur->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
+			|| (target->IsClient() && target->CastToClient()->IsFeigned() && !cur->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
 		)
 		{
 			++it;
@@ -3690,7 +3649,7 @@ void EntityList::LimitAddNPC(NPC *npc)
 	SpawnLimitRecord r;
 
 	uint16 eid = npc->GetID();
-	r.spawngroup_id = npc->GetSpawnGroupId();
+	r.spawngroup_id = npc->GetSp2();
 	r.npc_type = npc->GetNPCTypeID();
 
 	npc_limit_list[eid] = r;
@@ -3832,7 +3791,7 @@ bool EntityList::GetZommPet(Mob *owner, NPC* &pet)
 	while (it != npc_list.end()) {
 		NPC* n = it->second;
 		if (n->GetSwarmInfo()) {
-			if (n->GetSwarmInfo()->owner_id == owner->GetID() && n->GetRace() == Race::EyeOfZomm) {
+			if (n->GetSwarmInfo()->owner_id == owner->GetID() && n->GetRace() == EYE_OF_ZOMM) {
 				pet = it->second;
 				return true;
 			}
@@ -4118,7 +4077,7 @@ uint16 EntityList::CreateDoor(const char *model, const glm::vec4& position, uint
 
 	auto door = new Doors(model, position, opentype, size);
 	RemoveAllDoors();
-	zone->LoadZoneDoors();
+	zone->LoadZoneDoors(zone->GetShortName());
 	entity_list.AddDoor(door);
 	entity_list.RespawnAllDoors();
 
@@ -4474,7 +4433,7 @@ NPC *EntityList::GetClosestBanker(Mob *sender, uint32 &distance)
 
 	auto it = npc_list.begin();
 	while (it != npc_list.end()) {
-		if (it->second->GetClass() == Class::Banker) {
+		if (it->second->GetClass() == BANKER) {
 			uint32 nd = ((it->second->GetY() - sender->GetY()) * (it->second->GetY() - sender->GetY())) +
 				((it->second->GetX() - sender->GetX()) * (it->second->GetX() - sender->GetX()));
 			if (nd < distance){
@@ -4487,7 +4446,7 @@ NPC *EntityList::GetClosestBanker(Mob *sender, uint32 &distance)
 	return nc;
 }
 
-Mob *EntityList::GetClosestMobByBodyType(Mob *sender, uint8 BodyType)
+Mob *EntityList::GetClosestMobByBodyType(Mob *sender, bodyType BodyType)
 {
 
 	if (!sender)
@@ -5147,14 +5106,4 @@ uint16 EntityList::GetTopHateCount(Mob* targ)
 		++it;
 	}
 	return num;
-}
-
-void EntityList::ReloadMerchants() {
-	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
-		NPC* cur = it->second;
-		if (cur->MerchantType != 0) {
-			zone->ClearMerchantLists();
-			zone->LoadNewMerchantData(cur->MerchantType);
-		}
-	}
 }

@@ -132,7 +132,7 @@ std::vector<std::string> Strings::Split(std::string s, std::string delimiter)
 		res.push_back(token);
 	}
 
-	res.emplace_back(s.substr(pos_start));
+	res.push_back(s.substr(pos_start));
 	return res;
 }
 
@@ -994,47 +994,23 @@ uint32 Strings::TimeToSeconds(std::string time_string)
 
 bool Strings::ToBool(std::string bool_string)
 {
-	if (Trim(bool_string).length() > 0) {
-		if (
-			Strings::Contains(bool_string, "true") ||
-			Strings::Contains(bool_string, "y") ||
-			Strings::Contains(bool_string, "yes") ||
-			Strings::Contains(bool_string, "on") ||
-			Strings::Contains(bool_string, "enable") ||
-			Strings::Contains(bool_string, "enabled") ||
-			(Strings::IsNumber(bool_string) && std::stoi(bool_string))
-			) {
-			return true;
-		}
+	if (
+		Strings::Contains(bool_string, "true") ||
+		Strings::Contains(bool_string, "y") ||
+		Strings::Contains(bool_string, "yes") ||
+		Strings::Contains(bool_string, "on") ||
+		Strings::Contains(bool_string, "enable") ||
+		Strings::Contains(bool_string, "enabled") ||
+		(Strings::IsNumber(bool_string) && std::stoi(bool_string))
+		) {
+		return true;
 	}
+
 	return false;
-}
-
-bool Strings::BeginsWith(const std::string& subject, const std::string& search)
-{
-	if (subject.length() < search.length()) {
-		return false;
-	}
-
-	return subject.starts_with(search);
-}
-
-bool Strings::EndsWith(const std::string& subject, const std::string& search)
-{
-	if (subject.length() < search.length()) {
-		return false;
-	}
-
-	return subject.ends_with(search);
 }
 
 bool Strings::Contains(const std::string &subject, const std::string &search)
 {
-	if (subject.length() < search.length()) {
-		return false;
-	}
-
-
 	return subject.find(search) != std::string::npos;
 }
 
@@ -1138,20 +1114,6 @@ std::string Strings::RemoveNumbers(std::string s)
 	return s.substr(0, current);
 }
 
-std::string Strings::ZoneTime(const uint8 hours, const uint8 minutes)
-{
-	return fmt::format(
-		"{:02}:{:02} {}",
-		(
-			(hours % 12) == 0 ?
-			12 :
-			(hours % 12)
-			),
-		minutes,
-		hours >= 13 ? "PM" : "AM"
-	);
-}
-
 // Helper function to convert Roman numeral to integer
 int Strings::RomanToInt(const std::string& roman) {
 	std::unordered_map<char, int> romanToValue = {
@@ -1206,3 +1168,5 @@ std::string Strings::IncrementRoman(const std::string& roman) {
 	// Step 3: Convert the incremented integer back to a Roman numeral
 	return IntToRoman(num);
 }
+
+

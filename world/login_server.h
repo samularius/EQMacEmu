@@ -24,57 +24,38 @@
 #include "../common/queue.h"
 #include "../common/eq_packet_structs.h"
 #include "../common/mutex.h"
-#include "../common/net/servertalk_client_connection.h"
-#include "../common/net/servertalk_legacy_client_connection.h"
-#include "../common/event/timer.h"
-#include <memory>
+#include "../common/emu_tcp_connection.h"
 
-class LoginServer {
+class LoginServer{
 public:
 	LoginServer(const char*, uint16, const char*, const char*, uint8);
 	~LoginServer();
 
+	bool InitLoginServer();
+
+	bool Process();
 	bool Connect();
+
 	void SendInfo();
 	void SendNewInfo();
 	void SendStatus();
 
-	void SendPacket(ServerPacket* pack);
+	void SendPacket(ServerPacket* pack) { tcpc->SendPacket(pack); }
 	void SendAccountUpdate(ServerPacket* pack);
-	bool Connected() 
-	{ 
-		if (m_is_legacy) {
-			if (m_legacy_client) {
-				return m_legacy_client->Connected();
-			}
-		} 
-		else {
-			if (m_client) {
-				return m_client->Connected();
-			}
-		}
-
-		return false;
-	}
-	bool CanUpdate() { return m_can_account_update; }
+	bool ConnectReady() { return tcpc->ConnectReady(); }
+	bool Connected() { return tcpc->Connected(); }
+	bool CanUpdate() { return CanAccountUpdate; }
 
 private:
-	void ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p);
-	void ProcessLSClientAuth(uint16_t opcode, EQ::Net::Packet& p);
-	void ProcessLSFatalError(uint16_t opcode, EQ::Net::Packet& p);
-	void ProcessSystemwideMessage(uint16_t opcode, EQ::Net::Packet& p);
-	void ProcessLSRemoteAddr(uint16_t opcode, EQ::Net::Packet& p);
-	void ProcessLSAccountUpdate(uint16_t opcode, EQ::Net::Packet& p);
+	EmuTCPConnection* tcpc;
+	char	LoginServerAddress[256];
+	uint32	LoginServerIP;
+	uint16	LoginServerPort;
+	char	LoginAccount[32];
+	char	LoginPassword[32];
+	uint8	LoginServerType;
+	bool	CanAccountUpdate;
 
-	std::unique_ptr<EQ::Net::ServertalkClient>       m_client;
-	std::unique_ptr<EQ::Net::ServertalkLegacyClient> m_legacy_client;
-	std::unique_ptr<EQ::Timer>                       m_statusupdate_timer;
-	char	                                         m_loginserver_address[256];
-	uint32	                                         m_loginserver_ip;
-	uint16	                                         m_loginserver_port;
-	std::string	                                     m_login_account;
-	std::string                                      m_login_password;
-	bool	                                         m_can_account_update;
-	bool	                                         m_is_legacy;
+	Timer statusupdate_timer;
 };
 #endif

@@ -24,7 +24,6 @@
 #include "../common/eq_stream_factory.h"
 #include "../common/random.h"
 #include "login_types.h"
-#include "salt.h"
 #include <string>
 
 using namespace std;
@@ -144,7 +143,6 @@ public:
 
 
 private:
-	Saltme                             m_salt;
 	EQ::Random                         m_random;
 	std::shared_ptr<EQStreamInterface> m_connection;
 	LSClientVersion                    m_client_version;

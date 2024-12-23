@@ -167,13 +167,9 @@ public:
 	uint32 GetCharacterDropperID() const { return m_character_id; }
 	bool IsSSFRuleSet() const { return m_ssf_ruleset; }
 
-	bool ClearEntityVariables();
-	bool DeleteEntityVariable(std::string variable_name);
-	std::string GetEntityVariable(std::string variable_name);
-	std::vector<std::string> GetEntityVariables();
-	void SetEntityVariable(std::string variable_name, std::string variable_value);
-	bool EntityVariableExists(std::string variable_name);
-	
+	const char* GetEntityVariable(const char *id);
+	void SetEntityVariable(const char *id, const char *m_var);
+	bool EntityVariableExists(const char *id);
 	bool RespawnTimerEnabled() { return respawn_timer.Enabled(); };
 
 protected:

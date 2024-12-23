@@ -18,8 +18,6 @@
 
 #include "../common/spdat.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
-#include "../common/misc_functions.h"
 
 #include "data_bucket.h"
 #include "quest_parser_collection.h"
@@ -44,7 +42,7 @@ Mob::Mob(const char* in_name,
 		uint8		in_gender,
 		uint16		in_race,
 		uint8		in_class,
-		uint8		in_bodytype,
+		bodyType	in_bodytype,
 		uint8		in_deity,
 		uint8		in_level,
 		uint32		in_npctype_id,
@@ -127,9 +125,8 @@ Mob::Mob(const char* in_name,
 		strn0cpy(name,in_name,64);
 		strn0cpy(orig_name,in_name,64);
 	}
-	if (in_lastname) {
-		strn0cpy(lastname, in_lastname, 64);
-	}
+	if(in_lastname)
+		strn0cpy(lastname,in_lastname,64);
 	cur_hp		= in_cur_hp;
 	max_hp		= in_max_hp;
 	base_hp		= in_max_hp;
@@ -154,9 +151,8 @@ Mob::Mob(const char* in_name,
 	model_size = CalcModelSize();
 	model_bounding_radius = CalcBoundingRadius();
 	// sanity check
-	if (runspeed < 0.0f || runspeed > 20.0f) {
+	if (runspeed < 0.0f || runspeed > 20.0f)
 		runspeed = 1.25f; // mob speeds on mac client, only support increments of 0.1
-	}
 
 	int_runspeed = (int)((float)runspeed * 40.0f) + 2; // add the +2 to give a round behavior - int speeds are increments of 4
 	base_runspeed = (int)((float)runspeed * 40.0f);
@@ -209,9 +205,8 @@ Mob::Mob(const char* in_name,
 	hairstyle	= in_hairstyle;
 	luclinface	= in_luclinface;
 	beard		= in_beard;
-	if (luclinface == 254) {	// note: a face value of 254 will result in random face/hair/eye characteristics
+	if (luclinface == 254)	// note: a face value of 254 will result in random face/hair/eye characteristics
 		SetRandomFeatures();
-	}
 
 	attack_delay = 0;
 	slow_mitigation = 0;
@@ -222,12 +217,10 @@ Mob::Mob(const char* in_name,
 	last_los_check = false;
 	last_dest = glm::vec3(99999.0f, 99999.0f, 99999.0f);
 
-	if (in_aa_title > 0) {
-		aa_title = in_aa_title;
-	}
-	else {
-		aa_title = 0xFF;
-	}
+	if(in_aa_title>0)
+		aa_title	= in_aa_title;
+	else
+		aa_title	=0xFF;
 	AC		= in_ac;
 	ATK		= in_atk;
 	STR		= in_str;
@@ -268,13 +261,15 @@ Mob::Mob(const char* in_name,
 	// clear the proc arrays
 	int i;
 	int j;
-	for (j = 0; j < MAX_PROCS; j++)	{
+	for (j = 0; j < MAX_PROCS; j++)
+	{
 		SpellProcs[j].spellID = SPELL_UNKNOWN;
 		SpellProcs[j].chance = 0;
 		SpellProcs[j].base_spellID = SPELL_UNKNOWN;
 	}
 
-	for (i = 0; i < EQ::textures::materialCount; i++) {
+	for (i = 0; i < EQ::textures::materialCount; i++)
+	{
 		armor_tint.Slot[i].Color = in_armor_tint.Slot[i].Color;
 	}
 
@@ -288,8 +283,10 @@ Mob::Mob(const char* in_name,
 	pRunAnimSpeed = 0;
 
 	ZeroCastingVars();
-	_StopSong();
+	bardsong_timer.Disable();
 	spellrecovery_timer.Disable();
+	bardsong = 0;
+	bardsong_target_id = 0;
 	target = 0;
 
 	memset(&itembonuses, 0, sizeof(StatBonuses));
@@ -362,10 +359,12 @@ Mob::Mob(const char* in_name,
 	count_TempPet = 0;
 
 	//Boats always "run." Ignore launches and player controlled ships.
-	if((GetBaseRace() == Race::Ship || GetBaseRace() == Race::GhostShip) && RuleB(NPC, BoatsRunByDefault)) {
+	if((GetBaseRace() == SHIP || GetBaseRace() == GHOST_SHIP) && RuleB(NPC, BoatsRunByDefault))
+	{
 		m_is_running = true;
 	}
-	else {
+	else
+	{
 		m_is_running = false;
 	}
 
@@ -411,12 +410,10 @@ Mob::~Mob()
 
 	AI_Stop();
 	if (GetPet()) {
-		if (GetPet()->IsCharmedPet()) {
+		if (GetPet()->IsCharmedPet())
 			GetPet()->BuffFadeByEffect(SE_Charm);
-		}
-		else {
+		else
 			SetPet(0);
-		}
 	}
 
 	EQApplicationPacket app;
@@ -428,7 +425,8 @@ Mob::~Mob()
 	entity_list.RemoveFromTargets(this);
 	EndShield();
 
-	if(trade) {
+	if(trade) 
+	{
 		Mob *with = trade->With();
 		if(with && with->IsClient()) {
 			with->CastToClient()->FinishTrade(with);
@@ -437,7 +435,7 @@ Mob::~Mob()
 		safe_delete(trade);
 	}
 
-	if(HasTempPetsActive()) {
+	if(HasTempPetsActive()){
 		entity_list.DestroyTempPets(this);
 	}
 	UninitializeBuffSlots();
@@ -474,7 +472,7 @@ void Mob::SetInvisible(uint8 state, bool showInvis, bool skipSelf)
 	{
 		invisible = (bool) state;
 
-		if (GetClass() == Class::Rogue)
+		if (GetClass() == ROGUE)
 		{
 			// Rogues also get IVU when invisible/hidden.
 			invisible_undead = (bool) state;
@@ -508,20 +506,20 @@ bool Mob::IsInvisible(Mob* other) const
 		return true;
 
 	//check invis vs. undead
-	if (other->GetBodyType() == BodyType::Undead || other->GetBodyType() == BodyType::SummonedUndead) {
+	if (other->GetBodyType() == BT_Undead || other->GetBodyType() == BT_SummonedUndead) {
 		if(invisible_undead && !other->SeeInvisibleUndead())
 			return true;
 	}
 
 	//check invis vs. animals...
-	if (other->GetBodyType() == BodyType::Animal){
+	if (other->GetBodyType() == BT_Animal){
 		if(invisible_animals && !other->SeeInvisible())
 			return true;
 	}
 
 	if(hidden)
 	{
-		if (RuleB(Quarm, PreNerfSneakHide) && GetClass() == Class::Rogue)
+		if (RuleB(Quarm, PreNerfSneakHide) && GetClass() == ROGUE)
 		{
 			if (!other->SeeSneak())
 				return true;
@@ -542,7 +540,7 @@ bool Mob::IsInvisible(Mob* other) const
 
 	//handle sneaking
 	if(!other->SeeSneak() && sneaking) {
-		if(!InFrontMob(other, GetX(), GetY()))
+		if(BehindMob(other, GetX(), GetY()) )
 			return true;
 	}
 
@@ -603,7 +601,7 @@ int Mob::_GetWalkSpeed() const {
 	//runspeed cap.
 	if(IsClient())
 	{
-		if(GetClass() == Class::Bard) {
+		if(GetClass() == BARD) {
 			//this extra-high bard cap should really only apply if they have AAs
 			if(speed_mod > 72)
 				speed_mod = 72;
@@ -695,7 +693,7 @@ int Mob::_GetRunSpeed() const {
 	//runspeed cap.
 	if(IsClient())
 	{
-		if(GetClass() == Class::Bard) {
+		if(GetClass() == BARD) {
 			//this extra-high bard cap should really only apply if they have AAs
 			if(speed_mod > 72)
 				speed_mod = 72;
@@ -843,33 +841,33 @@ int32 Mob::GetSpellHPBonuses() {
 char Mob::GetCasterClass() const {
 	switch(class_)
 	{
-	case Class::Cleric:
-	case Class::Paladin:
-	case Class::Ranger:
-	case Class::Druid:
-	case Class::Shaman:
-	case Class::Beastlord:
-	case Class::ClericGM:
-	case Class::PaladinGM:
-	case Class::RangerGM:
-	case Class::DruidGM:
-	case Class::ShamanGM:
-	case Class::BeastlordGM:
+	case CLERIC:
+	case PALADIN:
+	case RANGER:
+	case DRUID:
+	case SHAMAN:
+	case BEASTLORD:
+	case CLERICGM:
+	case PALADINGM:
+	case RANGERGM:
+	case DRUIDGM:
+	case SHAMANGM:
+	case BEASTLORDGM:
 		return 'W';
 		break;
 
-	case Class::ShadowKnight:
-	case Class::Bard:
-	case Class::Necromancer:
-	case Class::Wizard:
-	case Class::Magician:
-	case Class::Enchanter:
-	case Class::ShadowKnightGM:
-	case Class::BardGM:
-	case Class::NecromancerGM:
-	case Class::WizardGM:
-	case Class::MagicianGM:
-	case Class::EnchanterGM:
+	case SHADOWKNIGHT:
+	case BARD:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
+	case SHADOWKNIGHTGM:
+	case BARDGM:
+	case NECROMANCERGM:
+	case WIZARDGM:
+	case MAGICIANGM:
+	case ENCHANTERGM:
 		return 'I';
 		break;
 
@@ -882,40 +880,40 @@ char Mob::GetCasterClass() const {
 uint8 Mob::GetArchetype() const {
 	switch(class_)
 	{
-	case Class::Paladin:
-	case Class::Ranger:
-	case Class::ShadowKnight:
-	case Class::Bard:
-	case Class::Beastlord:
-	case Class::PaladinGM:
-	case Class::RangerGM:
-	case Class::ShadowKnightGM:
-	case Class::BardGM:
-	case Class::BeastlordGM:
+	case PALADIN:
+	case RANGER:
+	case SHADOWKNIGHT:
+	case BARD:
+	case BEASTLORD:
+	case PALADINGM:
+	case RANGERGM:
+	case SHADOWKNIGHTGM:
+	case BARDGM:
+	case BEASTLORDGM:
 		return ARCHETYPE_HYBRID;
 		break;
-	case Class::Cleric:
-	case Class::Druid:
-	case Class::Shaman:
-	case Class::Necromancer:
-	case Class::Wizard:
-	case Class::Magician:
-	case Class::Enchanter:
-	case Class::ClericGM:
-	case Class::DruidGM:
-	case Class::ShamanGM:
-	case Class::NecromancerGM:
-	case Class::WizardGM:
-	case Class::MagicianGM:
-	case Class::EnchanterGM:
+	case CLERIC:
+	case DRUID:
+	case SHAMAN:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
+	case CLERICGM:
+	case DRUIDGM:
+	case SHAMANGM:
+	case NECROMANCERGM:
+	case WIZARDGM:
+	case MAGICIANGM:
+	case ENCHANTERGM:
 		return ARCHETYPE_CASTER;
 		break;
-	case Class::Warrior:
-	case Class::Monk:
-	case Class::Rogue:
-	case Class::WarriorGM:
-	case Class::MonkGM:
-	case Class::RogueGM:
+	case WARRIOR:
+	case MONK:
+	case ROGUE:
+	case WARRIORGM:
+	case MONKGM:
+	case ROGUEGM:
 		return ARCHETYPE_MELEE;
 		break;
 	default:
@@ -1354,7 +1352,7 @@ void Mob::ShowStats(Client* client)
 			if(n->respawn2 != 0)
 				spawngroupid = n->respawn2->SpawnGroupID();
 			client->Message(Chat::White, "  NPCID: %u  SpawnGroupID: %u Grid: %i FactionID: %i PreCharmFactionID: %i PrimaryFaction: %i", GetNPCTypeID(),spawngroupid, n->GetGrid(), n->GetNPCFactionID(), n->GetPreCharmNPCFactionID(), GetPrimaryFaction());
-			client->Message(Chat::White, "  HP Regen: %i Mana Regen: %i Magic Atk: %i Immune to Melee: %i", n->GetHPRegen(), n->GetManaRegen(), GetLevel() >= MAGIC_ATTACK_LEVEL ? 1 : GetSpecialAbility(SpecialAbility::MagicalAttack), GetSpecialAbility(SpecialAbility::MeleeImmunityExceptMagical));
+			client->Message(Chat::White, "  HP Regen: %i Mana Regen: %i Magic Atk: %i Immune to Melee: %i", n->GetHPRegen(), n->GetManaRegen(), GetLevel() >= MAGIC_ATTACK_LEVEL ? 1 : GetSpecialAbility(SPECATK_MAGICAL), GetSpecialAbility(IMMUNE_MELEE_NONMAGICAL));
 			client->Message(Chat::White, "  Accuracy: %i BonusAvoidance: %i LootTable: %u SpellsID: %u", n->GetAccuracyRating(), bonusAvoidance, n->GetLoottableID(), n->GetNPCSpellsID());
 			n->DisplayAttackTimer(client);
 			client->Message(Chat::White, "  EmoteID: %i SeeInvis/Hide: %i SeeInvUndead: %i SeeSneak: %i SeeImpHide: %i", n->GetEmoteID(), n->SeeInvisible(), n->SeeInvisibleUndead(), n->SeeSneak(), n->SeeImprovedHide());
@@ -1513,7 +1511,7 @@ void Mob::SendIllusionPacket(uint16 in_race, uint8 in_gender, uint8 in_texture, 
 		this->texture = in_texture;
 
 	if (in_helmtexture == 0xFF) {
-		if (GetBaseRace() == Race::Quarm && this->race == Race::Quarm)
+		if (GetBaseRace() == RACE_QUARM_304 && this->race == RACE_QUARM_304)
 		{
 			// this restores quarm's head appearance after he's illusioned into a skeleton and it wears off
 			this->texture = 254;
@@ -1531,7 +1529,7 @@ void Mob::SendIllusionPacket(uint16 in_race, uint8 in_gender, uint8 in_texture, 
 	{
 		// quarm head explosion calls this function to set the head appearance
 		// this saves quarm's head appearance in case he gets illusioned into something else
-		if (GetBaseRace() == Race::Quarm && this->race == Race::Quarm)
+		if (GetBaseRace() == RACE_QUARM_304 && this->race == RACE_QUARM_304)
 			this->helmtexture_quarm = in_helmtexture;
 		this->helmtexture = in_helmtexture;
 	}
@@ -1629,9 +1627,9 @@ void Mob::SendIllusionPacket(uint16 in_race, uint8 in_gender, uint8 in_texture, 
 uint8 Mob::GetDefaultGender(uint16 in_race, uint8 in_gender) {
 	if (IsPlayableRace(in_race) ||
 		in_race == BROWNIE || in_race == LION || in_race == DRACNID || in_race == ZOMBIE || in_race == ELF_VAMPIRE || in_race == ERUDITE_GHOST) {
-		if (in_gender >= Gender::Neuter) {
+		if (in_gender >= 2) {
 			// Female default for PC Races
-			return Gender::Female;
+			return 1;
 		}
 		else
 			return in_gender;
@@ -1641,23 +1639,23 @@ uint8 Mob::GetDefaultGender(uint16 in_race, uint8 in_gender) {
 		in_race == RIVERVALE_CITIZEN || in_race == HALAS_CITIZEN || in_race == GROBB_CITIZEN || in_race == OGGOK_CITIZEN || in_race == KALADIM_CITIZEN || 
 		in_race == FELGUARD || in_race == FAYGUARD) {
 		// Male only races
-		return Gender::Male;
+		return 0;
 
 	}
 	else if (in_race == FAIRY || in_race == PIXIE) {
 		// Female only races
-		return Gender::Female;
+		return 1;
 	}
 	else {
 		// Neutral default for NPC Races
-		return Gender::Neuter;
+		return 2;
 	}
 }
 
 bool Mob::IsPlayerClass(uint16 in_class) {
 	if (
-		in_class >= Class::Warrior &&
-		in_class <= Class::Beastlord
+		in_class >= WARRIOR &&
+		in_class <= BEASTLORD
 		) {
 		return true;
 	}
@@ -1888,7 +1886,7 @@ void Mob::Kill() {
 
 bool Mob::CanDualWield()
 {
-	if (GetSkill(EQ::skills::SkillDualWield) || (IsClient() && GetClass() == Class::Monk))
+	if (GetSkill(EQ::skills::SkillDualWield) || (IsClient() && GetClass() == MONK))
 		return true;
 
 	return false;
@@ -1898,7 +1896,7 @@ bool Mob::IsDualWielding()
 {
 	if (IsClient())
 	{
-		if (GetSkill(EQ::skills::SkillDualWield) > 0 || GetClass() == Class::Monk)
+		if (GetSkill(EQ::skills::SkillDualWield) > 0 || GetClass() == MONK)
 		{
 			const EQ::ItemInstance* pinst = CastToClient()->GetInv().GetItem(EQ::invslot::slotPrimary);
 			const EQ::ItemInstance* sinst = CastToClient()->GetInv().GetItem(EQ::invslot::slotSecondary);
@@ -1917,7 +1915,7 @@ bool Mob::IsDualWielding()
 
 			// Dual-Wielding Empty Fists
 			if (!pinst && !sinst)
-				if (class_ != Class::Monk && class_ != Class::Beastlord)
+				if (class_ != MONK && class_ != BEASTLORD)
 					return false;
 
 			return true;
@@ -1925,10 +1923,10 @@ bool Mob::IsDualWielding()
 	}
 	else if (IsNPC())
 	{
-		if (!CastToNPC()->GetEquipment(EQ::textures::weaponSecondary) && !GetSpecialAbility(SpecialAbility::DualWield))
+		if (!CastToNPC()->GetEquipment(EQ::textures::weaponSecondary) && !GetSpecialAbility(INNATE_DUAL_WIELD))
 			return false;
 
-		if (GetSpecialAbility(SpecialAbility::DualWield) && !IsSummonedClientPet())
+		if (GetSpecialAbility(INNATE_DUAL_WIELD) && !IsSummonedClientPet())
 			return true;
 
 		const EQ::ItemData* mh = database.GetItem(CastToNPC()->GetEquipment(EQ::textures::weaponPrimary));
@@ -1942,7 +1940,7 @@ bool Mob::IsDualWielding()
 			if (oh->ItemType == EQ::item::ItemType1HBlunt || oh->ItemType == EQ::item::ItemType1HSlash || oh->ItemType == EQ::item::ItemType1HPiercing || oh->ItemType == EQ::item::ItemTypeMartial)
 				return true;
 		}
-		else if (GetSpecialAbility(SpecialAbility::DualWield))
+		else if (GetSpecialAbility(INNATE_DUAL_WIELD))
 			return true;
 	}
 	return false;
@@ -1952,22 +1950,22 @@ bool Mob::IsWarriorClass(void) const
 {
 	switch(GetClass())
 	{
-	case Class::Warrior:
-	case Class::WarriorGM:
-	case Class::Rogue:
-	case Class::RogueGM:
-	case Class::Monk:
-	case Class::MonkGM:
-	case Class::Paladin:
-	case Class::PaladinGM:
-	case Class::ShadowKnight:
-	case Class::ShadowKnightGM:
-	case Class::Ranger:
-	case Class::RangerGM:
-	case Class::Beastlord:
-	case Class::BeastlordGM:
-	case Class::Bard:
-	case Class::BardGM:
+	case WARRIOR:
+	case WARRIORGM:
+	case ROGUE:
+	case ROGUEGM:
+	case MONK:
+	case MONKGM:
+	case PALADIN:
+	case PALADINGM:
+	case SHADOWKNIGHT:
+	case SHADOWKNIGHTGM:
+	case RANGER:
+	case RANGERGM:
+	case BEASTLORD:
+	case BEASTLORDGM:
+	case BARD:
+	case BARDGM:
 		{
 			return true;
 		}
@@ -2084,7 +2082,7 @@ bool Mob::CheckBardHateSummon(Mob* summoned) {
 	if (zone->GetGuildID() != GUILD_NONE)
 		return false;
 
-	if (summoned->GetClass() != Class::Bard || IsCharmedPet() || !summoned->IsClient() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
+	if (summoned->GetClass() != BARD || IsCharmedPet() || !summoned->IsClient() || summoned->PermaRooted() || (summoned->IsNPC() && summoned->GetMaxHP() > 300000)) { // raid bosses may not have been summonable
 		return false;
 	}
 
@@ -2095,7 +2093,7 @@ bool Mob::CheckBardHateSummon(Mob* summoned) {
 		return false;
 
 	// now validate the timer
-	Timer* timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
+	Timer* timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
 	if (!timer) {
 		// dont currently have a timer going, so we are going to summon
 		return true;
@@ -2123,14 +2121,14 @@ bool Mob::CheckHateSummon(Mob* summoned) {
 		return false;
 	}
 
-	int summon_level = GetSpecialAbility(SpecialAbility::Summon);
+	int summon_level = GetSpecialAbility(SPECATK_SUMMON);
 	if(summon_level != 1 && summon_level != 2) {
 		//unsupported summon level or OFF
 		return false;
 	} 
 
 	// validate hp
-	int hp_ratio = GetSpecialAbilityParam(SpecialAbility::Summon, 1);
+	int hp_ratio = GetSpecialAbilityParam(SPECATK_SUMMON, 1);
 	hp_ratio = hp_ratio > 0 ? hp_ratio : 97;
 	if(GetHPRatio() > static_cast<float>(hp_ratio)) {
 		return false;
@@ -2142,7 +2140,7 @@ bool Mob::CheckHateSummon(Mob* summoned) {
 	}
 
 	// now validate the timer
-	Timer *timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
+	Timer *timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
 	if (!timer) {
 		// dont currently have a timer going, so we are going to summon
 		return true;
@@ -2173,10 +2171,10 @@ bool Mob::BardHateSummon(Mob* summoned) {
 
 	// now validate the timer
 	int summon_timer_duration = RuleI(Quarm, BardInstagibResummonTimerMS);
-	Timer* timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
+	Timer* timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
 	if (!timer)
 	{
-		StartSpecialAbilityTimer(SpecialAbility::Summon, summon_timer_duration);
+		StartSpecialAbilityTimer(SPECATK_SUMMON, summon_timer_duration);
 	}
 	else {
 		if (!timer->Check())
@@ -2231,7 +2229,7 @@ bool Mob::HateSummon(Mob* summoned) {
 	if (IsCharmedPet())
 		return false;
 
-	int summon_level = GetSpecialAbility(SpecialAbility::Summon);
+	int summon_level = GetSpecialAbility(SPECATK_SUMMON);
 	if (summon_level != 1 && summon_level != 2)
 	{
 		//unsupported summon level or OFF
@@ -2239,22 +2237,22 @@ bool Mob::HateSummon(Mob* summoned) {
 	}
 
 	// validate hp
-	int hp_ratio = GetSpecialAbilityParam(SpecialAbility::Summon, 1);
+	int hp_ratio = GetSpecialAbilityParam(SPECATK_SUMMON, 1);
 	hp_ratio = hp_ratio > 0 ? hp_ratio : 97;
 	if(GetHPRatio() > static_cast<float>(hp_ratio)) {
 		return false;
 	}
 
 	// now validate the timer
-	int summon_timer_duration = GetSpecialAbilityParam(SpecialAbility::Summon, 0);
+	int summon_timer_duration = GetSpecialAbilityParam(SPECATK_SUMMON, 0);
 	int defaultTime = 11000;
 	if (GetLevel() > 65)
 		defaultTime = 6000;
 	summon_timer_duration = summon_timer_duration > 0 ? summon_timer_duration : defaultTime;
-	Timer *timer = GetSpecialAbilityTimer(SpecialAbility::Summon);
+	Timer *timer = GetSpecialAbilityTimer(SPECATK_SUMMON);
 	if (!timer)
 	{
-		StartSpecialAbilityTimer(SpecialAbility::Summon, summon_timer_duration);
+		StartSpecialAbilityTimer(SPECATK_SUMMON, summon_timer_duration);
 	} else {
 		if(!timer->Check())
 			return false;
@@ -2796,7 +2794,7 @@ bool Mob::ExecWeaponProc(const EQ::ItemInstance *inst, uint16 spell_id, Mob *on)
 		return false;
 	}
 
-	if (IsClient() && on->GetSpecialAbility(SpecialAbility::HarmFromClientImmunity))
+	if (IsClient() && on->GetSpecialAbility(NO_HARM_FROM_CLIENT))
 		return false;
 
 	if(!IsValidSpell(spell_id)) { // Check for a valid spell otherwise it will crash through the function
@@ -2975,80 +2973,30 @@ int Mob::GetSnaredAmount()
 	return worst_snare;
 }
 
-bool Mob::ClearEntityVariables()
+void Mob::SetEntityVariable(const char *id, const char *m_var)
 {
-	if (m_EntityVariables.empty()) {
-		return false;
-	}
-
-	m_EntityVariables.clear();
-	return true;
+	std::string n_m_var = m_var;
+	m_EntityVariables[id] = n_m_var;
 }
 
-bool Mob::DeleteEntityVariable(std::string variable_name)
+const char* Mob::GetEntityVariable(const char *id)
 {
-	if (m_EntityVariables.empty() || variable_name.empty()) {
-		return false;
+	auto iter = m_EntityVariables.find(id);
+	if(iter != m_EntityVariables.end())
+	{
+		return iter->second.c_str();
 	}
-
-	auto v = m_EntityVariables.find(variable_name);
-	if (v == m_EntityVariables.end()) {
-		return false;
-	}
-
-	m_EntityVariables.erase(v);
-	return true;
+	return nullptr;
 }
 
-std::string Mob::GetEntityVariable(std::string variable_name)
+bool Mob::EntityVariableExists(const char *id)
 {
-	if (m_EntityVariables.empty() || variable_name.empty()) {
-		return std::string();
-	}
-
-	const auto& v = m_EntityVariables.find(variable_name);
-	if (v != m_EntityVariables.end()) {
-		return v->second;
-	}
-
-	return std::string();
-}
-
-std::vector<std::string> Mob::GetEntityVariables()
-{
-	std::vector<std::string> l;
-	if (m_EntityVariables.empty()) {
-		return l;
-	}
-
-	for (const auto& v : m_EntityVariables) {
-		l.push_back(v.first);
-	}
-
-	return l;
-}
-
-bool Mob::EntityVariableExists(std::string variable_name)
-{
-	if (m_EntityVariables.empty() || variable_name.empty()) {
-		return false;
-	}
-
-	const auto& v = m_EntityVariables.find(variable_name);
-	if (v != m_EntityVariables.end()) {
+	auto iter = m_EntityVariables.find(id);
+	if(iter != m_EntityVariables.end())
+	{
 		return true;
 	}
-
 	return false;
-}
-
-void Mob::SetEntityVariable(std::string variable_name, std::string variable_value)
-{
-	if (variable_name.empty()) {
-		return;
-	}
-
-	m_EntityVariables[variable_name] = variable_value;
 }
 
 void Mob::SetFlyMode(GravityBehavior flymode)
@@ -3567,7 +3515,7 @@ bool Mob::IsBoat() const
 	return (GetBaseRace() == SHIP || GetBaseRace() == LAUNCH || GetBaseRace() == CONTROLLED_BOAT || GetBaseRace() == GHOST_SHIP);
 }
 
-void Mob::SetBodyType(uint8 new_body, bool overwrite_orig) {
+void Mob::SetBodyType(bodyType new_body, bool overwrite_orig) {
 	bool needs_spawn_packet = false;
 	if(bodytype == 11 || bodytype >= 65 || new_body == 11 || new_body >= 65) {
 		needs_spawn_packet = true;
@@ -3735,14 +3683,14 @@ void Mob::AddFactionBonus(uint32 pFactionID,int32 bonus)
 	faction_bonus = faction_bonuses.find(pFactionID);
 	if(faction_bonus == faction_bonuses.end())
 	{
-		faction_bonuses.emplace(NewFactionBonus(pFactionID,bonus));
+		faction_bonuses.insert(NewFactionBonus(pFactionID,bonus));
 	}
 	else
 	{
 		if(faction_bonus->second<bonus)
 		{
 			faction_bonuses.erase(pFactionID);
-			faction_bonuses.emplace(NewFactionBonus(pFactionID,bonus));
+			faction_bonuses.insert(NewFactionBonus(pFactionID,bonus));
 		}
 	}
 }
@@ -3755,14 +3703,14 @@ void Mob::AddItemFactionBonus(uint32 pFactionID,int32 bonus) {
 	faction_bonus = item_faction_bonuses.find(pFactionID);
 	if(faction_bonus == item_faction_bonuses.end())
 	{
-		item_faction_bonuses.emplace(NewFactionBonus(pFactionID,bonus));
+		item_faction_bonuses.insert(NewFactionBonus(pFactionID,bonus));
 	}
 	else
 	{
 		if((bonus > 0 && faction_bonus->second < bonus) || (bonus < 0 && faction_bonus->second > bonus))
 		{
 			item_faction_bonuses.erase(pFactionID);
-			item_faction_bonuses.emplace(NewFactionBonus(pFactionID, bonus));
+			item_faction_bonuses.insert(NewFactionBonus(pFactionID,bonus));
 		}
 	}
 }
@@ -3932,7 +3880,7 @@ bool Mob::HasSpellEffect(int effectid)
 }
 
 int Mob::GetSpecialAbility(int ability) {
-	if(ability >= SpecialAbility::Max || ability < 0) {
+	if(ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return 0;
 	}
 
@@ -3940,7 +3888,7 @@ int Mob::GetSpecialAbility(int ability) {
 }
 
 int Mob::GetSpecialAbilityParam(int ability, int param) {
-	if(param >= SpecialAbility::MaxParameters || param < 0 || ability >= SpecialAbility::Max || ability < 0) {
+	if(param >= MAX_SPECIAL_ATTACK_PARAMS || param < 0 || ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return 0;
 	}
 
@@ -3948,17 +3896,17 @@ int Mob::GetSpecialAbilityParam(int ability, int param) {
 }
 
 void Mob::SetSpecialAbility(int ability, int level) {
-	if(ability >= SpecialAbility::Max || ability < 0) {
+	if(ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return;
 	}
 
 	SpecialAbilities[ability].level = level;
-	if (ability == SpecialAbility::CorpseCamper)
+	if (ability == CORPSE_CAMPER)
 		AI_SetLoiterTimer();
 }
 
 void Mob::SetSpecialAbilityParam(int ability, int param, int value) {
-	if(param >= SpecialAbility::MaxParameters || param < 0 || ability >= SpecialAbility::Max || ability < 0) {
+	if(param >= MAX_SPECIAL_ATTACK_PARAMS || param < 0 || ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return;
 	}
 
@@ -3966,7 +3914,7 @@ void Mob::SetSpecialAbilityParam(int ability, int param, int value) {
 }
 
 void Mob::StartSpecialAbilityTimer(int ability, uint32 time) {
-	if (ability >= SpecialAbility::Max || ability < 0) {
+	if (ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return;
 	}
 
@@ -3979,7 +3927,7 @@ void Mob::StartSpecialAbilityTimer(int ability, uint32 time) {
 }
 
 void Mob::StopSpecialAbilityTimer(int ability) {
-	if (ability >= SpecialAbility::Max || ability < 0) {
+	if (ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return;
 	}
 
@@ -3987,7 +3935,7 @@ void Mob::StopSpecialAbilityTimer(int ability) {
 }
 
 Timer *Mob::GetSpecialAbilityTimer(int ability) {
-	if (ability >= SpecialAbility::Max || ability < 0) {
+	if (ability >= MAX_SPECIAL_ATTACK || ability < 0) {
 		return nullptr;
 	}
 
@@ -3995,10 +3943,10 @@ Timer *Mob::GetSpecialAbilityTimer(int ability) {
 }
 
 void Mob::ClearSpecialAbilities() {
-	for(int a = 0; a < SpecialAbility::Max; ++a) {
+	for(int a = 0; a < MAX_SPECIAL_ATTACK; ++a) {
 		SpecialAbilities[a].level = 0;
 		safe_delete(SpecialAbilities[a].timer);
-		for(int p = 0; p < SpecialAbility::MaxParameters; ++p) {
+		for(int p = 0; p < MAX_SPECIAL_ATTACK_PARAMS; ++p) {
 			SpecialAbilities[a].params[p] = 0;
 		}
 	}
@@ -4022,7 +3970,7 @@ void Mob::ModifySpecialAbility(const std::string &abil_str)
 		SetSpecialAbility(ability, value);
 
 		for (size_t i = 2, p = 0; i < sub_sp.size(); ++i, ++p) {
-			if (p >= SpecialAbility::MaxParameters) {
+			if (p >= MAX_SPECIAL_ATTACK_PARAMS) {
 				break;
 			}
 
@@ -4222,52 +4170,52 @@ uint32 Mob::GetRaceStringID() {
 uint32 Mob::GetClassStringID() {
 
 	switch (GetClass()) {
-		case Class::Warrior:
-		case Class::WarriorGM:
+		case WARRIOR:
+		case WARRIORGM:
 			return 1240; break;
-		case Class::Cleric:
-		case Class::ClericGM:
+		case CLERIC:
+		case CLERICGM:
 			return 1241; break;
-		case Class::Paladin:
-		case Class::PaladinGM:
+		case PALADIN:
+		case PALADINGM:
 			return 1242; break;
-		case Class::Ranger:
-		case Class::RangerGM:
+		case RANGER:
+		case RANGERGM:
 			return 1243; break;
-		case Class::ShadowKnight:
-		case Class::ShadowKnightGM:
+		case SHADOWKNIGHT:
+		case SHADOWKNIGHTGM:
 			return 1244; break;
-		case Class::Druid:
-		case Class::DruidGM:
+		case DRUID:
+		case DRUIDGM:
 			return 1245; break;
-		case Class::Monk:
-		case Class::MonkGM:
+		case MONK:
+		case MONKGM:
 			return 1246; break;
-		case Class::Bard:
-		case Class::BardGM:
+		case BARD:
+		case BARDGM:
 			return 1247; break;
-		case Class::Rogue:
-		case Class::RogueGM:
+		case ROGUE:
+		case ROGUEGM:
 			return 1248; break;
-		case Class::Shaman:
-		case Class::ShamanGM:
+		case SHAMAN:
+		case SHAMANGM:
 			return 1249; break;
-		case Class::Necromancer:
-		case Class::NecromancerGM:
+		case NECROMANCER:
+		case NECROMANCERGM:
 			return 1250; break;
-		case Class::Wizard:
-		case Class::WizardGM:
+		case WIZARD:
+		case WIZARDGM:
 			return 1251; break;
-		case Class::Magician:
-		case Class::MagicianGM:
+		case MAGICIAN:
+		case MAGICIANGM:
 			return 1252; break;
-		case Class::Enchanter:
-		case Class::EnchanterGM:
+		case ENCHANTER:
+		case ENCHANTERGM:
 			return 1253; break;
-		case Class::Beastlord:
-		case Class::BeastlordGM:
+		case BEASTLORD:
+		case BEASTLORDGM:
 			return 1254; break;
-		case Class::Banker:
+		case BANKER:
 			return 1255; break;
 		default:
 			return 1239; break;
@@ -4283,14 +4231,12 @@ float Mob::CalcZOffset()
 		mysize = RuleR(Map, BestZSizeMax);
 
 	// Z offset for beastlord pets is calculated different
-	if (myrace == Race::Tiger || ((myrace == Race::Wolf || myrace == Race::WolfElemental) && GetGender() == Gender::Neuter)) {
+	if (myrace == TIGER || ((myrace == WOLF || myrace == WOLF_ELEMENTAL) && GetGender() == 2))
 		return (mysize / 5.0f * 3.125f * 0.44999999f);
-	}
 
 	// fixed size dragons
-	if (myrace == Race::LavaDragon || myrace == Race::Wurm || myrace == Race::GhostDragon) {
+	if (myrace == LAVA_DRAGON || myrace == WURM || myrace == GHOST_DRAGON)
 		return 20.0f;
-	}
 
 	return (mysize / 5.0f * 3.125f);
 }
@@ -5017,47 +4963,47 @@ float Mob::GetPlayerHeight(uint16 race)
 
 	switch (race)
 	{
-	case Race::Barbarian:
-	case Race::HalasCitizen:
-	case Race::VahShir:
+	case RACE_BARBARIAN_2:
+	case RACE_HALAS_CITIZEN_90:
+	case RACE_VAH_SHIR_130:
 		ret_size = 7.0;
 		break;
-	case Race::WoodElf:
-	case Race::DarkElf:
-	case Race::NeriakCitizen:
-	case Race::Fayguard:
+	case RACE_WOOD_ELF_4:
+	case RACE_DARK_ELF_6:
+	case RACE_NERIAK_CITIZEN_77:
+	case RACE_FAYGUARD_112:
 		ret_size = 5.0;
 		break;
-	case Race::HalfElf:
+	case RACE_HALF_ELF_7:
 		ret_size = 5.5;
 		break;
-	case Race::Dwarf:
-	case Race::KaladimCitizen:
+	case RACE_DWARF_8:
+	case RACE_KALADIM_CITIZEN_94:
 		ret_size = 4.0;
 		break;
-	case Race::Troll:
-	case Race::GrobbCitizen:
+	case RACE_TROLL_9:
+	case RACE_GROBB_CITIZEN_92:
 		ret_size = 8.0;
 		break;
-	case Race::Ogre:
-	case Race::OggokCitizen:
+	case RACE_OGRE_10:
+	case RACE_OGGOK_CITIZEN_93:
 		ret_size = 9.0;
 		break;
-	case Race::Halfling:
-	case Race::RivervaleCitizen:
+	case RACE_HALFLING_11:
+	case RACE_RIVERVALE_CITIZEN_81:
 		ret_size = 3.5;
 		break;
-	case Race::Gnome:
-	case Race::ClockworkGnome:
+	case RACE_GNOME_12:
+	case RACE_CLOCKWORK_GNOME_88:
 		ret_size = 3.0;
 		break;
-	case Race::Wolf:
-	case Race::WolfElemental:
+	case RACE_WOLF_42:
+	case RACE_WOLF_ELEMENTAL_120:
 		if (this->gender != 2)
 			break;
 		ret_size = 3.0;
 		break;
-	case Race::Bear:
+	case RACE_BEAR_43:
 		ret_size = 4.6999998;
 		break;
 	}
@@ -5105,11 +5051,11 @@ bool Mob::CanCastBindAffinity()
 	uint8 class_ = GetClass();
 	uint8 level = GetLevel();
 
-	if(level >= 12 && (class_ == Class::Necromancer || class_ == Class::Wizard || class_ == Class::Magician || class_ == Class::Enchanter))
+	if(level >= 12 && (class_ == NECROMANCER || class_ == WIZARD || class_ == MAGICIAN || class_ == ENCHANTER))
 	{
 		return true;
 	}
-	else if(level >= 14 && (class_ == Class::Cleric || class_ == Class::Shaman || class_ == Class::Druid))
+	else if(level >= 14 && (class_ == CLERIC || class_ == SHAMAN || class_ == DRUID))
 	{
 		return true;
 	}
@@ -5129,8 +5075,8 @@ void Mob::FadeVoiceGraft()
 
 bool Mob::IsUnTargetable()
 {
-	if (GetBodyType() == BodyType::NoTarget || GetBodyType() == BodyType::NoTarget2 || GetBodyType() == BodyType::Special ||
-		(GetBaseRace() == INVISIBLE_MAN && GetBodyType() == BodyType::InvisibleMan))
+	if (GetBodyType() == BT_NoTarget || GetBodyType() == BT_NoTarget2 || GetBodyType() == BT_Special ||
+		(GetBaseRace() == INVISIBLE_MAN && GetBodyType() == BT_InvisMan))
 		return true;
 
 	return false;
@@ -5204,17 +5150,17 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 		int specific_gender = -1;
 		// Male
 		if (spell_id == 1732)
-			specific_gender = Gender::Male;
+			specific_gender = 0;
 		// Female
 		else if (spell_id == 1731)
-			specific_gender = Gender::Female;
+			specific_gender = 1;
 		// Switch
 		else if (spell_id == 1730)
 		{
-			if (GetGender() == Gender::Male)
-				specific_gender = Gender::Female;
+			if (GetGender() == 0)
+				specific_gender = 1;
 			else
-				specific_gender = Gender::Male;
+				specific_gender = 0;
 		}
 
 		if (specific_gender > -1)
@@ -5240,9 +5186,9 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 		// Great Bear - Ogre is Grizzly texture 0.
 		else if (spell_id == 1431)
 		{
-			if (GetBaseRace() == Race::Troll || GetBaseRace() == Race::Iksar)
+			if (GetBaseRace() == TROLL || GetBaseRace() == IKSAR)
 				texture = 1;
-			else if (GetBaseRace() == Race::Barbarian)
+			else if (GetBaseRace() == BARBARIAN)
 				texture = 2;
 		}
 		else
@@ -5292,7 +5238,7 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			// Scaled Wolf is a female wolf.
 			case 3586:
 			{
-				gender = Gender::Female;
+				gender = 1;
 				break;
 			}
 
@@ -5430,7 +5376,7 @@ void Mob::StartShield(Mob* mob)
 // this will permanently randomize face, hair, eye color.  this is based on a copy of the #randomfeatures command and may not have the ranges entirely correct
 void Mob::SetRandomFeatures()
 {
-	if (GetRace() <= Race::Gnome || GetRace() == Race::Iksar || GetRace() == Race::VahShir)
+	if (GetRace() <= GNOME || GetRace() == IKSAR || GetRace() == VAHSHIR)
 	{
 		eyecolor1 = zone->random.Int(0, 9);
 		eyecolor2 = zone->random.Int(0, 9);
@@ -5438,120 +5384,122 @@ void Mob::SetRandomFeatures()
 
 		switch (GetRace())
 		{
-		case Race::Human:	// Human
+		case 1:	// Human
 			haircolor = zone->random.Int(0, 19);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				beardcolor = haircolor;
 				hairstyle = zone->random.Int(0, 3);
 				beard = zone->random.Int(0, 5);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::Barbarian:	// Barbarian
+		case 2:	// Barbarian
 			haircolor = zone->random.Int(0, 19);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				beardcolor = haircolor;
 				hairstyle = zone->random.Int(0, 3);
 				beard = zone->random.Int(0, 5);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::Erudite: // Erudite
-			if (GetGender() == Gender::Male) {
+		case 3: // Erudite
+			if (GetGender() == 0) {
 				beardcolor = zone->random.Int(0, 19);
 				beard = zone->random.Int(0, 5);
 			}
 			break;
-		case Race::WoodElf: // WoodElf
+		case 4: // WoodElf
 			haircolor = zone->random.Int(0, 19);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				hairstyle = zone->random.Int(0, 3);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::HighElf: // HighElf
+		case 5: // HighElf
 			haircolor = zone->random.Int(0, 14);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				hairstyle = zone->random.Int(0, 3);
 				beardcolor = haircolor;
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::DarkElf: // DarkElf
+		case 6: // DarkElf
 			haircolor = zone->random.Int(13, 18);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				hairstyle = zone->random.Int(0, 3);
 				beardcolor = haircolor;
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::HalfElf: // HalfElf
+		case 7: // HalfElf
 			haircolor = zone->random.Int(0, 19);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				hairstyle = zone->random.Int(0, 3);
 				beardcolor = haircolor;
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::Dwarf: // Dwarf
+		case 8: // Dwarf
 			haircolor = zone->random.Int(0, 19);
 			beardcolor = haircolor;
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				hairstyle = zone->random.Int(0, 3);
 				beard = zone->random.Int(0, 5);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case  Race::Troll: // Troll
-			if (GetGender() == Gender::Female) {
+		case 9: // Troll
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 3);
 				haircolor = zone->random.Int(0, 23);
 			}
 			break;
-		case Race::Ogre: // Ogre
-			if (GetGender() == Gender::Female) {
+		case 10: // Ogre
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 3);
 				haircolor = zone->random.Int(0, 23);
 			}
 			break;
-		case Race::Halfling: // Halfling
+		case 11: // Halfling
 			haircolor = zone->random.Int(0, 19);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				beardcolor = haircolor;
 				hairstyle = zone->random.Int(0, 3);
 				beard = zone->random.Int(0, 5);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::Gnome: // Gnome
+		case 12: // Gnome
 			haircolor = zone->random.Int(0, 24);
-			if (GetGender() == Gender::Male) {
+			if (GetGender() == 0) {
 				beardcolor = haircolor;
 				hairstyle = zone->random.Int(0, 3);
 				beard = zone->random.Int(0, 5);
 			}
-			if (GetGender() == Gender::Female) {
+			if (GetGender() == 1) {
 				hairstyle = zone->random.Int(0, 2);
 			}
 			break;
-		case Race::Iksar: // Iksar
-		case Race::VahShir: // VahShir
+		case 128: // Iksar
+		case 130: // VahShir
+			break;
+		case 330: // Froglok
 			break;
 		default:
 			break;

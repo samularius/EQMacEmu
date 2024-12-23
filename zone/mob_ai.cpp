@@ -191,7 +191,7 @@ bool NPC::AICastSpell(Mob* tar, uint8 iChance, uint16 iSpellTypes, bool zeroPrio
 
 					case SpellType_Escape:
 					{
-						if (!roambox_distance && !IsPet() && GetHPRatio() <= 15.0f && zone->GetZoneExpansion() != ClassicEQ
+						if (!roambox_distance && !IsPet() && GetHPRatio() <= 10.0f && zone->GetZoneExpansion() != ClassicEQ
 							&& zone->random.Roll(50) && DistanceSquared(CastToNPC()->GetSpawnPoint(), GetPosition()) > 40000)
 						{
 							entity_list.MessageClose_StringID(this, true, 200, Chat::Spells, BEGIN_GATE, this->GetCleanName());
@@ -258,7 +258,7 @@ bool NPC::AICastSpell(Mob* tar, uint8 iChance, uint16 iSpellTypes, bool zeroPrio
 
 						if ((AIspells[i].priority == 0 || zone->random.Roll(40 + roll_mod))
 							&& ((mana_cost == 0 || spells[AIspells[i].spellid].buffduration == 0)		// 0 mana spell probably a raid boss spell; these always cast
-							&& (GetClass() != Class::Cleric || mana_cost == 0 || GetHPRatio() > 50.0f)			// clerics don't nuke if they're < 50%
+							&& (GetClass() != CLERIC || mana_cost == 0 || GetHPRatio() > 50.0f)			// clerics don't nuke if they're < 50%
 							|| tar->CanBuffStack(AIspells[i].spellid, GetLevel(), true) >= 0))
 						{
 							if (spells[AIspells[i].spellid].targettype != ST_AECaster && !spells[AIspells[i].spellid].npc_no_los)
@@ -281,7 +281,7 @@ bool NPC::AICastSpell(Mob* tar, uint8 iChance, uint16 iSpellTypes, bool zeroPrio
 					{
 						if (zone->random.Roll(10) || AIspells[i].priority == 0)
 						{
-							if (GetClass() == Class::Cleric && zone->random.Roll(66))	// cleric NPCs have very short spell lists which is causing the AI to make them cast dispels too frequently without this
+							if (GetClass() == CLERIC && zone->random.Roll(66))	// cleric NPCs have very short spell lists which is causing the AI to make them cast dispels too frequently without this
 								return false;
 
 							if (spells[AIspells[i].spellid].targettype != ST_AECaster && !spells[AIspells[i].spellid].npc_no_los)
@@ -457,7 +457,7 @@ bool EntityList::AICheckCloseBeneficialSpells(NPC* caster, uint8 iChance, float 
 	if(caster->AI_HasSpells() == false)
 		return false;
 
-	if(caster->GetSpecialAbility(SpecialAbility::NoBuffHealFriends))
+	if(caster->GetSpecialAbility(NPC_NO_BUFFHEAL_FRIENDS))
 		return false;
 
 	if (iChance < 100) {
@@ -522,7 +522,7 @@ void Mob::AI_Init() {
 	AIthink_timer.reset(nullptr);
 	AImovement_timer.reset(nullptr);
 	AIwalking_timer.reset(nullptr);
-	AI_scan_area_timer.reset(nullptr);
+	AIscanarea_timer.reset(nullptr);
 	AIdoor_timer.reset(nullptr);
 
 	pDontBuffMeBefore = 0;
@@ -560,8 +560,9 @@ void Mob::AI_Start() {
 	AIthink_timer->Trigger();
 	AIwalking_timer = std::unique_ptr<Timer>(new Timer(0));
 	AImovement_timer = std::unique_ptr<Timer>(new Timer(AImovement_duration));
-	if (zone->CanDoCombat() && CastToNPC()->GetNPCAggro()) {
-		AI_scan_area_timer = std::make_unique<Timer>(RandomTimer(RuleI(NPC, NPCToNPCAggroTimerMin), RuleI(NPC, NPCToNPCAggroTimerMax)));
+	if (zone->CanDoCombat())
+	{
+		AIscanarea_timer = std::unique_ptr<Timer>(new Timer(AIscanarea_delay));
 	}
 	AIhail_timer = std::unique_ptr<Timer>(new Timer(100));
 	AIhail_timer->Disable();
@@ -618,11 +619,9 @@ void NPC::AI_Start() {
 	} else {
 		AIautocastspell_timer = std::unique_ptr<Timer>(new Timer(750));
 	}
-
 	AI_AddNPCSpells(NPCTypedata.npc_spells_id);
 	ProcessSpecialAbilities(NPCTypedata.special_abilities);
 	AI_AddNPCSpellsEffects(NPCTypedata.npc_spells_effects_id);
-
 	SendTo(GetX(), GetY(), GetZ());
 	SaveGuardSpot();
 	AI_SetLoiterTimer();
@@ -638,7 +637,7 @@ void Mob::AI_Stop() {
 
 	AIthink_timer.reset(nullptr);
 	AIwalking_timer.reset(nullptr);
-	AI_scan_area_timer.reset(nullptr);
+	AIscanarea_timer.reset(nullptr);
 	AIhail_timer.reset(nullptr);
 	AIpetguard_timer.reset(nullptr);
 	AIdoor_timer.reset(nullptr);
@@ -703,7 +702,7 @@ void Mob::AI_ShutDown() {
 	bardsong_timer.Disable();
 	flee_timer.Disable();
 	
-	for (int sat = 0; sat < SpecialAbility::Max; ++sat) {
+	for (int sat = 0; sat < MAX_SPECIAL_ATTACK; ++sat) {
 		if (SpecialAbilities[sat].timer)
 			 SpecialAbilities[sat].timer->Disable();
 		
@@ -1007,7 +1006,7 @@ void Client::AI_Process()
 							Attack(GetTarget(), EQ::invslot::slotPrimary);
 
 							// Triple attack: Warriors and Monks level 60+ do this.  13.5% looks weird but multiple 8+ hour logs suggest it's about that
-							if ((GetClass() == Class::Warrior || GetClass() == Class::Monk) && GetLevel() >= 60 && zone->random.Int(0, 999) < 135)
+							if ((GetClass() == WARRIOR || GetClass() == MONK) && GetLevel() >= 60 && zone->random.Int(0, 999) < 135)
 							{
 								Attack(GetTarget(), EQ::invslot::slotPrimary);
 
@@ -1202,7 +1201,7 @@ void Mob::DoMainHandRound(Mob* victim, int damagePct)
 		Attack(victim, EQ::invslot::slotPrimary, damagePct);
 
 		// Triple attack: Warriors and Monks level 60+ do this.  13.5% looks weird but multiple 8+ hour logs suggest it's about that
-		if ((GetClass() == Class::Warrior || GetClass() == Class::Monk) && GetLevel() >= 60 && zone->random.Int(0, 999) < 135)
+		if ((GetClass() == WARRIOR || GetClass() == MONK) && GetLevel() >= 60 && zone->random.Int(0, 999) < 135)
 		{
 			Attack(victim, EQ::invslot::slotPrimary, damagePct);
 		}
@@ -1286,7 +1285,7 @@ void Mob::AI_Process() {
 
 	}
 
-	if (IsCasting() && GetClass() != Class::Bard)
+	if (IsCasting() && GetClass() != BARD)
 		return;
 
 	bool facing_set = false;
@@ -1371,7 +1370,7 @@ void Mob::AI_Process() {
 
 	if (RuleB(Combat, EnableFearPathing))
 	{
-		if ((IsFearedNoFlee() || (IsFleeing() && is_engaged)) && curfp && (!IsRooted() || (permarooted && GetSpecialAbility(SpecialAbility::PermarootFlee))))
+		if ((IsFearedNoFlee() || (IsFleeing() && is_engaged)) && curfp && (!IsRooted() || (permarooted && GetSpecialAbility(PERMAROOT_FLEE))))
 		{
 			DoFearMovement();
 			return;
@@ -1403,15 +1402,15 @@ void Mob::AI_Process() {
 			AIloiter_timer->Pause();
 
         auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
-		if(GetSpecialAbility(SpecialAbility::Tether)) {
-			float tether_range = static_cast<float>(GetSpecialAbilityParam(SpecialAbility::Tether, 0));
+		if(GetSpecialAbility(TETHER)) {
+			float tether_range = static_cast<float>(GetSpecialAbilityParam(TETHER, 0));
 			tether_range = tether_range > 0.0f ? tether_range * tether_range : pAggroRange * pAggroRange;
 
 			if(DistanceSquaredNoZ(m_Position, npcSpawnPoint) > tether_range) {
 				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
 			}
-		} else if(GetSpecialAbility(SpecialAbility::Leash)) {
-			float leash_range = static_cast<float>(GetSpecialAbilityParam(SpecialAbility::Leash, 0));
+		} else if(GetSpecialAbility(LEASH)) {
+			float leash_range = static_cast<float>(GetSpecialAbilityParam(LEASH, 0));
 			leash_range = leash_range > 0.0f ? leash_range * leash_range : pAggroRange * pAggroRange;
 
 			if(DistanceSquaredNoZ(m_Position, npcSpawnPoint) > leash_range) {
@@ -1426,7 +1425,7 @@ void Mob::AI_Process() {
 
 		// if NPC warrior, look for injured allies to /shield
 		// note that if you change the number of times that the AI loop runs per second, you'll need to change this roll number with it
-		if (IsNPC() && GetClass() == Class::Warrior && GetLevel() > 29 && !GetShieldTarget() && !IsStunned() && !IsMezzed() && !IsFeared()
+		if (IsNPC() && GetClass() == WARRIOR && GetLevel() > 29 && !GetShieldTarget() && !IsStunned() && !IsMezzed() && !IsFeared()
 			&& shield_cooldown < Timer::GetCurrentTime() && IsEngaged() && zone->random.Roll(0.0001))
 		{
 			std::list<Mob*> npcList;
@@ -1527,9 +1526,9 @@ void Mob::AI_Process() {
 
 					DoMainHandRound(victim);
 
-					if (victim && !victim->HasDied() && GetSpecialAbility(SpecialAbility::Flurry))
+					if (victim && !victim->HasDied() && GetSpecialAbility(SPECATK_FLURRY))
 					{
-						int flurry_chance = GetSpecialAbilityParam(SpecialAbility::Flurry, 0);
+						int flurry_chance = GetSpecialAbilityParam(SPECATK_FLURRY, 0);
 						flurry_chance = flurry_chance > 0 ? flurry_chance : RuleI(Combat, NPCFlurryChance);
 
 						if (zone->random.Roll(flurry_chance))
@@ -1570,15 +1569,15 @@ void Mob::AI_Process() {
 						}
 					}
 
-					if (victim && !victim->HasDied() && GetSpecialAbility(SpecialAbility::Rampage) && !specialed)
+					if (victim && !victim->HasDied() && GetSpecialAbility(SPECATK_RAMPAGE) && !specialed)
 					{
-						int rampage_chance = GetSpecialAbilityParam(SpecialAbility::Rampage, 0);
+						int rampage_chance = GetSpecialAbilityParam(SPECATK_RAMPAGE, 0);
 						rampage_chance = rampage_chance > 0 ? rampage_chance : 20;
 
 						if(zone->random.Roll(rampage_chance))
 						{
-							int range = GetSpecialAbilityParam(SpecialAbility::Rampage, 1);
-							int damage_percent = GetSpecialAbilityParam(SpecialAbility::Rampage, 2);
+							int range = GetSpecialAbilityParam(SPECATK_RAMPAGE, 1);
+							int damage_percent = GetSpecialAbilityParam(SPECATK_RAMPAGE, 2);
 
 							if (range <= 0)
 								range = 75;
@@ -1590,18 +1589,18 @@ void Mob::AI_Process() {
 						}
 					}
 
-					if (GetSpecialAbility(SpecialAbility::AreaRampage) && !specialed)
+					if (GetSpecialAbility(SPECATK_AREA_RAMPAGE) && !specialed)
 					{
-						int rampage_chance = GetSpecialAbilityParam(SpecialAbility::AreaRampage, 0);
+						int rampage_chance = GetSpecialAbilityParam(SPECATK_AREA_RAMPAGE, 0);
 						rampage_chance = rampage_chance > 0 ? rampage_chance : 20;
 
-						int rampage_targets = GetSpecialAbilityParam(SpecialAbility::AreaRampage, 1);
+						int rampage_targets = GetSpecialAbilityParam(SPECATK_AREA_RAMPAGE, 1);
 						if (rampage_targets <= 0)
 							rampage_targets = 999;
 
 						if(zone->random.Roll(rampage_chance))
 						{
-							int damage_percent = GetSpecialAbilityParam(SpecialAbility::AreaRampage, 2);
+							int damage_percent = GetSpecialAbilityParam(SPECATK_AREA_RAMPAGE, 2);
 							if (damage_percent <= 0)
 								damage_percent = 100;
 
@@ -1666,20 +1665,20 @@ void Mob::AI_Process() {
 				{
 					HateSummon(GetTarget());
 				}
-				else if (RuleB(Quarm, EnableBardInstagibLimit) && GetTarget()->IsClient() && GetTarget()->GetClass() == Class::Bard && CheckBardHateSummon(GetTarget()))
+				else if (RuleB(Quarm, EnableBardInstagibLimit) && GetTarget()->IsClient() && GetTarget()->GetClass() == BARD && CheckBardHateSummon(GetTarget()))
 				{
 					BardHateSummon(GetTarget());
 				}
 				else if (!IsBlind())
 				{
 					//could not summon them, check ranged...
-					if (GetSpecialAbility(SpecialAbility::RangedAttack) || HasBowAndArrowEquipped()) {
+					if (GetSpecialAbility(SPECATK_RANGED_ATK) || HasBowAndArrowEquipped()) {
 						doranged = true;
 					}
 
 					// Now pursue
 					if (AI_EngagedCastCheck()) {
-						if (IsCasting() && GetClass() != Class::Bard) {
+						if (IsCasting() && GetClass() != BARD) {
 							FaceTarget(GetTarget());
 						}
 					}
@@ -1813,11 +1812,11 @@ void Mob::AI_Process() {
 		}
 		if (AI_IdleCastCheck())
 		{
-			if (IsCasting() && GetClass() != Class::Bard) {
+			if (IsCasting() && GetClass() != BARD) {
 				StopNavigation();
 			}
 		}
-		else if (AI_scan_area_timer != nullptr && AI_scan_area_timer->Check())
+		else if (AIscanarea_timer != nullptr && AIscanarea_timer->Check())
 		{
 			/*
 			* This is where NPCs look around to see if they want to attack other NPCs.
@@ -1825,7 +1824,7 @@ void Mob::AI_Process() {
 			*/
 			if (IsNPC() && !zone->IsIdling())
 			{
-				if (CastToNPC()->GetNPCAggro())
+				if (CastToNPC()->WillAggroNPCs())
 				{
 					// if attackable NPC found then also check for clients so both NPCs and clients end up on hate list
 					if (entity_list.AICheckNPCAggro(this->CastToNPC()))
@@ -2427,7 +2426,7 @@ void Mob::AI_Event_Engaged(Mob* attacker)
 	}
 
 	if (IsNPC() && !IsPet() && !CastToNPC()->IsAssisting()) {
-		if (!RuleB(AlKabor, AllowTickSplit) || GetSpecialAbility(SpecialAbility::AlwaysCallHelp)) {
+		if (!RuleB(AlKabor, AllowTickSplit) || GetSpecialAbility(ALWAYS_CALL_HELP)) {
 			CastToNPC()->CallForHelp(attacker, true);
 		}
 	}
@@ -2442,7 +2441,7 @@ void Mob::AI_Event_Engaged(Mob* attacker)
 				if (AIwalking_timer->Check(false)) {
 					AIwalking_timer->Disable();
 				}
-				else if (!GetSpecialAbility(SpecialAbility::NoLoitering)) {
+				else if (!GetSpecialAbility(NO_LOITERING)) {
 					AIwalking_timer->Pause();
 				}
 			}
@@ -2476,10 +2475,10 @@ void Mob::AI_SetLoiterTimer()
 
 	if (IsNPC())
 	{
-		if (GetSpecialAbility(SpecialAbility::CorpseCamper))
+		if (GetSpecialAbility(CORPSE_CAMPER))
 		{
-			max_time = GetSpecialAbility(SpecialAbility::CorpseCamper);
-			min_time = GetSpecialAbilityParam(SpecialAbility::CorpseCamper, 0);
+			max_time = GetSpecialAbility(CORPSE_CAMPER);
+			min_time = GetSpecialAbilityParam(CORPSE_CAMPER, 0);
 
 			if (max_time < min_time)
 				max_time = min_time;
@@ -2495,7 +2494,7 @@ void Mob::AI_SetLoiterTimer()
 				min_time *= 1000;
 			}
 		}
-		else if (GetSpecialAbility(SpecialAbility::NoLoitering))
+		else if (GetSpecialAbility(NO_LOITERING))
 		{
 			min_time = max_time = 0;
 		}
@@ -2558,13 +2557,13 @@ void Mob::AI_Event_NoLongerEngaged() {
 
 		if (zone && zone->GetGuildID() != GUILD_NONE)
 		{
-			if (GetSpecialAbility(SpecialAbility::Tether)) {
+			if (GetSpecialAbility(TETHER)) {
 
 				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
 				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
 			}
 
-			else if (GetSpecialAbility(SpecialAbility::Leash)) {
+			else if (GetSpecialAbility(LEASH)) {
 				auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
 				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
 				SetHP(GetMaxHP());
@@ -2677,13 +2676,13 @@ bool NPC::AI_IdleCastCheck() {
 
 void Mob::CheckEnrage()
 {
-	if (!bEnraged && GetSpecialAbility(SpecialAbility::Enrage)) {
+	if (!bEnraged && GetSpecialAbility(SPECATK_ENRAGE)) {
 		// this is so we don't have to make duplicate NPC types
 		if (IsNPC() && GetLevel() < 56 && GetLevel() > 52) {
 			return;
 		}
 
-		int hp_ratio = GetSpecialAbilityParam(SpecialAbility::Enrage, 0);
+		int hp_ratio = GetSpecialAbilityParam(SPECATK_ENRAGE, 0);
 		hp_ratio = hp_ratio > 0 ? hp_ratio : RuleI(NPC, StartEnrageValue);
 		if (GetHPRatio() <= static_cast<float>(hp_ratio)) {
 			StartEnrage();
@@ -2699,14 +2698,14 @@ void Mob::StartEnrage()
 	if (bEnraged)
 		return;
 
-	if(!GetSpecialAbility(SpecialAbility::Enrage))
+	if(!GetSpecialAbility(SPECATK_ENRAGE))
 		return;
 
 	// Do not enrage if we are fleeing or feared, unless we are also rooted.
 	if (IsFeared() && !IsRooted())
 		return;
 
-	int hp_ratio = GetSpecialAbilityParam(SpecialAbility::Enrage, 0);
+	int hp_ratio = GetSpecialAbilityParam(SPECATK_ENRAGE, 0);
 	hp_ratio = hp_ratio > 0 ? hp_ratio : RuleI(NPC, StartEnrageValue);
 	if(GetHPRatio() > static_cast<float>(hp_ratio)) {
 		return;
@@ -2717,13 +2716,13 @@ void Mob::StartEnrage()
 		return;
 	}
 
-	Timer *timer = GetSpecialAbilityTimer(SpecialAbility::Enrage);
+	Timer *timer = GetSpecialAbilityTimer(SPECATK_ENRAGE);
 	if (timer && !timer->Check())
 		return;
 
-	int enraged_duration = GetSpecialAbilityParam(SpecialAbility::Enrage, 1);
+	int enraged_duration = GetSpecialAbilityParam(SPECATK_ENRAGE, 1);
 	enraged_duration = enraged_duration > 0 ? enraged_duration : EnragedDurationTimer;
-	StartSpecialAbilityTimer(SpecialAbility::Enrage, enraged_duration);
+	StartSpecialAbilityTimer(SPECATK_ENRAGE, enraged_duration);
 
 	// start the timer. need to call IsEnraged frequently since we dont have callback timers :-/
 	bEnraged = true;
@@ -2732,13 +2731,13 @@ void Mob::StartEnrage()
 
 void Mob::ProcessEnrage(){
 	if(IsEnraged()){
-		Timer *timer = GetSpecialAbilityTimer(SpecialAbility::Enrage);
+		Timer *timer = GetSpecialAbilityTimer(SPECATK_ENRAGE);
 		if(timer && timer->Check()){
 			entity_list.MessageClose_StringID(this, true, 200, Chat::NPCEnrage, NPC_ENRAGE_END, GetCleanName());
 
-			int enraged_cooldown = GetSpecialAbilityParam(SpecialAbility::Enrage, 2);
+			int enraged_cooldown = GetSpecialAbilityParam(SPECATK_ENRAGE, 2);
 			enraged_cooldown = enraged_cooldown > 0 ? enraged_cooldown : EnragedTimer;
-			StartSpecialAbilityTimer(SpecialAbility::Enrage, enraged_cooldown);
+			StartSpecialAbilityTimer(SPECATK_ENRAGE, enraged_cooldown);
 			bEnraged = false;
 		}
 	}
@@ -2786,7 +2785,7 @@ bool Mob::AddRampage(Mob *mob)
 	if (!mob)
 		return false;
 
-	if (!GetSpecialAbility(SpecialAbility::Rampage))
+	if (!GetSpecialAbility(SPECATK_RAMPAGE))
 		return false;
 
 	int firsthole = -1;
@@ -2827,7 +2826,7 @@ void Mob::RemoveFromRampageList(Mob* mob, bool force)
 	if (!mob)
 		return;
 
-	if (IsNPC() && GetSpecialAbility(SpecialAbility::Rampage)
+	if (IsNPC() && GetSpecialAbility(SPECATK_RAMPAGE)
 		&& (force || mob->IsNPC() || (mob->IsClient() && !mob->CastToClient()->IsFeigned())))
 	{
 		for (int i = 0; i < RampageArray.size(); i++)
@@ -3420,13 +3419,11 @@ void NPC::AddSpellToNPCList(int16 iPriority, int16 iSpellID, uint16 iType,
 	AIspells.push_back(t);
 
 	// If we're going from an empty list, we need to start the timer
-	if (AIspells.size() == 1) {
+	if (AIspells.size() == 1)
 		AIautocastspell_timer->Start(100, false);
-	}
-
-	if (iPriority == 0 && iType & (SpellType_Nuke | SpellType_Lifetap | SpellType_DOT | SpellType_Dispel | SpellType_Mez | SpellType_Slow | SpellType_Debuff | SpellType_Charm | SpellType_Root)) {
-		hasZeroPrioritySpells = true;
-	}
+		
+	if (iPriority == 0 && iType & (SpellType_Nuke | SpellType_Lifetap | SpellType_DOT | SpellType_Dispel | SpellType_Mez | SpellType_Slow | SpellType_Debuff | SpellType_Charm | SpellType_Root))
+        hasZeroPrioritySpells = true;
 }
 
 void NPC::RemoveSpellFromNPCList(int16 spell_id)

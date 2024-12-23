@@ -15,15 +15,13 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 	*/
-#include <fmt/format.h>
 #include "../common/global_define.h"
 #include "../common/classes.h"
-#include "data_verification.h"
 
 const char* GetClassIDName(uint8 class_id, uint8 level)
 {
 	switch(class_id) {
-		case Class::Warrior:
+		case WARRIOR:
 			if (level >= 65)
 				return "Overlord"; //Baron-Sprite: LEAVE MY CLASSES ALONE.
 			else if (level >= 60)
@@ -34,7 +32,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Champion";
 			else
 				return "Warrior";
-		case Class::Cleric:
+		case CLERIC:
 			if (level >= 65)
 				return "Archon";
 			else if (level >= 60)
@@ -45,7 +43,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Vicar";
 			else
 				return "Cleric";
-		case Class::Paladin:
+		case PALADIN:
 			if (level >= 65)
 				return "Lord Protector";
 			else if (level >= 60)
@@ -56,7 +54,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Cavalier";
 			else
 				return "Paladin";
-		case Class::Ranger:
+		case RANGER:
 			if (level >= 65)
 				return "Forest Stalker";
 			else if (level >= 60)
@@ -67,7 +65,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Pathfinder";
 			else
 				return "Ranger";
-		case Class::ShadowKnight:
+		case SHADOWKNIGHT:
 			if (level >= 65)
 				return "Dread Lord";
 			else if (level >= 60)
@@ -78,7 +76,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Reaver";
 			else
 				return "Shadowknight";
-		case Class::Druid:
+		case DRUID:
 			if (level >= 65)
 				return "Storm Warden";
 			else if (level >= 60)
@@ -89,7 +87,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Wanderer";
 			else
 				return "Druid";
-		case Class::Monk:
+		case MONK:
 			if (level >= 65)
 				return "Transcendent";
 			else if (level >= 60)
@@ -100,7 +98,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Disciple";
 			else
 				return "Monk";
-		case Class::Bard:
+		case BARD:
 			if (level >= 65)
 				return "Maestro";
 			else if (level >= 60)
@@ -111,7 +109,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Minstrel";
 			else
 				return "Bard";
-		case Class::Rogue:
+		case ROGUE:
 			if (level >= 65)
 				return "Deceiver";
 			else if (level >= 60)
@@ -122,7 +120,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Rake";
 			else
 				return "Rogue";
-		case Class::Shaman:
+		case SHAMAN:
 			if (level >= 65)
 				return "Prophet";
 			else if (level >= 60)
@@ -133,7 +131,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Mystic";
 			else
 				return "Shaman";
-		case Class::Necromancer:
+		case NECROMANCER:
 			if (level >= 65)
 				return "Arch Lich";
 			else if (level >= 60)
@@ -144,7 +142,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Heretic";
 			else
 				return "Necromancer";
-		case Class::Wizard:
+		case WIZARD:
 			if (level >= 65)
 				return "Arcanist";
 			else if (level >= 60)
@@ -155,7 +153,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Channeler";
 			else
 				return "Wizard";
-		case Class::Magician:
+		case MAGICIAN:
 			if (level >= 65)
 				return "Arch Convoker";
 			else if (level >= 60)
@@ -166,7 +164,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Elementalist";
 			else
 				return "Magician";
-		case Class::Enchanter:
+		case ENCHANTER:
 			if (level >= 65)
 				return "Coercer";
 			else if (level >= 60)
@@ -177,7 +175,7 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Illusionist";
 			else
 				return "Enchanter";
-		case Class::Beastlord:
+		case BEASTLORD:
 			if (level >= 65)
 				return "Feral Lord";
 			else if (level >= 60)
@@ -188,76 +186,196 @@ const char* GetClassIDName(uint8 class_id, uint8 level)
 				return "Primalist";
 			else
 				return "Beastlord";
-		case Class::Banker:
+		case BANKER:
+			if (level >= 65)
+				return "Elder Banker";
+			else if (level >= 60)
+				return "Oldest Banker";
+			else if (level >= 55)
+				return "Older Banker";
+			else if (level >= 51)
+				return "Old Banker";
+			else
 				return "Banker";
-		case Class::WarriorGM:
+		case WARRIORGM:
 			return "Warrior Guildmaster";
-		case Class::ClericGM:
+		case CLERICGM:
 			return "Cleric Guildmaster";
-		case Class::PaladinGM:
+		case PALADINGM:
 			return "Paladin Guildmaster";
-		case Class::RangerGM:
+		case RANGERGM:
 			return "Ranger Guildmaster";
-		case Class::ShadowKnightGM:
+		case SHADOWKNIGHTGM:
 			return "Shadowknight Guildmaster";
-		case Class::DruidGM:
+		case DRUIDGM:
 			return "Druid Guildmaster";
-		case Class::MonkGM:
+		case MONKGM:
 			return "Monk Guildmaster";
-		case Class::BardGM:
+		case BARDGM:
 			return "Bard Guildmaster";
-		case Class::RogueGM:
+		case ROGUEGM:
 			return "Rogue Guildmaster";
-		case Class::ShamanGM:
+		case SHAMANGM:
 			return "Shaman Guildmaster";
-		case Class::NecromancerGM:
+		case NECROMANCERGM:
 			return "Necromancer Guildmaster";
-		case Class::WizardGM:
+		case WIZARDGM:
 			return "Wizard Guildmaster";
-		case Class::MagicianGM:
+		case MAGICIANGM:
 			return "Magician Guildmaster";
-		case  Class::EnchanterGM:
+		case ENCHANTERGM:
 			return "Enchanter Guildmaster";
-		case Class::BeastlordGM:
+		case BEASTLORDGM:
 			return "Beastlord Guildmaster";
-		case Class::Merchant:
+		case MERCHANT:
 			return "Merchant";
-		case Class::CorpseClass:
+		case CORPSE_CLASS:
 			return "Corpse Class";
 		default:
 			return "Unknown";
 	}
 }
 
-uint8 GetPlayerClassValue(uint8 class_id)
+const char* GetPlayerClassName(uint32 player_class_value, uint8 level)
 {
-	if (!IsPlayerClass(class_id)) {
-		return 0;
-	}
-
-	return class_id;
+	return GetClassIDName(GetClassIDFromPlayerClassValue(player_class_value), level);
 }
 
-uint16 GetPlayerClassBit(uint8 class_id)
+uint32 GetPlayerClassValue(uint8 class_id)
 {
-	if (!IsPlayerClass(class_id)) {
-		return 0;
+	switch (class_id) {
+	case WARRIOR:
+	case CLERIC:
+	case PALADIN:
+	case RANGER:
+	case SHADOWKNIGHT:
+	case DRUID:
+	case MONK:
+	case BARD:
+	case ROGUE:
+	case SHAMAN:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
+	case BEASTLORD:
+		return class_id;
+	default:
+		return PLAYER_CLASS_UNKNOWN; // watch
 	}
+}
 
-	return player_class_bitmasks[class_id];
+uint32 GetPlayerClassBit(uint8 class_id)
+{
+	switch (class_id) {
+	case WARRIOR:
+		return PLAYER_CLASS_WARRIOR_BIT;
+	case CLERIC:
+		return PLAYER_CLASS_CLERIC_BIT;
+	case PALADIN:
+		return PLAYER_CLASS_PALADIN_BIT;
+	case RANGER:
+		return PLAYER_CLASS_RANGER_BIT;
+	case SHADOWKNIGHT:
+		return PLAYER_CLASS_SHADOWKNIGHT_BIT;
+	case DRUID:
+		return PLAYER_CLASS_DRUID_BIT;
+	case MONK:
+		return PLAYER_CLASS_MONK_BIT;
+	case BARD:
+		return PLAYER_CLASS_BARD_BIT;
+	case ROGUE:
+		return PLAYER_CLASS_ROGUE_BIT;
+	case SHAMAN:
+		return PLAYER_CLASS_SHAMAN_BIT;
+	case NECROMANCER:
+		return PLAYER_CLASS_NECROMANCER_BIT;
+	case WIZARD:
+		return PLAYER_CLASS_WIZARD_BIT;
+	case MAGICIAN:
+		return PLAYER_CLASS_MAGICIAN_BIT;
+	case ENCHANTER:
+		return PLAYER_CLASS_ENCHANTER_BIT;
+	case BEASTLORD:
+		return PLAYER_CLASS_BEASTLORD_BIT;
+	default:
+		return PLAYER_CLASS_UNKNOWN_BIT;
+	}
+}
+
+uint8 GetClassIDFromPlayerClassValue(uint32 player_class_value)
+{
+	switch (player_class_value) {
+	case PLAYER_CLASS_WARRIOR:
+	case PLAYER_CLASS_CLERIC:
+	case PLAYER_CLASS_PALADIN:
+	case PLAYER_CLASS_RANGER:
+	case PLAYER_CLASS_SHADOWKNIGHT:
+	case PLAYER_CLASS_DRUID:
+	case PLAYER_CLASS_MONK:
+	case PLAYER_CLASS_BARD:
+	case PLAYER_CLASS_ROGUE:
+	case PLAYER_CLASS_SHAMAN:
+	case PLAYER_CLASS_NECROMANCER:
+	case PLAYER_CLASS_WIZARD:
+	case PLAYER_CLASS_MAGICIAN:
+	case PLAYER_CLASS_ENCHANTER:
+	case PLAYER_CLASS_BEASTLORD:
+		return player_class_value;
+	default:
+		return PLAYER_CLASS_UNKNOWN; // watch
+	}
+}
+
+uint8 GetClassIDFromPlayerClassBit(uint32 player_class_bit)
+{
+	switch (player_class_bit) {
+	case PLAYER_CLASS_WARRIOR_BIT:
+		return WARRIOR;
+	case PLAYER_CLASS_CLERIC_BIT:
+		return CLERIC;
+	case PLAYER_CLASS_PALADIN_BIT:
+		return PALADIN;
+	case PLAYER_CLASS_RANGER_BIT:
+		return RANGER;
+	case PLAYER_CLASS_SHADOWKNIGHT_BIT:
+		return SHADOWKNIGHT;
+	case PLAYER_CLASS_DRUID_BIT:
+		return DRUID;
+	case PLAYER_CLASS_MONK_BIT:
+		return MONK;
+	case PLAYER_CLASS_BARD_BIT:
+		return BARD;
+	case PLAYER_CLASS_ROGUE_BIT:
+		return ROGUE;
+	case PLAYER_CLASS_SHAMAN_BIT:
+		return SHAMAN;
+	case PLAYER_CLASS_NECROMANCER_BIT:
+		return NECROMANCER;
+	case PLAYER_CLASS_WIZARD_BIT:
+		return WIZARD;
+	case PLAYER_CLASS_MAGICIAN_BIT:
+		return MAGICIAN;
+	case PLAYER_CLASS_ENCHANTER_BIT:
+		return ENCHANTER;
+	case PLAYER_CLASS_BEASTLORD_BIT:
+		return BEASTLORD;
+	default:
+		return PLAYER_CLASS_UNKNOWN; // watch
+	}
 }
 
 bool IsFighterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Warrior:
-	case Class::Paladin:
-	case Class::Ranger:
-	case Class::ShadowKnight:
-	case Class::Monk:
-	case Class::Bard:
-	case Class::Rogue:
-	case Class::Beastlord:
+	case WARRIOR:
+	case PALADIN:
+	case RANGER:
+	case SHADOWKNIGHT:
+	case MONK:
+	case BARD:
+	case ROGUE:
+	case BEASTLORD:
 		return true;
 	default:
 		return false;
@@ -267,10 +385,10 @@ bool IsFighterClass(uint8 class_id)
 bool IsSpellFighterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Paladin:
-	case Class::Ranger:
-	case Class::ShadowKnight:
-	case Class::Beastlord:
+	case PALADIN:
+	case RANGER:
+	case SHADOWKNIGHT:
+	case BEASTLORD:
 		return true;
 	default:
 		return false;
@@ -280,24 +398,10 @@ bool IsSpellFighterClass(uint8 class_id)
 bool IsNonSpellFighterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Warrior:
-	case Class::Monk:
-	case Class::Bard:
-	case Class::Rogue:
-		return true;
-	default:
-		return false;
-	}
-}
-
-bool IsHybridClass(uint8 class_id)
-{
-	switch (class_id) {
-	case Class::Paladin:
-	case Class::Ranger:
-	case Class::ShadowKnight:
-	case Class::Bard:
-	case Class::Beastlord:
+	case WARRIOR:
+	case MONK:
+	case BARD:
+	case ROGUE:
 		return true;
 	default:
 		return false;
@@ -307,13 +411,13 @@ bool IsHybridClass(uint8 class_id)
 bool IsCasterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Cleric:
-	case Class::Druid:
-	case Class::Shaman:
-	case Class::Necromancer:
-	case Class::Wizard:
-	case Class::Magician:
-	case Class::Enchanter:
+	case CLERIC:
+	case DRUID:
+	case SHAMAN:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
 		return true;
 	default:
 		return false;
@@ -323,10 +427,10 @@ bool IsCasterClass(uint8 class_id)
 bool IsINTCasterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Necromancer:
-	case Class::Wizard:
-	case Class::Magician:
-	case Class::Enchanter:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
 		return true;
 	default:
 		return false;
@@ -336,9 +440,9 @@ bool IsINTCasterClass(uint8 class_id)
 bool IsWISCasterClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Cleric:
-	case Class::Druid:
-	case Class::Shaman:
+	case CLERIC:
+	case DRUID:
+	case SHAMAN:
 		return true;
 	default:
 		return false;
@@ -348,11 +452,11 @@ bool IsWISCasterClass(uint8 class_id)
 bool IsPlateClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Warrior:
-	case Class::Cleric:
-	case Class::Paladin:
-	case Class::ShadowKnight:
-	case Class::Bard:
+	case WARRIOR:
+	case CLERIC:
+	case PALADIN:
+	case SHADOWKNIGHT:
+	case BARD:
 		return true;
 	default:
 		return false;
@@ -362,9 +466,9 @@ bool IsPlateClass(uint8 class_id)
 bool IsChainClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Ranger:
-	case Class::Rogue:
-	case Class::Shaman:
+	case RANGER:
+	case ROGUE:
+	case SHAMAN:
 		return true;
 	default:
 		return false;
@@ -374,9 +478,9 @@ bool IsChainClass(uint8 class_id)
 bool IsLeatherClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Druid:
-	case Class::Monk:
-	case Class::Beastlord:
+	case DRUID:
+	case MONK:
+	case BEASTLORD:
 		return true;
 	default:
 		return false;
@@ -386,10 +490,10 @@ bool IsLeatherClass(uint8 class_id)
 bool IsClothClass(uint8 class_id)
 {
 	switch (class_id) {
-	case Class::Necromancer:
-	case Class::Wizard:
-	case Class::Magician:
-	case Class::Enchanter:
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
 		return true;
 	default:
 		return false;
@@ -398,64 +502,27 @@ bool IsClothClass(uint8 class_id)
 
 uint8 ClassArmorType(uint8 class_id)
 {
-	if (IsChainClass(class_id)) {
-		return ARMOR_TYPE_CHAIN;
-	}
-	else if (IsClothClass(class_id)) {
-		return ARMOR_TYPE_CLOTH;
-	}
-	else if (IsLeatherClass(class_id)) {
-		return ARMOR_TYPE_LEATHER;
-	}
-	else if (IsPlateClass(class_id)) {
-		return ARMOR_TYPE_PLATE;
-	}
-
-	return ARMOR_TYPE_UNKNOWN;
-}
-
-const std::string GetPlayerClassAbbreviation(uint8 class_id)
-{
-	if (!EQ::ValueWithin(class_id, Class::Warrior, Class::Beastlord)) {
-		return std::string("UNK");
-	}
-
 	switch (class_id) {
-	case Class::Warrior:
-		return "WAR";
-	case Class::Cleric:
-		return "CLR";
-	case Class::Paladin:
-		return "PAL";
-	case Class::Ranger:
-		return "RNG";
-	case Class::ShadowKnight:
-		return "SHD";
-	case Class::Druid:
-		return "DRU";
-	case Class::Monk:
-		return "MNK";
-	case Class::Bard:
-		return "BRD";
-	case Class::Rogue:
-		return "ROG";
-	case Class::Shaman:
-		return "SHM";
-	case Class::Necromancer:
-		return "NEC";
-	case Class::Wizard:
-		return "WIZ";
-	case Class::Magician:
-		return "MAG";
-	case Class::Enchanter:
-		return "ENC";
-	case Class::Beastlord:
-		return "BST";
+	case WARRIOR:
+	case CLERIC:
+	case PALADIN:
+	case SHADOWKNIGHT:
+	case BARD:
+		return ARMOR_TYPE_PLATE;
+	case RANGER:
+	case ROGUE:
+	case SHAMAN:
+		return ARMOR_TYPE_CHAIN;
+	case DRUID:
+	case MONK:
+	case BEASTLORD:
+		return ARMOR_TYPE_LEATHER;
+	case NECROMANCER:
+	case WIZARD:
+	case MAGICIAN:
+	case ENCHANTER:
+		return ARMOR_TYPE_CLOTH;
+	default:
+		return ARMOR_TYPE_UNKNOWN;
 	}
-
-	return std::string("UNK");
-}
-
-bool IsPlayerClass(uint8 class_id) {
-	return EQ::ValueWithin(class_id, Class::Warrior, Class::Beastlord);
 }

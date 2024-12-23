@@ -24,7 +24,6 @@
 #include "../common/rulesys.h"
 #include "../common/types.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 #include "zonedb.h"
 #include "../common/repositories/grid_repository.h"
 #include "../common/repositories/grid_entries_repository.h"
@@ -32,18 +31,12 @@
 #include "../common/repositories/loottable_entries_repository.h"
 #include "../common/repositories/lootdrop_repository.h"
 #include "../common/repositories/lootdrop_entries_repository.h"
-#include "../common/repositories/zone_points_repository.h"
-#include "../common/repositories/npc_faction_repository.h"
-#include "../common/repositories/npc_faction_entries_repository.h"
-#include "../common/repositories/skill_caps_repository.h"
 #include "qglobals.h"
 #include "spawn2.h"
 #include "spawngroup.h"
 #include "pathfinder_interface.h"
 #include "position.h"
 #include "global_loot_manager.h"
-#include "queryserv.h"
-#include "../common/discord/discord.h"
 
 extern uint32 numclients;
 
@@ -60,9 +53,6 @@ struct ZonePoint
 	float target_heading;
 	uint16 target_zone_id;
 	uint32 client_version_mask;
-	bool   is_virtual;
-	int    height;
-	int    width;
 };
 
 struct ZoneBanishPoint
@@ -80,7 +70,6 @@ struct ZoneClientAuth_Struct {
 	uint32	accid;
 	int16	admin;
 	uint32	charid;
-	uint32  lsid;
 	bool	tellsoff;
 	char	charname[64];
 	char	lskey[30];
@@ -120,17 +109,13 @@ class MobMovementManager;
 class Zone
 {
 public:
-	static bool Bootup(uint32 iZoneID, bool is_static = false, uint32 iGuildID = 0xFFFFFFFF);
+	static bool Bootup(uint32 iZoneID, bool iStaticZone = false, uint32 iGuildID = 0xFFFFFFFF);
 	static void Shutdown(bool quite = false);
 
 	Zone(uint32 in_zoneid, const char* in_short_name, uint32 guild_id = 0xFFFFFFFF);
 	~Zone();
-	
-	/* When zone has its own version of time */
-	bool is_zone_time_localized;
-
-	bool	Init(bool is_static);
-	bool	LoadZoneCFG(const char* filename);
+	bool	Init(bool iStaticZone);
+	bool	LoadZoneCFG(const char* filename, bool DontLoadDefault = false);
 	bool	SaveZoneCFG();
 	bool	IsLoaded();
 	bool	IsPVPZone() { return pvpzone; }
@@ -141,27 +126,26 @@ public:
 	inline const uint32	GetGuildID() const { return guildid; }
 	inline const uint8	GetZoneType() const { return zone_type; }
 
+    inline glm::vec4 GetSafePoint() { return m_SafePoint; }
+	inline const uint32& graveyard_zoneid()	{ return pgraveyard_zoneid; }
+	inline glm::vec4 GetGraveyardPoint() { return m_Graveyard; }
+	inline const uint32& graveyard_id()	{ return pgraveyard_id; }
+	inline const uint16& graveyard_timer() { return pgraveyard_timer;  }
+	inline const uint32& GetMaxClients() { return pMaxClients; }
+	
 	inline const bool IsReducedSpawnTimersZone() { return reducedspawntimers;  }
 	inline const bool IsTrivialLootCodeEnabled() { return trivial_loot_code; }
 	inline bool IsReducedSpawnTimersEnabled();
-    inline glm::vec4 GetSafePoint() { return m_safe_point; }
-	inline const uint32& graveyard_zoneid()	{ return m_graveyard_zoneid; }
-	inline glm::vec4 GetGraveyardPoint() { return m_graveyard; }
-	inline const uint32& graveyard_id()	{ return m_graveyard_id; }
-	inline const uint16& graveyard_timer() { return m_graveyard_timer;  }
-	inline const uint32& GetMaxClients() { return m_max_clients; }
 	void	LoadAlternateAdvancement();
 	int		GetTotalAAs() { return totalAAs; }
 	SendAA_Struct*	GetAABySequence(uint32 seq) { return aas[seq]; }
 	SendAA_Struct*	FindAA(uint32 id, bool searchParent);
 	uint8	EmuToEQMacAA(uint32 id);
 	uint8	GetTotalAALevels(uint32 skill_id);
-	void	LoadZoneDoors();
+	void	LoadZoneDoors(std::string zone);
 	bool	LoadZoneObjects();
 	bool	LoadGroundSpawns();
 	void	ReloadStaticData();
-
-	void SetIsHotzone(bool is_hotzone);
 
 	uint32	CountSpawn2();
 	ZonePoint* GetClosestZonePoint(const glm::vec3& location, const char* to_name, Client *client, float max_distance = 40000.0f);
@@ -188,20 +172,12 @@ public:
 	void	RepopClose(const glm::vec4& client_position, uint32 repop_distance);
 	void	ClearNPCTypeCache(int id);
 	void	SpawnStatus(Mob* client, char filter = 'a', uint32 spawnid = 0);
-	void	StartShutdownTimer(uint32 set_time = (RuleI(Zone, AutoShutdownDelay)));
-	void	ResetShutdownTimer();
-	void    StopShutdownTimer();
+	void	StartShutdownTimer(uint32 set_time = 0);
 	void    ChangeWeather();
 	bool	HasWeather();
 	bool	IsSpecialWeatherZone();
-
-	std::string GetZoneDescription();
-	void SendReloadMessage(std::string reload_type);
-
 	void	AddAuth(ServerZoneIncomingClient_Struct* szic);
 	void	RemoveAuth(const char* iCharName, uint32 entity_id);
-	void	RemoveAuth(const char* iCharName, const char* iLSKey);
-	void	RemoveAuth(uint32 lsid);
 	void	ResetAuth();
 	bool	GetAuth(uint32 iIP, const char* iCharName, uint32* oWID = 0, uint32* oAccID = 0, uint32* oCharID = 0, int16* oStatus = 0, char* oLSKey = 0, bool* oTellsOff = 0, uint32* oVersionbit = 0, uint32 entity_id = 0);
 	bool	CheckAuth(const char* iCharName);
@@ -211,7 +187,7 @@ public:
 	void	SetNumAggroedNPCs(uint16 count) { aggroed_npcs = count; }
 	void		SetStaticZone(bool sz)	{ staticzone = sz; }
 	inline bool	IsStaticZone()			{ return staticzone; }
-	inline void	SetZoneHasCurrentTime(bool time)	{ zone_has_current_time = time; }
+	inline void	GotCurTime(bool time)	{ gottime = time; }
 
 	void	SpawnConditionChanged(const SpawnCondition &c, int16 old_value);
 	void	UpdateGroupTimers(SpawnGroup* sg, uint32 newtimer);
@@ -242,13 +218,10 @@ public:
 	std::map<uint32, ZoneEXPModInfo> level_exp_mod;
 	std::map<uint32, SkillDifficulty> skill_difficulty;
 
-	void ClearNPCEmotes(std::vector<NPC_Emote_Struct*>* NPCEmoteList);
-	void LoadNPCEmotes(std::vector<NPC_Emote_Struct*>* NPCEmoteList);
-	void LoadKeyRingData(LinkedList<KeyRing_Data_Struct*>* KeyRingDataList);
-	void ReloadWorld(uint8 global_repop);
-	void ClearSpawnTimers();
-	bool IsQuestHotReloadQueued() const;
-	void SetQuestHotReloadQueued(bool in_quest_hot_reload_queued);
+	void	ClearNPCEmotes(std::vector<NPC_Emote_Struct*>* NPCEmoteList);
+	void	LoadNPCEmotes(std::vector<NPC_Emote_Struct*>* NPCEmoteList);
+	void	LoadKeyRingData(LinkedList<KeyRing_Data_Struct*>* KeyRingDataList);
+	void	ReloadWorld(uint32 Option);
 
 	Map*	zonemap;
 	WaterMap* watermap;
@@ -260,13 +233,12 @@ public:
 	EQTime	zone_time;
 	void	GetTimeSync();
 	void	SetDate(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute);
-	void	SetTime(uint8 hour, uint8 minute, bool update_world = true);
+	void	SetTime(uint8 hour, uint8 minute);
 
 	bool	process_mobs_while_empty;
 	void	weatherSend(uint32 timer = 0);
 	bool	CanBind() const { return(can_bind); }
 	bool	IsCity() const { return(is_city); }
-	bool	IsHotzone() const { return (is_hotzone); }
 	bool	CanBindOthers() const { return(can_bind_others); }
 	bool	CanDoCombat() const { return(can_combat); }
 	bool	CanDoCombat(Mob* current, Mob* other, bool process = false);
@@ -286,8 +258,6 @@ public:
 	std::vector<GridEntriesRepository::GridEntries> grid_entries;
 
 	time_t	weather_timer;
-	Timer  hot_reload_timer;
-
 	uint8	weather_intensity;
 	uint8	zone_weather;
 
@@ -303,11 +273,11 @@ public:
 	void	SetGraveyard(uint32 zoneid, const glm::vec4& graveyardPosition);
 
 	void		LoadZoneBanishPoint(const char* zone);
-	void		LoadZoneBlockedSpells();
+	void		LoadBlockedSpells(uint32 zoneid);
 	void		ClearBlockedSpells();
 	bool		IsSpellBlocked(uint32 spell_id, const glm::vec3& location);
 	const char *GetSpellBlockedMessage(uint32 spell_id, const glm::vec3& location);
-	int			GetTotalBlockedSpells() { return zone_total_blocked_spells; }
+	int			GetTotalBlockedSpells() { return totalBS; }
 	inline bool HasMap() { return zonemap != nullptr; }
 	inline bool HasWaterMap() { return watermap != nullptr; }
 
@@ -318,12 +288,11 @@ public:
 
 	LinkedList<Spawn2*> spawn2_list;
 	LinkedList<ZonePoint*> zone_point_list;
-	std::vector<ZonePointsRepository::ZonePoints> virtual_zone_point_list;
 	uint32	numzonepoints;
 	float	update_range;
 
 	std::vector<NPC_Emote_Struct*> npc_emote_list;
-	LinkedList<KeyRing_Data_Struct*> key_ring_data_list;
+	LinkedList<KeyRing_Data_Struct*> KeyRingDataList;
 
 	void LoadTickItems();
 	void LoadGrids();
@@ -337,10 +306,6 @@ public:
 	inline void AddGlobalLootEntry(GlobalLootEntry &in) { return m_global_loot.AddEntry(in); }
 	inline void ShowZoneGlobalLoot(Client *to) { m_global_loot.ShowZoneGlobalLoot(to); }
 	inline void ShowNPCGlobalLoot(Client *to, NPC *who) { m_global_loot.ShowNPCGlobalLoot(to, who); }
-
-	void RequestUCSServerStatus();
-	void SetUCSServerAvailable(bool ucss_available, uint32 update_timestamp);
-	bool IsUCSServerAvailable() { return m_ucss_available; }
 
 	// random object that provides random values for the zone
 	EQ::Random random;
@@ -390,23 +355,6 @@ public:
 		}
 	}
 
-	static void SendDiscordMessage(int webhook_id, const std::string& message);
-	static void SendDiscordMessage(const std::string& webhook_name, const std::string& message);
-	static void DiscordWebhookMessageHandler(uint16 log_category, int webhook_id, const std::string& message)
-	{
-		std::string message_prefix;
-		if (!LogSys.origination_info.zone_short_name.empty()) {
-			message_prefix = fmt::format(
-				"[**{}**] **Zone** [**{}**] ",
-				Logs::LogCategoryName[log_category],
-				LogSys.origination_info.zone_short_name
-			);
-		}
-
-		SendDiscordMessage(webhook_id, message_prefix + Discord::FormatDiscordMessage(log_category, message));
-	};
-
-
 	bool	idle;
 
 	void	NexusProcess();
@@ -416,7 +364,6 @@ public:
 	bool	velious_active;	
 
 	bool	HasCharmedNPC;
-	bool	quest_hot_reload_queued;
 
 	// loot
 	void LoadLootTable(const uint32 loottable_id);
@@ -428,13 +375,6 @@ public:
 	LootdropRepository::Lootdrop GetLootdrop(const uint32 lootdrop_id) const;
 	std::vector<LootdropEntriesRepository::LootdropEntries> GetLootdropEntries(const uint32 lootdrop_id) const;
 
-	void LoadNPCFaction(const uint32 npc_faction_id);
-	void LoadNPCFactions(const std::vector<uint32>& npc_faction_ids);
-	void ClearNPCFactions();
-	void ReloadNPCFactions();
-	NpcFactionRepository::NpcFaction* GetNPCFaction(const uint32 npc_faction_id);
-	std::vector<NpcFactionEntriesRepository::NpcFactionEntries> GetNPCFactionEntries(const uint32 npc_faction_id) const;
-
 private:
 	uint32	zoneid;
 	uint32	guildid;
@@ -443,11 +383,10 @@ private:
 	char*	long_name;
 	char*	map_name;
 	bool pvpzone;
-	glm::vec4 m_safe_point;
-	uint32	m_max_clients;
+	glm::vec4 m_SafePoint;
+	uint32	pMaxClients;
 	bool	can_bind;
 	bool	is_city;
-	bool    is_hotzone;
 	bool	can_bind_others; //Zone is not a city, but has areas where others can be bound.
 	bool	can_combat;
 	bool	can_castoutdoor;
@@ -456,12 +395,12 @@ private:
 	bool	skip_los; // Zone does not do a LOS spell check.
 	bool	drag_aggro;
 	uint8	zone_type;
-	uint32	m_graveyard_id, m_graveyard_zoneid;
-	uint16	m_graveyard_timer;
-	glm::vec4 m_graveyard;
+	uint32	pgraveyard_id, pgraveyard_zoneid;
+	uint16	pgraveyard_timer;
+	glm::vec4 m_Graveyard;
 	int		default_ruleset;
 
-	int	zone_total_blocked_spells;
+	int	totalBS;
 	ZoneSpellsBlocked *blocked_spells;
 
 	ZoneBanishPoint zone_banish_point;
@@ -477,7 +416,7 @@ private:
 	bool	trivial_loot_code;
 
 	bool	staticzone;
-	bool	zone_has_current_time;
+	bool	gottime;
 
 	uint32 pQueuedMerchantsWorkID;
 	uint32 pQueuedTempMerchantsWorkID;
@@ -496,19 +435,12 @@ private:
 
 	GlobalLootManager m_global_loot;
 
-	bool m_ucss_available;
-	uint32 m_last_ucss_update;
-
 	// loot
 	std::vector<LoottableRepository::Loottable>               m_loottables = {};
 	std::vector<LoottableEntriesRepository::LoottableEntries> m_loottable_entries = {};
 	std::vector<LootdropRepository::Lootdrop>                 m_lootdrops = {};
 	std::vector<LootdropEntriesRepository::LootdropEntries>   m_lootdrop_entries = {};
-
-	// Factions
-	std::vector<NpcFactionRepository::NpcFaction>                 m_npc_factions = { };
-	std::vector<NpcFactionEntriesRepository::NpcFactionEntries>   m_npc_faction_entries = { };
-
 };
 
 #endif
+

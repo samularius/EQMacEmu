@@ -51,7 +51,7 @@ namespace EQ {
 		void Stop() {
 			if (m_timer) {
 				uv_close((uv_handle_t*)m_timer, [](uv_handle_t* handle) {
-					delete (uv_timer_t *)handle;
+					delete handle;
 				});
 				m_timer = nullptr;
 			}

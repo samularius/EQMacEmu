@@ -19,8 +19,6 @@
 #include "../common/global_define.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/spdat.h"
-#include "../common/zone_store.h"
-#include "../common/misc_functions.h"
 
 #include "client.h"
 #include "entity.h"
@@ -88,7 +86,7 @@ int32 NPC::GetActSpellDamage(uint16 spell_id, int32 value,  Mob* target) {
 // damage should be negative
 int32 Client::TryWizardInnateCrit(uint16 spell_id, int32 damage, int32 focusDmg, int32 maxHit)
 {
-	if (GetClass() == Class::Wizard && GetLevel() >= RuleI(Spells, WizCritLevel))
+	if (GetClass() == WIZARD && GetLevel() >= RuleI(Spells, WizCritLevel))
 	{
 		double wizCritChance = (((std::min(GetINT(), 255) + std::min(GetDEX(), 255)) / 2.0) + 32.0) / 10000.0;
 		bool critSuccess = zone->random.Roll(wizCritChance);
@@ -132,7 +130,7 @@ int32 Client::GetActSpellDamage(uint16 spell_id, int32 dmg, Mob* target)
 		Log(Logs::General, Logs::Focus, "focusImprovedDamage improved damage from %d to %d", dmg, focusDmg + dmg);
 
 	// SK AA Soul Abrasion; only SKs get something with focusSpellDamageMult
-	if (GetClass() == Class::ShadowKnight)
+	if (GetClass() == SHADOWKNIGHT)
 	{
 		dmg += dmg * GetFocusEffect(focusSpellDamageMult, spell_id, item_name) / 100;	// the AA bonus only applies to spells with spellgroup 99, so don't need spell ID check here
 	}
@@ -161,7 +159,7 @@ int32 Client::GetActSpellDamage(uint16 spell_id, int32 dmg, Mob* target)
 				OTHER_CRIT_BLAST, GetName(), itoa(-dmg));
 		Message_StringID(Chat::SpellCrit, YOU_CRIT_BLAST, itoa(-dmg));
 	}
-	else if (GetClass() == Class::Wizard)
+	else if (GetClass() == WIZARD)
 		dmg = TryWizardInnateCrit(spell_id, dmg, focusDmg);
 	else
 		dmg += focusDmg;
@@ -436,7 +434,7 @@ int32 Client::GetAACastingTimeModifier(uint16 spell_id, int32 casttime)
 	}
 
 	// Quick Summoning
-	if (GetClass() == Class::Magician)
+	if (GetClass() == MAGICIAN)
 	{
 		if (IsEffectInSpell(spell_id, SE_SummonItem) || IsEffectInSpell(spell_id, SE_SummonPet) || spell_id == SPELL_MANIFEST_ELEMENTS || spell_id == SPELL_CALL_OF_THE_HERO)
 		{
@@ -512,177 +510,177 @@ uint8 Client::DisciplineUseLevel(uint8 disc_id)
 	switch(disc_id) 
 	{
 		case disc_aggressive:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_precision:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 57;
 			else
 				return 0;
 			break;
 		case disc_defensive:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_evasive:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 52;
 			else
 				return 0;
 			break;
 		case disc_ashenhand:
-			if(GetClass() == Class::Monk)
+			if(GetClass() == MONK)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_furious:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 56;
-			else if(GetClass() == Class::Monk || GetClass() == Class::Rogue)
+			else if(GetClass() == MONK || GetClass() == ROGUE)
 				return 53;
 			else
 				return 0;
 			break;
 		case disc_stonestance:
-			if(GetClass() == Class::Monk)
+			if(GetClass() == MONK)
 				return 51;
-			else if(GetClass() == Class::Beastlord)
+			else if(GetClass() == BEASTLORD)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_thunderkick:
-			if(GetClass() == Class::Monk)
+			if(GetClass() == MONK)
 				return 52;
 			else
 				return 0;
 			break;
 		case disc_fortitude:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 59;
-			else if(GetClass() == Class::Monk)
+			else if(GetClass() == MONK)
 				return 54;
 			else
 				return 0;
 			break;
 		case disc_fellstrike:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 58;
-			else if(GetClass() == Class::Monk)
+			else if(GetClass() == MONK)
 				return 56;
-			else if(GetClass() == Class::Beastlord)
+			else if(GetClass() == BEASTLORD)
 				return 60;
-			else if(GetClass() == Class::Rogue)
+			else if(GetClass() == ROGUE)
 				return 59;
 			else
 				return 0;
 			break;
 		case disc_hundredfist:
-			if(GetClass() == Class::Monk)
+			if(GetClass() == MONK)
 				return 57;
-			else if(GetClass() == Class::Rogue)
+			else if(GetClass() == ROGUE)
 				return 58;
 			else
 				return 0;
 			break;
 		case disc_charge:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 53;
-			else if(GetClass() == Class::Rogue)
+			else if(GetClass() == ROGUE)
 				return 54;
 			else
 				return 0;
 			break;
 		case disc_mightystrike:
-			if(GetClass() == Class::Warrior)
+			if(GetClass() == WARRIOR)
 				return 54;
 			else
 				return 0;
 			break;
 		case disc_nimble:
-			if(GetClass() == Class::Rogue)
+			if(GetClass() == ROGUE)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_silentfist:
-			if(GetClass() == Class::Monk)
+			if(GetClass() == MONK)
 				return 59;
 			else
 				return 0;
 			break;
 		case disc_kinesthetics:
-			if(GetClass() == Class::Rogue)
+			if(GetClass() == ROGUE)
 				return 57;
 			else
 				return 0;
 			break;
 		case disc_holyforge:
-			if(GetClass() == Class::Paladin)
+			if(GetClass() == PALADIN)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_sanctification:
-			if(GetClass() == Class::Paladin)
+			if(GetClass() == PALADIN)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_trueshot:
-			if(GetClass() == Class::Ranger)
+			if(GetClass() == RANGER)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_weaponshield:
-			if(GetClass() == Class::Ranger)
+			if(GetClass() == RANGER)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_unholyaura:
-			if(GetClass() == Class::ShadowKnight)
+			if(GetClass() == SHADOWKNIGHT)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_leechcurse:
-			if(GetClass() == Class::ShadowKnight)
+			if(GetClass() == SHADOWKNIGHT)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_deftdance:
-			if(GetClass() == Class::Bard)
+			if(GetClass() == BARD)
 				return 55;
 			else
 				return 0;
 			break;
 		case disc_puretone:
-			if(GetClass() == Class::Bard)
+			if(GetClass() == BARD)
 				return 60;
 			else
 				return 0;
 			break;
 		case disc_resistant:
-			if(GetClass() == Class::Warrior || GetClass() == Class::Monk || GetClass() == Class::Rogue)
+			if(GetClass() == WARRIOR || GetClass() == MONK || GetClass() == ROGUE)
 				return 30;
-			else if(GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight || GetClass() == Class::Bard || GetClass() == Class::Beastlord)
+			else if(GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT || GetClass() == BARD || GetClass() == BEASTLORD)
 				return 51;
 			else
 				return 0;
 			break;
 		case disc_fearless:
-			if(GetClass() == Class::Warrior || GetClass() == Class::Monk || GetClass() == Class::Rogue)
+			if(GetClass() == WARRIOR || GetClass() == MONK || GetClass() == ROGUE)
 				return 40;
-			else if(GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight || GetClass() == Class::Bard || GetClass() == Class::Beastlord)
+			else if(GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT || GetClass() == BARD || GetClass() == BEASTLORD)
 				return 54;
 			else
 				return 0;
@@ -743,11 +741,11 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_furious: // furious (WAR), whirlwind (MNK), counterattack (ROG)
 			reuse_timer = 3600;
 			ability_timer = 9000;
-			if(GetBaseClass() == Class::Warrior)
+			if(GetBaseClass() == WARRIOR)
 				spellid = 4674;
-			else if(GetBaseClass() == Class::Monk)
+			else if(GetBaseClass() == MONK)
 				spellid = 4509;
-			else if(GetBaseClass() == Class::Rogue)
+			else if(GetBaseClass() == ROGUE)
 				spellid = 4673;
 			string = DISCIPLINE_FURIOUS;
 
@@ -755,9 +753,9 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_stonestance: // stonestance (MNK), protectivespirit (BST)
 			reuse_timer = 720;
 			ability_timer = 12000;
-			if(GetBaseClass() == Class::Monk)
+			if(GetBaseClass() == MONK)
 				spellid = 4510;
-			else if(GetBaseClass() == Class::Beastlord)
+			else if(GetBaseClass() == BEASTLORD)
 				spellid = 4671;
 			string = DISCIPLINE_STONESTANCE;
 
@@ -771,9 +769,9 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_fortitude: // fortitude (WAR), voiddance (MNK)
 			reuse_timer = 3600;
 			ability_timer = 8000;
-			if(GetBaseClass() == Class::Warrior)
+			if(GetBaseClass() == WARRIOR)
 				spellid = 4670;
-			else if(GetBaseClass() == Class::Monk)
+			else if(GetBaseClass() == MONK)
 				spellid = 4502;
 			string = DISCIPLINE_FORTITUDE;
 
@@ -781,13 +779,13 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_fellstrike: // fellstrike (WAR), bestialrage (BST), innerflame (MNK), duelist (ROG)
 			reuse_timer = 1800;
 			ability_timer = 12000;
-			if(GetBaseClass() == Class::Warrior)
+			if(GetBaseClass() == WARRIOR)
 				spellid = 4675;
-			else if(GetBaseClass() == Class::Monk)
+			else if(GetBaseClass() == MONK)
 				spellid = 4512;
-			else if(GetBaseClass() == Class::Rogue)
+			else if(GetBaseClass() == ROGUE)
 				spellid = 4676;
-			else if(GetBaseClass() == Class::Beastlord)
+			else if(GetBaseClass() == BEASTLORD)
 				spellid = 4678;
 			string = DISCIPLINE_FELLSTRIKE;
 
@@ -795,9 +793,9 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_hundredfist: // hundredfist (MNK), blindingspeed (ROG)
 			reuse_timer = 1800;
 			ability_timer = 15000;
-			if(GetBaseClass() == Class::Monk)
+			if(GetBaseClass() == MONK)
 				spellid = 4513;
-			else if(GetBaseClass() == Class::Rogue)
+			else if(GetBaseClass() == ROGUE)
 				spellid = 4677;
 			string = DISCIPLINE_HUNDREDFIST;
 
@@ -805,9 +803,9 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_charge: // charge (WAR), deadeye (ROG)
 			reuse_timer = 1800;
 			ability_timer = 14000;
-			if(GetBaseClass() == Class::Warrior)
+			if(GetBaseClass() == WARRIOR)
 				spellid = 4672;
-			else if(GetBaseClass() == Class::Rogue)
+			else if(GetBaseClass() == ROGUE)
 				spellid = 4505;
 			string = DISCIPLINE_CHARGE;
 
@@ -829,7 +827,7 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 		case disc_silentfist:
 			reuse_timer = 594;
 			spellid = 4507;
-			if(GetRace() == Race::Iksar)
+			if(GetRace() == IKSAR)
 				string = DISCIPLINE_SILENTFIST_IKSAR;
 			else
 				string = DISCIPLINE_SILENTFIST;
@@ -867,9 +865,9 @@ bool Client::CastDiscipline(uint8 disc_id, uint8 level_to_use)
 			reuse_timer = 4320;
 			ability_timer = 20000;
 			spellid = 4519;
-			if(GetGender() == Gender::Male)
+			if(GetGender() == 0)
 				string = DISCIPLINE_WPNSLD_MALE;
-			else if(GetGender() == Gender::Female)
+			else if(GetGender() == 1)
 				string = DISCIPLINE_WPNSLD_FEMALE;
 			else
 				string = DISCIPLINE_WPNSLD_MONSTER;
@@ -1083,13 +1081,13 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 		// undead aoe
 		if (spells[spell_id].targettype == ST_UndeadAE)
 		{
-			if (curmob->GetOrigBodyType() != BodyType::SummonedUndead && curmob->GetOrigBodyType() != BodyType::Undead && curmob->GetOrigBodyType() != BodyType::Vampire)
+			if (curmob->GetOrigBodyType() != BT_SummonedUndead && curmob->GetOrigBodyType() != BT_Undead && curmob->GetOrigBodyType() != BT_Vampire)
 				continue;
 		}
 		// summoned aoe
 		if (spells[spell_id].targettype == ST_SummonedAE)
 		{
-			if (curmob->GetOrigBodyType() != BodyType::SummonedUndead && curmob->GetOrigBodyType() != BodyType::Summoned && curmob->GetOrigBodyType() != BodyType::Summoned2 && curmob->GetOrigBodyType() != BodyType::Summoned3)
+			if (curmob->GetOrigBodyType() != BT_SummonedUndead && curmob->GetOrigBodyType() != BT_Summoned && curmob->GetOrigBodyType() != BT_Summoned2 && curmob->GetOrigBodyType() != BT_Summoned3)
 				continue;
 		}
 
@@ -1119,7 +1117,7 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 			NPC* spell_target_npc = curmob->CastToNPC();
 			if (spell_target_npc)
 			{
-				if (spell_target_npc->GetSpecialAbility(SpecialAbility::MagicImmunity) && spell_target_npc->GetSpecialAbility(SpecialAbility::AggroImmunity))
+				if (spell_target_npc->GetSpecialAbility(IMMUNE_MAGIC) && spell_target_npc->GetSpecialAbility(IMMUNE_AGGRO))
 				{
 					continue;
 				}
@@ -1295,7 +1293,7 @@ void EntityList::AEAttack(Mob *attacker, float dist, int targetLimit)
 		if (curmob->IsNPC()
 				&& curmob != attacker //this is not needed unless NPCs can use this
 				&&(attacker->IsAttackAllowed(curmob))
-				&& curmob->GetRace() != Race::Horse /* dont attack horses */
+				&& curmob->GetRace() != HORSE /* dont attack horses */
 				&& (DistanceSquared(curmob->GetPosition(), attacker->GetPosition()) <= dist2)
 		) {
 
@@ -1305,7 +1303,7 @@ void EntityList::AEAttack(Mob *attacker, float dist, int targetLimit)
 			{
 				attacker->Attack(curmob, EQ::invslot::slotPrimary);
 				// Triple attack: Warriors and Monks over level 60 do this.  10% chance on a double
-				if ((attacker->GetClass() == Class::Monk || attacker->GetClass() == Class::Warrior) && attacker->GetLevel() >= 60 && zone->random.Roll(10))
+				if ((attacker->GetClass() == MONK || attacker->GetClass() == WARRIOR) && attacker->GetLevel() >= 60 && zone->random.Roll(10))
 					attacker->Attack(curmob, EQ::invslot::slotPrimary);
 			}
 

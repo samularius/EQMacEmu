@@ -85,11 +85,11 @@ bool IsOfEqualRace(int r1, int r2)
 	switch(r1)
 	{
 	case DARK_ELF:
-		if (r2 == Race::NeriakCitizen)
+		if (r2 == 77)
 			return true;
 		break;
 	case BARBARIAN:
-		if (r2 == Race::HalasCitizen)
+		if (r2 == 90)
 			return true;
 	}
 	return false;

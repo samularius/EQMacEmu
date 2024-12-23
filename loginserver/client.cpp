@@ -53,6 +53,7 @@ bool Client::Process()
 
 		switch(app->GetOpcode()) {
 			case OP_SessionReady: {
+				LogInfo("Session ready received from client account {}", GetClientDescription());
 				Handle_SessionReady((const char*)app->pBuffer, app->Size());
 				break;
 			}
@@ -78,8 +79,8 @@ bool Client::Process()
 					break;
 				}
 
-				Handle_Login((const char*)app->pBuffer, app->Size(), "PC");
 				LogInfo("Login received from PC client. {}", GetClientDescription());
+				Handle_Login((const char*)app->pBuffer, app->Size(), "PC");
 				break;
 			}
 			case OP_LoginComplete: {
@@ -92,10 +93,6 @@ bool Client::Process()
 				auto outapp = new EQApplicationPacket(OP_LoginUnknown2, 0);
 				m_connection->QueuePacket(outapp);
 				delete(outapp);
-				break;
-			}
-			case OP_LoginDisconnect: {
-				LogInfo("Client disconnected from the Server");
 				break;
 			}
 			case OP_ServerListRequest: {
@@ -254,7 +251,7 @@ void Client::Handle_Login(const char* data, unsigned int size, std::string clien
 		platform = "PCT";
 		m_client_mac_version = pc;
 	}
-	std::string userandpass = m_salt.Salt(password);
+	string userandpass = password;
 	m_client_status = cs_logged_in;
 	unsigned int d_account_id = 0;
 	string d_pass_hash;
@@ -358,13 +355,13 @@ void Client::Handle_Play(const char* data)
 	}
 
 	if (data) {
-		server.server_manager->SendUserToWorldRequest(data, m_account_id, m_connection->GetRemoteIP());
+		server.server_manager->SendOldUserToWorldRequest(data, m_account_id, m_connection->GetRemoteIP());
 	}
 }
 
 void Client::SendServerListPacket()
 {
-	auto *outapp = server.server_manager->CreateServerListPacket(this);
+	auto *outapp = server.server_manager->CreateOldServerListPacket(this);
 
 	m_connection->QueuePacket(outapp);
 	delete outapp;

@@ -41,7 +41,7 @@ public:
 	bool	Process();
 	void	SendCharInfo();
 	void	EnterWorld(bool TryBootup = true);
-	void	TellClientZoneUnavailable();
+	void	ZoneUnavail();
 	void	QueuePacket(const EQApplicationPacket* app, bool ack_req = true);
 	void	Clearance(int8 response);
 	void	SendGuildList();
@@ -52,16 +52,16 @@ public:
 
 	inline uint32		GetIP()				{ return ip; }
 	inline uint16		GetPort()			{ return port; }
-	inline uint32		GetZoneID()			{ return zone_id; }
+	inline uint32		GetZoneID()			{ return zoneID; }
 	inline uint32		GetZoneGuildID() { return zoneGuildID; }
-	inline uint32		WaitingForBootup()	{ return zone_waiting_for_bootup; }
+	inline uint32		WaitingForBootup()	{ return pwaitingforbootup; }
 	inline const char *	GetAccountName()	{ if (cle) { return cle->AccountName(); } return "NOCLE"; }
 	inline int16		GetAdmin()			{ if (cle) { return cle->Admin(); } return 0; }
 	inline uint32		GetAccountID()		{ if (cle) { return cle->AccountID(); } return 0; }
 	inline uint32		GetWID()			{ if (cle) { return cle->GetID(); } return 0; }
 	inline uint32		GetLSID()			{ if (cle) { return cle->LSID(); } return 0; }
 	inline const char*	GetLSKey()			{ if (cle) { return cle->GetLSKey(); } return "NOKEY"; }
-	inline uint32		GetCharID()			{ return char_id; }
+	inline uint32		GetCharID()			{ return charid; }
 	inline const char*	GetCharName()		{ return char_name; }
 	inline ClientListEntry* GetCLE()		{ return cle; }
 	inline void			SetCLE(ClientListEntry* iCLE)			{ cle = iCLE; }
@@ -74,14 +74,13 @@ private:
 
 	uint32	ip;
 	uint16	port;
-	uint32	char_id;
+	uint32	charid;
 	char	char_name[64];
-	uint32	zone_id;
+	uint32	zoneID;
 	uint32	zoneGuildID;
 	bool	is_player_zoning;
 	Timer	autobootup_timeout;
-	uint32	zone_waiting_for_bootup;
-	bool	enter_world_triggered;
+	uint32	pwaitingforbootup;
 
 	EQ::versions::ClientVersion m_ClientVersion;
 	uint32 m_ClientVersionBit;
@@ -95,9 +94,10 @@ private:
 	void SetClassLanguages(PlayerProfile_Struct *pp);
 
 	ClientListEntry* cle;
+	Timer	CLE_keepalive_timer;
 	Timer	connect;
 	bool firstlogin;
-	bool seen_character_select;
+	bool seencharsel;
 	bool realfirstlogin;
 
 	bool HandlePacket(const EQApplicationPacket *app);

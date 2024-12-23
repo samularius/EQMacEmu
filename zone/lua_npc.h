@@ -111,7 +111,7 @@ public:
 	int GetSwarmOwner();
 	int GetSwarmTarget();
 	void SetSwarmTarget(int target);
-	void ModifyNPCStat(std::string stat, std::string value);
+	void ModifyNPCStat(const char *stat, const char *value);
 	void AddAISpell(int priority, int spell_id, int type, int mana_cost, int recast_delay, int resist_adjust);
 	void RemoveAISpell(int spell_id);
 	void SetCastRateDetrimental(int rate);
@@ -141,15 +141,12 @@ public:
 	int QuestLootCount(int itemid);
 	bool CanTalk();
 	void ForceRepop();
+	void SetNPCAggro(bool state);
 	void SetBaseHP(uint32 new_hp);
 	void SetSpawnPoint(float x, float y, float z, float h);
 	void SetClass(int classNum);
 	void SetMaxDamage(uint32 new_max_damage);
 	void SetMinDamage(uint32 new_min_damage);
-	void ReloadSpells();
-	float GetNPCStat(std::string stat);
-	bool GetNPCAggro();
-	void SetNPCAggro(bool in_npc_aggro);
 };
 
 #endif

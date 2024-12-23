@@ -9,7 +9,6 @@
 #include "../common/faction.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/repositories/doors_repository.h"
-#include "../common/repositories/npc_faction_entries_repository.h"
 
 class Client;
 class Corpse;
@@ -336,10 +335,11 @@ public:
 	bool		IsCorpseBackupOwner(uint32 corpse_id, uint32 char_id);
 
 	/* Faction   */
+	bool		GetNPCFactionList(uint32 npcfaction_id, int32* faction_id, int32* value, uint8* temp, int32* primary_faction = 0);
 	bool		GetFactionData(FactionMods* fd, uint32 class_mod, uint32 race_mod, uint32 deity_mod, int32 faction_id, uint8 texture_mod, uint8 gender_mod, uint32 base_race, bool skip_illusions = false); //needed for factions Dec, 16 2001
 	bool		GetFactionName(int32 faction_id, char* name, uint32 buflen); // needed for factions Dec, 16 2001
 	std::string GetFactionName(int32 faction_id);
-	bool		GetFactionIDsForNPC(uint32 npc_faction_id, std::list<NpcFactionEntriesRepository::NpcFactionEntries> *faction_list, int32* primary_faction = 0); // improve faction handling
+	bool		GetFactionIdsForNPC(uint32 nfl_id, std::list<struct NPCFaction*> *faction_list, int32* primary_faction = 0); // improve faction handling
 	bool		SetCharacterFactionLevel(uint32 char_id, int32 faction_id, int32 value, uint8 temp, faction_map &val_list); // needed for factions Dec, 16 2001
 	bool		LoadFactionData();
 	bool		SameFactions(uint32 npcfaction_id1, uint32 npcfaction_id2); //Returns true if both factions have the same primary, and faction hit list is the same (hit values are ignored.)
@@ -359,7 +359,7 @@ public:
 	uint32 CountAAEffects();
 
 	/* Zone related */
-	bool	GetZoneCFG(uint32 zoneid, NewZone_Struct *data, bool &can_bind, bool &can_combat, bool &can_levitate, bool &can_castoutdoor, bool &is_city, uint8 &zone_type, int &ruleset, char **map_filename, bool &can_bind_others, bool &skip_los, bool &drag_aggro, bool &can_castdungeon, uint16 &pull_limit, bool &reducedspawntimers, bool& trivial_loot_code, bool& is_hotzone);
+	bool	GetZoneCFG(uint32 zoneid, NewZone_Struct *data, bool &can_bind, bool &can_combat, bool &can_levitate, bool &can_castoutdoor, bool &is_city, uint8 &zone_type, int &ruleset, char **map_filename, bool &can_bind_others, bool &skip_los, bool &drag_aggro, bool &can_castdungeon, uint16 &pull_limit, bool &reducedspawntimers, bool& trivial_loot_code);
 	bool	SaveZoneCFG(uint32 zoneid, NewZone_Struct* zd);
 	bool	LoadStaticZonePoints(LinkedList<ZonePoint*>* zone_point_list,const char* zonename);
 	bool		UpdateZoneSafeCoords(const char* zonename, const glm::vec3& location);
@@ -383,8 +383,7 @@ public:
 	void		DeleteWaypoint(Client *c, uint32 grid_num, uint32 wp_num, uint16 zoneid);
 	void		AddWP(Client *c, uint32 gridid, uint32 wpnum, const glm::vec4& position, uint32 pause, uint16 zoneid);
 	uint32		AddWPForSpawn(Client *c, uint32 spawn2id, const glm::vec4& position, uint32 pause, int type1, int type2, uint16 zoneid);
-	void		ModifyGrid(Client* c, bool remove, uint32 grid_id, uint8 type = 0, uint8 type2 = 0, uint32 zone_id = 0);
-	bool		GridExistsInZone(uint32 zone_id, uint32 grid_id);
+	void		ModifyGrid(Client *c, bool remove, uint32 id, uint8 type = 0, uint8 type2 = 0, uint16 zoneid = 0);
 	uint8		GetGridType(uint32 grid, uint32 zoneid);
 	uint8		GetGridType2(uint32 grid, uint16 zoneid);
 	bool		GetWaypoints(uint32 grid, uint16 zoneid, uint32 num, wplist* wp);
@@ -413,7 +412,6 @@ public:
 
 	DBnpcspells_Struct*				GetNPCSpells(uint32 npc_spells_id);
 	DBnpcspellseffects_Struct*		GetNPCSpellsEffects(uint32 iDBSpellsEffectsID);
-	void ClearNPCSpells() { npc_spells_cache.clear(); npc_spells_loadtried.clear(); }
 	const NPCType*					LoadNPCTypesData(uint32 id, bool bulk_load = false);
 
 	/* Petitions   */

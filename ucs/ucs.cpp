@@ -21,41 +21,33 @@
 #include "../common/global_define.h"
 #include "clientlist.h"
 #include "../common/opcodemgr.h"
+#include "../common/eq_stream_factory.h"
 #include "../common/rulesys.h"
 #include "../common/servertalk.h"
 #include "../common/platform.h"
 #include "../common/crash.h"
 #include "../common/strings.h"
-#include "../common/event/event_loop.h"
+#include "../common/event/timer.h"
+#include "../common/path_manager.h"
 #include "database.h"
 #include "ucsconfig.h"
 #include "chatchannel.h"
 #include "worldserver.h"
 #include <list>
 #include <signal.h>
-#include <csignal>
-#include <thread>
-
-#include "../common/net/tcp_server.h"
-#include "../common/net/servertalk_client_connection.h"
-#include "../common/path_manager.h"
-#include "../common/zone_store.h"
-#include "../common/content/world_content_service.h"
-#include "../common/discord_manager.h"
+#include <mutex>
+#include <unordered_set>
 
 ChatChannelList *ChannelList;
 Clientlist *g_Clientlist;
 EQEmuLogSys LogSys;
-UCSDatabase database;
+TimeoutManager timeout_manager;
+Database database;
 WorldServer *worldserver = nullptr;
-DiscordManager discord_manager;
 PathManager path;
 std::unordered_set<uint32> ipWhitelist;
 std::mutex		ipMutex;
 bool bSkipFactoryAuth = true;
-
-ZoneStore zone_store;
-WorldContentService content_service;
 
 const ucsconfig *Config;
 
@@ -63,41 +55,14 @@ std::string WorldShortName;
 
 uint32 ChatMessagesSent = 0;
 
-void crash_func() {
-	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-	int* p = 0;
-	*p = 0;
-}
+volatile bool RunLoops = true;
 
-void Shutdown() {
-	LogInfo("Shutting down...");
-	ChannelList->RemoveAllChannels();
-	g_Clientlist->CloseAllConnections();
-	LogSys.CloseFileLogs();
-}
-
-int caught_loop = 0;
 void CatchSignal(int sig_num) {
-	LogInfo("Caught signal [{}]", sig_num);
 
-	EQ::EventLoop::Get().Shutdown();
+	RunLoops = false;
 
-	caught_loop++;
-	// when signal handler is incapable of exiting properly
-	if (caught_loop > 1) {
-		LogInfo("In a signal handler loop and process is incapable of exiting properly, forcefully cleaning up");
-		ChannelList->RemoveAllChannels();
-		g_Clientlist->CloseAllConnections();
-		LogSys.CloseFileLogs();
-		std::exit(0);
-	}
-}
-
-void DiscordQueueListener() {
-	while (caught_loop == 0) {
-		discord_manager.ProcessMessageQueue();
-		Sleep(100);
-	}
+	if(worldserver)
+		worldserver->Disconnect();
 }
 
 int main() {
@@ -112,7 +77,7 @@ int main() {
 	Timer ChannelListProcessTimer(60000);
 	Timer ClientConnectionPruneTimer(60000);
 
-	Timer keepalive(INTERSERVER_TIMER); // does auto-reconnect
+	Timer InterserverTimer(INTERSERVER_TIMER); // does auto-reconnect
 
 	LogInfo("Starting EQEmu Universal Chat Server.");
 
@@ -144,7 +109,7 @@ int main() {
 
 	char tmp[64];
 
-	if (database.GetVariable("RuleSet", tmp, sizeof(tmp) - 1)) {
+	if (database.GetVariable("RuleSet", tmp, sizeof(tmp)-1)) {
 		LogInfo("Loading rule set '[{0}]'", tmp);
 		if(!RuleManager::Instance()->LoadRules(&database, tmp)) {
 			LogInfo("Failed to load ruleset '[{0}]', falling back to defaults.", tmp);
@@ -163,30 +128,31 @@ int main() {
 
 	database.LoadChatChannels();
 
-	std::signal(SIGINT, CatchSignal);
-	std::signal(SIGTERM, CatchSignal);
-	std::signal(SIGKILL, CatchSignal);
-	std::signal(SIGSEGV, CatchSignal);
-
-	std::thread(DiscordQueueListener).detach();
+	if (signal(SIGINT, CatchSignal) == SIG_ERR)	{
+		LogInfo("Could not set signal handler");
+		return 1;
+	}
+	if (signal(SIGTERM, CatchSignal) == SIG_ERR)	{
+		LogInfo("Could not set signal handler");
+		return 1;
+	}
 
 	worldserver = new WorldServer;
 
-	// uncomment to simulate timed crash for catching SIGSEV
-	//	std::thread crash_test(crash_func);
-	//	crash_test.detach();
+	worldserver->Connect();
 
 	auto loop_fn = [&](EQ::Timer* t) {
-		if (keepalive.Check()) {
-			keepalive.Start();
-			database.ping();
-		}
 
 		Timer::SetCurrentTime();
 
 		ipMutex.lock();
 		ipWhitelist.clear();
 		ipMutex.unlock();
+
+		if (!RunLoops) {
+			EQ::EventLoop::Get().Shutdown();
+			return;
+		}
 
 		g_Clientlist->Process();
 
@@ -197,6 +163,15 @@ int main() {
 		if (ClientConnectionPruneTimer.Check()) {
 			g_Clientlist->CheckForStaleConnectionsAll();
 		}
+
+		if (InterserverTimer.Check()) {
+			if (worldserver->TryReconnect() && (!worldserver->Connected()))
+				worldserver->AsyncConnect();
+		}
+		worldserver->Process();
+
+		timeout_manager.CheckTimeouts();
+
 	};
 
 	EQ::Timer process_timer(loop_fn);
@@ -204,7 +179,12 @@ int main() {
 
 	EQ::EventLoop::Get().Run();
 
-	Shutdown();
+	ChannelList->RemoveAllChannels();
+
+	g_Clientlist->CloseAllConnections();
+
+	LogSys.CloseFileLogs();
+
 }
 
 void UpdateWindowTitle(char* iNewTitle)

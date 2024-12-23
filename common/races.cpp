@@ -22,619 +22,612 @@
 const char* GetRaceIDName(uint16 race_id)
 {
 	switch (race_id) {
-	case Race::Abhorrent:
+	case RT_ABHORRENT:
 		return "Abhorrent";
-	case Race::AirElemental:
+	case RT_AIR_ELEMENTAL:
 		return "Air Elemental";
-	case Race::AirMephit:
+	case RT_AIR_MEPHIT:
 		return "Air Mephit";
-	case Race::Akhevan:
+	case RT_AKHEVA:
 		return "Akheva";
-	case Race::Alligator:
+	case RT_ALLIGATOR:
 		return "Alligator";
-	case Race::Denizen:
+	case RT_AMYGDALAN:
 		return "Amygdalan";
-	case Race::AnimatedArmor:
+	case RT_ANIMATED_ARMOR:
 		return "Animated Armor";
-	case Race::AnimatedHand:
+	case RT_ANIMATED_HAND:
 		return "Animated Hand";
-	case Race::Arachnid:
+	case RT_ARACHNID:
 		return "Arachnid";
-	case Race::Armadillo:
+	case RT_ARMADILLO:
 		return "Armadillo";
-	case Race::Aviak:
+	case RT_AVIAK:
 		return "Aviak";
-	case Race::Banshee:
+	case RT_BANSHEE:
 		return "Banshee";
-	case Race::Barbarian:
-	case Race::HalasCitizen:
+	case RT_BARBARIAN:
+	case RT_BARBARIAN_2:
 		return "Barbarian";
-	case Race::GiantBat:
-	case Race::Bat:
+	case RT_BAT:
+	case RT_BAT_2:
 		return "Bat";
-	case Race::Bear:
-	case Race::Bear2:
+	case RT_BEAR:
+	case RT_BEAR_2:
 		return "Bear";
-	case Race::Beetle:
+	case RT_BEETLE:
 		return "Beetle";
-	case Race::HumanBeggar:
+	case RT_BEGGAR:
 		return "Beggar";
-	case Race::Bertoxxulous:
-	case Race::BertoxxulousNew:
+	case RT_BERTOXXULOUS:
+	case RT_BERTOXXULOUS_2:
 		return "Bertoxxulous";
-	case Race::Bixie:
+	case RT_BIXIE:
 		return "Bixie";
-	case Race::BloodRaven:
+	case RT_BLOOD_RAVEN:
 		return "Blood Raven";
-	case Race::Boat:
+	case RT_BOAT:
 		return "Boat";
-	case Race::Portal:
+	case RT_BOT_PORTAL:
 		return "BoT Portal";
-	case Race::Bristlebane:
+	case RT_BRISTLEBANE:
 		return "Bristlebane";
-	case Race::BrokenClockwork:
+	case RT_BROKEN_CLOCKWORK:
 		return "Broken Clockwork";
-	case Race::Brontotherium:
+	case RT_BRONTOTHERIUM:
 		return "Brontotherium";
-	case Race::Brownie:
+	case RT_BROWNIE:
 		return "Brownie";
-	case Race::Bubonian:
+	case RT_BUBONIAN:
 		return "Bubonian";
-	case Race::BubonianUnderling:
+	case RT_BUBONIAN_UNDERLING:
 		return "Bubonian Underling";
-	case Race::Burynai:
+	case RT_BURYNAI:
 		return "Burynai";
-	case Race::CazicThule:
+	case RT_CAZIC_THULE:
 		return "Cazic Thule";
-	case Race::Centaur:
+	case RT_CENTAUR:
 		return "Centaur";
-	case Race::Clam:
+	case RT_CLAM:
 		return "Clam";
-	case Race::ClockworkBeetle:
+	case RT_CLOCKWORK_BEETLE:
 		return "Clockwork Beetle";
-	case Race::ClockworkBrain:
+	case RT_CLOCKWORK_BRAIN:
 		return "Clockwork Brain";
-	case Race::ClockworkGnome:
+	case RT_CLOCKWORK_GNOME:
 		return "Clockwork Gnome";
-	case Race::ClockworkGolem:
+	case RT_CLOCKWORK_GOLEM:
 		return "Clockwork Golem";
-	case Race::Cockatrice:
+	case RT_COCKATRICE:
 		return "Cockatrice";
-	case Race::Coldain:
+	case RT_COLDAIN:
 		return "Coldain";
-	case Race::Crab:
+	case RT_CRAB:
 		return "Crab";
-	case Race::Crocodile:
+	case RT_CROCODILE:
 		return "Crocodile";
-	case Race::CrystalSpider:
+	case RT_CRYSTAL_SPIDER:
 		return "Crystal Spider";
-	case Race::DaisyMan:
+	case RT_DAISY_MAN:
 		return "Daisy Man";
-	case Race::DarkElf:
-	case Race::NeriakCitizen:
+	case RT_DARK_ELF:
+	case RT_DARK_ELF_2:
 		return "Dark Elf";
-	case Race::DemiLich:
+	case RT_DEMI_LICH:
 		return "Demi Lich";
-	case Race::Dervish:
+	case RT_DERVISH:
 		return "Dervish";
-	case Race::Devourer:
+	case RT_DEVOURER:
 		return "Devourer";
-	case Race::DireWolf:
+	case RT_DIRE_WOLF:
 		return "Dire Wolf";
-	case Race::DiseasedFiend:
+	case RT_DISEASED_FIEND:
 		return "Diseased Fiend";
-	case Race::Djinn:
+	case RT_DJINN:
 		return "Djinn";
-	case Race::Drachnid:
+	case RT_DRACHNID:
 		return "Drachnid";
-	case Race::Draglock:
+	case RT_DRAGLOCK:
 		return "Draglock";
-	case Race::LavaDragon:
-	case Race::DragonSkeleton:
-	case Race::WaterDragon:
-	case Race::VeliousDragon:
-	case Race::ClockworkDragon:
-	case Race::BlackAndWhiteDragon:
-	case Race::GhostDragon:
-	case Race::PrismaticDragon:
-	case Race::Quarm:
+	case RT_DRAGON:
+	case RT_DRAGON_2:
+	case RT_DRAGON_3:
+	case RT_DRAGON_4:
+	case RT_DRAGON_5:
+	case RT_DRAGON_6:
+	case RT_DRAGON_7:
+	case RT_DRAGON_8:
+	case RT_DRAGON_9:
 		return "Dragon";
-	case Race::Drake:
+	case RT_DRAKE:
 		return "Drake";
-	case Race::Drixie:
+	case RT_DRIXIE:
 		return "Drixie";
-	case Race::Drolvarg:
+	case RT_DROLVARG:
 		return "Drolvarg";
-	case Race::Dryad:
+	case RT_DRYAD:
 		return "Dryad";
-	case Race::Dwarf:
-	case Race::KaladimCitizen:
+	case RT_DWARF:
+	case RT_DWARF_2:
 		return "Dwarf";
-	case Race::EarthElemental:
+	case RT_EARTH_ELEMENTAL:
 		return "Earth Elemental";
-	case Race::EarthMephit:
+	case RT_EARTH_MEPHIT:
 		return "Earth Mephit";
-	case Race::GiantEel:
+	case RT_EEL:
 		return "Eel";
-	case Race::Efreeti:
-	case Race::Efreeti2:
+	case RT_EFREETI:
+	case RT_EFREETI_2:
 		return "Efreeti";
-	case Race::Elemental:
+	case RT_ELEMENTAL:
 		return "Elemental";
-	case Race::EnchantedArmor:
+	case RT_ENCHANTED_ARMOR:
 		return "Enchanted Armor";
-	case Race::Erollisi:
+	case RT_EROLLISI:
 		return "Erollisi";
-	case Race::Erudite:
-	case Race::EruditeCitizen:
+	case RT_ERUDITE:
+	case RT_ERUDITE_2:
 		return "Erudite";
-	case Race::EvanTest:
+	case RT_EVAN_TEST:
 		return "Evan Test";
-	case Race::EvilEye:
+	case RT_EVIL_EYE:
 		return "Evil Eye";
-	case Race::EyeOfZomm:
+	case RT_EYE:
 		return "Eye";
-	case Race::Fairy:
+	case RT_FAIRY:
 		return "Fairy";
-	case Race::Faun:
+	case RT_FAUN:
 		return "Faun";
-	case Race::FayDrake:
+	case RT_FAY_DRAKE:
 		return "Fay Drake";
-	case Race::FenninRo:
+	case RT_FENNIN_RO:
 		return "Fennin Ro";
-	case Race::Fiend:
+	case RT_FIEND:
 		return "Fiend";
-	case Race::FireElemental:
+	case RT_FIRE_ELEMENTAL:
 		return "Fire Elemental";
-	case Race::FireMephit:
+	case RT_FIRE_MEPHIT:
 		return "Fire Mephit";
-	case Race::Fish:
-	case Race::KunarkFish:
+	case RT_FISH:
+	case RT_FISH_2:
 		return "Fish";
-	case Race::Fly:
+	case RT_FLY:
 		return "Fly";
-	case Race::Froglok:
-	case Race::FroglokGhoul:
+	case RT_FROGLOK:
+	case RT_FROGLOK_2:
 		return "Froglok";
-	case Race::FungalFiend:
+	case RT_FUNGAL_FIEND:
 		return "Fungal Fiend";
-	case Race::Fungusman:
+	case RT_FUNGUSMAN:
 		return "Fungusman";
-	case Race::Galorian:
+	case RT_GALORIAN:
 		return "Galorian";
-	case Race::Gargoyle:
+	case RT_GARGOYLE:
 		return "Gargoyle";
-	case Race::Gasbag:
+	case RT_GASBAG:
 		return "Gasbag";
-	case Race::GelatinousCube:
+	case RT_GELATINOUS_CUBE:
 		return "Gelatinous Cube";
-	case Race::Geonid:
+	case RT_GEONID:
 		return "Geonid";
-	case Race::Ghost:
-	case Race::DwarfGhost:
-	case Race::EruditeGhost:
+	case RT_GHOST:
+	case RT_GHOST_2:
+	case RT_GHOST_3:
 		return "Ghost";
-	case Race::GhostShip:
+	case RT_GHOST_SHIP:
 		return "Ghost Ship";
-	case Race::Ghoul:
+	case RT_GHOUL:
 		return "Ghoul";
-	case Race::Giant:
-	case Race::ForestGiant:
-	case Race::FrostGiant:
-	case Race::StormGiant:
-	case Race::EarthGolem:
-	case Race::IronGolem:
-	case Race::StormGolem:
-	case Race::AirGolem:
-	case Race::WoodGolem:
-	case Race::FireGolem:
-	case Race::WaterGolem:
+	case RT_GIANT:
+	case RT_GIANT_2:
+	case RT_GIANT_3:
+	case RT_GIANT_4:
+	case RT_GIANT_5:
+	case RT_GIANT_6:
+	case RT_GIANT_7:
+	case RT_GIANT_8:
+	case RT_GIANT_9:
+	case RT_GIANT_10:
+	case RT_GIANT_11:
 		return "Giant";
-	case Race::GiantClockwork:
+	case RT_GIANT_CLOCKWORK:
 		return "Giant Clockwork";
-	case Race::Gnoll:
+	case RT_GNOLL:
 		return "Gnoll";
-	case Race::Gnome:
+	case RT_GNOME:
 		return "Gnome";
-	case Race::Goblin:
-	case Race::Bloodgill:
-	case Race::KunarkGoblin:
+	case RT_GOBLIN:
+	case RT_GOBLIN_2:
+	case RT_GOBLIN_3:
 		return "Goblin";
-	case Race::Golem:
+	case RT_GOLEM:
 		return "Golem";
-	case Race::Goo:
+	case RT_GOO:
 		return "Goo";
-	case Race::Gorgon:
+	case RT_GORGON:
 		return "Gorgon";
-	case Race::Gorilla:
+	case RT_GORILLA:
 		return "Gorilla";
-	case Race::GriegVeneficus:
+	case RT_GRIEG_VENEFICUS:
 		return "Grieg Veneficus";
-	case Race::Griffin:
+	case RT_GRIFFIN:
 		return "Griffin";
-	case Race::Grimling:
+	case RT_GRIMLING:
 		return "Grimling";
-	case Race::GroundShaker:
+	case RT_GROUND_SHAKER:
 		return "Ground Shaker";
-	case Race::FreeportGuard:
-	case Race::Felguard:
-	case Race::Fayguard:
-	case Race::VahShirGuard:
+	case RT_GUARD:
+	case RT_GUARD_2:
+	case RT_GUARD_3:
+	case RT_GUARD_4:
 		return "Guard";
-	case Race::GuardOfJustice:
+	case RT_GUARD_OF_JUSTICE:
 		return "Guard of Justice";
-	case Race::Hag:
+	case RT_HAG:
 		return "Hag";
-	case Race::HalfElf:
+	case RT_HALF_ELF:
 		return "Half Elf";
-	case Race::Halfling:
-	case Race::RivervaleCitizen:
+	case RT_HALFLING:
+	case RT_HALFLING_2:
 		return "Halfling";
-	case Race::Harpy:
+	case RT_HARPY:
 		return "Harpy";
-	case Race::HighElf:
+	case RT_HIGH_ELF:
 		return "High Elf";
-	case Race::Hippogriff:
+	case RT_HIPPOGRIFF:
 		return "Hippogriff";
-	case Race::Holgresh:
+	case RT_HOLGRESH:
 		return "Holgresh";
-	case Race::Horse:
+	case RT_HORSE:
 		return "Horse";
-	case Race::Hraquis:
+	case RT_HRAQUIS:
 		return "Hraquis";
-	case Race::Human:
-	case Race::HighpassCitizen:
-	case Race::QeynosCitizen:
+	case RT_HUMAN:
+	case RT_HUMAN_2:
+	case RT_HUMAN_3:
 		return "Human";
-	case Race::IceSpectre:
+	case RT_ICE_SPECTRE:
 		return "Ice Spectre";
-	case Race::Iksar:
-	case Race::IksarCitizen:
+	case RT_IKSAR:
+	case RT_IKSAR_2:
 		return "Iksar";
-	case Race::IksarGolem:
+	case RT_IKSAR_GOLEM:
 		return "Iksar Golem";
-	case Race::IksarSpirit:
+	case RT_IKSAR_SPIRIT:
 		return "Iksar Spirit";
-	case Race::Imp:
+	case RT_IMP:
 		return "Imp";
-	case Race::Innoruuk:
+	case RT_INNORUUK:
 		return "Innoruuk";
-	case Race::InvisibleMan:
+	case RT_INVISIBLE_MAN:
 		return "Invisible Man";
-	case Race::JunkBeast:
+	case RT_JUNK_BEAST:
 		return "Junk Beast";
-	case Race::Karana:
+	case RT_KARANA:
 		return "Karana";
-	case Race::PhinigelAutropos:
+	case RT_KEDGE:
 		return "Kedge";
-	case Race::Kerran:
+	case RT_KERRAN:
 		return "Kerran";
-	case Race::KnightOfPestilence:
+	case RT_KNIGHT_OF_PESTILENCE:
 		return "Knight of Pestilence";
-	case Race::Kobold:
+	case RT_KOBOLD:
 		return "Kobold";
-	case Race::Kraken:
+	case RT_KRAKEN:
 		return "Kraken";
-	case Race::Launch:
+	case RT_LAUNCH:
 		return "Launch";
-	case Race::Leech:
+	case RT_LEECH:
 		return "Leech";
-	case Race::Lepertoloth:
-		return "Lepertoloth";
-	case Race::Lightcrawler:
+	case RT_LIGHTCRAWLER:
 		return "Lightcrawler";
-	case Race::Lion:
+	case RT_LION:
 		return "Lion";
-	case Race::LizardMan:
+	case RT_LIZARD_MAN:
 		return "Lizard Man";
-	case Race::Malarian:
+	case RT_MALARIAN:
 		return "Malarian";
-	case Race::Mammoth:
+	case RT_MAMMOTH:
 		return "Mammoth";
-	case Race::ManEatingPlant:
+	case RT_MAN_EATING_PLANT:
 		return "Man - Eating Plant";
-	case Race::Manticore:
+	case RT_MANTICORE:
 		return "Manticore";
-	case Race::Mermaid:
+	case RT_MERMAID:
 		return "Mermaid";
-	case Race::Mimic:
+	case RT_MIMIC:
 		return "Mimic";
-	case Race::MiniPom:
+	case RT_MINI_POM:
 		return "Mini POM";
-	case Race::Minotaur:
+	case RT_MINOTAUR:
 		return "Minotaur";
-	case Race::MithanielMarr:
+	case RT_MITHANIEL_MARR:
 		return "Mithaniel Marr";
-	case Race::Mosquito:
+	case RT_MOSQUITO:
 		return "Mosquito";
-	case Race::MouthOfInsanity:
+	case RT_MOUTH_OF_INSANITY:
 		return "Mouth of Insanity";
-	case Race::Netherbian:
+	case RT_NETHERBIAN:
 		return "Netherbian";
-	case Race::Nightmare:
+	case RT_NIGHTMARE:
 		return "Nightmare";
-	case Race::NightmareGargoyle:
+	case RT_NIGHTMARE_GARGOYLE:
 		return "Nightmare Gargoyle";
-	case Race::NightmareGoblin:
+	case RT_NIGHTMARE_GOBLIN:
 		return "Nightmare Goblin";
-	case Race::NightmareMephit:
+	case RT_NIGHTMARE_MEPHIT:
 		return "Nightmare Mephit";
-	case Race::NightmareWraith:
+	case RT_NIGHTMARE_WRAITH:
 		return "Nightmare Wraith";
-	case Race::Nilborien:
+	case RT_NILBORIEN:
 		return "Nilborien";
-	case Race::Nymph:
+	case RT_NYMPH:
 		return "Nymph";
-	case Race::Ogre:
-	case Race::OggokCitizen:
+	case RT_OGRE:
+	case RT_OGRE_2:
 		return "Ogre";
-	case Race::Orc:
+	case RT_ORC:
 		return "Orc";
-	case Race::Othmir:
+	case RT_OTHMIR:
 		return "Othmir";
-	case Race::Owlbear:
+	case RT_OWLBEAR:
 		return "Owlbear";
-	case Race::Pegasus:
+	case RT_PEGASUS:
 		return "Pegasus";
-	case Race::Phoenix:
+	case RT_PHOENIX:
 		return "Phoenix";
-	case Race::Piranha:
+	case RT_PIRANHA:
 		return "Piranha";
-	case Race::Pixie:
+	case RT_PIXIE:
 		return "Pixie";
-	case Race::PoisonFrog:
+	case RT_POISON_FROG:
 		return "Poison Frog";
-	case Race::Puma:
+	case RT_PUMA:
 		return "Puma";
-	case Race::Pusling:
+	case RT_PUSLING:
 		return "Pusling";
-	case Race::StatueOfRallosZek:
-	case Race::NewRallosZek:
+	case RT_RALLOS_ZEK:
+	case RT_RALLOS_ZEK_2:
 		return "Rallos Zek";
-	case Race::RallosOgre:
+	case RT_RALLOS_ZEK_MINION:
 		return "Rallos Zek Minion";
-	case Race::Raptor:
+	case RT_RAPTOR:
 		return "Raptor";
-	case Race::GiantRat:
+	case RT_RAT:
 		return "Rat";
-	case Race::Ratman:
+	case RT_RATMAN:
 		return "Ratman";
-	case Race::ReanimatedHand:
+	case RT_REANIMATED_HAND:
 		return "Reanimated Hand";
-	case Race::Recuso:
+	case RT_RECUSO:
 		return "Recuso";
-	case Race::RhinoBeetle:
+	case RT_RHINO_BEETLE:
 		return "Rhino Beetle";
-	case Race::Rhinoceros:
+	case RT_RHINOCEROS:
 		return "Rhinoceros";
-	case Race::Rockhopper:
+	case RT_ROCKHOPPER:
 		return "Rockhopper";
-	case Race::RonnieTest:
+	case RT_RONNIE_TEST:
 		return "Ronnie Test";
-	case Race::Sabertooth:
+	case RT_SABER_TOOTHED_CAT:
 		return "Saber - toothed Cat";
-	case Race::Sarnak:
+	case RT_SARNAK:
 		return "Sarnak";
-	case Race::SarnakGolem:
+	case RT_SARNAK_GOLEM:
 		return "Sarnak Golem";
-	case Race::SarnakSpirit:
+	case RT_SARNAK_SPIRIT:
 		return "Sarnak Spirit";
-	case Race::Saryrn:
+	case RT_SARYRN:
 		return "Saryrn";
-	case Race::Scarecrow:
+	case RT_SCARECROW:
 		return "Scarecrow";
-	case Race::ScarletCheetah:
+	case RT_SCARLET_CHEETAH:
 		return "Scarlet Cheetah";
-	case Race::Scorpion:
-	case Race::IksarScorpion:
+	case RT_SCORPION:
+	case RT_SCORPION_2:
 		return "Scorpion";
-	case Race::SeaTurtle:
+	case RT_SEA_TURTLE:
 		return "Sea Turtle";
-	case Race::SeaHorse:
+	case RT_SEAHORSE:
 		return "Seahorse";
-	case Race::LordInquisitorSeru:
+	case RT_SERU:
 		return "Seru";
-	case Race::Shade:
+	case RT_SHADE:
 		return "Shade";
-	case Race::KhatiSha:
+	case RT_SHADEL:
 		return "Shadel";
-	case Race::Shark:
+	case RT_SHARK:
 		return "Shark";
-	case Race::Shiknar:
+	case RT_SHIKNAR:
 		return "Shik'Nar";
-	case Race::Ship:
+	case RT_SHIP:
 		return "Ship";
-	case Race::Shissar:
+
+	case RT_SHISSAR:
 		return "Shissar";
-	case Race::Shrieker:
+	case RT_SHRIEKER:
 		return "Shrieker";
-	case Race::Siren:
+	case RT_SIREN:
 		return "Siren";
-	case Race::SkeletalHorse:
+	case RT_SKELETAL_HORSE:
 		return "Skeletal Horse";
-	case Race::Skeleton:
+	case RT_SKELETON:
 		return "Skeleton";
-	case Race::Skunk:
+	case RT_SKUNK:
 		return "Skunk";
-	case Race::GiantSnake:
+	case RT_SNAKE:
 		return "Snake";
-	case Race::SnakeElemental:
+	case RT_SNAKE_ELEMENTAL:
 		return "Snake Elemental";
-	case Race::SnowDervish:
+	case RT_SNOW_DERVISH:
 		return "Snow Dervish";
-	case Race::SnowRabbit:
+	case RT_SNOW_RABBIT:
 		return "Snow Rabbit";
-	case Race::SolusekRo:
-	case Race::SolusekRo2:
+	case RT_SOLUSEK_RO:
+	case RT_SOLUSEK_RO_2:
 		return "Solusek Ro";
-	case Race::SolusekRoGuard:
+	case RT_SOLUSEK_RO_GUARD:
 		return "Solusek Ro Guard";
-	case Race::SonicWolf:
+	case RT_SONIC_WOLF:
 		return "Sonic Wolf";
-	case Race::SoulDevourer:
+	case RT_SOUL_DEVOURER:
 		return "Soul Devourer";
-	case Race::Spectre:
+	case RT_SPECTRE:
 		return "Spectre";
-	case Race::Sphinx:
+	case RT_SPHINX:
 		return "Sphinx";
-	case Race::GiantSpider:
+	case RT_SPIDER:
 		return "Spider";
-	case Race::Stonegrabber:
+	case RT_STONEGRABBER:
 		return "Stonegrabber";
-	case Race::Stormrider:
+	case RT_STORMRIDER:
 		return "Stormrider";
-	case Race::Succulent:
+	case RT_SUCCULENT:
 		return "Succulent";
-	case Race::Shadel:
+	case RT_SUN_REVENANT:
 		return "Sun Revenant";
-	case Race::Sunflower:
+	case RT_SUNFLOWER:
 		return "Sunflower";
-	case Race::Swordfish:
+	case RT_SWORDFISH:
 		return "Swordfish";
-	case Race::FroglokTadpole:
+	case RT_TADPOLE:
 		return "Tadpole";
-	case Race::TallonZek:
+	case RT_TALLON_ZEK:
 		return "Tallon Zek";
-	case Race::TarewMarr:
+	case RT_TAREW_MARR:
 		return "Tarew Marr";
-	case Race::Tegi:
+	case RT_TEGI:
 		return "Tegi";
-	case Race::TeleportMan:
+	case RT_TELEPORT_MAN:
 		return "Teleport Man";
-	case Race::TentacleTerror:
+	case RT_TENTACLE_TERROR:
 		return "Tentacle Terror";
-	case Race::TerrisThule:
+	case RT_TERRIS_THULE:
 		return "Terris Thule";
-	case Race::TestObject:
+	case RT_TEST_OBJECT:
 		return "Test Object";
-	case Race::Rathe:
+	case RT_THE_RATHE:
 		return "The Rathe";
-	case Race::TribunalNew:
+	case RT_THE_TRIBUNAL:
 		return "The Tribunal";
-	case Race::ThoughtHorror:
+	case RT_THOUGHT_HORROR:
 		return "Thought Horror";
-	case Race::Tiger:
+	case RT_TIGER:
 		return "Tiger";
-	case Race::TinSoldier:
+	case RT_TIN_SOLDIER:
 		return "Tin Soldier";
-	case Race::Tormentor:
+	case RT_TORMENTOR:
 		return "Tormentor";
-	case Race::Totem:
+	case RT_TOTEM:
 		return "Totem";
-	case Race::Trakanon:
+	case RT_TRAKANON:
 		return "Trakanon";
-	case Race::Tranquilion:
+	case RT_TRANQUILION:
 		return "Tranquilion";
-	case Race::Treant:
-	case Race::Treant2:
+	case RT_TREANT:
+	case RT_TREANT_2:
 		return "Treant";
-	case Race::Tribunal:
+	case RT_TRIBUNAL:
 		return "Tribunal";
-	case Race::Troll:
-	case Race::GrobbCitizen:
+	case RT_TROLL:
+	case RT_TROLL_2:
 		return "Troll";
-	case Race::Tunare:
+	case RT_TUNARE:
 		return "Tunare";
-	case Race::Ulthork:
+	case RT_ULTHORK:
 		return "Ulthork";
-	case Race::UndeadFootman:
+	case RT_UNDEAD_FOOTMAN:
 		return "Undead Footman";
-	case Race::UndeadIksar:
+	case RT_UNDEAD_IKSAR:
 		return "Undead Iksar";
-	case Race::UndeadKnight:
+	case RT_UNDEAD_KNIGHT:
 		return "Undead Knight";
-	case Race::UndeadSarnak:
+	case RT_UNDEAD_SARNAK:
 		return "Undead Sarnak";
-	case Race::Underbulk:
+	case RT_UNDERBULK:
 		return "Underbulk";
-	case Race::Unicorn:
+	case RT_UNICORN:
 		return "Unicorn";
-	case Race::Doug:
-	case Race::MinorIllusion:
-	case Race::Tree:
-	case Race::Unknown:
-	case Race::Unknown2:
+	case RT_UNKNOWN_RACE:
+	case RT_UNKNOWN_RACE_2:
+	case RT_UNKNOWN_RACE_3:
+	case RT_UNKNOWN_RACE_4:
+	case RT_UNKNOWN_RACE_5:
 		return "UNKNOWN RACE";
-	case Race::VahShir:
-	case Race::VahShirKing:
+	case RT_VAH_SHIR:
+	case RT_VAH_SHIR_2:
 		return "Vah Shir";
-	case Race::VahShirSkeleton:
+	case RT_VAH_SHIR_SKELETON:
 		return "Vah Shir Skeleton";
-	case Race::VallonZek:
+	case RT_VALLON_ZEK:
 		return "Vallon Zek";
-	case Race::Valorian:
-	case Race::Valorian2:
+	case RT_VALORIAN:
+	case RT_VALORIAN_2:
 		return "Valorian";
-	case Race::Vampire:
-	case Race::ElfVampire:
-	case Race::Vampire2:
-	case Race::VampireVolatalis:
+	case RT_VAMPIRE:
+	case RT_VAMPIRE_2:
+	case RT_VAMPIRE_3:
+	case RT_VAMPIRE_4:
 		return "Vampire";
-	case Race::Vegerog:
+	case RT_VEGEROG:
 		return "Vegerog";
-	case Race::VenrilSathir:
+	case RT_VENRIL_SATHIR:
 		return "Venril Sathir";
-	case Race::Walrus:
+	case RT_WALRUS:
 		return "Walrus";
-	case Race::WarBoar:
-	case Race::WarBoar2:
+	case RT_WAR_BOAR:
+	case RT_WAR_BOAR_2:
 		return "War Boar";
-	case Race::WarWraith:
+	case RT_WAR_WRAITH:
 		return "War Wraith";
-	case Race::Wasp:
+	case RT_WASP:
 		return "Wasp";
-	case Race::WaterElemental:
+	case RT_WATER_ELEMENTAL:
 		return "Water Elemental";
-	case Race::WaterMephit:
+	case RT_WATER_MEPHIT:
 		return "Water Mephit";
-	case Race::Werewolf:
-	case Race::Werewolf2:
+	case RT_WEREWOLF:
+	case RT_WEREWOLF_2:
 		return "Werewolf";
-	case Race::WetfangMinnow:
+	case RT_WETFANG_MINNOW:
 		return "Wetfang Minnow";
-	case Race::Wisp:
+	case RT_WILL_O_WISP:
 		return "Will - O - Wisp";
-	case Race::Wolf:
-	case Race::WolfElemental:
+	case RT_WOLF:
+	case RT_WOLF_2:
 		return "Wolf";
-	case Race::WoodElf:
+	case RT_WOOD_ELF:
 		return "Wood Elf";
-	case Race::Worm:
+	case RT_WORM:
 		return "Worm";
-	case Race::Wretch:
+	case RT_WRETCH:
 		return "Wretch";
-	case Race::Wrulon:
+	case RT_WRULON:
 		return "Wrulon";
-	case Race::Wurm:
+	case RT_WURM:
 		return "Wurm";
-	case Race::Wyvern:
+	case RT_WYVERN:
 		return "Wyvern";
-	case Race::Xalgoz:
+	case RT_XALGOZ:
 		return "Xalgoz";
-	case Race::Xegony:
+	case RT_XEGONY:
 		return "Xegony";
-	case Race::Yakkar:
+	case RT_YAKKAR:
 		return "Yakkar";
-	case Race::Yeti:
+	case RT_YETI:
 		return "Yeti";
-	case Race::Zebuxoruk:
+	case RT_ZEBUXORUK:
 		return "Zebuxoruk";
-	case Race::ZebuxoruksCage:
+	case RT_ZEBUXORUKS_CAGE:
 		return "Zebuxoruk's Cage";
-	case Race::Zelniak:
+	case RT_ZELNIAK:
 		return "Zelniak";
-	case Race::Zombie:
+	case RT_ZOMBIE:
 		return "Zombie";
 	default:
 		return "UNKNOWN RACE";
 	}
 }
-
-const char* GetPlayerRaceName(uint32 player_race_value)
-{
-	return GetRaceIDName(GetRaceIDFromPlayerRaceValue(player_race_value));
-}
-
 
 const char* GetRaceIDNamePlural(uint16 race_id)
 {
@@ -672,6 +665,12 @@ const char* GetRaceIDNamePlural(uint16 race_id)
 		return "Races"; break;
 	}
 }
+
+const char* GetPlayerRaceName(uint32 player_race_value)
+{
+	return GetRaceIDName(GetRaceIDFromPlayerRaceValue(player_race_value));
+}
+
 
 uint32 GetPlayerRaceValue(uint16 race_id) {
 	switch (race_id) {
@@ -910,34 +909,34 @@ float GetRaceGenderDefaultHeight(int race, int gender)
 }
 
 // PlayerAppearance prep
-#define HUMAN_MALE ((HUMAN << 8) |Gender::Male)
-#define HUMAN_FEMALE ((HUMAN << 8) |Gender::Female)
-#define BARBARIAN_MALE ((BARBARIAN << 8) |Gender::Male)
-#define BARBARIAN_FEMALE ((BARBARIAN << 8) |Gender::Female)
-#define ERUDITE_MALE ((ERUDITE << 8) |Gender::Male)
-#define ERUDITE_FEMALE ((ERUDITE << 8) |Gender::Female)
-#define WOOD_ELF_MALE ((WOOD_ELF << 8) |Gender::Male)
-#define WOOD_ELF_FEMALE ((WOOD_ELF << 8) |Gender::Female)
-#define HIGH_ELF_MALE ((HIGH_ELF << 8) |Gender::Male)
-#define HIGH_ELF_FEMALE ((HIGH_ELF << 8) |Gender::Female)
-#define DARK_ELF_MALE ((DARK_ELF << 8) |Gender::Male)
-#define DARK_ELF_FEMALE ((DARK_ELF << 8) |Gender::Female)
-#define HALF_ELF_MALE ((HALF_ELF << 8) |Gender::Male)
-#define HALF_ELF_FEMALE ((HALF_ELF << 8) |Gender::Female)
-#define DWARF_MALE ((DWARF << 8) |Gender::Male)
-#define DWARF_FEMALE ((DWARF << 8) |Gender::Female)
-#define TROLL_MALE ((TROLL << 8) |Gender::Male)
-#define TROLL_FEMALE ((TROLL << 8) |Gender::Female)
-#define OGRE_MALE ((OGRE << 8) |Gender::Male)
-#define OGRE_FEMALE ((OGRE << 8) |Gender::Female)
-#define HALFLING_MALE ((HALFLING << 8) |Gender::Male)
-#define HALFLING_FEMALE ((HALFLING << 8) |Gender::Female)
-#define GNOME_MALE ((GNOME << 8) |Gender::Male)
-#define GNOME_FEMALE ((GNOME << 8) |Gender::Female)
-#define IKSAR_MALE ((IKSAR << 8) |Gender::Male)
-#define IKSAR_FEMALE ((IKSAR << 8) |Gender::Female)
-#define VAHSHIR_MALE ((VAHSHIR << 8) |Gender::Male)
-#define VAHSHIR_FEMALE ((VAHSHIR << 8) |Gender::Female)
+#define HUMAN_MALE ((HUMAN << 8) | MALE)
+#define HUMAN_FEMALE ((HUMAN << 8) | FEMALE)
+#define BARBARIAN_MALE ((BARBARIAN << 8) | MALE)
+#define BARBARIAN_FEMALE ((BARBARIAN << 8) | FEMALE)
+#define ERUDITE_MALE ((ERUDITE << 8) | MALE)
+#define ERUDITE_FEMALE ((ERUDITE << 8) | FEMALE)
+#define WOOD_ELF_MALE ((WOOD_ELF << 8) | MALE)
+#define WOOD_ELF_FEMALE ((WOOD_ELF << 8) | FEMALE)
+#define HIGH_ELF_MALE ((HIGH_ELF << 8) | MALE)
+#define HIGH_ELF_FEMALE ((HIGH_ELF << 8) | FEMALE)
+#define DARK_ELF_MALE ((DARK_ELF << 8) | MALE)
+#define DARK_ELF_FEMALE ((DARK_ELF << 8) | FEMALE)
+#define HALF_ELF_MALE ((HALF_ELF << 8) | MALE)
+#define HALF_ELF_FEMALE ((HALF_ELF << 8) | FEMALE)
+#define DWARF_MALE ((DWARF << 8) | MALE)
+#define DWARF_FEMALE ((DWARF << 8) | FEMALE)
+#define TROLL_MALE ((TROLL << 8) | MALE)
+#define TROLL_FEMALE ((TROLL << 8) | FEMALE)
+#define OGRE_MALE ((OGRE << 8) | MALE)
+#define OGRE_FEMALE ((OGRE << 8) | FEMALE)
+#define HALFLING_MALE ((HALFLING << 8) | MALE)
+#define HALFLING_FEMALE ((HALFLING << 8) | FEMALE)
+#define GNOME_MALE ((GNOME << 8) | MALE)
+#define GNOME_FEMALE ((GNOME << 8) | FEMALE)
+#define IKSAR_MALE ((IKSAR << 8) | MALE)
+#define IKSAR_FEMALE ((IKSAR << 8) | FEMALE)
+#define VAHSHIR_MALE ((VAHSHIR << 8) | MALE)
+#define VAHSHIR_FEMALE ((VAHSHIR << 8) | FEMALE)
 
 #define BINDRG(r, g) (((int)r << 8) | g)
 
@@ -974,10 +973,6 @@ bool PlayerAppearance::IsValidBeard(uint16 race_id, uint8 gender_id, uint8 beard
 		return false;
 	}
 	else {
-		switch (BINDRG(race_id, gender_id)) {
-		default:
-			break;
-		}
 		return false;
 	}
 }
@@ -985,8 +980,8 @@ bool PlayerAppearance::IsValidBeard(uint16 race_id, uint8 gender_id, uint8 beard
 bool PlayerAppearance::IsValidBeardColor(uint16 race_id, uint8 gender_id, uint8 beard_color_value, bool use_luclin)
 {
 	if (beard_color_value == 0xFF)
-		return true;
-
+	return true;
+	
 	switch (BINDRG(race_id, gender_id)) {
 	case GNOME_MALE:
 		if (beard_color_value <= 24)
@@ -1003,16 +998,24 @@ bool PlayerAppearance::IsValidBeardColor(uint16 race_id, uint8 gender_id, uint8 
 			return true;
 		break;
 	case DARK_ELF_MALE:
-		if (beard_color_value >= 13 && beard_color_value <= 18)
+		if (beard_color_value >= 13 &&  beard_color_value <= 18)
 			return true;
 		break;
 	case HIGH_ELF_MALE:
 		if (beard_color_value <= 14)
 			return true;
 		break;
+		if (beard_color_value <= 3)
+			return true;
+		break;
 	default:
 		break;
 	}
+	return false;
+}
+
+bool PlayerAppearance::IsValidDetail(uint16 race_id, uint8 gender_id, uint32 detail_value, bool use_luclin)
+{
 	return false;
 }
 
@@ -1049,7 +1052,7 @@ bool PlayerAppearance::IsValidEyeColor(uint16 race_id, uint8 gender_id, uint8 ey
 	case VAHSHIR_FEMALE:
 		if (eye_color_value <= 9)
 			return true;
-		break;
+		break;	
 	case TROLL_MALE:
 	case TROLL_FEMALE:
 		if (eye_color_value <= 10)
@@ -1148,10 +1151,6 @@ bool PlayerAppearance::IsValidHair(uint16 race_id, uint8 gender_id, uint8 hair_v
 		return false;
 	}
 	else {
-		switch (BINDRG(race_id, gender_id)) {
-		default:
-			break;
-		}
 		return false;
 	}
 }
@@ -1292,107 +1291,6 @@ bool PlayerAppearance::IsValidHead(uint16 race_id, uint8 gender_id, uint8 head_v
 	}
 }
 
-bool PlayerAppearance::IsValidTexture(uint16 race_id, uint8 gender_id, uint8 texture_value, bool use_luclin)
-{
-	if (texture_value == 0xFF)
-		return true;
-
-	if (use_luclin) {
-		switch (BINDRG(race_id, gender_id)) {
-		case HUMAN_MALE:
-		case HUMAN_FEMALE:
-		case IKSAR_MALE:
-		case IKSAR_FEMALE:
-			if ((texture_value >= 10 && texture_value <= 16) || texture_value <= 4)
-				return true;
-			break;
-		case ERUDITE_MALE:
-		case ERUDITE_FEMALE:
-		case HIGH_ELF_MALE:
-		case HIGH_ELF_FEMALE:
-		case DARK_ELF_MALE:
-		case DARK_ELF_FEMALE:
-		case GNOME_MALE:
-		case GNOME_FEMALE:
-			if ((texture_value >= 10 && texture_value <= 16) || texture_value <= 3)
-				return true;
-			break;
-		case BARBARIAN_MALE:
-		case BARBARIAN_FEMALE:
-		case WOOD_ELF_MALE:
-		case WOOD_ELF_FEMALE:
-		case HALF_ELF_MALE:
-		case HALF_ELF_FEMALE:
-		case DWARF_MALE:
-		case DWARF_FEMALE:
-		case TROLL_MALE:
-		case TROLL_FEMALE:
-		case OGRE_MALE:
-		case OGRE_FEMALE:
-		case HALFLING_MALE:
-		case HALFLING_FEMALE:
-		case VAHSHIR_MALE:
-		case VAHSHIR_FEMALE:
-			if (texture_value <= 3)
-				return true;
-			break;
-		default:
-			break;
-		}
-		return false;
-	}
-	else {
-		switch (BINDRG(race_id, gender_id)) {
-		case HUMAN_MALE:
-		case HUMAN_FEMALE:
-		case ERUDITE_MALE:
-		case ERUDITE_FEMALE:
-			if ((texture_value >= 10 && texture_value <= 16) || texture_value <= 4)
-				return true;
-			break;
-		case HIGH_ELF_MALE:
-		case HIGH_ELF_FEMALE:
-		case DARK_ELF_MALE:
-		case DARK_ELF_FEMALE:
-		case GNOME_MALE:
-		case GNOME_FEMALE:
-			if ((texture_value >= 10 && texture_value <= 16) || texture_value <= 3)
-				return true;
-			break;
-		case VAHSHIR_MALE:
-		case VAHSHIR_FEMALE:
-			if (texture_value == 50 || texture_value <= 3)
-				return true;
-			break;
-		case IKSAR_MALE:
-		case IKSAR_FEMALE:
-			if (texture_value == 10 || texture_value <= 4)
-				return true;
-			break;
-		case BARBARIAN_MALE:
-		case BARBARIAN_FEMALE:
-		case WOOD_ELF_MALE:
-		case WOOD_ELF_FEMALE:
-		case HALF_ELF_MALE:
-		case HALF_ELF_FEMALE:
-		case DWARF_MALE:
-		case DWARF_FEMALE:
-		case TROLL_MALE:
-		case TROLL_FEMALE:
-		case OGRE_MALE:
-		case OGRE_FEMALE:
-		case HALFLING_MALE:
-		case HALFLING_FEMALE:
-			if (texture_value <= 3)
-				return true;
-			break;
-		default:
-			break;
-		}
-		return false;
-	}
-}
-
 bool PlayerAppearance::IsValidWoad(uint16 race_id, uint8 gender_id, uint8 woad_value, bool use_luclin)
 {
 	if (woad_value == 0xFF)
@@ -1414,13 +1312,13 @@ bool PlayerAppearance::IsValidWoad(uint16 race_id, uint8 gender_id, uint8 woad_v
 
 const char* GetGenderName(uint32 gender_id) {
 	const char* gender_name = "Unknown";
-	if (gender_id ==Gender::Male) {
+	if (gender_id == MALE) {
 		gender_name = "Male";
 	}
-	else if (gender_id ==Gender::Female) {
+	else if (gender_id == FEMALE) {
 		gender_name = "Female";
 	}
-	else if (gender_id == Gender::Neuter) {
+	else if (gender_id == NEUTER) {
 		gender_name = "Neuter";
 	}
 	return gender_name;
@@ -1428,95 +1326,55 @@ const char* GetGenderName(uint32 gender_id) {
 
 const bool IsFlyingCreatureRace(const uint16 race_id) {
 	switch (race_id) {
-	case Race::Ghost:
-	case Race::DwarfGhost:
-	case Race::EruditeGhost:
-	case Race::Gargoyle:
-	case Race::Spectre:
-	case Race::IceSpectre:
-	case Race::Imp:
-	case Race::Harpy:
-	case Race::Pegasus:
-	case Race::Djinn:
-	case Race::Griffin:
-	case Race::Pixie:
-	case Race::Fairy:
-	case Race::Wisp:
-	case Race::AirElemental:
-	case Race::Wasp:
-	case Race::Bixie:
-	case Race::Drake:
-	case Race::FayDrake:
-	case Race::ReanimatedHand:
-	case Race::BlackAndWhiteDragon:
-	case Race::ClockworkDragon:
-	case Race::DragonSkeleton:
-	case Race::GhostDragon:
-	case Race::LavaDragon:
-	case Race::PrismaticDragon:
-	case Race::VeliousDragon:
-	case Race::WaterDragon:
-	case Race::Draglock:
-	case Race::EvilEye:
-	case Race::Fish:
-	case Race::KunarkFish:
-	case Race::Shark:
-	case Race::Swordfish:
-	case Race::Dervish:
-	case Race::SnowDervish:
-	case Race::Bat:
-	case Race::GiantBat:
-	case Race::Aviak:
+		case RT_GHOST:
+		case RT_GHOST_2:
+		case RT_GHOST_3:
+		case RT_GARGOYLE:
+		case RT_SPECTRE:
+		case RT_ICE_SPECTRE:
+		case RT_IMP:
+		case RT_HARPY:
+		case RT_PEGASUS:
+		case RT_DJINN:
+		case RT_GRIFFIN:
+		case RT_PIXIE:
+		case RT_FAIRY:
+		case RT_WILL_O_WISP:
+		case RT_AIR_ELEMENTAL:
+		case RT_WASP:
+		case RT_BIXIE:
+		case RT_DRAKE:
+		case RT_FAY_DRAKE:
+		case RT_REANIMATED_HAND:
+		case RT_DRAGON:
+		case RT_DRAGON_2:
+		case RT_DRAGON_3:
+		case RT_DRAGON_4:
+		case RT_DRAGON_5:
+		case RT_DRAGON_6:
+		case RT_DRAGON_7:
+		case RT_DRAGON_8:
+		case RT_DRAGON_9:
+		case RT_EVIL_EYE:
+		case RT_FISH:
+		case RT_FISH_2:
+		case RT_SHARK:
+		case RT_SWORDFISH:
+		case RT_DERVISH:
+		case RT_SNOW_DERVISH:
+		case RT_BAT:
+		case RT_BAT_2:
+		case RT_AVIAK:
 			return true;
 		default:
 			return false;
 	}
 }
 
-const std::string GetPlayerRaceAbbreviation(uint16 race_id)
-{
-	if (!IsPlayerRace(race_id)) {
-		return std::string("UNK");
-	}
-
-	switch (race_id) {
-	case Race::Human:
-		return "HUM";
-	case Race::Barbarian:
-		return "BAR";
-	case Race::Erudite:
-		return "ERU";
-	case Race::WoodElf:
-		return "ELF";
-	case Race::HighElf:
-		return "HIE";
-	case Race::DarkElf:
-		return "DEF";
-	case Race::HalfElf:
-		return "HEF";
-	case Race::Dwarf:
-		return "DWF";
-	case Race::Troll:
-		return "TRL";
-	case Race::Ogre:
-		return "OGR";
-	case Race::Halfling:
-		return "HFL";
-	case Race::Gnome:
-		return "GNM";
-	case Race::Iksar:
-		return "IKS";
-	case Race::VahShir:
-		return "VAH";
-	}
-
-	return std::string("UNK");
-}
-
 bool IsPlayerRace(uint16 race_id) {
 	return (
-		EQ::ValueWithin(race_id, Race::Human, Race::Gnome) ||
-		race_id == Race::Iksar ||
-		race_id == Race::VahShir
+		EQ::ValueWithin(race_id, HUMAN, GNOME) ||
+		race_id == IKSAR ||
+		race_id == VAHSHIR
 		);
 }

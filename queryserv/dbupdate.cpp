@@ -24,7 +24,7 @@
 #include <string.h>
 #include <mysqld_error.h>
 
-bool QSDatabase::DBSetup()
+bool Database::DBSetup()
 {
 	if (!DBSetup_CheckLegacy())
 	{
@@ -57,7 +57,7 @@ bool QSDatabase::DBSetup()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerAAPurchase()
+bool Database::DBSetup_PlayerAAPurchase()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_aa_purchase_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -84,7 +84,7 @@ bool QSDatabase::DBSetup_PlayerAAPurchase()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerDeathBy()
+bool Database::DBSetup_PlayerDeathBy()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_killed_by_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -110,7 +110,7 @@ bool QSDatabase::DBSetup_PlayerDeathBy()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerTSEvents()
+bool Database::DBSetup_PlayerTSEvents()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_ts_event_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -138,7 +138,7 @@ bool QSDatabase::DBSetup_PlayerTSEvents()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerQGlobalUpdates()
+bool Database::DBSetup_PlayerQGlobalUpdates()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_qglobal_updates_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -164,7 +164,7 @@ bool QSDatabase::DBSetup_PlayerQGlobalUpdates()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerLootRecords()
+bool Database::DBSetup_PlayerLootRecords()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_loot_records_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -196,7 +196,7 @@ bool QSDatabase::DBSetup_PlayerLootRecords()
 	return true;
 }
 
-bool QSDatabase::DBSetup_PlayerItemDesyncs()
+bool Database::DBSetup_PlayerItemDesyncs()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_item_desyncs_log'");
 	auto results1 = QueryDatabase(check_query1);
@@ -222,7 +222,7 @@ bool QSDatabase::DBSetup_PlayerItemDesyncs()
 
 #pragma region Legacy Setup
 #pragma region Trade Tables
-bool QSDatabase::Check_Trade_Tables()
+bool Database::Check_Trade_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_trade_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_player_trade_record_entries'");
@@ -258,7 +258,7 @@ bool QSDatabase::Check_Trade_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_Trade_Table()
+bool Database::Create_Trade_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create trade table.");
 	std::string query = StringFormat(
@@ -292,7 +292,7 @@ bool QSDatabase::Create_Trade_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_Trade_Record()
+bool Database::Copy_Trade_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_player_trade_record`");
 	auto results1 = QueryDatabase(query1);
@@ -388,7 +388,7 @@ bool QSDatabase::Copy_Trade_Record()
 #pragma endregion
 
 #pragma region Handin Tables
-bool QSDatabase::Check_Handin_Tables()
+bool Database::Check_Handin_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_handin_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_player_handin_record_entries'");
@@ -424,7 +424,7 @@ bool QSDatabase::Check_Handin_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_Handin_Table()
+bool Database::Create_Handin_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create handin table.");
 	std::string query = StringFormat(
@@ -457,7 +457,7 @@ bool QSDatabase::Create_Handin_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_Handin_Record()
+bool Database::Copy_Handin_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_player_handin_record`");
 	auto results1 = QueryDatabase(query1);
@@ -549,7 +549,7 @@ bool QSDatabase::Copy_Handin_Record()
 #pragma endregion
 
 #pragma region NPCKills
-bool QSDatabase::Check_NPCKills_Tables()
+bool Database::Check_NPCKills_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_npc_kill_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_player_npc_kill_record_entries'");
@@ -585,7 +585,7 @@ bool QSDatabase::Check_NPCKills_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_NPCKills_Table()
+bool Database::Create_NPCKills_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create npc kills table.");
 	std::string query = StringFormat(
@@ -605,7 +605,7 @@ bool QSDatabase::Create_NPCKills_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_NPCKills_Record()
+bool Database::Copy_NPCKills_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_player_npc_kill_record`");
 	auto results1 = QueryDatabase(query1);
@@ -655,7 +655,7 @@ bool QSDatabase::Copy_NPCKills_Record()
 #pragma endregion
 
 #pragma region Merchant Tables
-bool QSDatabase::Check_Merchant_Tables()
+bool Database::Check_Merchant_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_merchant_transaction_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_merchant_transaction_record_entries'");
@@ -691,7 +691,7 @@ bool QSDatabase::Check_Merchant_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_Merchant_Table()
+bool Database::Create_Merchant_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create merchant table.");
 	std::string query = StringFormat(
@@ -723,7 +723,7 @@ bool QSDatabase::Create_Merchant_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_Merchant_Record()
+bool Database::Copy_Merchant_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_merchant_transaction_record`");
 	auto results1 = QueryDatabase(query1);
@@ -812,7 +812,7 @@ bool QSDatabase::Copy_Merchant_Record()
 #pragma endregion
 
 #pragma region Delete Tables
-bool QSDatabase::Check_Delete_Tables()
+bool Database::Check_Delete_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_delete_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_player_delete_record_entries'");
@@ -848,7 +848,7 @@ bool QSDatabase::Check_Delete_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_Delete_Table()
+bool Database::Create_Delete_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create delete table.");
 	std::string query = StringFormat(
@@ -870,7 +870,7 @@ bool QSDatabase::Create_Delete_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_Delete_Record()
+bool Database::Copy_Delete_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_player_delete_record`");
 	auto results1 = QueryDatabase(query1);
@@ -925,7 +925,7 @@ bool QSDatabase::Copy_Delete_Record()
 #pragma endregion
 
 #pragma region ItemMove Tables
-bool QSDatabase::Check_ItemMove_Tables()
+bool Database::Check_ItemMove_Tables()
 {
 	std::string check_query1 = StringFormat("SHOW TABLES LIKE 'qs_player_move_record'");
 	std::string check_query2 = StringFormat("SHOW TABLES LIKE 'qs_player_move_record_entries'");
@@ -961,7 +961,7 @@ bool QSDatabase::Check_ItemMove_Tables()
 	return true;
 }
 
-bool QSDatabase::Create_ItemMove_Table()
+bool Database::Create_ItemMove_Table()
 {
 	Log(Logs::Detail, Logs::QSServer, "Attempting to create item move table.");
 	std::string query = StringFormat(
@@ -985,7 +985,7 @@ bool QSDatabase::Create_ItemMove_Table()
 	return true;
 }
 
-bool QSDatabase::Copy_ItemMove_Record()
+bool Database::Copy_ItemMove_Record()
 {
 	std::string query1 = StringFormat("SELECT * from `qs_player_move_record`");
 	auto results1 = QueryDatabase(query1);
@@ -1048,7 +1048,7 @@ bool QSDatabase::Copy_ItemMove_Record()
 }
 #pragma endregion
 
-bool QSDatabase::DBSetup_CheckLegacy()
+bool Database::DBSetup_CheckLegacy()
 {
 	if (!Check_Trade_Tables())
 	{

@@ -23,7 +23,6 @@ Copyright (C) 2001-2004 EQEMu Development Team (http://eqemulator.net)
 #include "../common/races.h"
 #include "../common/spdat.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 
 #include "aa.h"
 #include "client.h"
@@ -165,13 +164,13 @@ void Client::ActivateAA(aaID aaid)
 		//special because spell_id depends on class
 		switch (GetClass())
 		{
-		case Class::Druid:
+		case DRUID:
 			spell_id = 2760;
 			break;
-		case Class::Necromancer:
+		case NECROMANCER:
 			spell_id = 2759;
 			break;
-		case Class::Enchanter:
+		case ENCHANTER:
 			spell_id = 2761;
 			break;
 		}
@@ -386,7 +385,7 @@ void Client::ActivateAA(aaID aaid)
 		else
 		{
 			// Bards can cast instant cast AAs while they are casting another song - this really only applies to one ability - Boastful Bellow
-			if (spells[spell_id].cast_time == 0 && GetClass() == Class::Bard && IsBardSong(casting_spell_id))
+			if (spells[spell_id].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id))
 			{
 				cast_success = SpellFinished(spell_id, entity_list.GetMob(target_id), EQ::spells::CastingSlot::Item, -1, -1, spells[spell_id].ResistDiff, false);
 			}
@@ -419,7 +418,7 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 	NPCType* npc_type_copy = new NPCType;
 	memcpy(npc_type_copy, npc_type, sizeof(NPCType));
 	NPC* swarm_pet_npc = new NPC(npc_type_copy, 0, position, GravityBehavior::Water);
-	if (swarm_pet_npc->GetRace() != Race::EyeOfZomm)
+	if (swarm_pet_npc->GetRace() != EYE_OF_ZOMM)
 	{
 		swarm_pet_npc->SetOwnerID(GetID());
 		//swarm_pet_npc->SetSummonedClientPet(IsClient());
@@ -429,7 +428,8 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 	
 
 	// have to hardcode this because NPC skills are hardcoded.  Xuzl pets don't bash/kick
-	if (GetClass() == Class::Wizard) {
+	if (GetClass() == WIZARD)
+	{
 		swarm_pet_npc->SetSkill(EQ::skills::SkillBash, 0);
 		swarm_pet_npc->SetSkill(EQ::skills::SkillKick, 0);
 	}
@@ -461,7 +461,7 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 			swarm_pet_npc->GetSwarmInfo()->target = 0;
 	}
 
-	if (swarm_pet_npc->GetRace() == Race::EyeOfZomm)
+	if (swarm_pet_npc->GetRace() == EYE_OF_ZOMM)
 	{
 		swarm_pet_npc->iszomm = true;
 		swarm_pet_npc->SetNPCFactionID(0);
@@ -479,7 +479,7 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 	swarm_pet_npc->UpdateEquipmentLight();
 
 	entity_list.AddNPC(swarm_pet_npc, true, true);
-	safe_delete(npc_type_copy);
+
 	return swarm_pet_npc;
 }
 
@@ -660,65 +660,65 @@ void Mob::CopyWakeCorpse(NPCType *make_npc, Corpse *CorpseToUse)
 	strcpy(make_npc->special_abilities, "14,1^7,1^10,1^17,1^21,1"); // UNCHARMABLE, INNATE_DUAL_WIELD, SPECATK_MAGICAL, UNFEARABLE, IMMUNE_FLEEING
 	switch (CorpseToUse->class_)
 	{
-	case Class::Cleric:
+	case CLERIC:
 		make_npc->npc_spells_id = 1;
 		break;
-	case Class::Wizard:
+	case WIZARD:
 		make_npc->npc_spells_id = 2;
 		break;
-	case Class::Necromancer:
+	case NECROMANCER:
 		make_npc->npc_spells_id = 3;
 		break;
-	case Class::Magician:
+	case MAGICIAN:
 		make_npc->npc_spells_id = 4;
 		break;
-	case Class::Enchanter:
+	case ENCHANTER:
 		make_npc->npc_spells_id = 5;
 		break;
-	case Class::Shaman:
+	case SHAMAN:
 		make_npc->npc_spells_id = 6;
 		break;
-	case Class::Druid:
+	case DRUID:
 		make_npc->npc_spells_id = 7;
 		break;
-	case Class::Paladin:
+	case PALADIN:
 		make_npc->cur_hp = make_npc->cur_hp * 150 / 100;
 		make_npc->max_hp = make_npc->max_hp * 150 / 100;
 		make_npc->npc_spells_id = 8;
 		break;
-	case Class::ShadowKnight:
+	case SHADOWKNIGHT:
 		make_npc->cur_hp = make_npc->cur_hp * 150 / 100;
 		make_npc->max_hp = make_npc->max_hp * 150 / 100;
 		make_npc->npc_spells_id = 9;
 		break;
-	case Class::Ranger:
+	case RANGER:
 		make_npc->cur_hp = make_npc->cur_hp * 135 / 100;
 		make_npc->max_hp = make_npc->max_hp * 135 / 100;
 		make_npc->npc_spells_id = 10;
 		break;
-	case Class::Bard:
+	case BARD:
 		make_npc->cur_hp = make_npc->cur_hp * 110 / 100;
 		make_npc->max_hp = make_npc->max_hp * 110 / 100;
 		make_npc->npc_spells_id = 11;
 		break;
-	case Class::Beastlord:
+	case BEASTLORD:
 		make_npc->cur_hp = make_npc->cur_hp * 110 / 100;
 		make_npc->max_hp = make_npc->max_hp * 110 / 100;
 		make_npc->npc_spells_id = 12;
 		break;
-	case Class::Rogue:
+	case ROGUE:
 		strcat(make_npc->special_abilities, "^2,1"); // SPECATK_ENRAGE
 		make_npc->max_dmg = make_npc->max_dmg * 150 / 100;
 		make_npc->cur_hp = make_npc->cur_hp * 110 / 100;
 		make_npc->max_hp = make_npc->max_hp * 110 / 100;
 		break;
-	case Class::Monk:
+	case MONK:
 		strcat(make_npc->special_abilities, "^2,1"); // SPECATK_ENRAGE
 		make_npc->max_dmg = make_npc->max_dmg * 150 / 100;
 		make_npc->cur_hp = make_npc->cur_hp * 135 / 100;
 		make_npc->max_hp = make_npc->max_hp * 135 / 100;
 		break;
-	case Class::Warrior:
+	case WARRIOR:
 		strcat(make_npc->special_abilities, "^2,1"); // SPECATK_ENRAGE
 		make_npc->max_dmg = make_npc->max_dmg * 150 / 100;
 		make_npc->cur_hp = make_npc->cur_hp * 175 / 100;

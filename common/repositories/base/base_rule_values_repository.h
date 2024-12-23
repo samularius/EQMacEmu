@@ -155,7 +155,6 @@ public:
 		return (results.Success() ? results.RowsAffected() : 0);
 	}
 
-	/* don't use this
 	static int UpdateOne(
 		Database& db,
 		const RuleValues &e
@@ -182,7 +181,6 @@ public:
 
 		return (results.Success() ? results.RowsAffected() : 0);
 	}
-	*/
 
 	static RuleValues InsertOne(
 		Database& db,

@@ -28,51 +28,15 @@
 #include "../common/eqemu_exception.h"
 #include "../common/strings.h"
 #include "../common/path_manager.h"
-#include "../common/zone_store.h"
 #include "items.h"
+#include "npc_faction.h"
+#include "skill_caps.h"
 #include "spells.h"
 #include "../common/content/world_content_service.h"
 
 EQEmuLogSys LogSys;
 WorldContentService content_service;
-ZoneStore zone_store;
 PathManager path;
-
-#ifdef _WINDOWS
-#include <direct.h>
-#else
-
-#include <unistd.h>
-
-#endif
-
-#include <sys/stat.h>
-
-inline bool MakeDirectory(const std::string& directory_name)
-{
-#ifdef _WINDOWS
-	struct _stat st;
-	if (_stat(directory_name.c_str(), &st) == 0) {
-		return false;
-	}
-	else {
-		_mkdir(directory_name.c_str());
-		return true;
-	}
-
-#else
-	struct stat st;
-	if (stat(directory_name.c_str(), &st) == 0) {
-		return false;
-	}
-	else {
-		mkdir(directory_name.c_str(), 0755);
-		return true;
-	}
-
-#endif
-	return false;
-}
 
 int main(int argc, char **argv) {
 	RegisterExecutablePlatform(ExePlatformSharedMemory);
@@ -91,13 +55,8 @@ int main(int argc, char **argv) {
 
 	SharedDatabase database;
 	LogInfo("Connecting to database...");
-	if(!database.Connect(
-		Config->DatabaseHost.c_str(), 
-		Config->DatabaseUsername.c_str(),
-		Config->DatabasePassword.c_str(), 
-		Config->DatabaseDB.c_str(), 
-		Config->DatabasePort
-	)) {
+	if(!database.Connect(Config->DatabaseHost.c_str(), Config->DatabaseUsername.c_str(),
+		Config->DatabasePassword.c_str(), Config->DatabaseDB.c_str(), Config->DatabasePort)) {
 		LogError("Unable to connect to the database, cannot continue without a database connection");
 		return 1;
 	}
@@ -106,11 +65,6 @@ int main(int argc, char **argv) {
 		->SetLogPath(path.GetLogPath())
 		->LoadLogDatabaseSettings()
 		->StartFileLogs();
-
-	std::string shared_mem_directory = Config->SharedMemDir;
-	if (MakeDirectory(shared_mem_directory)) {
-		LogInfo("Shared Memory folder doesn't exist, so we created it [{}]", shared_mem_directory.c_str());
-	}
 
 	database.LoadVariables();
 
@@ -157,11 +111,11 @@ int main(int argc, char **argv) {
 	);
 
 	std::string hotfix_name = "";
-
 	bool load_all = true;
 	bool load_items = false;
+	bool load_factions = false;
+	bool load_skill_caps = false;
 	bool load_spells = false;
-
 	if(argc > 1) {
 		for(int i = 1; i < argc; ++i) {
 			switch(argv[i][0]) {	
@@ -172,8 +126,18 @@ int main(int argc, char **argv) {
 				}
 				break;
 	
+			case 'f':
+				if(strcasecmp("factions", argv[i]) == 0) {
+					load_factions = true;
+					load_all = false;
+				}
+				break;
+	
 			case 's':
-				if(strcasecmp("spells", argv[i]) == 0) {
+				if(strcasecmp("skill_caps", argv[i]) == 0) {
+					load_skill_caps = true;
+					load_all = false;
+				} else if(strcasecmp("spells", argv[i]) == 0) {
 					load_spells = true;
 					load_all = false;
 				}
@@ -202,6 +166,26 @@ int main(int argc, char **argv) {
 		LogInfo("Loading items...");
 		try {
 			LoadItems(&database, hotfix_name);
+		} catch(std::exception &ex) {
+			LogError("{}", ex.what());
+			return 1;
+		}
+	}
+	
+	if(load_all || load_factions) {
+		LogInfo("Loading factions...");
+		try {
+			LoadFactions(&database, hotfix_name);
+		} catch(std::exception &ex) {
+			LogError("{}", ex.what());
+			return 1;
+		}
+	}
+	
+	if(load_all || load_skill_caps) {
+		LogInfo("Loading skill caps...");
+		try {
+			LoadSkillCaps(&database, hotfix_name);
 		} catch(std::exception &ex) {
 			LogError("{}", ex.what());
 			return 1;

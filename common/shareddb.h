@@ -11,7 +11,6 @@
 #include "fixed_memory_hash_set.h"
 #include "fixed_memory_variable_hash_set.h"
 #include "say_link.h"
-#include "repositories/command_subsettings_repository.h"
 
 #include <list>
 #include <memory>
@@ -47,14 +46,10 @@ public:
 	bool	GetCommandSettings(std::map<std::string, std::pair<uint8, std::vector<std::string>>>& command_settings);
 	bool	UpdateInjectedCommandSettings(const std::vector<std::pair<std::string, uint8>>& injected);
 	bool	UpdateOrphanedCommandSettings(const std::vector<std::string>& orphaned);
-	bool	GetCommandSubSettings(std::vector<CommandSubsettingsRepository::CommandSubsettings>& command_subsettings);
 	uint32	GetTotalTimeEntitledOnAccount(uint32 AccountID);
 	bool	SetGMInvul(uint32 account_id, bool gminvul);
 	bool	SetGMFlymode(uint32 account_id, uint8 flymode);
 	bool	SetGMIgnoreTells(uint32 account_id, uint8 ignoretells);
-	void	SetMailKey(int CharID, int IPAddress, int MailKey);
-	std::string	GetMailKey(int CharID, bool key_only = false);
-
 	bool    GetCharCreateStats(uint32 class_id, uint32 race_id, RaceClassAllocation& out);
 	bool    GetCharCreateFullInfo(uint32 class_id, uint32 race_id, uint32 diety_id, uint32 player_choice_city, uint32& expansions_req, RaceClassAllocation& out_allocation, BindStruct& out_bind);
 
@@ -92,6 +87,18 @@ public:
 		const EQ::ItemData* GetItem(uint32 id);
 		uint32 GetSharedItemsCount() { return m_shared_items_count; }
 		uint32 GetItemsCount();
+
+		//faction lists
+		void GetFactionListInfo(uint32 &list_count, uint32 &max_lists);
+		const NPCFactionList* GetNPCFactionEntry(uint32 id);
+		void LoadNPCFactionLists(void *data, uint32 size, uint32 list_count, uint32 max_lists);
+		bool LoadNPCFactionLists(const std::string &prefix);
+
+		//skills
+		void LoadSkillCaps(void *data);
+		bool LoadSkillCaps(const std::string &prefix);
+		uint16 GetSkillCap(uint8 Class_, EQ::skills::SkillType Skill, uint8 Level);
+		uint8 GetTrainLevel(uint8 Class_, EQ::skills::SkillType Skill, uint8 Level);
 
 		//spells
 		int GetMaxSpellID();
