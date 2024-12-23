@@ -23,8 +23,7 @@ void command_zonebootup(Client *c, const Seperator *sep)
 		ServerZoneStateChange_struct* s = (ServerZoneStateChange_struct *)pack->pBuffer;
 		s->ZoneServerID = atoi(sep->arg[2]);
 		strcpy(s->adminname, c->GetName());
-		s->zoneid = ZoneID(sep->arg[1]);
-		s->ZoneServerGuildID = GUILD_NONE;
+		s->zoneid = database.GetZoneID(sep->arg[1]);
 		s->makestatic = true;
 		worldserver.SendPacket(pack);
 		safe_delete(pack);

@@ -1,7 +1,6 @@
 #include "data_bucket.h"
 #include <utility>
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 #include "zonedb.h"
 #include <ctime>
 #include <cctype>
@@ -147,7 +146,7 @@ uint64 DataBucket::DoesBucketExist(std::string bucket_key) {
 	if (results.RowCount() != 1)
 		return 0;
 
-	return Strings::ToUnsignedBigInt(row[0]);
+	return std::stoull(row[0]);
 }
 
 /**

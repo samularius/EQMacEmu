@@ -27,9 +27,9 @@ void command_zoneguild(Client *c, const Seperator *sep)
 	auto zone_id = (
 		sep->IsNumber(1) ?
 		std::stoul(zone_identifier) :
-		ZoneID(zone_identifier)
+		database.GetZoneID(zone_identifier)
 		);
-	auto zone_short_name = ZoneName(zone_id);
+	auto zone_short_name = database.GetZoneName(zone_id);
 	if (!zone_id || !zone_short_name) {
 		c->Message(
 			Chat::White,

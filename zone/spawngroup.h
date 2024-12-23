@@ -24,10 +24,11 @@
 #include <list>
 #include <memory>
 
-class SpawnEntry {
+class SpawnEntry
+{
 public:
-	SpawnEntry(uint32 in_NPCType, int in_chance, uint8 in_npc_spawn_limit, uint8 in_mintime, uint8 in_maxtime);
-	~SpawnEntry() {}
+	SpawnEntry(uint32 in_NPCType, int in_chance, uint8 in_npc_spawn_limit, uint8 in_mintime, uint8 in_maxtime );
+	~SpawnEntry() { }
 	uint32 NPCType;
 	int chance;
 	uint8 mintime;
@@ -37,23 +38,10 @@ public:
 	uint8 npc_spawn_limit; //max # of this entry which can be spawned in this zone
 };
 
-class SpawnGroup {
+class SpawnGroup
+{
 public:
-	SpawnGroup(
-		uint32 in_id, 
-		char* name, 
-		int in_group_spawn_limit, 
-		float maxx, 
-		float minx, 
-		float maxy, 
-		float miny, 
-		int delay_in, 
-		int despawn_in, 
-		uint32 despawn_timer_in, 
-		int min_delay_in, 
-		bool wp_spawns_in 
-	);
-
+	SpawnGroup(uint32 in_id, char* name, int in_group_spawn_limit, float maxx, float minx, float maxy, float miny, int delay_in, int despawn_in, uint32 despawn_timer_in, int min_delay_in, bool wp_spawns_in );
 	~SpawnGroup();
 	uint32 GetNPCType(uint32& rtime, uint32 spawn2_id = 0);
 	void AddSpawnEntry(std::unique_ptr<SpawnEntry>& newEntry);
@@ -76,15 +64,15 @@ private:
 	std::list<std::unique_ptr<SpawnEntry>> list_;
 };
 
-class SpawnGroupList {
+class SpawnGroupList
+{
 public:
-	SpawnGroupList() {}
+	SpawnGroupList() { }
 	~SpawnGroupList();
 
 	void AddSpawnGroup(std::unique_ptr<SpawnGroup>& new_group);
 	SpawnGroup* GetSpawnGroup(uint32 id);
-	void ClearSpawnGroups();
-	void ReloadSpawnGroups();
+	bool RemoveSpawnGroup(uint32 in_id);
 private:
 	std::map<uint32, std::unique_ptr<SpawnGroup>> m_spawn_groups;
 };

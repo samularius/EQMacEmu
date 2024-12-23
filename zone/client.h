@@ -45,7 +45,6 @@ struct ItemData;
 #include "../common/guilds.h"
 #include "../common/item_data.h"
 #include "../common/data_verification.h"
-#include "../common/zone_store.h"
 
 #include "aa.h"
 #include "common.h"
@@ -72,7 +71,6 @@ struct ItemData;
 #define CLIENT_LD_TIMEOUT	30000 // length of time client stays in zone after LDing
 #define TARGETING_RANGE		200	// range for /target
 #define ASSIST_RANGE		250 // range for /assist
-#define MAX_SPECIALIZED_SKILL 50
 
 extern Zone* zone;
 
@@ -300,7 +298,6 @@ public:
 	inline void	PreDisconnect() { client_state = PREDISCONNECTED; }
 	inline void	Reconnect() { client_state = CLIENT_CONNECTED; }
 	inline bool IsLD() const { return (bool) (client_state == CLIENT_LINKDEAD); }
-	void Kick(const std::string& reason);
 	void WorldKick();
 	inline uint8 GetAnon() const { return m_pp.anon; }
 	inline PlayerProfile_Struct& GetPP() { return m_pp; }
@@ -413,8 +410,6 @@ public:
 	inline float ProximityY() const { return m_Proximity.y; }
 	inline float ProximityZ() const { return m_Proximity.z; }
 	inline void ClearAllProximities() { entity_list.ProcessMove(this, glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX)); m_Proximity = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX); }
-
-	void CheckVirtualZoneLines();
 
 	/*
 			Begin client modifiers
@@ -568,8 +563,8 @@ public:
 	bool CheckLoreConflict(const EQ::ItemData* item);
 	void ChangeLastName(const char* in_lastname);
 	void SetTemporaryLastName(char* in_lastname);
-	void SacrificeConfirm(Mob* caster);
-	void Sacrifice(Mob* caster);
+	void SacrificeConfirm(Client* caster);
+	void Sacrifice(Client* caster);
 	void GoToDeath();
 	void ForceGoToDeath();
 	void SetZoning(bool in) { zoning = in; }
@@ -581,7 +576,7 @@ public:
 	int32 GetModCharacterFactionLevel(int32 faction_id, bool skip_illusions = false);
 	void MerchantRejectMessage(Mob *merchant, int primaryfaction);
 	int32 UpdatePersonalFaction(int32 char_id, int32 npc_value, int32 faction_id, int32 temp, bool skip_gm = true, bool show_msg = true);
-	void SetFactionLevel(uint32 char_id, uint32 npc_faction_id, bool quest = false);
+	void SetFactionLevel(uint32 char_id, uint32 npc_id, bool quest = false);
 	void SetFactionLevel2(uint32 char_id, int32 faction_id, int32 value, uint8 temp);
 	int32 GetRawItemAC();
 	uint8 GetRaceArmorSize();
@@ -611,8 +606,6 @@ public:
 	void	RefreshGuildInfo();
 	std::string GetGuildName();
 
-	uint8 GetClientMaxLevel() const { return client_max_level; }
-	void SetClientMaxLevel(uint8 max_level) { client_max_level = max_level; }
 
 	void	SendManaUpdatePacket();
 	void	SendManaUpdate();
@@ -671,11 +664,10 @@ public:
 	void	SendStats(Client* client);
 	void	SendQuickStats(Client* client);
 
-	uint16 MaxSkill(EQ::skills::SkillType skill_id, uint8 class_id, uint8 level) const;
-	inline uint16 MaxSkill(EQ::skills::SkillType skill_id) const { return MaxSkill(skill_id, GetClass(), GetLevel()); }
-	uint16	GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skill_id, uint16 maxSkill);
-	uint8 GetSkillTrainLevel(EQ::skills::SkillType skill_id, uint16 class_id);
-	void MaxSkills();
+	uint16 MaxSkill(EQ::skills::SkillType skillid, uint16 class_, uint16 level) const;
+	inline uint16 MaxSkill(EQ::skills::SkillType skillid) const { return MaxSkill(skillid, GetClass(), GetLevel()); }
+	uint16	GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skillid, uint16 maxSkill);
+	uint8 SkillTrainLevel(EQ::skills::SkillType skillid, uint16 class_);
 
 	bool TradeskillExecute(DBTradeskillRecipe_Struct *spec);
 	void CheckIncreaseTradeskill(bool isSuccessfulCombine, EQ::skills::SkillType tradeskill);
@@ -707,8 +699,8 @@ public:
 	void UnscribeSpellAll(bool update_client = true);
 	bool SpellGlobalCheck(uint16 spell_id, uint32 char_id);
 	bool SpellBucketCheck(uint16 spell_id, uint32 char_id);
-	uint8 GetCharMaxLevelFromQGlobal();
-	uint8 GetCharMaxLevelFromBucket();
+	uint32 GetCharMaxLevelFromQGlobal();
+	uint32 GetCharMaxLevelFromBucket();
 
 	inline bool IsSitting() const {return (playeraction == eaSitting);}
 	inline bool IsBecomeNPC() const { return npcflag; }
@@ -914,7 +906,7 @@ public:
 	bool	PendingTranslocate;
 	time_t	TranslocateTime;
 	bool	PendingSacrifice;
-	uint16 sacrifice_caster_id;
+	std::string	SacrificeCaster;
 	PendingTranslocate_Struct PendingTranslocateData;
 	void	SendOPTranslocateConfirm(Mob *Caster, uint16 SpellID);
 
@@ -924,7 +916,7 @@ public:
 
 	int GetAggroCount();
 
-	void CheckEmoteHail(NPC* n, const char* message);
+	void CheckEmoteHail(Mob *target, const char* message);
 
 	void SummonAndRezzAllCorpses();
 	void SummonAllCorpses(const glm::vec4& position);
@@ -989,8 +981,6 @@ public:
 	bool GetInterrogateInvState() { return interrogateinv_flag; }
 
 	bool InterrogateInventory(Client* requester, bool log, bool silent, bool allowtrip, bool& error, bool autolog = true);
-
-	uint8 client_max_level;
 
 	bool IsLFG() { return LFG; }
 
@@ -1125,7 +1115,6 @@ public:
 
 	inline bool InstanceBootGraceTimerExpired() { return instance_boot_grace_timer.Check(); }
 	void ShowDevToolsMenu();
-	void SendReloadCommandMessages();
 
 protected:
 	friend class Mob;
@@ -1297,7 +1286,7 @@ private:
 	Timer global_channel_timer;
 	Timer fishing_timer;
 	Timer autosave_timer;
-
+	Timer scanarea_timer;
 	Timer	proximity_timer;
 	Timer	charm_class_attacks_timer;
 	Timer	charm_cast_timer;
@@ -1321,10 +1310,6 @@ private:
 	Timer instance_boot_grace_timer;
 
     glm::vec3 m_Proximity;
-
-	// client aggro
-	Timer m_client_npc_aggro_scan_timer;
-	void CheckClientToNpcAggroTimer();
 
 	void BulkSendInventoryItems();
 	void SendCursorItems();

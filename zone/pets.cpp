@@ -21,7 +21,6 @@
 #include "../common/strings.h"
 #include "../common/types.h"
 #include "../common/data_verification.h"
-#include "../common/zone_store.h"
 
 #include "entity.h"
 #include "client.h"
@@ -186,12 +185,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 					focusType = FocusPetType::ALL;
 				} else {
 					// make sure we can use the focus item as the class .. client should never let us fail this but for sanity!
-					if (GetClass() == Class::Magician) {
+					if (GetClass() == MAGICIAN) {
 						Log(Logs::General, Logs::Pets, "Looking up mage");
 						Log(Logs::General, Logs::Pets, "Looking up if spell: %d is allowed ot be focused", spell_id);
 						focusType = Pet::GetPetItemPetTypeFromSpellId(spell_id);
 						Log(Logs::General, Logs::Pets, "FocusType fround %i", focusType);
-					} else if (GetClass() == Class::Necromancer) {
+					} else if (GetClass() == NECROMANCER) {
 						Log(Logs::General, Logs::Pets, "We are a necro");
 						focusType = FocusPetType::NECRO;
 					}
@@ -208,12 +207,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	auto npc_type = new NPCType;
 	memcpy(npc_type, base, sizeof(NPCType));
 
-	if ((GetClass() == Class::Necromancer || GetClass() == Class::ShadowKnight) && GetBaseRace() == Race::Iksar && npc_type->race == Race::Skeleton) {
+	if ((GetClass() == NECROMANCER || GetClass() == SHADOWKNIGHT) && GetBaseRace() == IKSAR && npc_type->race == SKELETON) {
 		npc_type->race = IKSAR_SKELETON;
 		npc_type->helmtexture = GetGender();
     }
 
-	if ((GetClass() == Class::Necromancer || GetClass() == Class::ShadowKnight) && GetBaseRace() == Race::Gnome && npc_type->race == Race::Skeleton && npc_type->size != 0)
+	if (GetClass() == NECROMANCER && GetBaseRace() == GNOME && npc_type->race == SKELETON && npc_type->size != 0)
 		npc_type->size = EQ::ClampUpper((float)npc_type->size - 2.0f, 3.0f);
 
 	npc_type->loot_lockout = 0;
@@ -277,15 +276,15 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			atk = 25;
 			switch (GetClass())
 			{
-			case Class::Magician:
+			case MAGICIAN:
 				minDmg = 4;
 				maxDmg = 11;
 				break;
-			case Class::Necromancer:
+			case NECROMANCER:
 				minDmg = 2;
 				maxDmg = 8;
 				break;
-			case Class::Beastlord:
+			case BEASTLORD:
 				minDmg = 1;
 				maxDmg = 9;
 				break;
@@ -339,33 +338,32 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	{
 		switch(GetBaseRace())
 		{
-		case Race::VahShir:
-			npc_type->race = Race::Tiger;
+		case VAHSHIR:
+			npc_type->race = TIGER;
 			npc_type->size *= 0.8f;
 			break;
-		case Race::Troll:
-			npc_type->race = Race::Alligator;
+		case TROLL:
+			npc_type->race = ALLIGATOR;
 			npc_type->size *= 2.5f;
 			break;
-		case Race::Ogre:
-			npc_type->race = Race::Bear;
+		case OGRE:
+			npc_type->race = BEAR;
 			npc_type->texture = 3;
-			npc_type->gender = Gender::Neuter;
+			npc_type->gender = 2;
 			break;
-		case Race::Barbarian:
-			npc_type->race = Race::Wolf;
+		case BARBARIAN:
+			npc_type->race = WOLF;
 			npc_type->texture = 2;
 			break;
-		case Race::Iksar:
-			npc_type->race = Race::Wolf;
+		case IKSAR:
+			npc_type->race = WOLF;
 			npc_type->texture = 0;
-			npc_type->gender = Gender::Female;
+			npc_type->gender = 1;
 			npc_type->luclinface = 0;
 			break;
 		default:
 			npc_type->race = WOLF;
 			npc_type->texture = 0;
-			break;
 		}
 	}
 
@@ -394,9 +392,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 
 		// since we don't have any monsters, just make it look like an earth pet for now
-		if (monsterid == 0) {
+		if (monsterid == 0)
 			monsterid = 579;
-		}
 
 		Log(Logs::General, Logs::Pets, "Monster Summon appearance NPCID is %d", monsterid);
 
@@ -404,20 +401,20 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		const NPCType* monster = database.LoadNPCTypesData(monsterid);
 		if(monster) {
 			npc_type->race = monster->race;
-			if (monster->size < 1) {
+			if (monster->size < 1)
+			{
 				npc_type->size = 6;
 			}
-			else {
+			else
+			{
 				npc_type->size = monster->size;
 			}
 			npc_type->texture = monster->texture;
 			npc_type->gender = monster->gender;
 			npc_type->luclinface = monster->luclinface;
 			npc_type->helmtexture = monster->helmtexture;
-		}
-		else {
+		} else
 			Log(Logs::General, Logs::Error, "Error loading NPC data for monster summoning pet (NPC ID %d)", monsterid);
-		}
 
 	}
 
@@ -481,16 +478,16 @@ Pet::Pet(NPCType *type_data, Mob *owner, PetType type, uint16 spell_id, int16 po
 	skills[EQ::skills::SkillDoubleAttack] = 0;
 	skills[EQ::skills::SkillDualWield] = 0;
 
-	if (class_ == Class::Warrior || class_ == Class::Paladin || class_ == Class::ShadowKnight)
+	if (class_ == WARRIOR || class_ == PALADIN || class_ == SHADOWKNIGHT)
 		skills[EQ::skills::SkillBash] = level > 5 ? skillLevel : 0;
 
-	if (class_ == Class::Warrior || class_ == Class::Ranger)
+	if (class_ == WARRIOR || class_ == RANGER)
 		skills[EQ::skills::SkillKick] = level > 15 ? skillLevel : 0;
 
-	if (class_ == Class::Rogue)
+	if (class_ == ROGUE)
 		skills[EQ::skills::SkillBackstab] = level > 9 ? skillLevel : 0;
 
-	if (class_ == Class::Monk)
+	if (class_ == MONK)
 	{
 		skills[EQ::skills::SkillRoundKick] = level > 4 ? skillLevel : 0;
 		skills[EQ::skills::SkillTigerClaw] = level > 9 ? skillLevel : 0;
@@ -504,12 +501,12 @@ Pet::Pet(NPCType *type_data, Mob *owner, PetType type, uint16 spell_id, int16 po
 	if (level >= 60)
 		skillLevel += 25;
 
-	if (class_ == Class::Warrior || class_ == Class::Paladin || class_ == Class::ShadowKnight || class_ == Class::Rogue || class_ == Class::Ranger || class_ == Class::Bard)
+	if (class_ == WARRIOR || class_ == PALADIN || class_ == SHADOWKNIGHT || class_ == ROGUE || class_ == RANGER || class_ == BARD)
 	{
 		skills[EQ::skills::SkillParry] = level > 6 ? skillLevel : 0;
 		skills[EQ::skills::SkillRiposte] = level > 11 ? skillLevel : 0;
 	}
-	else if (class_ == Class::Monk)
+	else if (class_ == MONK)
 	{
 		skills[EQ::skills::SkillParry] = 0;
 		skills[EQ::skills::SkillRiposte] = level > 11 ? skillLevel : 0;

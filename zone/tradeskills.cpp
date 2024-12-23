@@ -27,7 +27,6 @@
 
 #include "../common/rulesys.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 #include "../common/repositories/criteria/content_filter_criteria.h"
 
 #include "queryserv.h"
@@ -121,7 +120,7 @@ void Object::HandleCombine(Client* user, const Combine_Struct* in_combine, Objec
 
 	//changing from a switch to string of if's since we don't need to iterate through all of the skills in the SkillType enum
 	if (spec.tradeskill == EQ::skills::SkillAlchemy) {
-		if (user_pp.class_ != Class::Shaman) {
+		if (user_pp.class_ != SHAMAN) {
 			user->Message(Chat::Red, "This tradeskill can only be performed by a shaman.");
 			return;
 		}
@@ -137,7 +136,7 @@ void Object::HandleCombine(Client* user, const Combine_Struct* in_combine, Objec
 		}
 	}
 	else if (spec.tradeskill == EQ::skills::SkillMakePoison) {
-		if (user_pp.class_ != Class::Rogue) {
+		if (user_pp.class_ != ROGUE) {
 			user->Message(Chat::Red, "Only rogues can mix poisons.");
 			return;
 		}
@@ -349,7 +348,7 @@ bool Client::TradeskillExecute(DBTradeskillRecipe_Struct *spec) {
 		Log(Logs::Detail, Logs::Tradeskills, "Combine failed");
 			if (this->GetGroup())
 		{
-			entity_list.MessageGroup(this,true, Chat::Skills,"%s was unsuccessful in %s tradeskill attempt.",GetName(),this->GetGender() == Gender::Male ? "his" : this->GetGender() == Gender::Female ? "her" : "its");
+			entity_list.MessageGroup(this,true, Chat::Skills,"%s was unsuccessful in %s tradeskill attempt.",GetName(),this->GetGender() == 0 ? "his" : this->GetGender() == 1 ? "her" : "its");
 
 		}
 
@@ -473,7 +472,7 @@ bool ZoneDatabase::GetTradeRecipe(const EQ::ItemInstance* container, uint8 c_typ
 	}
 
 	std::string containers;// make where clause segment for container(s)
-	if (some_id < 75) {
+	if (some_id == 0) {
 		containers = StringFormat("= %u", c_type); // world combiner so no item number
 	}
 	else {
@@ -692,7 +691,7 @@ bool ZoneDatabase::GetTradeRecipe(uint32 recipe_id, uint8 c_type, uint32 some_id
 
 	// make where clause segment for container(s)
 	std::string containers;
-	if (some_id < 75) {
+	if (some_id == 0) {
 		// world combiner so no item number
 		containers = StringFormat("= %u", c_type); 
 	}
@@ -766,7 +765,7 @@ bool ZoneDatabase::GetTradeRecipe(uint32 recipe_id, uint8 c_type, uint32 some_id
 	for(auto row = results.begin(); row != results.end(); ++row) {
 		uint32 item = (uint32)atoi(row[0]);
 		uint8 num = (uint8) atoi(row[1]);
-		spec->onsuccess.emplace_back(std::pair<uint32,uint8>(item, num));
+		spec->onsuccess.push_back(std::pair<uint32,uint8>(item, num));
 	}
 
 	spec->onfail.clear();
@@ -778,7 +777,7 @@ bool ZoneDatabase::GetTradeRecipe(uint32 recipe_id, uint8 c_type, uint32 some_id
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			uint32	item	= (uint32)atoi(row[0]);
 			uint8	num		= (uint8)atoi(row[1]);
-			spec->onfail.emplace_back(std::pair<uint32, uint8>(item, num));
+			spec->onfail.push_back(std::pair<uint32, uint8>(item, num));
 		}
 	}
 

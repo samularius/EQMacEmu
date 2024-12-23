@@ -18,10 +18,8 @@
 #ifndef LAUNCHERLINK_H_
 #define LAUNCHERLINK_H_
 
+#include "../common/emu_tcp_connection.h"
 #include "../common/timer.h"
-#include "../common/net/servertalk_server_connection.h"
-#include "../common/event/timer.h"
-#include <memory>
 #include <string>
 #include <vector>
 #include <map>
@@ -30,20 +28,19 @@ class ServerPacket;
 
 class LauncherLink {
 public:
-	LauncherLink(int id, std::shared_ptr<EQ::Net::ServertalkServerConnection> tcpc);
+	LauncherLink(int id, EmuTCPConnection *tcpc);
 	~LauncherLink();
 
-	void Process(EQ::Timer* t);
-	void ProcessMessage(uint16 opcode, EQ::Net::Packet& p);
-	void SendPacket(ServerPacket* pack) { tcpc->SendPacket(pack); }
+	bool		Process();
+	bool		SendPacket(ServerPacket* pack) { return tcpc->SendPacket(pack); }
+//	bool		SendPacket(TCPConnection::TCPNetPacket_Struct* tnps) { return tcpc->SendPacket(tnps); }
 
 	int GetID() const { return(ID); }
-	void Disconnect() { if (tcpc->Handle()) { tcpc->Handle()->Disconnect(); } }
+	void Disconnect() { tcpc->Disconnect(); }
 
-	inline bool	HasName() const { return(m_name.length() > 0); }
-	inline std::string GetIP() const { return tcpc->Handle() ? tcpc->Handle()->RemoteIP() : 0; }
-	inline uint16 GetPort() const { return tcpc->Handle() ? tcpc->Handle()->RemotePort() : 0; }
-	inline std::string GetUUID() const { return tcpc->GetUUID(); }
+	inline bool			HasName() const		{ return(m_name.length() > 0); }
+	inline uint32		GetIP() const		{ return tcpc->GetrIP(); }
+	inline uint16		GetPort() const		{ return tcpc->GetrPort(); }
 	inline const char * GetName() const		{ return(m_name.c_str()); }
 	inline int			CountZones() const	{ return(m_states.size()); }
 
@@ -63,8 +60,7 @@ public:
 
 protected:
 	const int			ID;
-	std::shared_ptr<EQ::Net::ServertalkServerConnection> tcpc;
-	std::unique_ptr<EQ::Timer> m_process_timer;
+	EmuTCPConnection*const tcpc;
 	bool				authenticated;
 	std::string			m_name;
 	Timer				m_bootTimer;

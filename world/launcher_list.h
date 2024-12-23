@@ -19,13 +19,12 @@
 #define LAUNCHERLIST_H_
 
 #include "../common/types.h"
-#include "../common/net/servertalk_server_connection.h"
 #include <map>
 #include <vector>
 #include <string>
-#include <memory>
 
 class LauncherLink;
+class EmuTCPConnection;
 class EQLConfig;
 
 class LauncherList {
@@ -40,8 +39,7 @@ public:
 	void CreateLauncher(const char *name, uint8 dynamic_count);
 	void Remove(const char *name);
 
-	void Add(std::shared_ptr<EQ::Net::ServertalkServerConnection> conn);
-	void Remove(std::shared_ptr<EQ::Net::ServertalkServerConnection> conn);
+	void Add(EmuTCPConnection *conn);
 	LauncherLink *Get(const char *name);
 	LauncherLink *FindByZone(const char *short_name);
 
@@ -51,6 +49,7 @@ public:
 protected:
 	std::map<std::string, EQLConfig *> m_configs;	//we own these objects
 	std::map<std::string, LauncherLink *> m_launchers;	//we own these objects
+//	std::map<std::string, EQLConfig *> m_configs;	//we own these objects
 	std::vector<LauncherLink *> m_pendingLaunchers;	//we own these objects, have not yet identified themself
 	int nextID;
 };

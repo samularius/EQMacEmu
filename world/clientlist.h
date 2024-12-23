@@ -7,8 +7,6 @@
 #include "../common/timer.h"
 #include "../common/rulesys.h"
 #include "../common/servertalk.h"
-#include "../common/event/timer.h"
-#include "../common/net/console_server_connection.h"
 #include <vector>
 #include <string>
 
@@ -73,8 +71,6 @@ public:
 	void	UpdateClientGuild(uint32 char_id, uint32 guild_id);
 	bool	ActiveConnection(uint32 iAccID);
 	bool	ActiveConnection(uint32 iAccID, uint32 iCharID);
-	bool    IsAccountInGame(uint32 iLSID);
-
 
 	int GetClientCount();
 	void GetClients(const char *zone_name, std::vector<ClientListEntry *> &into);
@@ -83,9 +79,8 @@ public:
 	void GetClientList(Json::Value &response);
 
 	std::string AppendChallengeModeFlagsToName(ClientListEntry* cle);
-	
-private:
-	void OnTick(EQ::Timer* t);
+
+protected:
 	inline uint32 GetNextCLEID() { return NextCLEID++; }
 
 	//this is the list of people actively connected to zone
@@ -96,7 +91,6 @@ private:
 	uint32 NextCLEID;
 	LinkedList<ClientListEntry *> clientlist;
 
-	std::unique_ptr<EQ::Timer> m_tick;
 };
 
 #endif /*CLIENTLIST_H_*/

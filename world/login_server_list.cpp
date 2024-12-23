@@ -52,78 +52,132 @@ LoginServerList::~LoginServerList() {
 void LoginServerList::Add(const char* iAddress, uint16 iPort, const char* Account, const char* Password, uint8 Type)
 {
 	auto loginserver = new LoginServer(iAddress, iPort, Account, Password, Type);
-	m_list.emplace_back(std::unique_ptr<LoginServer>(loginserver));
+	list.Insert(loginserver);
+}
+
+bool LoginServerList::Process() {
+	LinkedListIterator<LoginServer*> iterator(list);
+
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->Process();
+		iterator.Advance();
+	}
+	return true;
+}
+
+#ifdef _WINDOWS
+void AutoInitLoginServer(void *tmp) {
+#else
+void *AutoInitLoginServer(void *tmp) {
+#endif
+	loginserverlist.InitLoginServer();
+#ifndef WIN32
+	return 0;
+#endif
+}
+
+void LoginServerList::InitLoginServer() {
+	LinkedListIterator<LoginServer*> iterator(list);
+
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->InitLoginServer();
+		iterator.Advance();
+	}
 }
 
 bool LoginServerList::SendInfo() {
-	for (auto& iter : m_list) {
-		(*iter).SendInfo();
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->SendInfo();
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::SendNewInfo() {
-	for (auto& iter : m_list) {
-		(*iter).SendNewInfo();
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->SendNewInfo();
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::SendStatus() {
-	for (auto& iter : m_list) {
-		(*iter).SendStatus();
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->SendStatus();
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::SendPacket(ServerPacket* pack) {
-	for (auto& iter : m_list) {
-		(*iter).SendPacket(pack);
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		iterator.GetData()->SendPacket(pack);
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::SendAccountUpdate(ServerPacket* pack) {
-	for (auto& iter : m_list) {
-		if ((*iter).CanUpdate()) {
-			(*iter).SendAccountUpdate(pack);
-		}
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	Log(Logs::Detail, Logs::WorldServer, "Requested to send ServerOP_LSAccountUpdate packet to all loginservers");
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		if(iterator.GetData()->CanUpdate()) {
+			iterator.GetData()->SendAccountUpdate(pack);
+		}
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::Connected() {
-	for (auto & iter : m_list) {
-		if ((*iter).Connected()) {
-			return true;
-		}
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		if(iterator.GetData()->Connected())
+			return true;
+		iterator.Advance();
+	}
 	return false;
 }
 
 bool LoginServerList::AllConnected() {
-	for (auto& iter : m_list) {
-		if (!(*iter).Connected()) {
-			return false;
-		}
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		if(iterator.GetData()->Connected() == false)
+			return false;
+		iterator.Advance();
+	}
 	return true;
 }
 
 bool LoginServerList::CanUpdate() {
-	for (auto& iter : m_list) {
-		if ((*iter).CanUpdate()) {
-			return true;
-		}
-	}
+	LinkedListIterator<LoginServer*> iterator(list);
 
+	iterator.Reset();
+	while(iterator.MoreElements()){
+		if(iterator.GetData()->CanUpdate())
+			return true;
+		iterator.Advance();
+	}
 	return false;
 }
 

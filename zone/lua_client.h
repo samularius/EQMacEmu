@@ -261,20 +261,13 @@ public:
 	void QuestReward(Lua_Mob target, luabind::adl::object reward);
 	int GetHandToHandDamage();
 	int GetHandToHandDelay();
-
 	void PermaGender(uint32 in_Gender);
 	bool IsMarried();
 	void SetMarried(const char*);
 	void SetTemporaryLastName(char*);
 	bool HasTemporaryLastName();
-
-	uint8 GetSkillTrainLevel(int skill_id);
-	void MaxSkills();
 	bool SendGMCommand(std::string message);
 	bool SendGMCommand(std::string message, bool ignore_status);
-
-	void SetClientMaxLevel(uint8 max_level);
-	uint8 GetClientMaxLevel();
 };
 
 #endif

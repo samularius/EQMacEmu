@@ -18,8 +18,7 @@
 #ifndef WORLDSERVER_H
 #define WORLDSERVER_H
 
-#include "../common/net/servertalk_client_connection.h"
-#include <memory>
+#include "../common/worldconn.h"
 #include <string>
 #include <queue>
 #include <map>
@@ -27,19 +26,18 @@
 class ZoneLaunch;
 class EQEmuConfig;
 
-class WorldServer {
+class WorldServer : public WorldConnection {
 public:
 	WorldServer(std::map<std::string, ZoneLaunch *> &zones, const char *name, const EQEmuConfig *config);
-	~WorldServer();
+	virtual ~WorldServer();
 
-	void HandleMessage(uint16 opcode, EQ::Net::Packet& p);
+	virtual void Process();
 
 	void SendStatus(const char *short_name, uint32 start_count, bool running);
 
 private:
 	virtual void OnConnected();
 
-	std::unique_ptr<EQ::Net::ServertalkClient> m_connection;
 	const char *const m_name;
 	const EQEmuConfig *const m_config;
 	std::map<std::string, ZoneLaunch *> &m_zones;

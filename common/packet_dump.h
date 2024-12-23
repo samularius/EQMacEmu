@@ -18,8 +18,7 @@
 #ifndef PACKET_DUMP_H
 #define PACKET_DUMP_H
 
-#include "types.h"
-#include "net/packet.h"
+#include "../common/types.h"
 
 class ServerPacket;
 
@@ -30,7 +29,6 @@ std::string DumpPacketToRawString(const uchar* buf, uint32 size);
 void DumpPacketBin(const void* data, uint32 len);
 void DumpPacket(const uchar* buf, uint32 size);
 void DumpPacket(const ServerPacket* pack, bool iShowInfo = false);
-void DumpPacket(uint16 opcode, const EQ::Net::Packet& p, bool iShowInfo = false);
 void DumpPacketBin(const ServerPacket* pack);
 void DumpPacketBin(uint32 data);
 void DumpPacketBin(uint16 data);

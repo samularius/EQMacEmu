@@ -260,9 +260,6 @@ foreach my $table_to_generate (@tables) {
         elsif ((trim($column_default) eq "" || $column_default eq "NULL") && $column_type =~ /text|varchar/i) {
             $default_value = '""';
         }
-        elsif ((trim($column_default) eq "" || $column_default eq "NULL") && $column_type =~ /blob/i) {
-            $default_value = '""';
-        }
 
         # for datetime values that set default value all zeroed out
         if ($default_value =~ /0000-00-00 00:00:00/i) {
@@ -283,7 +280,7 @@ foreach my $table_to_generate (@tables) {
 
         # column names (string)
         $column_names_quoted .= sprintf("\t\t\t\"%s\",\n", format_column_name_for_mysql($column_name));
-        if ($data_type =~ /datetime|timestamp/) {
+        if ($data_type =~ /datetime/) {
             $select_column_names_quoted .= sprintf("\t\t\t\"UNIX_TIMESTAMP(%s)\",\n", format_column_name_for_mysql($column_name));
         }
         else {
@@ -296,11 +293,8 @@ foreach my $table_to_generate (@tables) {
             if ($data_type =~ /int|float|double|decimal/) {
                 $query_value = sprintf('" + std::to_string(e.%s));', $column_name_formatted);
             }
-            elsif ($data_type =~ /datetime|timestamp/) {
+            elsif ($data_type =~ /datetime/) {
                 $query_value = sprintf('FROM_UNIXTIME(" + (e.%s > 0 ? std::to_string(e.%s) : "null") + ")");', $column_name_formatted, $column_name_formatted);
-            }
-            elsif ($data_type =~ /blob/) {
-                $query_value = sprintf('\'" + e.%s + "\'");', $column_name_formatted);
             }
 
             $update_one_entries .= sprintf(
@@ -315,11 +309,8 @@ foreach my $table_to_generate (@tables) {
         if ($data_type =~ /int|float|double|decimal/) {
             $value = sprintf('std::to_string(e.%s)', $column_name_formatted);
         }
-        elsif ($data_type =~ /datetime|timestamp/) {
+        elsif ($data_type =~ /datetime/) {
             $value = sprintf('"FROM_UNIXTIME(" + (e.%s > 0 ? std::to_string(e.%s) : "null") + ")"', $column_name_formatted, $column_name_formatted);
-        }
-        elsif ($data_type =~ /blob/) {
-            $value = sprintf("\"'\" + e.%s + \"'\"", $column_name_formatted);
         }
 
         $insert_one_entries  .= sprintf("\t\tv.push_back(%s);\n", $value);
@@ -341,7 +332,7 @@ foreach my $table_to_generate (@tables) {
             $all_entries      .= sprintf("\t\t\te.%-${longest_column_length}s = row[%s] ? strtoll(row[%s], nullptr, 10) : %s;\n", $column_name_formatted, $index, $index, $default_value);
             $find_one_entries .= sprintf("\t\t\te.%-${longest_column_length}s = row[%s] ? strtoll(row[%s], nullptr, 10) : %s;\n", $column_name_formatted, $index, $index, $default_value);
         }
-        elsif ($data_type =~ /datetime|timestamp/) {
+        elsif ($data_type =~ /datetime/) {
             $all_entries      .= sprintf("\t\t\te.%-${longest_column_length}s = strtoll(row[%s] ? row[%s] : \"-1\", nullptr, 10);\n", $column_name_formatted, $index, $index);
             $find_one_entries .= sprintf("\t\t\te.%-${longest_column_length}s = strtoll(row[%s] ? row[%s] : \"-1\", nullptr, 10);\n", $column_name_formatted, $index, $index);
         }
@@ -600,7 +591,7 @@ sub translate_mysql_data_type_to_c
     elsif ($mysql_data_type =~ /double/) {
         $struct_data_type = 'double';
     }
-    elsif ($mysql_data_type =~ /datetime|timestamp/) {
+    elsif ($mysql_data_type =~ /datetime/) {
         $struct_data_type = 'time_t';
     }
 

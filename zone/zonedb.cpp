@@ -4,7 +4,6 @@
 #include "../common/item_instance.h"
 #include "../common/rulesys.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 
 #include "client.h"
 #include "corpse.h"
@@ -97,8 +96,7 @@ bool ZoneDatabase::SaveZoneCFG(uint32 zoneid, NewZone_Struct* zd) {
 	return true;
 }
 
-bool ZoneDatabase::GetZoneCFG(uint32 zoneid, NewZone_Struct *zone_data, bool &can_bind, bool &can_combat, bool &can_levitate, bool &can_castoutdoor, bool &is_city, uint8 &zone_type, int &ruleset, char **map_filename, bool &can_bind_others, bool &skip_los, bool &drag_aggro, bool &can_castdungeon, uint16 &pull_limit, bool &reducedspawntimers, bool& trivial_loot_code, bool &is_hotzone) {
-
+bool ZoneDatabase::GetZoneCFG(uint32 zoneid, NewZone_Struct *zone_data, bool &can_bind, bool &can_combat, bool &can_levitate, bool &can_castoutdoor, bool &is_city, uint8 &zone_type, int &ruleset, char **map_filename, bool &can_bind_others, bool &skip_los, bool &drag_aggro, bool &can_castdungeon, uint16 &pull_limit, bool &reducedspawntimers, bool& trivial_loot_code) {
 
 	*map_filename = new char[100];
 	zone_data->zone_id = zoneid;
@@ -110,7 +108,7 @@ bool ZoneDatabase::GetZoneCFG(uint32 zoneid, NewZone_Struct *zone_data, bool &ca
         "fog_red4, fog_green4, fog_blue4, fog_minclip4, fog_maxclip4, " // 5
         "fog_density, sky, zone_exp_multiplier, safe_x, safe_y, safe_z, underworld, " // 7
         "minclip, maxclip, time_type, canbind, cancombat, canlevitate, " // 6
-        "castoutdoor, hotzone, ruleset, suspendbuffs, map_file_name, short_name, " // 5
+        "castoutdoor, ruleset, suspendbuffs, map_file_name, short_name, " // 5
         "rain_chance1, rain_chance2, rain_chance3, rain_chance4, " // 4
         "rain_duration1, rain_duration2, rain_duration3, rain_duration4, " // 4
         "snow_chance1, snow_chance2, snow_chance3, snow_chance4, " // 4
@@ -171,38 +169,37 @@ bool ZoneDatabase::GetZoneCFG(uint32 zoneid, NewZone_Struct *zone_data, bool &ca
     can_combat = atoi(row[32]) == 0? false: true;
     can_levitate = atoi(row[33]) == 0? false: true;
     can_castoutdoor = atoi(row[34]) == 0? false: true;
-	is_hotzone = atoi(row[35]) == 0 ? false : true;
 
-    ruleset = atoi(row[36]);
-    zone_data->SuspendBuffs = atoi(row[37]);
+    ruleset = atoi(row[35]);
+    zone_data->SuspendBuffs = atoi(row[36]);
 
-    char *file = row[38];
+    char *file = row[37];
     if(file)
         strcpy(*map_filename, file);
     else
-        strcpy(*map_filename, row[39]);
+        strcpy(*map_filename, row[38]);
 
     for(index = 0; index < 4; index++)
-        zone_data->rain_chance[index]=atoi(row[40 + index]);
+        zone_data->rain_chance[index]=atoi(row[39 + index]);
 
 	for(index = 0; index < 4; index++)
-        zone_data->rain_duration[index]=atoi(row[44 + index]);
+        zone_data->rain_duration[index]=atoi(row[43 + index]);
 
 	for(index = 0; index < 4; index++)
-        zone_data->snow_chance[index]=atoi(row[48 + index]);
+        zone_data->snow_chance[index]=atoi(row[47 + index]);
 
 	for(index = 0; index < 4; index++)
-        zone_data->snow_duration[index]=atoi(row[52 + index]);
+        zone_data->snow_duration[index]=atoi(row[51 + index]);
 
-	zone_data->skylock = atoi(row[56]);
-	skip_los = atoi(row[57]) == 0? false: true;
-	zone_data->normal_music_day = atoi(row[58]);
+	zone_data->skylock = atoi(row[55]);
+	skip_los = atoi(row[56]) == 0? false: true;
+	zone_data->normal_music_day = atoi(row[57]);
 	
 	// These never change in packet
 	zone_data->water_music = 4;
 	zone_data->normal_music_night = 0;
 
-	uint8 zone_expansion = atoi(row[59]);
+	uint8 zone_expansion = atoi(row[58]);
 	if(zone_expansion == 1)
 		zone_data->expansion = KunarkEQ;
 
@@ -218,14 +215,14 @@ bool ZoneDatabase::GetZoneCFG(uint32 zoneid, NewZone_Struct *zone_data, bool &ca
 	else
 		zone_data->expansion = ClassicEQ;
 
-	drag_aggro = atoi(row[60]) == 0 ? false : true;
-	zone_data->never_idle = atoi(row[61]) == 0 ? false : true;
-	can_castdungeon = atoi(row[62]) == 0 ? false : true;
-	pull_limit = atoi(row[63]);
-	zone_data->graveyard_time = atoi(row[64]);
-	zone_data->max_z = atof(row[65]);
-	reducedspawntimers = atoi(row[66]);
-	trivial_loot_code = atoi(row[67]);
+	drag_aggro = atoi(row[59]) == 0 ? false : true;
+	zone_data->never_idle = atoi(row[60]) == 0 ? false : true;
+	can_castdungeon = atoi(row[61]) == 0 ? false : true;
+	pull_limit = atoi(row[62]);
+	zone_data->graveyard_time = atoi(row[63]);
+	zone_data->max_z = atof(row[64]);
+	reducedspawntimers = atoi(row[65]);
+	trivial_loot_code = atoi(row[66]);
 	return true;
 }
 
@@ -1138,12 +1135,8 @@ bool ZoneDatabase::SaveCharacterSkill(uint32 character_id, uint32 skill_id, uint
 	return true;
 }
 
-bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp)
-{
-	std::string mail_key = database.GetMailKey(character_id);
-
+bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp){
 	clock_t t = std::clock(); /* Function timer start */
-	
 	std::string query = StringFormat(
 		"REPLACE INTO `character_data` ("
 		" id,                        "
@@ -1212,7 +1205,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_temp_last_name,			 "
 		" e_married_character_id,	 "
 		" e_char_export_flag,		 "
-		" mailkey,					 "
 		" e_times_rebirthed			 "
 		")							 "
 		"VALUES ("
@@ -1282,7 +1274,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s',"  // e_temp_last_name
 		"%u,"  // e_married_character_id
 		"%u,"  // e_char_export_flag
-		"'%s'," // mailkey
 		"%u"  // e_times_rebirthed
 		")",
 		character_id,					  // " id,                        "
@@ -1351,7 +1342,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		Strings::Escape(m_epp->temp_last_name).c_str(),
 		m_epp->married_character_id,
 		m_epp->char_export_flag,
-		mail_key.c_str(),
 		m_epp->e_times_rebirthed
 	);
 	auto results = database.QueryDatabase(query);
@@ -1577,7 +1567,6 @@ const NPCType* ZoneDatabase::LoadNPCTypesData(uint32 id, bool bulk_load)
 		);
 	}
 
-	std::vector<uint32> npc_faction_ids;
 	std::vector<uint32> loottable_ids;
 
     // Otherwise, get NPCs from database.
@@ -1676,18 +1665,6 @@ const NPCType* ZoneDatabase::LoadNPCTypesData(uint32 id, bool bulk_load)
 		t->eyecolor2 = n.luclin_eyecolor2;
 		t->beardcolor = n.luclin_beardcolor;
 		t->beard = n.luclin_beard;
-
-		if (t->npc_faction_id > 0) {
-			if (
-				std::find(
-					npc_faction_ids.begin(),
-					npc_faction_ids.end(),
-					t->npc_faction_id
-				) == npc_faction_ids.end()
-				) {
-				npc_faction_ids.emplace_back(t->npc_faction_id);
-			}
-		}
 
 		uint32 armor_tint_id = n.armortint_id;
 
@@ -1792,10 +1769,6 @@ const NPCType* ZoneDatabase::LoadNPCTypesData(uint32 id, bool bulk_load)
 		zone->npctable[t->npc_id] = t;
 		npc = t;
 
-	}
-
-	if (!npc_faction_ids.empty()) {
-		zone->LoadNPCFactions(npc_faction_ids);
 	}
 	
 	zone->LoadLootTables(loottable_ids);
@@ -2648,6 +2621,30 @@ std::string ZoneDatabase::GetFactionName(int32 faction_id)
 }
 
 //o--------------------------------------------------------------
+//| Name: GetNPCFactionList; Dec. 16, 2001
+//o--------------------------------------------------------------
+//| Purpose: Gets a list of faction_id's and values bound to the npc_id. Returns false on failure.
+//o--------------------------------------------------------------
+bool ZoneDatabase::GetNPCFactionList(uint32 npcfaction_id, int32* faction_id, int32* value, uint8* temp, int32* primary_faction) {
+	if (npcfaction_id <= 0) {
+		if (primary_faction)
+			*primary_faction = npcfaction_id;
+		return true;
+	}
+	const NPCFactionList* nfl = GetNPCFactionEntry(npcfaction_id);
+	if (!nfl)
+		return false;
+	if (primary_faction)
+		*primary_faction = nfl->primaryfaction;
+	for (int i=0; i<MAX_NPC_FACTIONS; i++) {
+		faction_id[i] = nfl->factionid[i];
+		value[i] = nfl->factionvalue[i];
+		temp[i] = nfl->factiontemp[i];
+	}
+	return true;
+}
+
+//o--------------------------------------------------------------
 //| Name: SetCharacterFactionLevel; Dec. 20, 2001
 //o--------------------------------------------------------------
 //| Purpose: Update characters faction level with specified faction_id to specified value. Returns false on failure.
@@ -2726,38 +2723,45 @@ bool ZoneDatabase::LoadFactionData()
 	return true;
 }
 
-bool ZoneDatabase::GetFactionIDsForNPC(
-	uint32 npc_faction_id,
-	std::list<NpcFactionEntriesRepository::NpcFactionEntries>* faction_list,
-	int32* primary_faction
-)
-{
-	if (npc_faction_id <= 0) {
-		faction_list->clear();
-
-		if (primary_faction) {
-			*primary_faction = npc_faction_id;
+bool ZoneDatabase::GetFactionIdsForNPC(uint32 nfl_id, std::list<struct NPCFaction*> *faction_list, int32* primary_faction) {
+	if (nfl_id <= 0) {
+		std::list<struct NPCFaction*>::iterator cur,end;
+		cur = faction_list->begin();
+		end = faction_list->end();
+		for(; cur != end; ++cur) {
+			struct NPCFaction* tmp = *cur;
+			safe_delete(tmp);
 		}
 
+		faction_list->clear();
+		if (primary_faction)
+			*primary_faction = nfl_id;
 		return true;
 	}
-
-	const auto& npcf = zone->GetNPCFaction(npc_faction_id);
-	if (!npcf) {
-		LogError("No NPC faction entry for [{}]", npc_faction_id);
+	const NPCFactionList* nfl = GetNPCFactionEntry(nfl_id);
+	if (!nfl)
 		return false;
+	if (primary_faction)
+		*primary_faction = nfl->primaryfaction;
+
+	std::list<struct NPCFaction*>::iterator cur,end;
+	cur = faction_list->begin();
+	end = faction_list->end();
+	for(; cur != end; ++cur) {
+		struct NPCFaction* tmp = *cur;
+		safe_delete(tmp);
 	}
-
-	const auto& l = zone->GetNPCFactionEntries(npc_faction_id);
-
-	if (primary_faction) {
-		*primary_faction = npcf->primaryfaction;
-	}
-
 	faction_list->clear();
-
-	for (const auto& e: l) {
-		faction_list->emplace_back(e);
+	for (int i=0; i<MAX_NPC_FACTIONS; i++) {
+		struct NPCFaction *pFac;
+		if (nfl->factionid[i]) {
+			pFac = new struct NPCFaction;
+			pFac->factionID = nfl->factionid[i];
+			pFac->value_mod = nfl->factionvalue[i];
+			pFac->npc_value = nfl->factionnpcvalue[i];
+			pFac->temp = nfl->factiontemp[i];
+			faction_list->push_back(pFac);
+		}
 	}
 	return true;
 }
@@ -2770,51 +2774,59 @@ bool ZoneDatabase::SameFactions(uint32 npcfaction_id1, uint32 npcfaction_id2)
 	if (npcfaction_id1 == npcfaction_id2)
 		return true;
 
-	const auto nfl1 = zone->GetNPCFaction(npcfaction_id1);
-	const auto nfl2 = zone->GetNPCFaction(npcfaction_id2);
+	const NPCFactionList* nfl1 = GetNPCFactionEntry(npcfaction_id1);
+	const NPCFactionList* nfl2 = GetNPCFactionEntry(npcfaction_id2);
 
-	if (!nfl1 || !nfl2) {
+	if (!nfl1 || !nfl2)
+	{
 		return false;
 	}
 
-	if (nfl1->primaryfaction != nfl2->primaryfaction) {
+	if (nfl1->primaryfaction != nfl2->primaryfaction)
+	{
 		return false;
 	}
 
-	const auto& l1 = zone->GetNPCFactionEntries(npcfaction_id1);
-	const auto& l2 = zone->GetNPCFactionEntries(npcfaction_id2);
-
-
-	for (const auto& e1 : l1) {
-		uint32 faction = nfl1->id;
+	for (int i = 0; i<MAX_NPC_FACTIONS; i++) 
+	{
+		uint32 faction = nfl1->factionid[i];
 		// Skip primary faction, since it will cause NPCs to assist, but may not have a faction hit (templeveeshan mobs as an example.)
-		if (faction != nfl1->primaryfaction){
+		if (faction != nfl1->primaryfaction)
+		{
 			bool found = false;
-			for (const auto& e2 : l2) {
-				if (faction == nfl2->id) {
+			for (int x = 0; x < MAX_NPC_FACTIONS; x++)
+			{
+				if (faction == nfl2->factionid[x])
+				{
 					found = true;
 					break;
 				}
 			}
 
-			if (!found)	{
+			if (!found)
+			{
 				return false;
 			}
 		}
 	}
 
-	for (const auto& e2 : l2) {
-		uint32 faction = nfl2->id;
-		if (faction != nfl2->primaryfaction) {
+	for (int i = 0; i<MAX_NPC_FACTIONS; i++)
+	{
+		uint32 faction = nfl2->factionid[i];
+		if (faction != nfl2->primaryfaction)
+		{
 			bool found = false;
-			for (const auto& e1 : l1) {
-				if (faction == nfl1->id) {
+			for (int x = 0; x < MAX_NPC_FACTIONS; x++)
+			{
+				if (faction == nfl1->factionid[x])
+				{
 					found = true;
 					break;
 				}
 			}
 
-			if (!found)	{
+			if (!found)
+			{
 				return false;
 			}
 		}

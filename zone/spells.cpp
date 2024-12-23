@@ -74,14 +74,11 @@ Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
 #include "../common/global_define.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/item_instance.h"
-#include "../common/misc_functions.h"
 #include "../common/rulesys.h"
 #include "../common/skills.h"
 #include "../common/spdat.h"
 #include "../common/strings.h"
 
-
-#include "data_bucket.h"
 #include "quest_parser_collection.h"
 #include "string_ids.h"
 #include "worldserver.h"
@@ -98,8 +95,7 @@ Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
 	#include "../common/packet_dump_file.h"
 #endif
 
-#include "mob_movement_manager.h"
-#include "client.h"
+
 
 extern Zone* zone;
 extern volatile bool is_zone_loaded;
@@ -290,7 +286,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		NPC* spell_target_npc = spell_target->CastToNPC();
 		if (spell_target_npc)
 		{
-			if (spell_target_npc->GetSpecialAbility(SpecialAbility::MagicImmunity) && spell_target_npc->GetSpecialAbility(SpecialAbility::AggroImmunity))
+			if (spell_target_npc->GetSpecialAbility(IMMUNE_MAGIC) && spell_target_npc->GetSpecialAbility(IMMUNE_AGGRO))
 			{
 				InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, true, false);
 				return false;
@@ -469,7 +465,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		// This was added to the game in the February 21, 2001 patch.  Logs confirm it does apply to NPCs as well.
 		if (
 			GetLevel() > 50 &&
-			(GetClass() == Class::Beastlord || GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight) &&
+			(GetClass() == BEASTLORD || GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT) &&
 			orgcasttime > 2999 &&
 			spells[spell_id].goodEffect == 0
 		)
@@ -549,7 +545,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	if (cast_time <= 0)
 	{
 		CastedSpellFinished(spell_id, target_id, slot, mana_cost, item_slot, resist_adjust);
-		if (IsBardSong(spell_id) && GetClass() == Class::Bard && slot == CastingSlot::Item)
+		if (IsBardSong(spell_id) && GetClass() == BARD && slot == CastingSlot::Item)
 			_StopSong(); // don't repeat Breath of Harmony and Lute of the Flowing Waters instant cast clickies
 		return(true);
 	}
@@ -902,7 +898,7 @@ bool Client::CheckFizzle(uint16 spell_id)
 		// the spell also has 25 adjustment in it, but that adjustment is only applied to clerics
 		// this special case only has an effect for DRU/SHM because PAL would have 0 adjustment anyway due to another special case below
 		// the end result is that at max level CLR/DRU/SHM are equally skilled at casting this spell
-		if (spell_id == SPELL_SUPERIOR_HEALING && GetClass() != Class::Cleric)
+		if (spell_id == SPELL_SUPERIOR_HEALING && GetClass() != CLERIC)
 		{
 			spellFizzleAdjustment = 0;
 		}
@@ -912,12 +908,12 @@ bool Client::CheckFizzle(uint16 spell_id)
 			spellFizzleAdjustment = 0;
 		}
 		// for PAL/RNG/SHD class the fizzle adjustment is overriden for spells 41+ instead
-		if ((GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight) && spellLevel > 40)
+		if ((GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT) && spellLevel > 40)
 		{
 			spellFizzleAdjustment = 0;
 		}
 		// bard fizzle adjustment capped to 15 max.
-		if (GetClass() == Class::Bard && spellFizzleAdjustment > 15)
+		if (GetClass() == BARD && spellFizzleAdjustment > 15)
 		{
 			// this is how it's coded in the client, however there are no bard songs that have an adjustment larger than 15 anyway so this has no effect
 			spellFizzleAdjustment = 15;
@@ -925,7 +921,7 @@ bool Client::CheckFizzle(uint16 spell_id)
 
 		// primeStat is just your WIS/INT or DEX+CHA combined for bard
 		int primeStat = 0;
-		if (GetClass() == Class::Bard)
+		if (GetClass() == BARD)
 		{
 			primeStat = (GetCHA() + GetDEX()) / 2;
 		}
@@ -963,12 +959,12 @@ bool Client::CheckFizzle(uint16 spell_id)
 
 		// cap chance
 		cappedChance = chance;
-		if (GetClass() == Class::Bard)
+		if (GetClass() == BARD)
 		{
 			// min 1 max 95 for bard
 			cappedChance = cappedChance < 1 ? 1 : cappedChance > 95 ? 95 : cappedChance;
 		}
-		else if(GetClass() <= Class::PLAYER_CLASS_COUNT)
+		else if(GetClass() <= PLAYER_CLASS_COUNT)
 		{
 			// min 5 max 95 for non bard
 			cappedChance = cappedChance < 5 ? 5 : cappedChance > 95 ? 95 : cappedChance;
@@ -1136,7 +1132,7 @@ void Mob::InterruptSpell(uint16 message, uint16 color, uint16 spellid, bool fizz
 			case SPELL_RECOVERY:
 			case SPELL_RECAST:
 				message_other = 0;
-				if (IsValidSpell(spellid) && GetClass() == Class::Bard && IsBardSong(spellid))
+				if (IsValidSpell(spellid) && GetClass() == BARD && IsBardSong(spellid))
 				{
 					message_other = SONG_ENDS_ABRUPTLY_OTHER;
 					color = Chat::Spells;
@@ -1208,7 +1204,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 	bool regain_conc = false;
 	Mob *spell_target = entity_list.GetMob(target_id);
 	// here we do different things if this is a bard casting a bard song
-	if(GetClass() == Class::Bard) // bard's can move when casting any spell...
+	if(GetClass() == BARD) // bard's can move when casting any spell...
 	{
 		if (spells[spell_id].bardsong)
 		{
@@ -1324,7 +1320,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 					roll = zone->random.Int(1, 390);
 
 					// AK logs show some warrior NPCs (e.g. Tallon Zek) not regaining concentration; maybe NPCs used channeling skill in 2002 but not 2006?  shrug
-					if (GetClass() == Class::Warrior || GetClass() == Class::Rogue || GetClass() == Class::Monk)
+					if (GetClass() == WARRIOR || GetClass() == ROGUE || GetClass() == MONK)
 						roll = 0;
 
 					if (roll > ((GetLevel() < 51 ? 325 : 225) - GetLevel() * 3))		// not how Sony did it; replace this if you find data/evidence/leaks
@@ -1371,7 +1367,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 		Log(Logs::Detail, Logs::Spells, "Spell %d: requires a component.", spell_id);
 
 		// bard instrument is checked in SpellFinished()
-		if (GetClass() != Class::Bard && !spells[spell_id].bardsong && !HasSpellReagent(spell_id))
+		if (GetClass() != BARD && !spells[spell_id].bardsong && !HasSpellReagent(spell_id))
 		{
 			InterruptSpell();
 			return;
@@ -1425,7 +1421,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 		{
 			if (spell_target->IsNPC())
 			{
-				if (!spell_target->CastToNPC()->GetSpecialAbility(SpecialAbility::SnareImmunity))
+				if (!spell_target->CastToNPC()->GetSpecialAbility(UNSNAREABLE))
 				{
 					SpellFinished(512, spell_target, slot, mana_used, inventory_slot, resist_adjust);
 				}
@@ -1453,7 +1449,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 
 		// bard songs have to be stopped manually, the gems don't pop out on their own, even on nonrepeating songs (those which have a recast delay or mana cost)
 		bool skipSpellRefresh = false;
-		if (GetClass() == Class::Bard && (IsBardSong(spell_id) || HasActiveSong()))
+		if (GetClass() == BARD && (IsBardSong(spell_id) || HasActiveSong()))
 			skipSpellRefresh = true;
 
 		if (slot < CastingSlot::MaxGems || slot == CastingSlot::Ability)
@@ -1615,7 +1611,7 @@ bool Mob::HasSpellReagent(uint16 spell_id)
 	else
 	{
 		// mage AA still requires reagents but does not consume them
-		if (GetClass() == Class::Magician && GetAA(aaElementalPact) > 0 && GetSpellEffectIndex(spell_id, SE_SummonPet) != -1)
+		if (GetClass() == MAGICIAN && GetAA(aaElementalPact) > 0 && GetSpellEffectIndex(spell_id, SE_SummonPet) != -1)
 			return true;
 
 		std::string item_name;
@@ -1727,9 +1723,9 @@ bool Mob::DetermineSpellTargets(uint16 spell_id, Mob *&spell_target, Mob *&ae_ce
 	// during this switch, this variable gets set to one of these things
 	// and that causes the spell to be executed differently
 
-	uint8 target_bt = BodyType::Humanoid;
+	bodyType target_bt = BT_Humanoid;
 	SpellTargetType targetType = spells[spell_id].targettype;
-	uint8 mob_body = spell_target ? spell_target->GetBodyType() : BodyType::Humanoid;
+	bodyType mob_body = spell_target ? spell_target->GetBodyType() : BT_Humanoid;
 
 	if(IsClient()
 		&& spell_target != nullptr // null ptr crash safeguard
@@ -1766,9 +1762,9 @@ bool Mob::DetermineSpellTargets(uint16 spell_id, Mob *&spell_target, Mob *&ae_ce
 		// target required for these
 		case ST_Undead: {
 			if(!spell_target || (
-				mob_body != BodyType::SummonedUndead
-				&& mob_body != BodyType::Undead
-				&& mob_body != BodyType::Vampire
+				mob_body != BT_SummonedUndead
+				&& mob_body != BT_Undead
+				&& mob_body != BT_Vampire
 				)
 			)
 			{
@@ -1785,7 +1781,7 @@ bool Mob::DetermineSpellTargets(uint16 spell_id, Mob *&spell_target, Mob *&ae_ce
 		}
 
 		case ST_Summoned: {
-			if(!spell_target || (mob_body != BodyType::Summoned && mob_body != BodyType::Summoned2 && mob_body != BodyType::Summoned3))
+			if(!spell_target || (mob_body != BT_Summoned && mob_body != BT_Summoned2 && mob_body != BT_Summoned3))
 			{
 				//invalid target
 				Log(Logs::Detail, Logs::Spells, "Spell %d canceled: invalid target of body type %d (summoned)", spell_id, mob_body);
@@ -1798,10 +1794,10 @@ bool Mob::DetermineSpellTargets(uint16 spell_id, Mob *&spell_target, Mob *&ae_ce
 
 		//single body type target spells...
 		//this is a little hackish, but better than duplicating code IMO
-		case ST_Plant: if(target_bt == BodyType::Humanoid) target_bt = BodyType::Plant;
-		case ST_UberDragon: if(target_bt == BodyType::Humanoid) target_bt = BodyType::VeliousDragon;
-		case ST_UberGiant: if(target_bt == BodyType::Humanoid) target_bt = BodyType::RaidGiant;
-		case ST_Animal: if(target_bt == BodyType::Humanoid) target_bt = BodyType::Animal;
+		case ST_Plant: if(target_bt == BT_Humanoid) target_bt = BT_Plant;
+		case ST_UberDragon: if(target_bt == BT_Humanoid) target_bt = BT_VeliousDragon;
+		case ST_UberGiant: if(target_bt == BT_Humanoid) target_bt = BT_BaneGiant;
+		case ST_Animal: if(target_bt == BT_Humanoid) target_bt = BT_Animal;
 		{
 			if(!spell_target || mob_body != target_bt)
 			{
@@ -2328,7 +2324,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	if (IsClient() && slot < CastingSlot::MaxGems)
 	{
 		Client *c = CastToClient();
-		if (GetClass() == Class::Bard && IsBardSong(spell_id))
+		if (GetClass() == BARD && IsBardSong(spell_id))
 		{
 			c->CheckSongSkillIncrease(spell_id);
 		}
@@ -2363,7 +2359,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 				recast += GetActSpellCasttime(spell_id, spells[spell_id].cast_time) / 1000 - 1;
 				if (
 					GetLevel() > 50 && spells[spell_id].goodEffect == 0 && spells[spell_id].cast_time > 2999 &&
-					(GetClass() == Class::Beastlord || GetClass() == Class::Paladin || GetClass() == Class::Ranger || GetClass() == Class::ShadowKnight)
+					(GetClass() == BEASTLORD || GetClass() == PALADIN || GetClass() == RANGER || GetClass() == SHADOWKNIGHT)
 				)
 					recast -= 1;
 			}
@@ -2393,8 +2389,8 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 
 	// Reset attack timer on casts for most classes.  Logs confirm this does apply to NPCs as well.
 	// Note that the exceptions for hybrid classes (except bard) were added in the January 9, 2001 patch. (BSTs in Luclin, obv)
-	if (slot >= CastingSlot::Gem1 && slot < CastingSlot::MaxGems && GetClass() != Class::Bard && GetClass() != Class::Ranger
-		&& GetClass() != Class::ShadowKnight && GetClass() != Class::Paladin && GetClass() != Class::Beastlord)
+	if (slot >= CastingSlot::Gem1 && slot < CastingSlot::MaxGems && GetClass() != BARD && GetClass() != RANGER
+		&& GetClass() != SHADOWKNIGHT && GetClass() != PALADIN && GetClass() != BEASTLORD)
 	{
 		GetAttackTimer().Reset();
 	}
@@ -2948,7 +2944,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 					is_spell_target_out_of_range = false;
 				}
 				if ((IsClient() && spelltar->IsNPC() && spells[spell_id].max[i] != 0 && is_spell_target_out_of_range) ||
-					spelltar->GetSpecialAbility(SpecialAbility::PacifyImmunity))
+					spelltar->GetSpecialAbility(IMMUNE_PACIFY)) 
 				{
 					spelltar->PacifyImmune = true;
 					Message_StringID(Chat::SpellFailure, SPELL_NO_EFFECT);
@@ -3101,7 +3097,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 		else if	( !IsAttackAllowed(spelltar, true, spell_id) && !IsResurrectionEffects(spell_id) && spell_id != 721) { // Detrimental spells - PVP check. This also is used for Bard AE detrimental songs.
 			Log(Logs::Detail, Logs::Spells, "Detrimental spell %d can't take hold %s -> %s", spell_id, GetName(), spelltar->GetName());
 			spelltar->Message_StringID(Chat::SpellFailure, YOU_ARE_PROTECTED, GetCleanName());
-			if((GetClass() == Class::Bard && IsBardSong(spell_id)) == false) // no spam for bard songs, including single target ones
+			if((GetClass() == BARD && IsBardSong(spell_id)) == false) // no spam for bard songs, including single target ones
 				Message_StringID(Chat::SpellFailure, SPELL_NO_HOLD);
 			safe_delete(action_packet);
 			return false;
@@ -3121,9 +3117,9 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 
 	//check for AE_Undead
 	if(spells[spell_id].targettype == ST_UndeadAE){
-		if(spelltar->GetBodyType() != BodyType::SummonedUndead &&
-			spelltar->GetBodyType() != BodyType::Undead &&
-			spelltar->GetBodyType() != BodyType::Vampire)
+		if(spelltar->GetBodyType() != BT_SummonedUndead &&
+			spelltar->GetBodyType() != BT_Undead &&
+			spelltar->GetBodyType() != BT_Vampire)
 		{
 			safe_delete(action_packet);
 			return false;
@@ -3140,7 +3136,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 			case 1:
 			{
 				if(spells[spell_id].targettype == ST_Target) {
-					for(int y = 0; y < Class::PLAYER_CLASS_COUNT; y++) {
+					for(int y = 0; y < PLAYER_CLASS_COUNT; y++) {
 						if(spells[spell_id].classes[y] < 255)
 							reflect_chance = 1;
 					}
@@ -3149,7 +3145,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 			}
 			case 2:
 			{
-				for(int y = 0; y < Class::PLAYER_CLASS_COUNT; y++) {
+				for(int y = 0; y < PLAYER_CLASS_COUNT; y++) {
 					if(spells[spell_id].classes[y] < 255)
 						reflect_chance = 1;
 				}
@@ -3247,7 +3243,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 	{
 		// if AssignBuffSlot returned false there's a problem applying the spell. It's most likely a buff that can't stack.
 		Log(Logs::General, Logs::Spells, "Spell %d could not be assigned a slot %s -> %s\n", spell_id, GetName(), spelltar->GetName());
-		if ((GetClass() == Class::Bard && IsBardSong(spell_id)) == false) // no spam for bard songs, including single target ones
+		if ((GetClass() == BARD && IsBardSong(spell_id)) == false) // no spam for bard songs, including single target ones
 			Message_StringID(Chat::SpellFailure, SPELL_NO_HOLD);
 		safe_delete(action_packet);
 		CalcBonuses();
@@ -3354,16 +3350,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 	}
 
 	// Apply the spell effects and bonuses.
-	if (spell_id == SPELL_MISTWALKER) // this is coded as a normal self only pet spell, but we're making it into a temporary swarm pet that attacks the caster's target here
-	{
-		if (GetTarget() && (GetTarget()->IsNPC() || GetTarget()->IsClient()))
-		{
-			char pet_name[64];
-			snprintf(pet_name, sizeof(pet_name), "%s`s_pet", GetCleanName());
-			TemporaryPets(spell_id, GetTarget(), pet_name, 2);
-		}
-	}
-	else if (!spelltar->SpellEffect(this, spell_id, buffslot, clevel, spell_effectiveness))
+	if (!spelltar->SpellEffect(this, spell_id, buffslot, clevel, spell_effectiveness))
 	{
 		// if SpellEffect() returned false there's a problem applying the effects (invalid spell.)
 		Log(Logs::General, Logs::Spells, "Spell %d could not apply its effects %s -> %s\n", spell_id, GetName(), spelltar->GetName());
@@ -3438,7 +3425,8 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	// refresh rezzed state from database
 	uint32 db_exp, db_gmexp;
 	bool db_rezzable, db_is_rezzed;
-	if (!database.LoadCharacterCorpseRezData(corpse_db_id, &db_exp, &db_gmexp, &db_rezzable, &db_is_rezzed)) {
+	if (!database.LoadCharacterCorpseRezData(corpse_db_id, &db_exp, &db_gmexp, &db_rezzable, &db_is_rezzed))
+	{
 		// db error, corpse disappeared?
 		Caster->Message_StringID(Chat::White, REZZ_ALREADY_PENDING);
 		return;
@@ -3449,8 +3437,10 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	gm_rez_experience = db_gmexp;
 
 	// Rez timer has expired, only GMs can rez at this point. (uses rezzable)
-	if(!IsRezzable()) {
-		if(Caster && Caster->IsClient() && !Caster->CastToClient()->GetGM()) {
+	if(!IsRezzable())
+	{
+		if(Caster && Caster->IsClient() && !Caster->CastToClient()->GetGM())
+		{
 			Caster->Message_StringID(Chat::White, REZZ_ALREADY_PENDING);
 			Caster->Message_StringID(Chat::White, CORPSE_TOO_OLD);
 			return;
@@ -3458,25 +3448,26 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	}
 
 	// Corpse has been rezzed, but timer is still active. Players can corpse gate, GMs can rez for XP. (uses is_rezzed)
-	if(IsRezzed()) {
-		if(Caster && Caster->IsClient()) {
-			if(Caster->CastToClient()->GetGM()) {
+	if(IsRezzed())
+	{
+		if(Caster && Caster->IsClient())
+		{
+			if(Caster->CastToClient()->GetGM())
+			{
 				rez_experience = gm_rez_experience;
 				gm_rez_experience = 0;
 			}
-			else {
+			else
 				rez_experience = 0;
-			}
 		}
 	}
 
 	auto outapp = new EQApplicationPacket(OP_RezzRequest, sizeof(Resurrect_Struct));
-	auto *rezz = (Resurrect_Struct*) outapp->pBuffer;
-
-	strn0cpy(rezz->your_name,this->corpse_name,64);
-	strn0cpy(rezz->corpse_name,this->name,64);
-	strn0cpy(rezz->rezzer_name,Caster->GetName(),64);
-
+	Resurrect_Struct* rezz = (Resurrect_Struct*) outapp->pBuffer;
+	// Why are we truncating these names to 30 characters ?
+	memcpy(rezz->your_name,this->corpse_name,30);
+	memcpy(rezz->corpse_name,this->name,30);
+	memcpy(rezz->rezzer_name,Caster->GetName(),30);
 	rezz->zone_id = zone->GetZoneID();
 	rezz->spellid = spellid;
 	rezz->x = this->m_Position.x;
@@ -3485,7 +3476,6 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	rezz->unknown000 = 0x00000000;
 	rezz->unknown020 = 0x00000000;
 	rezz->unknown088 = 0x00000000;
-
 	// We send this to world, because it needs to go to the player who may not be in this zone.
 	worldserver.RezzPlayer(outapp, rez_experience, corpse_db_id, char_id, OP_RezzRequest);
 	safe_delete(outapp);
@@ -3686,7 +3676,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 
 	if(IsMezSpell(spell_id))
 	{
-		if(GetSpecialAbility(SpecialAbility::MesmerizeImmunity)) {
+		if(GetSpecialAbility(UNMEZABLE)) {
 			Log(Logs::Detail, Logs::Spells, "We are immune to Mez spells.");
 			caster->Message_StringID(Chat::SpellFailure, CANNOT_MEZ);
 			ResistSpell(caster, spell_id, isProc);
@@ -3707,8 +3697,8 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 	}
 
 	// slow and haste spells
-	if((GetSpecialAbility(SpecialAbility::SlowImmunity) && !GetSpecialAbility(SpecialAbility::ReverseSlow) && IsSlowSpell(spell_id)) ||
-		(GetSpecialAbility(SpecialAbility::HasteImmunity) && IsHasteSpell(spell_id)))
+	if((GetSpecialAbility(UNSLOWABLE) && !GetSpecialAbility(REVERSE_SLOW) && IsSlowSpell(spell_id)) ||
+		(GetSpecialAbility(NO_HASTE) && IsHasteSpell(spell_id)))
 	{
 		Log(Logs::Detail, Logs::Spells, "We are immune to changes to attack speed spells.");
 		caster->Message_StringID(Chat::SpellFailure, IMMUNE_ATKSPEED);
@@ -3721,7 +3711,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 		effect_index = GetSpellEffectIndex(spell_id, SE_Fear);
 
 		// level 52 hardcap immunity for fear spells. Unlike Mez, Charm, Pacify, and Stun this should be enforced on NPC vs NPC action
-		if (GetSpecialAbility(SpecialAbility::FearImmunity) || (IsNPC() && GetLevel() > 52))
+		if (GetSpecialAbility(UNFEARABLE) || (IsNPC() && GetLevel() > 52))
 		{
 			Log(Logs::Detail, Logs::Spells, "We are immune to Fear spells.");
 			caster->Message_StringID(Chat::SpellFailure, IMMUNE_FEAR);
@@ -3754,15 +3744,15 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 
 	if(IsCharmSpell(spell_id))
 	{
-		if (GetClass() == Class::Merchant || GetClass() == Class::Banker || GetClass() >= Class::WarriorGM && GetClass() <= Class::BeastlordGM)
+		if (GetClass() == MERCHANT || GetClass() == BANKER || GetClass() >= WARRIORGM && GetClass() <= BEASTLORDGM)
 		{
 			Log(Logs::Detail, Logs::Spells, "We are immune to Charm spells. (Banker, Merchant, Guildmaster)");
 			caster->Message_StringID(Chat::SpellFailure, CANNOT_CHARM);
 			ResistSpell(caster, spell_id, isProc);
 			return true;
 		}
-		
-		if(GetSpecialAbility(SpecialAbility::CharmImmunity))
+
+		if(GetSpecialAbility(UNCHARMABLE))
 		{
 			Log(Logs::Detail, Logs::Spells, "We are immune to Charm spells.");
 			caster->Message_StringID(Chat::SpellFailure, CANNOT_CHARM);
@@ -3799,7 +3789,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 		IsEffectInSpell(spell_id, SE_MovementSpeed)
 	)
 	{
-		if(GetSpecialAbility(SpecialAbility::SnareImmunity)) {
+		if(GetSpecialAbility(UNSNAREABLE)) {
 			Log(Logs::Detail, Logs::Spells, "We are immune to Snare spells.");
 			caster->Message_StringID(Chat::SpellFailure, IMMUNE_MOVEMENT);
 			ResistSpell(caster, spell_id, isProc);
@@ -3841,7 +3831,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		return 0;
 	}
 
-	if(GetSpecialAbility(SpecialAbility::MagicImmunity)) {
+	if(GetSpecialAbility(IMMUNE_MAGIC)) {
 		Log(Logs::Detail, Logs::Spells, "We are immune to magic, so we fully resist the spell %d", spell_id);
 		return(0);
 	}
@@ -3875,7 +3865,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		return 100;
 	}
 
-	if (GetSpecialAbility(SpecialAbility::CastingFromRangeImmunity)) {
+	if (GetSpecialAbility(IMMUNE_CASTING_FROM_RANGE)) {
 		if (!caster->CombatRange(this)) {
 			return(0);
 		}
@@ -4022,7 +4012,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		}
 	}
 	
-	if (!tick_save && caster->GetClass() == Class::Enchanter) {
+	if (!tick_save && caster->GetClass() == ENCHANTER) {
 		// See http://www.eqemulator.org/forums/showthread.php?t=43370
 
 		if (IsCharmSpell(spell_id) || IsMezSpell(spell_id)) {
@@ -4098,7 +4088,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	resist_chance += resist_modifier;
 	
 	if (use_classic_resists && caster->IsNPC() && caster->GetLevel() > 24 && zone->GetZoneID() != Zones::SIRENS
-		&& (caster->GetClass() == Class::Enchanter || caster->GetClass() == Class::EnchanterGM))
+		&& (caster->GetClass() == ENCHANTER || caster->GetClass() == ENCHANTERGM))
 	{
 		if (GetLevel() < resist_chance) {
 			resist_chance = GetLevel();
@@ -4132,7 +4122,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	if (IsNPC() && IsRainSpell(spell_id)) {
 
 		int resist_chance_percentage = 20;
-		if(caster->GetClass() == Class::Wizard) {
+		if(caster->GetClass() == WIZARD) {
 			resist_chance_percentage = RuleI(Spells, RainWizardResistChance);
 		}
 		
@@ -4538,7 +4528,7 @@ void Client::ScribeSpell(uint16 spell_id, int slot, bool update_client, bool def
 	}
 
 	if(update_client) {
-		if (m_pp.spell_book[slot] != -1) {
+		if (m_pp.spell_book[slot] != 0xFFFFFFFF) {
 			UnscribeSpell(slot, update_client, defer_save);
 		}
 	}
@@ -4609,148 +4599,98 @@ int Client::FindSpellBookSlotBySpellID(uint16 spellid) {
 	return -1;	//default
 }
 
-bool Client::SpellGlobalCheck(uint16 spell_id, uint32 character_id) {
-	std::string query = fmt::format(
-		"SELECT qglobal, value FROM spell_globals WHERE spellid = {}",
-		spell_id
-	);
+bool Client::SpellGlobalCheck(uint16 spell_ID, uint32 char_ID) {
 
+	std::string spell_Global_Name;
+	int spell_Global_Value;
+	int global_Value;
+
+	std::string query = StringFormat("SELECT qglobal, value FROM spell_globals "
+                                    "WHERE spellid = %i", spell_ID);
     auto results = database.QueryDatabase(query);
     if (!results.Success()) {
 		return false; // Query failed, so prevent spell from scribing just in case
     }
 
-	if (!results.RowCount()) {
-		return true; // Spell ID isn't listed in the spell_globals table, allow scribing,
-	}
+    if (results.RowCount() != 1)
+        return true; // Spell ID isn't listed in the spells_global table, so it is not restricted from scribing
 
-	auto row = results.begin();
-	std::string spell_global_name = row[0];
-	std::string spell_global_value = row[1];
+    auto row = results.begin();
+    spell_Global_Name = row[0];
+	spell_Global_Value = atoi(row[1]);
 
-	if (spell_global_name.empty()) {
-		return true; // If the entry in the spell_globals table has nothing set for the qglobal name
-	}
+	if (spell_Global_Name.empty())
+        return true; // If the entry in the spell_globals table has nothing set for the qglobal name
 
-	query = fmt::format(
-		"SELECT value FROM quest_globals WHERE charid = {} AND name = '{}'",
-		character_id,
-		Strings::Escape(spell_global_name)
-	);
-
+    query = StringFormat("SELECT value FROM quest_globals "
+                        "WHERE charid = %i AND name = '%s'",
+                        char_ID, spell_Global_Name.c_str());
     results = database.QueryDatabase(query);
-	if (!results.Success()) {
-		LogError(
-			"Spell global [{}] for spell ID [{}] for character ID [{}] query failed.",
-			spell_global_name,
-			spell_id,
-			character_id
-		);
+    if (!results.Success()) {
+        Log(Logs::General, Logs::Error, "Spell ID %i query of spell_globals with Name: '%s' Value: '%i' failed", spell_ID, spell_Global_Name.c_str(), spell_Global_Value);
+        return false;
+    }
 
-		return false; // Query failed, do not allow scribing.
-	}
-
-
-	if (!results.RowCount()) {
-		LogError(
-			"Spell global [{}] for spell ID [{}] for character ID [{}] does not exist.",
-			spell_global_name,
-			spell_id,
-			character_id
-		);
-
-		return false; // No rows found, do not allow scribing.
-	}
+    if (results.RowCount() != 1) {
+        Log(Logs::General, Logs::Error, "Char ID: %i does not have the Qglobal Name: '%s' for Spell ID %i", char_ID, spell_Global_Name.c_str(), spell_ID);
+        return false;
+    }
 
     row = results.begin();
-	std::string global_value = row[0];
-	if (Strings::IsNumber(global_value) && Strings::IsNumber(spell_global_value)) {
-		if (std::stoi(global_value) >= std::stoi(spell_global_value)) {
-			return true; // If value is greater than or equal to spell global value, allow scribing.
-		}
-	}
-	else {
-		if (global_value == spell_global_value) {
-			return true; // If value is equal to spell bucket value, allow scribing.
-		}
-	}
 
-	// If user's qglobal does not meet requirements, do not allow scribing.
-	LogError(
-		"Spell global [{}] for spell ID [{}] for character ID [{}] did not match value [{}] value found was [{}].",
-		spell_global_name,
-		spell_id,
-		character_id,
-		spell_global_value,
-		global_value
-	);
+    global_Value = atoi(row[0]);
 
+    if (global_Value == spell_Global_Value)
+        return true; // If the values match from both tables, allow the spell to be scribed
+    else if (global_Value > spell_Global_Value)
+        return true; // Check if the qglobal value is greater than the require spellglobal value
+
+    // If no matching result found in qglobals, don't scribe this spell
+    Log(Logs::General, Logs::Error, "Char ID: %i Spell_globals Name: '%s' Value: '%i' did not match QGlobal Value: '%i' for Spell ID %i", char_ID, spell_Global_Name.c_str(), spell_Global_Value, global_Value, spell_ID);
     return false;
 }
 
 bool Client::SpellBucketCheck(uint16 spell_id, uint32 char_id) {
-	auto query = fmt::format(
-		"SELECT `key`, value FROM spell_buckets WHERE spellid = {}",
-		spell_id
-	);
-
+	std::string spell_bucket_name;
+	int spell_bucket_value;
+	int bucket_value;
+	std::string query = StringFormat("SELECT key, value FROM spell_buckets WHERE spellid = %i", spell_id);
 	auto results = database.QueryDatabase(query);
-	if (!results.Success()) {
-		return false; // Query failed, do not allow scribing.
-	}
+	if (!results.Success())
+		return false;
 
-	if (!results.RowCount()) {
-		return true; // Spell ID isn't listed in the spell_buckets table, allow scribing.
-	}
+	if (results.RowCount() != 1)
+		return true;
 
 	auto row = results.begin();
-	std::string spell_bucket_name = row[0];
-	std::string spell_bucket_value = row[1];
+	spell_bucket_name = row[0];
+	spell_bucket_value = atoi(row[1]);
+	if (spell_bucket_name.empty())
+		return true;
 
-	if (spell_bucket_name.empty()) {
-		return true; // If the entry in the spell_buckets table has nothing set for the qglobal name, allow scribing.
+	query = StringFormat("SELECT value FROM data_buckets WHERE key = '%i-%s'", char_id, spell_bucket_name.c_str());
+	results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		Log(Logs::General, Logs::Error, "Spell bucket %s for spell ID %i for char ID %i failed.", spell_bucket_name.c_str(), spell_id, char_id);
+		return false;
 	}
 
-	auto new_bucket_name = fmt::format(
-		"{}-{}",
-		GetBucketKey(),
-		spell_bucket_name
-	);
-
-	auto bucket_value = DataBucket::GetData(new_bucket_name);
-	if (!bucket_value.empty()) {
-		if (Strings::IsNumber(bucket_value) && Strings::IsNumber(spell_bucket_value)) {
-			if (std::stoi(bucket_value) >= std::stoi(spell_bucket_value)) {
-				return true; // If value is greater than or equal to spell bucket value, allow scribing.
-			}
-		}
-		else {
-			if (bucket_value == spell_bucket_value) {
-				return true; // If value is equal to spell bucket value, allow scribing.
-			}
-		}
+	if (results.RowCount() != 1) {
+		Log(Logs::General, Logs::Error, "Spell bucket %s does not exist for spell ID %i for char ID %i.", spell_bucket_name.c_str(), spell_id, char_id);
+		return false;
 	}
 
-	auto old_bucket_name = fmt::format(
-		"{}-{}",
-		character_id,
-		spell_bucket_name
-	);
+	row = results.begin();
 
-	bucket_value = DataBucket::GetData(old_bucket_name);
-	if (!bucket_value.empty()) {
-		if (Strings::IsNumber(bucket_value) && Strings::IsNumber(spell_bucket_value)) {
-			if (std::stoi(bucket_value) >= std::stoi(spell_bucket_value)) {
-				return true; // If value is greater than or equal to spell bucket value, allow scribing.
-			}
-		}
-		else {
-			if (bucket_value == spell_bucket_value) {
-				return true; // If value is equal to spell bucket value, allow scribing.
-			}
-		}
-	}
+	bucket_value = atoi(row[0]);
 
+	if (bucket_value == spell_bucket_value)
+		return true; // If the values match from both tables, allow the spell to be scribed
+	else if (bucket_value > spell_bucket_value)
+		return true; // Check if the data bucket value is greater than the required spell bucket value
+
+	// If no matching result found in spell buckets, don't scribe this spell
+	Log(Logs::General, Logs::Error, "Spell bucket %s for spell ID %i for char ID %i did not match value %i.", spell_bucket_name.c_str(), spell_id, char_id, spell_bucket_value);
 	return false;
 }
 
@@ -4905,7 +4845,7 @@ bool Mob::UseBardSpellLogic(uint16 spell_id, int slot)
 		spell_id != 0 &&
 		spell_id != SPELL_UNKNOWN &&
 		slot != -1 &&
-		GetClass() == Class::Bard &&
+		GetClass() == BARD &&
 		slot <= MAX_PP_MEMSPELL &&
 		IsBardSong(spell_id)
 	);
@@ -5319,8 +5259,7 @@ bool Mob::InSameRaid(Mob *other)
 bool Client::RestictedManastoneClick(int16 zone_id)
 {
 	return {
-		EQ::ValueWithin(zone_id, Zones::FIELDOFBONE, Zones::KURN) ||
-		EQ::ValueWithin(zone_id, Zones::STONEBRUNT, Zones::POTIMEB) ||
+		EQ::ValueWithin(zone_id, Zones::FIELDOFBONE, Zones::POTIMEB) ||
 		zone_id == Zones::AIRPLANE ||
 		zone_id == Zones::HATEPLANE ||
 		zone_id == Zones::FEARPLANE

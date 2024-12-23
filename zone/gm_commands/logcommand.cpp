@@ -1,11 +1,11 @@
 #include "../client.h"
 
-void command_logcommand(Client* c, std::string message)
+void command_logcommand(Client *c, std::string message)
 {
 	int admin = c->Admin();
 
 	bool log = false;
-	switch (zone->loglevelvar) { //catch failsafe
+	switch (zone->loglevelvar){ //catch failsafe
 	case 9: { // log only LeadGM
 		if (
 			admin >= AccountStatus::GMLeadAdmin &&
@@ -76,14 +76,14 @@ void command_logcommand(Client* c, std::string message)
 
 	if (log) {
 		database.logevents(
-			c->AccountName(),
-			c->AccountID(),
+		c->AccountName(),
+		c->AccountID(),
 			admin,
 			c->GetName(),
-			c->GetTarget() ? c->GetTarget()->GetName() : "None",
-			"Command",
+		c->GetTarget() ? c->GetTarget()->GetName() : "None",
+		"Command",
 			message.c_str(),
-			1
+		1
 		);
-	}
+}
 }

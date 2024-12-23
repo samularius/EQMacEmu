@@ -5282,7 +5282,7 @@ void StreamWriterBuilder::setDefaults(Json::Value* settings)
 {
   //! [StreamWriterBuilderDefaults]
   (*settings)["commentStyle"] = "All";
-  (*settings)["indentation"] = "  ";
+  (*settings)["indentation"] = "\t";
   (*settings)["enableYAMLCompatibility"] = false;
   (*settings)["dropNullPlaceholders"] = false;
   (*settings)["useSpecialFloats"] = false;

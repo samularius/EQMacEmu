@@ -237,41 +237,6 @@ uint32 SharedDatabase::GetTotalTimeEntitledOnAccount(uint32 AccountID)
 	return EntitledTime;
 }
 
-void SharedDatabase::SetMailKey(int CharID, int IPAddress, int MailKey)
-{
-	char MailKeyString[17];
-
-	if (RuleB(Chat, EnableMailKeyIPVerification) == true)
-		sprintf(MailKeyString, "%08X%08X", IPAddress, MailKey);
-	else
-		sprintf(MailKeyString, "%08X", MailKey);
-
-	std::string query = StringFormat("UPDATE character_data SET mailkey = '%s' WHERE id = '%i'",
-		MailKeyString, CharID);
-	auto results = QueryDatabase(query);
-	if (!results.Success())
-		Log(Logs::General, Logs::Error, "SharedDatabase::SetMailKey(%i, %s) : %s", CharID, MailKeyString, results.ErrorMessage().c_str());
-
-}
-
-std::string SharedDatabase::GetMailKey(int CharID, bool key_only)
-{
-	std::string query = StringFormat("SELECT `mailkey` FROM `character_data` WHERE `id`='%i' LIMIT 1", CharID);
-	auto results = QueryDatabase(query);
-	if (!results.Success()) {
-		LogClientLogin("Error retrieving mailkey from database: {}", results.ErrorMessage().c_str());
-		return std::string();
-	}
-
-	auto row = results.begin();
-	std::string mail_key = row[0];
-
-	if (mail_key.length() > 8 && key_only)
-		return mail_key.substr(8);
-	else
-		return mail_key;
-}
-
 bool SharedDatabase::SaveInventory(uint32 char_id, const EQ::ItemInstance* inst, int16 slot_id)
 {
 	if (!inst) // All other inventory
@@ -571,10 +536,10 @@ bool SharedDatabase::LoadItems(const std::string &prefix)
 		EQ::IPCMutex mutex("items");
 		mutex.Lock();
 		std::string file_name = fmt::format("{}/{}{}", path.GetSharedMemoryPath(), prefix, std::string("items"));
+		LogInfo("Attempting to load file [{0}]", file_name);
 		items_mmf = std::unique_ptr<EQ::MemoryMappedFile>(new EQ::MemoryMappedFile(file_name));
 		items_hash = std::unique_ptr<EQ::FixedMemoryHashSet<EQ::ItemData>>(new EQ::FixedMemoryHashSet<EQ::ItemData>(reinterpret_cast<uint8*>(items_mmf->Get()), items_mmf->Size()));
 		mutex.Unlock();
-
 	} catch(std::exception& ex) {
 		LogError("Error Loading Items: {0}", ex.what());
 		return false;
@@ -583,7 +548,7 @@ bool SharedDatabase::LoadItems(const std::string &prefix)
 	return true;
 }
 
-void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_item_id)
+void SharedDatabase::LoadItems(void *data, uint32 size, int32 items, uint32 max_item_id) 
 {
 	EQ::FixedMemoryHashSet<EQ::ItemData> hash(reinterpret_cast<uint8*>(data), size, items, max_item_id);
 
@@ -604,7 +569,7 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 		}
 	}
 
-	EQ::ItemData item;
+    EQ::ItemData item;
 
 	const std::string query = "SELECT source,"
 #define F(x) "`"#x"`,"
@@ -612,12 +577,12 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 #undef F
 		"updated FROM items ORDER BY id";
 	auto results = QueryDatabase(query);
-	if (!results.Success()) {
-		return;
-	}
+    if (!results.Success()) {
+        return;
+    }
 
-	for (auto row = results.begin(); row != results.end(); ++row) {
-		memset(&item, 0, sizeof(EQ::ItemData));
+    for(auto row = results.begin(); row != results.end(); ++row) {
+        memset(&item, 0, sizeof(EQ::ItemData));
 
 		float enabled_era = RuleR(World, CurrentExpansion);
 
@@ -680,17 +645,33 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 		item.HP = std::stoi(row[ItemField::hp]);
 		item.Mana = std::stoi(row[ItemField::mana]);
 		item.AC = std::stoi(row[ItemField::ac]);
-		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
-			//Bane Damage
-			item.BaneDmgAmt = 0;
-			item.BaneDmgBody = 0;
-			item.BaneDmgRace = 0;
 
-			// Elemental Damage
-			item.ElemDmgType = 0;
-			item.ElemDmgAmt = 0;
+		if (RuleB(AlKabor, EnableEraItemRules))
+		{
+			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
+			{
+				item.BaneDmgAmt = 0;
+				item.BaneDmgBody = 0;
+				item.BaneDmgRace = 0;
+
+				// Elemental Damage
+				item.ElemDmgType = 0;
+				item.ElemDmgAmt = 0;
+			}
+			else
+			{
+				//Bane Damage
+				item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
+				item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
+				item.BaneDmgRace = std::stoi(row[ItemField::banedmgrace]);
+
+				// Elemental Damage
+				item.ElemDmgType = static_cast<uint8>(std::stoul(row[ItemField::elemdmgtype]));
+				item.ElemDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::elemdmgamt]));
+			}
 		}
-		else {
+		else
+		{
 			//Bane Damage
 			item.BaneDmgAmt = static_cast<uint8>(std::stoul(row[ItemField::banedmgamt]));
 			item.BaneDmgBody = std::stoi(row[ItemField::banedmgbody]);
@@ -711,25 +692,44 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 		item.Deity = std::stoul(row[ItemField::deity]);
 		item.ItemClass = std::stoi(row[ItemField::itemclass]);
 		item.Races = std::stoi(row[ItemField::races]);
-
-		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
-			item.RecLevel = 0;
-			item.RecSkill = 0;
-			item.ReqLevel = 0;
+		item.ReqLevel = static_cast<uint8>(std::stoul(row[ItemField::reqlevel]));
+		if (RuleB(AlKabor, EnableEraItemRules))
+		{
+			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
+			{
+				item.RecLevel = 0;
+				item.RecSkill = 0;
+			}
+			else
+			{
+				item.RecLevel = static_cast<uint8>(std::stoul(row[ItemField::reclevel]));
+				item.RecSkill = static_cast<uint8>(std::stoul(row[ItemField::recskill]));
+			}
 		}
-		else {
+		else
+		{
 			item.RecLevel = static_cast<uint8>(std::stoul(row[ItemField::reclevel]));
 			item.RecSkill = static_cast<uint8>(std::stoul(row[ItemField::recskill]));
-			item.ReqLevel = static_cast<uint8>(std::stoul(row[ItemField::reqlevel]));
 		}
+
 		item.Slots = std::stoi(row[ItemField::slots]);
 
 		// Skill Modifier
-		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
-			item.SkillModValue = 0;
-			item.SkillModType = 0;
+		if (RuleB(AlKabor, EnableEraItemRules))
+		{
+			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra)
+			{
+				item.SkillModValue = 0;
+				item.SkillModType = 0;
+			}
+			else
+			{
+				item.SkillModValue = std::stoi(row[ItemField::skillmodvalue]);
+				item.SkillModType = std::stoul(row[ItemField::skillmodtype]);
+			}
 		}
-		else {
+		else
+		{
 			item.SkillModValue = std::stoi(row[ItemField::skillmodvalue]);
 			item.SkillModType = std::stoul(row[ItemField::skillmodtype]);
 		}
@@ -775,14 +775,28 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 		item.RecastDelay = std::stoul(row[ItemField::recastdelay]);
 		item.RecastType = std::stoul(row[ItemField::recasttype]);
 
-		// Focus Effect
-		if (RuleB(Expansion, UseItemExpansionSetting) && !content_service.IsTheShadowsOfLuclinEnabled()) {
-			item.Focus.Effect = 0;
-			item.Focus.Type = 0;
-			item.Focus.Level = 0;
-			item.Focus.Level2 = 0;
+		if (RuleB(AlKabor, EnableEraItemRules))
+		{
+			if (enabled_era >= (float)ExpansionEras::ClassicEQEra && enabled_era < (float)ExpansionEras::LuclinEQEra) //Luclin
+			{
+				// Focus Effect
+				item.Focus.Effect = 0;
+				item.Focus.Type = 0;
+				item.Focus.Level = 0;
+				item.Focus.Level2 = 0;
+			}
+			else
+			{
+				// Focus Effect
+				item.Focus.Effect = std::stoi(row[ItemField::focuseffect]);
+				item.Focus.Type = std::stoi(row[ItemField::focustype]);
+				item.Focus.Level = static_cast<uint8>(std::stoul(row[ItemField::focuslevel]));
+				item.Focus.Level2 = static_cast<uint8>(std::stoul(row[ItemField::focuslevel2]));
+			}
 		}
-		else {
+		else
+		{
+			// Focus Effect
 			item.Focus.Effect = std::stoi(row[ItemField::focuseffect]);
 			item.Focus.Type = std::stoi(row[ItemField::focustype]);
 			item.Focus.Level = static_cast<uint8>(std::stoul(row[ItemField::focuslevel]));
@@ -807,7 +821,7 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 		item.Worn.Type = std::stoi(row[ItemField::worntype]);
 		item.Worn.Level = static_cast<uint8>(std::stoul(row[ItemField::wornlevel]));
 		item.Worn.Level2 = static_cast<uint8>(std::stoul(row[ItemField::wornlevel2]));
-
+		
 		//Expansion appears in
 		item.min_expansion = std::stof(row[ItemField::min_expansion]);
 		item.max_expansion = std::stof(row[ItemField::max_expansion]);
@@ -831,8 +845,8 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 					item.ItemType == EQ::item::ItemTypeUnknown4 ||
 					item.ItemType == EQ::item::ItemTypeFishingBait ||
 					item.ItemType == EQ::item::ItemTypeAlcohol
-					)
 				)
+			)
 		{
 			// item is stackable
 			item.StackSize = 20;
@@ -859,8 +873,8 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 					item.ItemType == EQ::item::ItemTypeUnknown4 ||
 					item.ItemType == EQ::item::ItemTypeFishingBait ||
 					item.ItemType == EQ::item::ItemTypeAlcohol
-					)
 				)
+			)
 		{
 			// item is stackable
 			item.StackSize = 20;
@@ -871,14 +885,14 @@ void SharedDatabase::LoadItems(void* data, uint32 size, int32 items, uint32 max_
 			item.StackSize = 1;
 		}
 
-		try {
-			hash.insert(item.ID, item);
-		}
-		catch (std::exception& ex) {
-			LogError("Database::LoadItems: {0}", ex.what());
-			break;
-		}
-	}
+        try {
+            hash.insert(item.ID, item);
+        } catch(std::exception &ex) {
+            LogError("Database::LoadItems: {0}", ex.what());
+            break;
+        }
+    }
+
 }
 
 const EQ::ItemData* SharedDatabase::GetItem(uint32 id)
@@ -964,6 +978,111 @@ std::string SharedDatabase::GetBook(const char *txtfile)
     txtout.assign(row[0],strlen(row[0]));
 
     return txtout;
+}
+
+void SharedDatabase::GetFactionListInfo(uint32 &list_count, uint32 &max_lists) 
+{
+	list_count = 0;
+	max_lists = 0;
+
+	const std::string query = "SELECT COUNT(*), MAX(id) FROM npc_faction";
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+        return;
+	}
+
+	if (results.RowCount() == 0)
+        return;
+
+    auto row = results.begin();
+
+    list_count = static_cast<uint32>(atoul(row[0]));
+    max_lists = static_cast<uint32>(atoul(row[1] ? row[1] : "0"));
+}
+
+const NPCFactionList* SharedDatabase::GetNPCFactionEntry(uint32 id)
+{
+	if(!faction_hash) {
+		return nullptr;
+	}
+
+	if(faction_hash->exists(id)) {
+		return &(faction_hash->at(id));
+	}
+
+	return nullptr;
+}
+
+void SharedDatabase::LoadNPCFactionLists(void *data, uint32 size, uint32 list_count, uint32 max_lists)
+{
+	EQ::FixedMemoryHashSet<NPCFactionList> hash(reinterpret_cast<uint8*>(data), size, list_count, max_lists);
+	NPCFactionList faction;
+
+	const std::string query = "SELECT npc_faction.id, npc_faction.primaryfaction, npc_faction.ignore_primary_assist, "
+                            "npc_faction_entries.faction_id, npc_faction_entries.value, npc_faction_entries.npc_value, "
+                            "npc_faction_entries.temp FROM npc_faction LEFT JOIN npc_faction_entries "
+                            "ON npc_faction.id = npc_faction_entries.npc_faction_id ORDER BY npc_faction_entries.npc_faction_id, npc_faction_entries.sort_order;";
+    auto results = QueryDatabase(query);
+    if (!results.Success()) {
+		return;
+    }
+
+    uint32 current_id = 0;
+    uint32 current_entry = 0;
+
+    for(auto row = results.begin(); row != results.end(); ++row) {
+        uint32 id = static_cast<uint32>(atoul(row[0]));
+        if(id != current_id) {
+            if(current_id != 0) {
+                hash.insert(current_id, faction);
+            }
+
+            memset(&faction, 0, sizeof(faction));
+            current_entry = 0;
+            current_id = id;
+            faction.id = id;
+            faction.primaryfaction = static_cast<uint32>(atoul(row[1]));
+            faction.assistprimaryfaction = (atoi(row[2]) == 0);
+        }
+
+        if(!row[3])
+            continue;
+
+        if(current_entry >= MAX_NPC_FACTIONS)
+				continue;
+
+        faction.factionid[current_entry] = static_cast<uint32>(atoul(row[3]));
+        faction.factionvalue[current_entry] = static_cast<int32>(atoi(row[4]));
+        faction.factionnpcvalue[current_entry] = static_cast<int8>(atoi(row[5]));
+        faction.factiontemp[current_entry] = static_cast<uint8>(atoi(row[6]));
+        ++current_entry;
+    }
+
+    if(current_id != 0)
+        hash.insert(current_id, faction);
+
+}
+
+bool SharedDatabase::LoadNPCFactionLists(const std::string &prefix)
+{
+	faction_mmf.reset(nullptr);
+	faction_hash.reset(nullptr);
+
+	try {
+		auto Config = EQEmuConfig::get();
+		EQ::IPCMutex mutex("faction");
+		mutex.Lock();
+		std::string file_name = fmt::format("{}/{}{}", path.GetSharedMemoryPath(), prefix, std::string("faction"));
+		LogInfo("Attempting to load file [{0}]", file_name);
+		faction_mmf = std::unique_ptr<EQ::MemoryMappedFile>(new EQ::MemoryMappedFile(file_name));
+		faction_hash = std::unique_ptr<EQ::FixedMemoryHashSet<NPCFactionList>>(new EQ::FixedMemoryHashSet<NPCFactionList>(reinterpret_cast<uint8*>(faction_mmf->Get()), faction_mmf->Size()));
+		mutex.Unlock();
+	} catch(std::exception& ex) {
+		LogError("Error Loading npc factions: {0}", ex.what());
+		return false;
+	}
+
+	return true;
 }
 
 // Create appropriate ItemInst class
@@ -1087,26 +1206,21 @@ int32 SharedDatabase::DeleteStalePlayerCorpses()
 bool SharedDatabase::GetCommandSettings(std::map<std::string, std::pair<uint8, std::vector<std::string>>>& command_settings) 
 {
 	command_settings.clear();
-
-	const std::string& query = "SELECT `command`, `access`, `aliases` FROM `command_settings`";
+	std::string query = "SELECT `command`, `access`, `aliases` FROM `command_settings`";
 	auto results = QueryDatabase(query);
-	if (!results.Success() || !results.RowCount()) {
+	if (!results.Success()) 
 		return false;
-	}
 
-	for (auto row : results) {
-		command_settings[row[0]].first = Strings::ToUnsignedInt(row[1]);
-		if (row[2][0] == 0) {
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		command_settings[row[0]].first = atoi(row[1]);
+		if (row[2][0] == 0)
 			continue;
-		}
 
 		std::vector<std::string> aliases = Strings::Split(row[2], '|');
-		for (const auto& e : aliases) {
-			if (e.empty()) {
+		for (std::vector<std::string>::iterator iter = aliases.begin(); iter != aliases.end(); ++iter) {
+			if (iter->empty())
 				continue;
-			}
-
-			command_settings[row[0]].second.push_back(e);
+			command_settings[row[0]].second.push_back(*iter);
 		}
 	}
 
@@ -1126,15 +1240,13 @@ bool SharedDatabase::UpdateInjectedCommandSettings(const std::vector<std::pair<s
 			)
 		);
 
-		auto results = QueryDatabase(query);
-		if (!results.Success()) {
+		if (!QueryDatabase(query).Success()) {
 			return false;
 		}
 
 		LogInfo(
-			"[{}] New Command{} Added",
-			injected.size(),
-			injected.size() != 1 ? "s" : ""
+			"[{0}] New Command(s) Added",
+			injected.size()
 		);
 	}
 
@@ -1145,55 +1257,157 @@ bool SharedDatabase::UpdateOrphanedCommandSettings(const std::vector<std::string
 {
 
 	if (orphaned.size()) {
+
 		std::string query = fmt::format(
 			"DELETE FROM `command_settings` WHERE `command` IN ({})",
 			Strings::ImplodePair(",", std::pair<char, char>('\'', '\''), orphaned)
 		);
 
-		auto results = QueryDatabase(query);
-		if (!results.Success()) {
-			return false;
-		}
-
-		query = fmt::format(
-			"DELETE FROM `command_subsettings` WHERE `parent_command` IN ({})",
-			Strings::ImplodePair(",", std::pair<char, char>('\'', '\''), orphaned)
-		);
-
-		auto results_two = QueryDatabase(query);
-		if (!results_two.Success()) {
+		if (!QueryDatabase(query).Success()) {
 			return false;
 		}
 
 		LogInfo(
-			"{} Orphaned Command{} Deleted | {} Orphaned Subcommand{} Deleted",
+			"{} Orphaned Command{} Deleted",
 			orphaned.size(),
-			orphaned.size() != 1 ? "s" : "",
-			results_two.RowsAffected(),
-			results_two.RowsAffected() != 1 ? "s" : ""
+			(orphaned.size() == 1 ? "" : "s")
 		);
 	}
 
 	return true;
 }
 
-bool SharedDatabase::GetCommandSubSettings(std::vector<CommandSubsettingsRepository::CommandSubsettings>& command_subsettings)
+bool SharedDatabase::LoadSkillCaps(const std::string &prefix)
 {
-	command_subsettings.clear();
+	skill_caps_mmf.reset(nullptr);
 
-	const auto& l = CommandSubsettingsRepository::GetAll(*this);
+	uint32 class_count = PLAYER_CLASS_COUNT;
+	uint32 skill_count = EQ::skills::HIGHEST_SKILL + 1;
+	uint32 level_count = HARD_LEVEL_CAP + 1;
+	uint32 size = (class_count * skill_count * level_count * sizeof(uint16));
 
-	if (l.empty()) {
+	try {
+		auto Config = EQEmuConfig::get();
+		EQ::IPCMutex mutex("skill_caps");
+		mutex.Lock();
+		std::string file_name = fmt::format("{}/{}{}", path.GetSharedMemoryPath(), prefix, std::string("skill_caps"));
+		LogInfo("Attempting to load file [{0}]", file_name);
+		skill_caps_mmf = std::unique_ptr<EQ::MemoryMappedFile>(new EQ::MemoryMappedFile(file_name));
+		mutex.Unlock();
+	} catch(std::exception &ex) {
+		LogError("Error loading skill caps: {0}", ex.what());
 		return false;
 	}
 
-	command_subsettings.reserve(l.size());
+	return true;
+}
 
-	for (const auto& e : l) {
-		command_subsettings.emplace_back(e);
+void SharedDatabase::LoadSkillCaps(void *data)
+{
+	uint32 class_count = PLAYER_CLASS_COUNT;
+	uint32 skill_count = EQ::skills::HIGHEST_SKILL + 1;
+	uint32 level_count = HARD_LEVEL_CAP + 1;
+	uint16 *skill_caps_table = reinterpret_cast<uint16*>(data);
+
+	const std::string query = "SELECT skillID, class, level, cap FROM skill_caps ORDER BY skillID, class, level";
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+        LogError("Error loading skill caps from database: {0}", results.ErrorMessage().c_str());
+        return;
 	}
 
-	return true;
+    for(auto row = results.begin(); row != results.end(); ++row) {
+        uint8 skillID = atoi(row[0]);
+        uint8 class_ = atoi(row[1]) - 1;
+        uint8 level = atoi(row[2]);
+        uint16 cap = atoi(row[3]);
+
+        if(skillID >= skill_count || class_ >= class_count || level >= level_count)
+            continue;
+
+        uint32 index = (((class_ * skill_count) + skillID) * level_count) + level;
+        skill_caps_table[index] = cap;
+    }
+}
+
+uint16 SharedDatabase::GetSkillCap(uint8 Class_, EQ::skills::SkillType Skill, uint8 Level) 
+{
+	if(!skill_caps_mmf) {
+		return 0;
+	}
+
+	if(Class_ == 0)
+		return 0;
+
+	int SkillMaxLevel = RuleI(Character, SkillCapMaxLevel);
+	if(SkillMaxLevel < 1) {
+		SkillMaxLevel = RuleI(Character, MaxLevel);
+	}
+
+	uint32 class_count = PLAYER_CLASS_COUNT;
+	uint32 skill_count = EQ::skills::HIGHEST_SKILL + 1;
+	uint32 level_count = HARD_LEVEL_CAP + 1;
+	if(Class_ > class_count || static_cast<uint32>(Skill) > skill_count || Level > level_count) {
+		return 0;
+	}
+
+	if(Level > static_cast<uint8>(SkillMaxLevel)){
+		Level = static_cast<uint8>(SkillMaxLevel);
+	}
+
+	uint32 index = ((((Class_ - 1) * skill_count) + Skill) * level_count) + Level;
+	uint16 *skill_caps_table = reinterpret_cast<uint16*>(skill_caps_mmf->Get());
+	return skill_caps_table[index];
+}
+
+uint8 SharedDatabase::GetTrainLevel(uint8 Class_, EQ::skills::SkillType Skill, uint8 Level)
+{
+	if(!skill_caps_mmf) {
+		return 0;
+	}
+
+	if(Class_ == 0)
+		return 0;
+
+	int SkillMaxLevel = RuleI(Character, SkillCapMaxLevel);
+	if (SkillMaxLevel < 1) {
+		SkillMaxLevel = RuleI(Character, MaxLevel);
+	}
+
+	uint32 class_count = PLAYER_CLASS_COUNT;
+	uint32 skill_count = EQ::skills::HIGHEST_SKILL + 1;
+	uint32 level_count = HARD_LEVEL_CAP + 1;
+	if(Class_ > class_count || static_cast<uint32>(Skill) > skill_count || Level > level_count) {
+		return 0;
+	}
+
+	uint8 ret = 0;
+	if(Level > static_cast<uint8>(SkillMaxLevel)) {
+		uint32 index = ((((Class_ - 1) * skill_count) + Skill) * level_count);
+		uint16 *skill_caps_table = reinterpret_cast<uint16*>(skill_caps_mmf->Get());
+		for(uint8 x = 0; x < Level; x++){
+			if(skill_caps_table[index + x]){
+				ret = x;
+				break;
+			}
+		}
+	}
+	else
+	{
+		uint32 index = ((((Class_ - 1) * skill_count) + Skill) * level_count);
+		uint16 *skill_caps_table = reinterpret_cast<uint16*>(skill_caps_mmf->Get());
+		for(int x = 0; x < SkillMaxLevel; x++){
+			if(skill_caps_table[index + x]){
+				ret = x;
+				break;
+			}
+		}
+	}
+
+	if(ret > GetSkillCap(Class_, Skill, Level))
+		ret = static_cast<uint8>(GetSkillCap(Class_, Skill, Level));
+
+	return ret;
 }
 
 void SharedDatabase::LoadDamageShieldTypes(SPDat_Spell_Struct* sp, int32 iMaxSpellID)
@@ -1238,12 +1452,10 @@ bool SharedDatabase::LoadSpells(const std::string &prefix, int32 *records, const
 	
 		std::string file_name = fmt::format("{}/{}{}", path.GetSharedMemoryPath(), prefix, std::string("spells"));
 		spells_mmf = std::unique_ptr<EQ::MemoryMappedFile>(new EQ::MemoryMappedFile(file_name));
-		LogInfo("Loading [{}]", file_name);
+		LogInfo("Attempting to load file [{0}]", file_name);
 		*records = *reinterpret_cast<uint32*>(spells_mmf->Get());
 		*sp = reinterpret_cast<const SPDat_Spell_Struct*>((char*)spells_mmf->Get() + 4);
 		mutex.Unlock();
-
-		LogInfo("Loaded [{}] spells via shared memory", Strings::Commify(m_shared_spells_count));
 	}
 	catch(std::exception& ex) {
 		LogError("Error Loading Spells: {0}", ex.what());
@@ -1348,7 +1560,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells)
 		sp[tempid].EnvironmentType = atoi(row[102]);
 		sp[tempid].TimeOfDay = atoi(row[103]);
 
-		for (y = 0; y < Class::PLAYER_CLASS_COUNT; y++)
+		for (y = 0; y < PLAYER_CLASS_COUNT; y++)
 			sp[tempid].classes[y] = atoi(row[104 + y]);
 
 		sp[tempid].CastingAnim = atoi(row[119]);
@@ -1422,7 +1634,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells)
 		sp[tempid].contains_se_currentmana = false;
 
 		int r, min = 255;
-		for (r = 0; r < Class::PLAYER_CLASS_COUNT; r++)
+		for (r = 0; r < PLAYER_CLASS_COUNT; r++)
 			if (sp[tempid].classes[r] < min)
 				min = sp[tempid].classes[r];
 
@@ -1432,7 +1644,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells)
 		if (min < 127)
 			sp[tempid].min_castinglevel = min;
 
-		if (sp[tempid].classes[Class::Bard - 1] < 255)
+		if (sp[tempid].classes[BARD - 1] < 255)
 			sp[tempid].bardsong = true;
 
 		if (sp[tempid].RecourseLink != 0 && sp[tempid].RecourseLink != 1 && sp[tempid].RecourseLink != 0xFFFFFFFF)

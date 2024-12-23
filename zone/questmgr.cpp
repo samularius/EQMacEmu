@@ -22,7 +22,6 @@
 #include "../common/skills.h"
 #include "../common/spdat.h"
 #include "../common/strings.h"
-#include "../common/zone_store.h"
 
 #include "entity.h"
 #include "event_codes.h"
@@ -79,40 +78,28 @@ void QuestManager::Process() {
 	end = QTimerList.end();
 	while (cur != end) {
 		if (cur->Timer_.Enabled() && cur->Timer_.Check()) {
-			if (cur->mob) {
-				if (cur->mob->IsNPC()) {
-					if (parse->HasQuestSub(cur->mob->GetNPCTypeID(), EVENT_TIMER)) {
-						parse->EventNPC(EVENT_TIMER, cur->mob->CastToNPC(), nullptr, cur->name, 0);
-					}
-				}
+			if(cur->mob) {
+				if(cur->mob->IsNPC()) {
+					parse->EventNPC(EVENT_TIMER, cur->mob->CastToNPC(), nullptr, cur->name, 0);
+
+				} 
 				else if (cur->mob->IsEncounter()) {
-					parse->EventEncounter(
-						EVENT_TIMER, 
-						cur->mob->CastToEncounter()->GetEncounterName(), 
-						cur->name, 
-						0, 
-						nullptr
-					);
-				}
+					parse->EventEncounter(EVENT_TIMER, cur->mob->CastToEncounter()->GetEncounterName(), cur->name, 0, nullptr);
+				} 
 				else if (cur->mob->IsClient()) {
-					if (parse->PlayerHasQuestSub(EVENT_TIMER)) {
 						//this is inheriently unsafe if we ever make it so more than npc/client start timers
 						parse->EventPlayer(EVENT_TIMER, cur->mob->CastToClient(), cur->name, 0);
-					}
 				}
 
 				//we MUST reset our iterator since the quest could have removed/added any
 				//number of timers... worst case we have to check a bunch of timers twice
 				cur = QTimerList.begin();
-				end = QTimerList.end();    //dunno if this is needed, cant hurt...
-			}
-			else {
+				end = QTimerList.end();	//dunno if this is needed, cant hurt...
+			} else {
 				cur = QTimerList.erase(cur);
 			}
-		}
-		else {
+		} else
 			++cur;
-		}
 	}
 
 	auto cur_iter = STimerList.begin();
@@ -346,7 +333,7 @@ Mob* QuestManager::spawn_from_spawn2(uint32 spawn2_id)
 	if (npc->DropsGlobalLoot()) {
 		npc->CheckGlobalLootTables();
 	}
-	npc->SetSpawnGroupId(found_spawn->SpawnGroupID());
+	npc->SetSp2(found_spawn->SpawnGroupID());
 	entity_list.AddNPC(npc);
 	entity_list.LimitAddNPC(npc);
 
@@ -417,7 +404,7 @@ void QuestManager::Zone(const char *zone_name) {
 		ztz->response = 0;
 		ztz->current_zone_id = zone->GetZoneID();
 		ztz->current_zone_guild_id = zone->GetGuildID();
-		ztz->requested_zone_id = ZoneID(zone_name);
+		ztz->requested_zone_id = database.GetZoneID(zone_name);
 		ztz->requested_zone_guild_id = GUILD_NONE;
 		ztz->admin = initiator->Admin();
 		strcpy(ztz->name, initiator->GetName());
@@ -449,7 +436,7 @@ void QuestManager::settimer(const char *timer_name, int seconds) {
 		++cur;
 	}
 
-	QTimerList.emplace_back(QuestTimer(seconds * 1000, owner, timer_name));
+	QTimerList.push_back(QuestTimer(seconds * 1000, owner, timer_name));
 }
 
 void QuestManager::settimerMS(const char *timer_name, int milliseconds) {
@@ -473,7 +460,7 @@ void QuestManager::settimerMS(const char *timer_name, int milliseconds) {
 		++cur;
 	}
 
-	QTimerList.emplace_back(QuestTimer(milliseconds, owner, timer_name));
+	QTimerList.push_back(QuestTimer(milliseconds, owner, timer_name));
 }
 
 void QuestManager::settimerMS(const char *timer_name, int milliseconds, EQ::ItemInstance *inst) {
@@ -496,7 +483,7 @@ void QuestManager::settimerMS(const char *timer_name, int milliseconds, Mob *mob
 		++cur;
 	}
 
-	QTimerList.emplace_back(QuestTimer(milliseconds, mob, timer_name));
+	QTimerList.push_back(QuestTimer(milliseconds, mob, timer_name));
 }
 
 void QuestManager::stoptimer(const char *timer_name) {
@@ -697,8 +684,8 @@ void QuestManager::resumetimer(const char *timer_name) {
 		++cur;
 	}
 
-	QTimerList.emplace_back(QuestTimer(duration, owner, timer_name, milliseconds));
-	LogQuests("Creating a new timer and resuming [{}] for [{}] with [{}] ms remaining", timer_name, owner->GetName(), milliseconds);
+	QTimerList.push_back(QuestTimer(duration, owner, timer_name, milliseconds));
+	Log(Logs::General, Logs::Quests, "Creating a new timer and resuming %s for %s with %d ms remaining.", timer_name, owner->GetName(), milliseconds);
 	
 }
 
@@ -943,42 +930,12 @@ std::string QuestManager::getlanguagename(int language_id) {
 	return EQ::constants::GetLanguageName(language_id);
 }
 
-std::string QuestManager::getbodytypename(uint8 body_type_id) {
-	return BodyType::GetName(body_type_id);
+std::string QuestManager::getbodytypename(uint32 bodytype_id) {
+	return EQ::constants::GetBodyTypeName(static_cast<bodyType>(bodytype_id));
 }
 
 std::string QuestManager::getconsiderlevelname(uint8 consider_level) {
 	return EQ::constants::GetConsiderLevelName(consider_level);
-}
-
-std::string QuestManager::getnpcnamebyid(uint32 npc_id) {
-	std::string res;
-	if (npc_id > 0) {
-		res = database.GetNPCNameByID(npc_id);
-	}
-	return res;
-}
-
-std::string QuestManager::getcharnamebyid(uint32 char_id) {
-	std::string res;
-	if (char_id > 0) {
-		res = database.GetCharNameByID(char_id);
-	}
-	return res;
-}
-
-int QuestManager::getguildidbycharid(uint32 char_id) {
-	if (char_id > 0) {
-		return database.GetGuildIDByCharID(char_id);
-	}
-	return 0;
-}
-
-int QuestManager::getgroupidbycharid(uint32 char_id) {
-	if (char_id > 0) {
-		return database.GetGroupIDByCharID(char_id);
-	}
-	return 0;
 }
 
 void QuestManager::safemove() {
@@ -1272,11 +1229,9 @@ void QuestManager::CreateGuild(const char *guild_name, const char *leader) {
 			}
 }
 
-void QuestManager::settime(uint8 new_hour, uint8 new_min, bool update_world /*= true*/) 
-{
-	if (zone) {
-		zone->SetTime(new_hour + 1, new_min, update_world);
-	}
+void QuestManager::settime(uint8 new_hour, uint8 new_min) {
+	if (zone)
+		zone->SetTime(new_hour, new_min);
 }
 
 void QuestManager::itemlink(int item_id) {
@@ -1297,7 +1252,7 @@ void QuestManager::itemlink(int item_id) {
 void QuestManager::signalwith(int npc_id, int signal_id, int wait_ms, const char* data)
 {
 	if (npc_id < 1000 || npc_id / 1000 == zone->GetZoneID() || npc_id / 1000 == database.GetClientZoneID(zone->GetZoneID()))
-		STimerList.emplace_back(SignalTimer(wait_ms < 0 ? 0 : wait_ms, npc_id, signal_id, data));
+		STimerList.push_back(SignalTimer(wait_ms < 0 ? 0 : wait_ms, npc_id, signal_id, data));
 	else
 		CrossZoneSignalNPCByNPCTypeID(npc_id, signal_id, data);
 }
@@ -1982,12 +1937,19 @@ void QuestManager::npcfeature(char *feature, int setting)
 }
 
 void QuestManager::clearspawntimers() {
-	
-	if (!zone) {
-		return;
-	}
+	if(!zone)
+        return;
 
-	zone->ClearSpawnTimers();
+	//TODO: Dec 19, 2008, replace with code updated for current spawn timers.
+    LinkedListIterator<Spawn2*> iterator(zone->spawn2_list);
+	iterator.Reset();
+	while (iterator.MoreElements()) {
+		std::string query = StringFormat("DELETE FROM respawn_times "
+                                        "WHERE id = %lu and guild_id = %lu",
+                                        (unsigned long)iterator.GetData()->GetID(), (unsigned long)zone->GetGuildID());
+        auto results = database.QueryDatabase(query);
+		iterator.Advance();
+	}
 }
 
 void QuestManager::ze(int type, const char *str) {
@@ -2058,11 +2020,14 @@ uint16 QuestManager::CreateGroundObjectFromModel(const char *model, const glm::v
 	return entid;
 }
 
-void QuestManager::ModifyNPCStat(std::string stat, std::string value)
+void QuestManager::ModifyNPCStat(const char *identifier, const char *newValue)
 {
 	QuestManagerCurrentQuestVars();
-	if (owner && owner->IsNPC()) {
-		owner->CastToNPC()->ModifyNPCStat(stat, value);
+	if(owner){
+		if(owner->IsNPC())
+		{
+			owner->CastToNPC()->ModifyNPCStat(identifier, newValue);
+		}
 	}
 }
 
@@ -2156,7 +2121,7 @@ void QuestManager::UpdateSpawnTimer(uint32 id, uint32 newTime)
 void QuestManager::MerchantSetItem(uint32 NPCid, uint32 itemid, uint32 quantity) {
 	Mob* merchant = entity_list.GetMobByNpcTypeID(NPCid);
 
-	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != Class::Merchant))
+	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != MERCHANT))
 		return;	// don't do anything if NPCid isn't a merchant
 
 	const EQ::ItemData* item = nullptr;
@@ -2169,7 +2134,7 @@ void QuestManager::MerchantSetItem(uint32 NPCid, uint32 itemid, uint32 quantity)
 uint32 QuestManager::MerchantCountItem(uint32 NPCid, uint32 itemid) {
 	Mob* merchant = entity_list.GetMobByNpcTypeID(NPCid);
 
-	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != Class::Merchant))
+	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != MERCHANT))
 		return 0;	// if it isn't a merchant, it doesn't have any items
 
 	const EQ::ItemData* item = nullptr;
@@ -2324,6 +2289,24 @@ void QuestManager::wearchange(uint8 slot, uint16 texture)
 	}
 }
 
+void QuestManager::SendMail(const char *to, const char *from, const char *subject, const char *message) {
+	if(to == nullptr || from == nullptr || subject == nullptr || message == nullptr) {
+		return;
+	}
+
+	uint32 message_len = strlen(message) + 1;
+	auto pack = new ServerPacket(ServerOP_UCSMailMessage, sizeof(ServerMailMessageHeader_Struct) + message_len);
+	ServerMailMessageHeader_Struct* mail = (ServerMailMessageHeader_Struct*) pack->pBuffer;
+
+	strn0cpy(mail->to, to, 64);
+	strn0cpy(mail->from, from, 64);
+	strn0cpy(mail->subject, subject, 128);
+	strcpy(mail->message, message);
+
+	worldserver.SendPacket(pack);
+	safe_delete(pack);
+}
+
 uint16 QuestManager::CreateDoor(const char* model, float x, float y, float z, float heading, uint8 opentype, uint16 size)
 {
 	uint16 entid = 0; //safety check
@@ -2332,7 +2315,7 @@ uint16 QuestManager::CreateDoor(const char* model, float x, float y, float z, fl
 }
 
 int32 QuestManager::GetZoneID(const char *zone) {
-	return static_cast<int32>(ZoneID(zone));
+	return static_cast<int32>(database.GetZoneID(zone));
 }
 
 const char* QuestManager::GetZoneLongName(const char *zone) {

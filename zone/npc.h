@@ -24,12 +24,10 @@
 #include "qglobals.h"
 #include "zonedb.h"
 #include "zonedump.h"
-#include "../common/zone_store.h"
 #include "../common/repositories/loottable_repository.h"
 #include "../common/repositories/loottable_entries_repository.h"
 #include "../common/repositories/lootdrop_repository.h"
 #include "../common/repositories/lootdrop_entries_repository.h"
-#include "../common/repositories/npc_faction_entries_repository.h"
 
 #include <deque>
 #include <list>
@@ -96,8 +94,7 @@ public:
 
 	virtual ~NPC();
 
-	static void SpawnGridNodeNPC(const glm::vec4& position, int32 grid_id, int32 grid_number, int32 zoffset);
-	static void SpawnZonePointNodeNPC(std::string name, const glm::vec4& position);
+	static void SpawnGridNodeNPC(const glm::vec4& position, int32 grid_number, int32 zoffset);
 
 	//abstract virtual function implementations required by base abstract class
 	virtual bool Death(Mob* killerMob, int32 damage, uint16 spell_id, EQ::skills::SkillType attack_skill, uint8 killedby = 0, bool bufftic = false);
@@ -237,11 +234,11 @@ public:
 
 	virtual int32 CalcMaxMana();
 	void SetGrid(int32 grid_){ grid=grid_; }
-	void SetSpawnGroupId(uint32 sg2){ spawn_group_id =sg2; }
+	void SetSp2(uint32 sg2){ spawn_group=sg2; }
 	void SetSaveWaypoint(uint16 wp_){ save_wp=wp_; }
 
 	int32 GetGrid() const { return grid; }
-	uint32 GetSpawnGroupId() const { return spawn_group_id; }
+	uint32 GetSp2() const { return spawn_group; }
 	uint32 GetSpawnPointID() const;
 
 	void ClearPathing();
@@ -282,12 +279,9 @@ public:
 	bool	IsOnHatelist(Mob*p) { return hate_list.IsOnHateList(p);}
 	void	SetRememberDistantMobs(bool state) { hate_list.SetRememberDistantMobs(state); }
 
-	void	SetNPCFactionID(int32 in) { 
-		npc_faction_id = in; 
-		database.GetFactionIDsForNPC(npc_faction_id, &faction_list, &primary_faction); 
-	}
+	void	SetNPCFactionID(int32 in) { npc_faction_id = in; database.GetFactionIdsForNPC(npc_faction_id, &faction_list, &primary_faction); }
 	void	SetPreCharmNPCFactionID(int32 in) { precharm_npc_faction_id = in; }
-	void	RestoreNPCFactionID() { npc_faction_id = precharm_npc_faction_id; database.GetFactionIDsForNPC(npc_faction_id, &faction_list, &primary_faction); }
+	void	RestoreNPCFactionID() { npc_faction_id = precharm_npc_faction_id; database.GetFactionIdsForNPC(npc_faction_id, &faction_list, &primary_faction); }
 
     glm::vec4 m_SpawnPoint;
 
@@ -297,7 +291,7 @@ public:
 	int		GetBaseDamage(Mob* defender = nullptr, int slot = EQ::invslot::slotPrimary);
 	inline void	TriggerClassAtkTimer() { classattack_timer.Trigger(); }
 	int16	GetSlowMitigation() const {return slow_mitigation;}
-	bool	IsAnimal() const { return(bodytype == BodyType::Animal); }
+	bool	IsAnimal() const { return(bodytype == BT_Animal); }
 	uint16	GetPetSpellID() const {return pet_spell_id;}
 	void	SetPetSpellID(uint16 amt) {pet_spell_id = amt;}
 	uint32	GetMaxDamage(uint8 tlevel);
@@ -360,8 +354,7 @@ public:
 	void				AI_SetRoambox(float iMaxX, float iMinX, float iMaxY, float iMinY, uint32 iDelay = 2500, uint32 iMinDelay = 2500);
 	void				SetSpawnPoint(float x, float y, float z, float h);
 
-	inline bool GetNPCAggro() const { return npc_aggro; }
-	inline void SetNPCAggro(bool in_npc_aggro) { npc_aggro = in_npc_aggro; }
+	inline bool WillAggroNPCs() const { return(npc_aggro); }
 
 	inline const uint32 GetNPCSpellsID()	const { return npc_spells_id; }
 	inline const uint32 GetNPCSpellsEffectsID()	const { return npc_spells_effects_id; }
@@ -381,29 +374,28 @@ public:
 	void	SetIgnoreDistance(float distance) { ignore_distance = distance; }
 	float	GetIgnoreDistance() { return ignore_distance; }
 
-	float	GetNPCStat(std::string stat);
-	void	ModifyNPCStat(std::string stat, std::string value);
+	void	ModifyNPCStat(const char *identifier, const char *newValue);
 	virtual void SetLevel(uint8 in_level, bool command = false);
-	inline void SetClass(uint8 classNum) { if (classNum <= Class::PLAYER_CLASS_COUNT && classNum > 0) class_ = static_cast<uint8>(classNum); }; // for custom scripts
+	inline void SetClass(uint8 classNum) { if (classNum <= PLAYER_CLASS_COUNT && classNum > 0) class_ = static_cast<uint8>(classNum); }; // for custom scripts
 
 	const bool GetCombatEvent() const { return combat_event; }
 	void SetCombatEvent(bool b) { combat_event = b; }
 
 	/* Only allows players that killed corpse to loot */
-	const bool HasPrivateCorpse() const { return NPCTypedata.private_corpse; }
+	const bool HasPrivateCorpse() const { return private_corpse; }
 	const bool IsAggroOnPC() const { return aggro_pc; }
 	const bool IsUnderwaterOnly() const { return underwater; }
 	const char* GetRawNPCTypeName() const { return NPCTypedata.name; }
 
+	inline bool GetNPCAggro() { return npc_aggro; }
+	inline void SetNPCAggro(bool state) { npc_aggro = state; }
 	inline bool GetIgnoreDespawn() { return ignore_despawn; }
-	inline void GiveNPCTypeData() { NPCTypedata_ours = true; }
 
 	virtual int GetStuckBehavior() const { return stuck_behavior; }
 
 	bool GetDepop() { return p_depop; }
 
 	void NPCSlotTexture(uint8 slot, uint16 texture);	// Sets new material values for slots
-
 
 	void AddSpellToNPCList(int16 iPriority, int16 iSpellID, uint16 iType, int16 iManaCost, int32 iRecastDelay, int16 iResistAdjust);
 	void AddSpellEffectToNPCList(uint16 iSpellEffectID, int32 base, int32 limit, int32 max);
@@ -485,18 +477,15 @@ public:
 
 	std::string GetSpawnedString();
 
-	void ReloadSpells();
-
 protected:
 
 	NPCType	NPCTypedata;
-	bool NPCTypedata_ours;	//special case for npcs with uniquely created data.
-
 
 	friend class EntityList;
+	std::list<struct NPCFaction*> faction_list;
 
 	int32	grid;
-	uint32	spawn_group_id;
+	uint32	spawn_group;
 	void	InitializeGrid(int start_wp);
 
 	// loot
@@ -505,8 +494,6 @@ protected:
 	uint32    m_loot_gold;
 	uint32    m_loot_platinum;
 	LootItems m_loot_items;
-
-	std::list<NpcFactionEntriesRepository::NpcFactionEntries> faction_list;
 
 	int32	npc_faction_id;
 	int32	precharm_npc_faction_id;

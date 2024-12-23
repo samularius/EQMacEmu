@@ -25,7 +25,6 @@
 #include "../common/spdat.h"
 #include "../common/strings.h"
 #include "../common/fastmath.h"
-#include "../common/misc_functions.h"
 #include "quest_parser_collection.h"
 #include "string_ids.h"
 #include "water_map.h"
@@ -49,7 +48,6 @@ extern FastMath g_Math;
 
 extern EntityList entity_list;
 extern Zone* zone;
-
 bool Mob::AttackAnimation(EQ::skills::SkillType &skillinuse, int Hand, const EQ::ItemInstance* weapon)
 {
 	// Determine animation
@@ -178,13 +176,13 @@ bool Mob::AvoidanceCheck(Mob* attacker, EQ::skills::SkillType skillinuse)
 
 	int toHit = attacker->GetToHit(skillinuse);
 	int avoidance = defender->GetAvoidance();
-	int toHitPct = 0;
-	int avoidancePct = 0;
+	int percentMod = 0;
 	
+	Log(Logs::Detail, Logs::Attack, "AvoidanceCheck: %s attacked by %s;  Avoidance: %i  To-Hit: %i", defender->GetName(), attacker->GetName(), avoidance, toHit);
+
 	// Hit Chance percent modifier
 	// Disciplines: Evasive, Precision, Deadeye, Trueshot, Charge
-	// Buffs: the Eagle Eye line
-	toHitPct = attacker->itembonuses.HitChanceEffect[skillinuse] +
+	percentMod = attacker->itembonuses.HitChanceEffect[skillinuse] +
 		attacker->spellbonuses.HitChanceEffect[skillinuse] +
 		attacker->aabonuses.HitChanceEffect[skillinuse] +
 		attacker->itembonuses.HitChanceEffect[EQ::skills::HIGHEST_SKILL + 1] +
@@ -193,14 +191,34 @@ bool Mob::AvoidanceCheck(Mob* attacker, EQ::skills::SkillType skillinuse)
 
 	// Avoidance chance percent modifier
 	// Disciplines: Evasive, Precision, Voiddance, Fortitude
-	avoidancePct = defender->spellbonuses.AvoidMeleeChanceEffect + defender->itembonuses.AvoidMeleeChanceEffect;
+	percentMod -= (defender->spellbonuses.AvoidMeleeChanceEffect + defender->itembonuses.AvoidMeleeChanceEffect);
 
-	toHit = toHit * (100 + toHitPct) / 100;
-	avoidance = avoidance * (100 + avoidancePct) / 100;
+	if (percentMod != 0)
+	{
+		if (skillinuse == EQ::skills::SkillArchery && percentMod > 0)
+			percentMod -= static_cast<int>(static_cast<float>(percentMod) * RuleR(Combat, ArcheryHitPenalty));
 
-	Log(Logs::Detail, Logs::Attack, "AvoidanceCheck: %s attacked by %s;  Avoidance: %i (pct: %i)  To-Hit: %i (pct: %i)", 
-		defender->GetName(), attacker->GetName(), avoidance, avoidancePct, toHit, toHitPct);
+		Log(Logs::Detail, Logs::Attack, "Modified chance to hit: %i%%", percentMod);
 
+		if (percentMod > 0)
+		{
+			if (zone->random.Roll(percentMod))
+			{
+				Log(Logs::Detail, Logs::Attack, "Modified Hit");
+				return true;
+			}
+		}
+		else
+		{
+			if (zone->random.Roll(-percentMod))
+			{
+				Log(Logs::Detail, Logs::Attack, "Modified Miss");
+				return false;
+			}
+		}
+	}
+
+	// This produces precise output.  Don't change this unless you have Sony's actual code
 	double hitChance;
 	toHit += 10;
 	avoidance += 10;
@@ -227,7 +245,7 @@ bool Mob::AvoidanceCheck(Mob* attacker, EQ::skills::SkillType skillinuse)
 	return false;
 }
 
-bool Mob::AvoidDamage(Mob* attacker, int32 &damage, bool isRangedAttack)
+bool Mob::AvoidDamage(Mob* attacker, int32 &damage, bool noRiposte, bool isRangedAttack)
 {
 	/* solar: called when a mob is attacked, does the checks to see if it's a hit
 	* and does other mitigation checks. 'this' is the mob being attacked.
@@ -287,7 +305,7 @@ bool Mob::AvoidDamage(Mob* attacker, int32 &damage, bool isRangedAttack)
 	}
 
 	// riposte
-	if (!isRangedAttack && GetSkill(EQ::skills::SkillRiposte) && InFront)
+	if (!noRiposte && !isRangedAttack && GetSkill(EQ::skills::SkillRiposte) && InFront)
 	{
 		bool cannotRiposte = false;
 
@@ -476,7 +494,7 @@ int Client::GetBaseDamage(Mob *defender, int slot)
 		else
 			dmg = weapon->Damage;
 
-		if (weapon->ElemDmgAmt && !defender->GetSpecialAbility(SpecialAbility::MagicImmunity))
+		if (weapon->ElemDmgAmt && !defender->GetSpecialAbility(IMMUNE_MAGIC))
 		{
 			int eledmg = 0;
 
@@ -568,25 +586,25 @@ uint32 Client::RollDamageMultiplier(uint32 offense, int& damage, EQ::skills::Ski
 	int maxExtra = 210;
 	int minusFactor = 105;
 
-	if (GetClass() == Class::Monk && level >= 65)
+	if (GetClass() == MONK && level >= 65)
 	{
 		rollChance = 83;
 		maxExtra = 300;
 		minusFactor = 50;
 	}
-	else if (level >= 65 || (GetClass() == Class::Monk && level >= 63))
+	else if (level >= 65 || (GetClass() == MONK && level >= 63))
 	{
 		rollChance = 81;
 		maxExtra = 295;
 		minusFactor = 55;
 	}
-	else if (level >= 63 || (GetClass() == Class::Monk && level >= 60))
+	else if (level >= 63 || (GetClass() == MONK && level >= 60))
 	{
 		rollChance = 79;
 		maxExtra = 290;
 		minusFactor = 60;
 	}
-	else if (level >= 60 || (GetClass() == Class::Monk && level >= 56))
+	else if (level >= 60 || (GetClass() == MONK && level >= 56))
 	{
 		rollChance = 77;
 		maxExtra = 285;
@@ -598,7 +616,7 @@ uint32 Client::RollDamageMultiplier(uint32 offense, int& damage, EQ::skills::Ski
 		maxExtra = 265;
 		minusFactor = 70;
 	}
-	else if (level >= 51 || GetClass() == Class::Monk)
+	else if (level >= 51 || GetClass() == MONK)
 	{
 		rollChance = 65;
 		maxExtra = 245;
@@ -671,7 +689,7 @@ int Mob::CalcEleWeaponResist(int weaponDamage, int resistType, Mob *target)
 // slot argument should be one of the following: SlotPrimary, SlotSecondary, SlotRange, SlotAmmo, SlotFeet, SlotHands
 bool Mob::IsImmuneToMelee(Mob* attacker, int slot)
 {
-	if (!attacker || GetInvul() || GetSpecialAbility(SpecialAbility::MeleeImmunity))
+	if (!attacker || GetInvul() || GetSpecialAbility(IMMUNE_MELEE))
 		return true;
 
 	if (slot != EQ::invslot::slotSecondary && slot != EQ::invslot::slotRange && slot != EQ::invslot::slotAmmo && slot != EQ::invslot::slotFeet && slot != EQ::invslot::slotHands)
@@ -703,21 +721,21 @@ bool Mob::IsImmuneToMelee(Mob* attacker, int slot)
 		if (weapon->Magic || attacker->spellbonuses.MagicWeapon || attacker->itembonuses.MagicWeapon)
 			magicWeapon = true;
 	}
-	else if ((attacker->GetClass() == Class::Monk || attacker->GetClass() == Class::Beastlord) && attacker->GetLevel() > 29
+	else if ((attacker->GetClass() == MONK || attacker->GetClass() == BEASTLORD) && attacker->GetLevel() > 29
 		&& (slot == EQ::invslot::slotPrimary || slot == EQ::invslot::slotSecondary || slot == EQ::invslot::slotHands)
 	)
 		magicWeapon = true;
 		
-	if (!magicWeapon && GetSpecialAbility(SpecialAbility::MeleeImmunityExceptMagical))
+	if (!magicWeapon && GetSpecialAbility(IMMUNE_MELEE_NONMAGICAL))
 	{
-		if (attacker->IsNPC() && !attacker->GetSpecialAbility(SpecialAbility::MagicalAttack) && attacker->GetLevel() < MAGIC_ATTACK_LEVEL)
+		if (attacker->IsNPC() && !attacker->GetSpecialAbility(SPECATK_MAGICAL) && attacker->GetLevel() < MAGIC_ATTACK_LEVEL)
 		{
 			return true;
 		}
 		else if (attacker->IsClient())
 		{
 			// grant magic attack to fists but not to held weapons if gloves are magic to these three classes
-			if ( (attacker->GetClass() == Class::Monk || attacker->GetClass() == Class::Beastlord || attacker->GetClass() == Class::Bard)
+			if ( (attacker->GetClass() == MONK || attacker->GetClass() == BEASTLORD || attacker->GetClass() == BARD)
 				&& ((!weapon && (slot == EQ::invslot::slotPrimary || slot == EQ::invslot::slotSecondary)) || slot == EQ::invslot::slotHands)
 			)
 			{
@@ -732,10 +750,10 @@ bool Mob::IsImmuneToMelee(Mob* attacker, int slot)
 	}
 
 	// don't think there are weapons that are pure elemental damage, but handling them anyway
-	if (weapon && !weapon->Damage && weapon->ElemDmgAmt && GetSpecialAbility(SpecialAbility::MagicImmunity))
+	if (weapon && !weapon->Damage && weapon->ElemDmgAmt && GetSpecialAbility(IMMUNE_MAGIC))
 		return true;
 
-	if (GetSpecialAbility(SpecialAbility::MeleeImmunityExceptBane))
+	if (GetSpecialAbility(IMMUNE_MELEE_EXCEPT_BANE))
 	{
 		if (attacker->IsClient())
 		{
@@ -753,7 +771,7 @@ bool Mob::IsImmuneToMelee(Mob* attacker, int slot)
 		}
 		else
 		{
-			if (!attacker->GetSpecialAbility(SpecialAbility::BaneAttack)
+			if (!attacker->GetSpecialAbility(SPECATK_BANE)				
 				&& (!weapon || (weapon->BaneDmgBody != GetBodyType() && weapon->BaneDmgRace != GetRace()))
 			)
 				return true;
@@ -780,7 +798,7 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 
 	//SetAttackTimer();
 	if (
-		(IsCasting() && GetClass() != Class::Bard)
+		(IsCasting() && GetClass() != BARD)
 		|| other == nullptr
 		|| ((IsClient() && CastToClient()->dead) || (other->IsClient() && other->CastToClient()->dead))
 		|| (GetHP() < 0)
@@ -833,16 +851,16 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 	{
 		switch (GetClass())
 		{
-		case Class::Druid:
-		case Class::Cleric:
-		case Class::Shaman:
+		case DRUID:
+		case CLERIC:
+		case SHAMAN:
 			if (baseDamage > 9)
 				baseDamage = 9;
 			break;
-		case Class::Wizard:
-		case Class::Magician:
-		case Class::Necromancer:
-		case Class::Enchanter:
+		case WIZARD:
+		case MAGICIAN:
+		case NECROMANCER:
+		case ENCHANTER:
 			if (baseDamage > 6)
 				baseDamage = 6;
 			break;
@@ -855,16 +873,16 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 	{
 		switch (GetClass())
 		{
-		case Class::Druid:
-		case Class::Cleric:
-		case Class::Shaman:
+		case DRUID:
+		case CLERIC:
+		case SHAMAN:
 			if (baseDamage > 12)
 				baseDamage = 12;
 			break;
-		case Class::Wizard:
-		case Class::Magician:
-		case Class::Necromancer:
-		case Class::Enchanter:
+		case WIZARD:
+		case MAGICIAN:
+		case NECROMANCER:
+		case ENCHANTER:
 			if (baseDamage > 10)
 				baseDamage = 10;
 			break;
@@ -877,16 +895,16 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 	{
 		switch (GetClass())
 		{
-		case Class::Druid:
-		case Class::Cleric:
-		case Class::Shaman:
+		case DRUID:
+		case CLERIC:
+		case SHAMAN:
 			if (baseDamage > 20)
 				baseDamage = 20;
 			break;
-		case Class::Wizard:
-		case Class::Magician:
-		case Class::Necromancer:
-		case Class::Enchanter:
+		case WIZARD:
+		case MAGICIAN:
+		case NECROMANCER:
+		case ENCHANTER:
 			if (baseDamage > 12)
 				baseDamage = 12;
 			break;
@@ -899,16 +917,16 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 	{
 		switch (GetClass())
 		{
-		case Class::Druid:
-		case Class::Cleric:
-		case Class::Shaman:
+		case DRUID:
+		case CLERIC:
+		case SHAMAN:
 			if (baseDamage > 26)
 				baseDamage = 26;
 			break;
-		case Class::Wizard:
-		case Class::Magician:
-		case Class::Necromancer:
-		case Class::Enchanter:
+		case WIZARD:
+		case MAGICIAN:
+		case NECROMANCER:
+		case ENCHANTER:
 			if (baseDamage > 18)
 				baseDamage = 18;
 			break;
@@ -924,16 +942,16 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 	{
 		switch (GetClass())
 		{
-		case Class::Druid:
-		case Class::Cleric:
-		case Class::Shaman:
+		case DRUID:
+		case CLERIC:
+		case SHAMAN:
 			if (baseDamage > 80)
 				baseDamage = 80;
 			break;
-		case Class::Wizard:
-		case Class::Magician:
-		case Class::Necromancer:
-		case Class::Enchanter:
+		case WIZARD:
+		case MAGICIAN:
+		case NECROMANCER:
+		case ENCHANTER:
 			if (baseDamage > 40)
 				baseDamage = 40;
 			break;
@@ -1080,7 +1098,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 				int caster_class = other->GetClass();
 				float mitigation;
 
-				if (caster_class == Class::Bard || caster_class == Class::Paladin || caster_class == Class::Ranger || caster_class == Class::ShadowKnight)
+				if (caster_class == BARD || caster_class == PALADIN || caster_class == RANGER || caster_class == SHADOWKNIGHT)
 				{
 					if (spell_id != SPELL_IMP_HARM_TOUCH && spell_id != SPELL_HARM_TOUCH)
 					{
@@ -1094,7 +1112,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 				else
 				{
 					int spell_level = 39;
-					if (caster_class <= Class::PLAYER_CLASS_COUNT)
+					if (caster_class <= PLAYER_CLASS_COUNT)
 					{
 						spell_level = spells[spell_id].classes[caster_class - 1];
 					}
@@ -1235,7 +1253,7 @@ void Mob::AggroPet(Mob* attacker)
 	 */
 	if(attacker) {
 		Mob *pet = GetPet();
-		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(SpecialAbility::AggroImmunity) && attacker && attacker != this && !attacker->IsCorpse() && !attacker->IsUnTargetable())
+		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && attacker && attacker != this && !attacker->IsCorpse() && !attacker->IsUnTargetable())
 		{
 			if (pet->hate_list.IsOnHateList(attacker))
 				return;
@@ -1570,7 +1588,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 	{
 		m_pp.zone_id = m_pp.binds[0].zoneId;
 		m_epp.zone_guild_id = GUILD_NONE;
-		database.MoveCharacterToZone(this->CharacterID(), m_pp.zone_id);
+		database.MoveCharacterToZone(this->CharacterID(), database.GetZoneName(m_pp.zone_id));
 	}
 	else
 	{
@@ -1832,8 +1850,8 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 	// oos is the non-pet Mob who dealt the deathblow. 
 	Mob *oos = nullptr;
 	bool skip_corpse_checks = false;
-	bool ismerchant = class_ == Class::Merchant || MerchantType > 0;
-	bool player_damaged = ds_damage + npc_damage < player_damage;
+	bool ismerchant = class_ == MERCHANT || MerchantType > 0;
+	bool player_damaged = ds_damage + npc_damage < total_damage;
 	bool corpse = false;
 	bool xp = false;
 	bool faction = false;
@@ -1860,7 +1878,7 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 
 		if (oos)
 		{
-			if (oos->IsClient() && GetSpecialAbility(SpecialAbility::PCDeathblowCorpse) && !ismerchant)
+			if (oos->IsClient() && GetSpecialAbility(PC_DEATHBLOW_CORPSE) && !ismerchant)
 			{
 				skip_corpse_checks = true;
 				Log(Logs::Detail, Logs::Death, "Deathblow dealt by %s, skipping all corpse checks for %s...", oos->GetName(), GetName());
@@ -1951,7 +1969,7 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 	}
 
 	// Do faction hits to any player on the hatelist, so long as a player damaged us.
-	if (GetNPCFactionID() > 0 && player_damaged && !oos->IsNPC())
+	if (GetNPCFactionID() > 0 && player_damaged)
 	{
 		hate_list.DoFactionHits(GetNPCFactionID(), faction);
 	}
@@ -2582,13 +2600,13 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 	if(IsClient() && !IsAIControlled())
 		return;
 
-	if(IsFamiliar() || GetSpecialAbility(SpecialAbility::AggroImmunity))
+	if(IsFamiliar() || GetSpecialAbility(IMMUNE_AGGRO))
 		return;
 
 	if (other == myowner)
 		return;
 
-	if(other->GetSpecialAbility(SpecialAbility::BeingAggroImmunity))
+	if(other->GetSpecialAbility(IMMUNE_AGGRO_ON))
 		return;
 
 	if (IsNPC() && other->IsClient() && zone && zone->GetGuildID() != GUILD_NONE)
@@ -2608,8 +2626,8 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 		}
 	}
 
-	if(GetSpecialAbility(SpecialAbility::TunnelVision)) {
-		int tv_mod = GetSpecialAbilityParam(SpecialAbility::TunnelVision, 0);
+	if(GetSpecialAbility(NPC_TUNNELVISION)) {
+		int tv_mod = GetSpecialAbilityParam(NPC_TUNNELVISION, 0);
 
 		Mob *top = GetTarget();
 		if(top && top != other) {
@@ -2696,7 +2714,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 	// then add pet owner if there's one
 	if (owner)
 	{
-		if(!owner->GetSpecialAbility(SpecialAbility::AggroImmunity))
+		if(!owner->GetSpecialAbility(IMMUNE_AGGRO))
 		{
 			hate_list.Add(owner, 0, 0, false, !iBuffTic);
 			if (!iBuffTic && owner->IsClient())
@@ -2706,14 +2724,14 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 
 	if (addpet && mypet) 
 	{ // I have a pet, add other to it
-		if (!mypet->IsFamiliar() && !mypet->GetSpecialAbility(SpecialAbility::AggroImmunity) && damage < GetMaxHP())
+		if (!mypet->IsFamiliar() && !mypet->GetSpecialAbility(IMMUNE_AGGRO) && damage < GetMaxHP())
 		{
 			mypet->hate_list.Add(other, 0, 0, bFrenzy);
 		}
 	} 
 	else if (myowner) 
 	{ // I am a pet, add other to owner if it's NPC/LD
-		if (myowner->IsAIControlled() && !myowner->GetSpecialAbility(SpecialAbility::AggroImmunity))
+		if (myowner->IsAIControlled() && !myowner->GetSpecialAbility(IMMUNE_AGGRO))
 			myowner->hate_list.Add(other, 0, 0, bFrenzy);
 	}
 
@@ -2886,7 +2904,7 @@ int Client::GetHandToHandDamage()
 		9, 9, 9, 9, 9, 10, 10, 10, 10, 10,   // 31-40
 		10, 11, 11, 11, 11, 11, 11, 12, 12 }; // 41-49
 
-	if (GetClass() == Class::Monk)
+	if (GetClass() == MONK)
 	{
 		if (IsClient() && CastToClient()->GetItemIDAt(12) == 10652 && GetLevel() > 50)		// Celestial Fists, monk epic
 			return 9;
@@ -2894,7 +2912,7 @@ int Client::GetHandToHandDamage()
 			return 15;
 		return mnk_dmg[level];
 	}
-	else if (GetClass() == Class::Beastlord)
+	else if (GetClass() == BEASTLORD)
 	{
 		if (level > 49)
 			return 13;
@@ -2931,17 +2949,17 @@ int Client::GetHandToHandDelay()
 		30, 30, 30, 29, 29, 29, 29, 29, 28, 28, // 51-60
 		28, 28, 28 };							// 61-63
 
-	if (GetClass() == Class::Monk)
+	if (GetClass() == MONK)
 	{
 		if (GetItemIDAt(12) == 10652 && GetLevel() > 50)		// Celestial Fists, monk epic
 			return 16;
 		
 		if (GetLevel() > 62)
-			return GetRace() == Race::Iksar ? 21 : 20;
+			return GetRace() == IKSAR ? 21 : 20;
 
-		return GetRace() == Race::Iksar ? mnk_iks_delay[level] : mnk_hum_delay[level];
+		return GetRace() == IKSAR ? mnk_iks_delay[level] : mnk_hum_delay[level];
 	}
-	else if (GetClass() == Class::Beastlord)
+	else if (GetClass() == BEASTLORD)
 	{
 		if (GetLevel() > 63)
 			return 27;
@@ -3350,7 +3368,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	// hundreds of spells have the skill id set to tiger claw in the spell data
 	// without this, lots of stuff will 'strike' instead of give a proper spell damage message
 	uint8 skill_id = skill_used;
-	if (skill_used == EQ::skills::SkillTigerClaw && spell_id > 0 && ((attacker && attacker->GetClass() != Class::Monk) || spell_id != SPELL_UNKNOWN))
+	if (skill_used == EQ::skills::SkillTigerClaw && spell_id > 0 && ((attacker && attacker->GetClass() != MONK) || spell_id != SPELL_UNKNOWN))
 	{
 		skill_id = EQ::skills::SkillEvocation;
 	}
@@ -3910,7 +3928,7 @@ bool NPC::TryInnateProc(Mob* target)
 		int16 resist_diff = spells[innateProcSpellId].ResistDiff;
 		
 		// Sleeper proc.  it seemed to have hit clients only and was unresistable
-		if (innateProcSpellId == SPELL_DRAGON_CHARM && GetRace() == Race::PrismaticDragon)
+		if (innateProcSpellId == SPELL_DRAGON_CHARM && GetRace() == PRISMATIC_DRAGON)
 		{
 			if (!target->IsClient())
 				return false;
@@ -3937,8 +3955,8 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, int32 minBa
 	bool undeadTarget = false;
 
 	//1: Try Slay Undead
-	if (defender && (defender->GetBodyType() == BodyType::Undead ||
-		defender->GetBodyType() == BodyType::SummonedUndead || defender->GetBodyType() == BodyType::Vampire))
+	if (defender && (defender->GetBodyType() == BT_Undead ||
+		defender->GetBodyType() == BT_SummonedUndead || defender->GetBodyType() == BT_Vampire))
 	{
 		undeadTarget = true;
 
@@ -3957,7 +3975,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, int32 minBa
 				if (damage < minSlay)
 					damage = minSlay;
 
-				if (GetGender() == Gender::Female) // female
+				if (GetGender() == 1) // female
 					entity_list.FilteredMessageClose_StringID(this, false, RuleI(Range, CombatSpecials),
 						Chat::MeleeCrit, FilterMeleeCrits, FEMALE_SLAYUNDEAD,
 						GetCleanName(), itoa(damage));
@@ -3985,18 +4003,18 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, int32 minBa
 		if (spellbonuses.BerserkSPA || itembonuses.BerserkSPA || aabonuses.BerserkSPA)
 			isBerserk = true;
 
-		if (GetClass() == Class::Warrior && GetLevel() >= 12)
+		if (GetClass() == WARRIOR && GetLevel() >= 12)
 		{
 			if (IsBerserk())
 				isBerserk = true;
 
 			critChance += 0.5f + static_cast<float>(std::min(GetDEX(), 255)) / 90.0f + overCap;
 		}
-		else if (skill == EQ::skills::SkillArchery && GetClass() == Class::Ranger && GetLevel() > 16)
+		else if (skill == EQ::skills::SkillArchery && GetClass() == RANGER && GetLevel() > 16)
 		{
 			critChance += 1.35f + static_cast<float>(std::min(GetDEX(), 255)) / 34.0f + overCap * 2;
 		}
-		else if (GetClass() != Class::Warrior && critChanceMult)
+		else if (GetClass() != WARRIOR && critChanceMult)
 		{
 			critChance += 0.275f + static_cast<float>(std::min(GetDEX(), 255)) / 150.0f + overCap;
 		}
@@ -4018,7 +4036,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, int32 minBa
 	int deadlyChance = 0;
 	int deadlyMod = 0;
 
-	if (skill == EQ::skills::SkillThrowing && GetClass() == Class::Rogue && GetSkill(EQ::skills::SkillThrowing) >= 65) {
+	if (skill == EQ::skills::SkillThrowing && GetClass() == ROGUE && GetSkill(EQ::skills::SkillThrowing) >= 65) {
 		critChance += RuleI(Combat, RogueCritThrowingChance);
 		deadlyChance = RuleI(Combat, RogueDeadlyStrikeChance);
 		deadlyMod = RuleI(Combat, RogueDeadlyStrikeMod);
@@ -4118,7 +4136,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, int32 minBa
 			else if (skill == EQ::skills::SkillDragonPunch)
 			{
 				uint32 stringid = SILENT_FIST_CRIT;
-				if (GetRace() == Race::Iksar)
+				if (GetRace() == IKSAR)
 				{
 					stringid = SILENT_FIST_TAIL;
 				}
@@ -4161,7 +4179,7 @@ bool Mob::TryFinishingBlow(Mob *defender, EQ::skills::SkillType skillinuse, uint
 void Mob::DoRiposte(Mob* defender) {
 	Log(Logs::Detail, Logs::Combat, "Preforming a riposte");
 
-	if (!defender || GetSpecialAbility(SpecialAbility::RiposteImmunity))
+	if (!defender || GetSpecialAbility(IMMUNE_RIPOSTE))
 		return;
 
 	if (defender->IsClient())
@@ -4198,7 +4216,7 @@ void Mob::DoRiposte(Mob* defender) {
 	if(DoubleRipChance && zone->random.Roll(DoubleRipChance)) {
 	Log(Logs::Detail, Logs::Combat, "Preforming a return SPECIAL ATTACK (%d percent chance)", DoubleRipChance);
 
-		if (defender->GetClass() == Class::Monk)
+		if (defender->GetClass() == MONK)
 			defender->DoMonkSpecialAttack(this, defender->aabonuses.GiveDoubleRiposte[2], true);
 	}
 }
@@ -4356,6 +4374,9 @@ void Mob::CommonBreakInvisible(bool skip_sneakhide)
 		}
 	}
 
+	if (spellbonuses.NegateIfCombat)
+		BuffFadeByEffect(SE_NegateIfCombat);
+
 	if (!skip_sneakhide)
 	{
 		CommonBreakSneakHide();
@@ -4490,7 +4511,7 @@ void Client::SetAttackTimer(bool trigger)
 		//if we have no weapon..
 		if (ItemToUse == nullptr)
 		{
-			if (GetClass() == Class::Monk || GetClass() == Class::Beastlord)
+			if (GetClass() == MONK || GetClass() == BEASTLORD)
 				delay = GetHandToHandDelay();
 		}
 		else
@@ -4712,7 +4733,7 @@ int Client::GetOffense(EQ::skills::SkillType skill)
 	if (offense < 1)
 		offense = 1;
 
-	if (GetClass() == Class::Ranger && GetLevel() > 54)
+	if (GetClass() == RANGER && GetLevel() > 54)
 	{
 		offense = offense + GetLevel() * 4 - 216;
 	}
@@ -4772,7 +4793,7 @@ int Mob::GetToHit(EQ::skills::SkillType skill)
 				drunkReduction = 100;
 			toHit = toHit * drunkReduction / 100;
 		}
-		else if (GetClass() == Class::Warrior && CastToClient()->IsBerserk())
+		else if (GetClass() == WARRIOR && CastToClient()->IsBerserk())
 		{
 			toHit += 2 * GetLevel() / 5;
 		}
@@ -4874,7 +4895,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 	uint8 playerClass = classnum;
 
 	// add 33% to item AC for all but NEC WIZ MAG ENC
-	if (playerClass != Class::Necromancer && playerClass != Class::Wizard && playerClass != Class::Magician && playerClass != Class::Enchanter)
+	if (playerClass != NECROMANCER && playerClass != WIZARD && playerClass != MAGICIAN && playerClass != ENCHANTER)
 	{
 		acSum = 4 * acSum / 3;
 	}
@@ -4885,7 +4906,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 		acSum = level * 6 + 25;
 	}
 
-	if (playerClass == Class::Monk)
+	if (playerClass == MONK)
 	{
 		int32 hardcap, softcap;
 
@@ -4970,7 +4991,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 		}
 
 	}
-	else if (playerClass == Class::Rogue)
+	else if (playerClass == ROGUE)
 	{
 		if (level >= 30 && agi > 75)
 		{
@@ -5008,7 +5029,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 			acSum += acBonus;
 		}
 	}
-	else if (playerClass == Class::Beastlord)
+	else if (playerClass == BEASTLORD)
 	{
 		if (level > 10)
 		{
@@ -5068,7 +5089,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 	int32 defense = defense_skill_value;
 	if (defense > 0)
 	{
-		if (playerClass == Class::Wizard || playerClass == Class::Necromancer || playerClass == Class::Enchanter || playerClass == Class::Magician)
+		if (playerClass == WIZARD || playerClass == NECROMANCER || playerClass == ENCHANTER || playerClass == MAGICIAN)
 		{
 			acSum += defense / 2;
 		}
@@ -5079,7 +5100,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 	}
 
 	int spellACDivisor = 4;
-	if (playerClass == Class::Wizard || playerClass == Class::Magician || playerClass == Class::Necromancer || playerClass == Class::Enchanter)
+	if (playerClass == WIZARD || playerClass == MAGICIAN || playerClass == NECROMANCER || playerClass == ENCHANTER)
 	{
 		spellACDivisor = 3;
 	}
@@ -5096,23 +5117,23 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 	if (level > 50) {
 		if (content_service.IsTheScarsOfVeliousEnabled()) { // earliest known client with these caps is April 4, 2001; defaulting this to Velious Era
 			switch (playerClass) {
-				case Class::Warrior: {
+				case WARRIOR: {
 					softcap = 430;
 					break;
 				}
-				case Class::Paladin:
-				case Class::ShadowKnight:
-				case Class::Cleric:
-				case Class::Bard: {
+				case PALADIN:
+				case SHADOWKNIGHT:
+				case CLERIC:
+				case BARD: {
 					softcap = 403;
 					break;
 				}
-				case Class::Ranger:
-				case Class::Shaman: {
+				case RANGER:
+				case SHAMAN: {
 					softcap = 375;
 					break;
 				}
-				case Class::Monk: {
+				case MONK: {
 					softcap = RuleB(AlKabor, ReducedMonkAC) ? 315 : 350;
 					break;
 				}
@@ -5123,7 +5144,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 		}
 
 		else {
-			if (playerClass == Class::Warrior && content_service.IsTheRuinsOfKunarkEnabled()) {
+			if (playerClass == WARRIOR && content_service.IsTheRuinsOfKunarkEnabled()) {
 				softcap = 405;
 			}
 		}
@@ -5151,13 +5172,12 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 
 		if (!content_service.IsThePlanesOfPowerEnabled()) {
 			returns = 12;
-			
-			if (playerClass == Class::Cleric || playerClass == Class::Druid || playerClass == Class::Shaman || playerClass == Class::Wizard || playerClass == Class::Magician || playerClass == Class::Enchanter || playerClass == Class::Necromancer) {
+			if (playerClass == CLERIC || playerClass == DRUID || playerClass == SHAMAN || playerClass == WIZARD || playerClass == MAGICIAN || playerClass == ENCHANTER || playerClass == NECROMANCER) {
 				overcap = 0; // melee only until PoP
 			}
 		}
 		else {
-			if (playerClass == Class::Warrior) {
+			if (playerClass == WARRIOR) {
 				if (level <= 61) {
 					returns = 5;
 				}
@@ -5168,7 +5188,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 					returns = 3;
 				}
 			}
-			else if (playerClass == Class::Paladin || playerClass == Class::ShadowKnight) {
+			else if (playerClass == PALADIN || playerClass == SHADOWKNIGHT) {
 				if (level <= 61) {
 					returns = 6;
 				}
@@ -5179,7 +5199,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 					returns = 4;
 				}
 			}
-			else if (playerClass == Class::Bard) {
+			else if (playerClass == BARD) {
 				if (level <= 61) {
 					returns = 8;
 				}
@@ -5190,7 +5210,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 					returns = 6;
 				}
 			}
-			else if (playerClass == Class::Monk || playerClass == Class::Rogue) {
+			else if (playerClass == MONK || playerClass == ROGUE) {
 				if (level <= 61) {
 					returns = 20;
 				}
@@ -5207,7 +5227,7 @@ int Client::GetMitigation(bool ignoreCap, int item_ac_sum, int shield_ac, int sp
 					returns = 12;
 				}
 			}
-			else if (playerClass == Class::Ranger || playerClass == Class::Beastlord)	{
+			else if (playerClass == RANGER || playerClass == BEASTLORD)	{
 				if (level <= 61) {
 					returns = 10;
 				}

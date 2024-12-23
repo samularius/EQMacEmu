@@ -46,7 +46,6 @@
 #include "extprofile.h"
 #include "strings.h"
 #include "random.h"
-#include "zone_store.h"
 
 extern Client client;
 EQ::Random emudb_random;
@@ -778,11 +777,11 @@ bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, EQ::I
 		return false;
 	}
 
-	const char *zname = ZoneName(pp->zone_id);
+	const char *zname = GetZoneName(pp->zone_id);
 	if(zname == nullptr) {
 		/* Zone not in the DB, something to prevent crash... */
-		strn0cpy(zone, "qeynos", 49);
-		pp->zone_id = Zones::QEYNOS;
+		strn0cpy(zone, "bazaar", 49);
+		pp->zone_id = Zones::BAZAAR;
 	}
 	else{ strn0cpy(zone, zname, 49); }
 
@@ -939,61 +938,6 @@ uint32 Database::GetAccountIDByName(std::string account_name, int16* status, uin
 	return account_id;
 }
 
-uint32 Database::GetGuildIDByCharID(uint32 character_id)
-{
-	std::string query = fmt::format(
-		SQL(
-			SELECT 
-				guild_id 
-			FROM 
-				guild_members 
-			WHERE 
-				char_id='{}'
-		),
-		character_id
-	);
-	auto results = QueryDatabase(query);
-
-	if (!results.Success()) {
-		return 0;
-	}
-
-	if (results.RowCount() == 0) {
-		return 0;
-	}
-
-	auto row = results.begin();
-	return atoi(row[0]);
-}
-
-uint32 Database::GetGroupIDByCharID(uint32 character_id)
-{
-	std::string query = fmt::format(
-		SQL(
-			SELECT 
-				groupid
-			FROM 
-				group_id
-			WHERE 
-				charid = '{}'
-		),
-		character_id
-	);
-	auto results = QueryDatabase(query);
-
-	if (!results.Success()) {
-		return 0;
-	}
-
-	if (results.RowCount() == 0) {
-		return 0;
-	}
-
-	auto row = results.begin();
-	return atoi(row[0]);
-}
-
-
 void Database::GetAccountName(uint32 accountid, char* name, uint32* oLSAccountID) {
 	std::string query = StringFormat("SELECT `name`, `lsaccount_id` FROM `account` WHERE `id` = '%i'", accountid); 
 	auto results = QueryDatabase(query);
@@ -1050,42 +994,6 @@ bool Database::IsCharacterNameReserved(uint32 account_id, const char* input_char
 	} else {
 		return true; // name is reserved but not for this account_id so we return true
 	};
-}
-
-std::string Database::GetCharNameByID(uint32 char_id) {
-	std::string query = fmt::format("SELECT `name` FROM `character_data` WHERE id = {}", char_id);
-	auto results = QueryDatabase(query);
-	std::string res;
-
-	if (!results.Success()) {
-		return res;
-	}
-
-	if (results.RowCount() == 0) {
-		return res;
-	}
-
-	auto row = results.begin();
-	res = row[0];
-	return res;
-}
-
-std::string Database::GetNPCNameByID(uint32 npc_id) {
-	std::string query = fmt::format("SELECT `name` FROM `npc_types` WHERE id = {}", npc_id);
-	auto results = QueryDatabase(query);
-	std::string res;
-
-	if (!results.Success()) {
-		return res;
-	}
-
-	if (results.RowCount() == 0) {
-		return res;
-	}
-
-	auto row = results.begin();
-	res = row[0];
-	return res;
 }
 
 bool Database::LoadVariables() {
@@ -1313,6 +1221,50 @@ bool Database::GetZoneGraveyard(const uint32 graveyard_id, uint32* graveyard_zon
 	return true;
 }
 
+bool Database::LoadZoneNames() {
+	std::string query("SELECT zoneidnumber, short_name FROM zone");
+
+	auto results = QueryDatabase(query);
+
+	if (!results.Success())
+	{
+		return false;
+	}
+
+	for (auto row= results.begin();row != results.end();++row)
+	{
+		uint32 zoneid = atoi(row[0]);
+		std::string zonename = row[1];
+		zonename_array.insert(std::pair<uint32,std::string>(zoneid,zonename));
+	}
+
+	return true;
+}
+
+uint32 Database::GetZoneID(const char* zonename) {
+
+	if (zonename == nullptr)
+		return 0;
+
+	for (auto iter = zonename_array.begin(); iter != zonename_array.end(); ++iter)
+		if (strcasecmp(iter->second.c_str(), zonename) == 0)
+			return iter->first;
+
+	return 0;
+}
+
+const char* Database::GetZoneName(uint32 zoneID, bool ErrorUnknown) {
+	auto iter = zonename_array.find(zoneID);
+
+	if (iter != zonename_array.end())
+		return iter->second.c_str();
+
+	if (ErrorUnknown)
+		return "UNKNOWN";
+
+	return 0;
+}
+
 uint8 Database::GetPEQZone(uint32 zoneID){
 	
 	std::string query = StringFormat("SELECT peqzone from zone where zoneidnumber='%i'", zoneID);
@@ -1427,7 +1379,7 @@ bool Database::CheckNameFilter(const char* name, bool surname) {
 		}
 		else {
 			num_c = 1;
-			c = name[x];
+			c = str_name[x];
 		}
 		if (num_c > 2) {
 			return false;
@@ -1459,16 +1411,18 @@ bool Database::CheckNameFilter(const char* name, bool surname) {
 	return true;
 }
 
-bool Database::AddToNameFilter(std::string name) 
-{
-	auto query = fmt::format(
-		"INSERT INTO name_filter (name) values ('{}')",
-		name
-	);
+bool Database::AddToNameFilter(const char* name) {
+	
+	std::string query = StringFormat("INSERT INTO name_filter (name) values ('%s')", name);
 	auto results = QueryDatabase(query);
-	if (!results.Success() || !results.RowsAffected()) {
+
+	if (!results.Success())
+	{
 		return false;
 	}
+
+	if (results.RowsAffected() == 0)
+		return false;
 
 	return true;
 }
@@ -1551,18 +1505,15 @@ bool Database::UpdateName(const char* oldname, const char* newname) {
 }
 
 // If the name is used or an error occurs, it returns false, otherwise it returns true
-bool Database::CheckUsedName(std::string name, uint32 charid) 
-{
-	auto query = fmt::format(
-		"SELECT `id` FROM `character_data` WHERE `name` = '{}' AND id != {}", 
-		name, 
-		charid
-	);
-
+bool Database::CheckUsedName(const char* name, uint32 charid) {
+	std::string query = StringFormat("SELECT `id` FROM `character_data` WHERE `name` = '%s' AND id != %d", name, charid);
 	auto results = QueryDatabase(query); 
-	if (!results.Success() || results.RowCount()) {
+	if (!results.Success()) {
 		return false;
 	}
+
+	if (results.RowCount() > 0)
+		return false;
 
 	return true;
 }
@@ -1581,31 +1532,36 @@ uint8 Database::GetServerType() {
 	return atoi(row[0]);
 }
 
-bool Database::MoveCharacterToZone(uint32 character_id, uint32 zone_id)
+bool Database::MoveCharacterToZone(const char* charname, const char* zonename, uint32 zoneid) 
 {
-	std::string query = StringFormat(
-		"UPDATE `character_data` SET `zone_id` = %i, `x` = -1, `y` = -1, `z` = -1 WHERE `id` = %i",
-		zone_id,
-		character_id
-	);
+	if(zonename == nullptr || strlen(zonename) == 0)
+		return false;
 
+	float safe_x = 0, safe_y = 0, safe_z = 0;
+	GetSafePoints(zoneid, &safe_x, &safe_y, &safe_z);
+	std::string query = StringFormat("UPDATE `character_data` SET `zone_id` = %i, `x` = %0.2f, `y` = %0.2f, `z` = %0.2f WHERE `name` = '%s'", zoneid, safe_x, safe_y, safe_z, charname);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
 		return false;
 	}
 
-	return results.RowsAffected() != 0;
+	if (results.RowsAffected() == 0)
+		return false;
+
+	return true;
 }
 
-bool Database::MoveCharacterToZone(const char* charname, uint32 zone_id)
+bool Database::MoveCharacterToZone(const char* charname, const char* zonename) 
 {
-	std::string query = StringFormat(
-		"UPDATE `character_data` SET `zone_id` = %i, `x` = -1, `y` = -1, `z` = -1 WHERE `name` = '%s'",
-		zone_id,
-		charname
-	);
+	return MoveCharacterToZone(charname, zonename, GetZoneID(zonename));
+}
 
+bool Database::MoveCharacterToZone(uint32 iCharID, const char* iZonename) 
+{ 
+	float safe_x = 0, safe_y = 0, safe_z = 0;
+	GetSafePoints(iZonename, &safe_x, &safe_y, &safe_z);
+	std::string query = StringFormat("UPDATE `character_data` SET `zone_id` = %i, `x` = %0.2f, `y` = %0.2f, `z` = %0.2f WHERE `id` = %i", GetZoneID(iZonename), safe_x, safe_y, safe_z, iCharID);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
@@ -1705,6 +1661,56 @@ uint8 Database::GetRaceSkill(uint8 skillid, uint8 in_race)
 
 	auto row = results.begin();
 	return atoi(row[0]);
+}
+
+uint8 Database::GetSkillCap(uint8 skillid, uint8 in_race, uint8 in_class, uint16 in_level)
+{
+	uint8 skill_level = 0, skill_formula = 0;
+	uint16 base_cap = 0, skill_cap = 0, skill_cap2 = 0, skill_cap3 = 0;
+	
+
+	//Fetch the data from DB.
+	std::string query = StringFormat("SELECT level, formula, pre50cap, post50cap, post60cap from skillcaps where skill = %i && class = %i", skillid, in_class);
+	auto results = QueryDatabase(query);
+
+	if (results.Success() && results.RowsAffected() != 0)
+	{
+		auto row = results.begin();
+		skill_level = atoi(row[0]);
+		skill_formula = atoi(row[1]);
+		skill_cap = atoi(row[2]);
+		if (atoi(row[3]) > skill_cap)
+			skill_cap2 = (atoi(row[3])-skill_cap)/10; //Split the post-50 skill cap into difference between pre-50 cap and post-50 cap / 10 to determine amount of points per level.
+		skill_cap3 = atoi(row[4]);
+	}
+
+	int race_skill = GetRaceSkill(skillid,in_race);
+
+	if (race_skill > 0 && (race_skill > skill_cap || skill_cap == 0 || in_level < skill_level))
+		return race_skill;
+
+	if (skill_cap == 0) //Can't train this skill at all.
+		return 255; //Untrainable
+
+	if (in_level < skill_level)
+		return 254; //Untrained
+
+	//Determine pre-51 level-based cap
+	if (skill_formula > 0)
+		base_cap = in_level*skill_formula+skill_formula;
+	if (base_cap > skill_cap || skill_formula == 0)
+		base_cap = skill_cap;
+
+	//If post 50, add post 50 cap to base cap.
+	if (in_level > 50 && skill_cap2 > 0)
+		base_cap += skill_cap2*(in_level-50);
+
+	//No cap should ever go above its post50cap
+	if (skill_cap3 > 0 && base_cap > skill_cap3)
+		base_cap = skill_cap3;
+
+	//Base cap is now the max value at the person's level, return it!
+	return base_cap;
 }
 
 uint32 Database::GetCharacterInfo(const char* iName, uint32* oAccID, uint32* oZoneID, uint32* oZoneGuildID, float* oX, float* oY, float* oZ, uint64* oDeathTime) {
@@ -2606,7 +2612,7 @@ uint32 Database::GetClientZoneID(uint32 zoneID) {
 		if (iter2 != zonename_filename_array.end())
 		{
 			if (!iter2->second.empty())
-				return ZoneID(iter2->second.c_str());
+				return GetZoneID(iter2->second.c_str());
 		}
 	}
 

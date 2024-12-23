@@ -1,13 +1,12 @@
 #include "../client.h"
 #include "../worldserver.h"
-
 extern WorldServer worldserver;
 
-inline void print_legend(Client* c) {
+inline void print_legend(Client *c) {
 	c->Message(Chat::White, "[Legend] [G = GM Say] [F = File] [C = Console]");
-}
-
-void command_logs(Client* c, const Seperator* sep)
+		}
+		/* #logs list_settings */
+void command_logs(Client *c, const Seperator *sep)
 {
 	int arguments = sep->argnum;
 	if (!arguments) {
@@ -28,7 +27,7 @@ void command_logs(Client* c, const Seperator* sep)
 			"#logs set [console|file|gmsay] [Category ID] [Debug Level (1-3)] - Sets log settings during the lifetime of the zone"
 		);
 		return;
-	}
+			}
 
 	bool is_list = !strcasecmp(sep->arg[1], "list");
 	bool is_reload = !strcasecmp(sep->arg[1], "reload");
@@ -52,7 +51,7 @@ void command_logs(Client* c, const Seperator* sep)
 			"#logs set [console|file|gmsay] [Category ID] [Debug Level (1-3)] - Sets log settings during the lifetime of the zone"
 		);
 		return;
-	}
+			}
 
 	if (is_list || (is_set && !sep->IsNumber(3))) {
 		uint32 start_category_id = 1;
@@ -74,7 +73,7 @@ void command_logs(Client* c, const Seperator* sep)
 			bool is_deprecated_category = Strings::Contains(fmt::format("{}", Logs::LogCategoryName[index]), "Deprecated");
 			if (is_deprecated_category) {
 				continue;
-			}
+		}
 
 			std::vector<std::string> gmsay;
 			for (int i = 0; i <= 3; i++) {
@@ -84,14 +83,14 @@ void command_logs(Client* c, const Seperator* sep)
 				if (LogSys.log_settings[index].log_to_gmsay == i) {
 					gmsay.emplace_back(std::to_string(i));
 					continue;
-				}
+	}
 
 				gmsay.emplace_back(
 					EQ::SayLinkEngine::GenerateQuestSaylink(
 						fmt::format("#logs set gmsay {} {}", index, i), false, std::to_string(i)
 					)
 				);
-			}
+	}
 
 			std::vector<std::string> file;
 			for (int i = 0; i <= 3; i++) {
@@ -101,7 +100,7 @@ void command_logs(Client* c, const Seperator* sep)
 				if (LogSys.log_settings[index].log_to_file == i) {
 					file.emplace_back(std::to_string(i));
 					continue;
-				}
+}
 
 				file.emplace_back(
 					EQ::SayLinkEngine::GenerateQuestSaylink(

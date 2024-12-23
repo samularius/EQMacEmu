@@ -21,7 +21,8 @@
 #define CHATSERVER_CLIENTLIST_H
 
 #include "../common/opcodemgr.h"
-#include "../common/net/eqstream.h"
+#include "../common/eq_stream_type.h"
+#include "../common/eq_stream_factory.h"
 #include "../common/rulesys.h"
 #include "chatchannel.h"
 #include <list>
@@ -85,21 +86,21 @@ struct CharacterEntry {
 class Client {
 
 public:
-	Client(std::shared_ptr<EQStreamInterface> eqs);
+	Client(std::shared_ptr<EQStream> eqs);
 	~Client();
 
-	std::shared_ptr<EQStreamInterface> ClientStream;
+	std::shared_ptr<EQStream> ClientStream;
 	void AddCharacter(int CharID, const char *CharacterName, int Level, int Race, int Class);
 	void ClearCharacters() { Characters.clear(); }
 	void SendChatlist();
-	inline void QueuePacket(const EQApplicationPacket* p, bool ack_req = true) { ClientStream->QueuePacket(p, ack_req); }
+	inline void QueuePacket(const EQApplicationPacket* p, bool ack_req = true) { if (ClientStream && ClientStream->CheckActive()) ClientStream->QueuePacket(p, ack_req); }
 	std::string GetName() { if(Characters.size()) return Characters[0].Name; else return ""; }
 	int GetLevel() { if (Characters.size()) return Characters[0].Level; else return 0; }
 	int GetRace() { if (Characters.size()) return Characters[0].Race; else return 999; }
 	int GetClass() { if (Characters.size()) return Characters[0].Class; else return 999; }
-	void JoinChannels(std::string& channel_name_list);
-	void LeaveChannels(std::string& channel_name_list);
-	void LeaveAllChannels(bool send_updated_channel_list = true);
+	void JoinChannels(std::string ChannelList);
+	void LeaveChannels(std::string ChannelList);
+	void LeaveAllChannels(bool SendUpdatedChannelList = true);
 	void AddToChannelList(ChatChannel *JoinedChannel);
 	void RemoveFromChannelList(ChatChannel *JoinedChannel);
 	void SendChannelMessage(std::string Message);
@@ -141,11 +142,10 @@ public:
 	inline bool CanListAllChannels() { return (Status >= RuleI(Channels, RequiredStatusListAll)); }
 	void SendHelp();
 	inline bool GetForceDisconnect() { return ForceDisconnect; }
-
 	void SetConnectionType(char c);
 	ConnectionType GetConnectionType() { return TypeOfConnection; }
-	EQ::versions::ClientVersion GetClientVersion() { return ClientVersion_; }
-
+	bool GetStale() { return stale; }
+	void SetStale() { stale = true; }
 	void SendFriends();
 	int GetCharID();
 	void SendUptime();
@@ -160,7 +160,8 @@ private:
 	bool HideMe;
 	bool AllowInvites;
 	int8 Revoked;
-	
+	bool stale;
+
 	//Anti Spam Stuff
 	Timer *AccountGrabUpdateTimer;
 	uint32 TotalKarma;
@@ -169,7 +170,6 @@ private:
 	int AttemptedMessages;
 	bool ForceDisconnect;
 	ConnectionType TypeOfConnection;
-	EQ::versions::ClientVersion ClientVersion_;
 };
 
 class Clientlist {
@@ -178,19 +178,21 @@ public:
 	Clientlist(int ChatPort);
 	void	Process();
 	void	CloseAllConnections();
-	Client* FindCharacter(const std::string& CharacterName);
+	Client *FindCharacter(std::string CharacterName);
 	void	CheckForStaleConnectionsAll();
-	void	CheckForStaleConnections(Client* c);
-	Client* IsCharacterOnline(const std::string& CharacterName);
-	void ProcessOPChatCommand(Client* c, std::string command_string);
+	void	CheckForStaleConnections(Client *c);
+	void	CLClearStaleConnections();
+	Client *IsCharacterOnline(std::string CharacterName);
+	void ProcessOPChatCommand(Client *c, std::string CommandString);
 
 private:
 
-	EQ::Net::EQStreamManager* chatsf;
+	EQStreamFactory *chatsf;
 
-	std::list<Client*> ClientChatConnections;
+	std::deque<Client*> ClientChatConnections;
+	Mutex MClientChatConnections;
 
-	OpcodeManager* ChatOpMgr;
+	OpcodeManager *ChatOpMgr;
 };
 
 #endif

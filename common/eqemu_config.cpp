@@ -19,13 +19,9 @@
 #include "../common/global_define.h"
 #include "eqemu_config.h"
 #include "misc_functions.h"
-#include "strings.h"
-#include "eqemu_logsys.h"
-#include "json/json.hpp"
 
 #include <iostream>
 #include <sstream>
-#include <filesystem>
 
 std::string EQEmuConfig::ConfigFile = "eqemu_config.json";
 EQEmuConfig *EQEmuConfig::_config = nullptr;
@@ -35,16 +31,16 @@ void EQEmuConfig::parse_config() {
 	LongName = _root["server"]["world"].get("longname", "").asString();
 	WorldAddress = _root["server"]["world"].get("address", "").asString();
 	LocalAddress = _root["server"]["world"].get("localaddress", "").asString();
-	MaxClients = Strings::ToInt(_root["server"]["world"].get("maxclients", "-1").asString());
+	MaxClients = atoi(_root["server"]["world"].get("maxclients", "-1").asString().c_str());
 	SharedKey = _root["server"]["world"].get("key", "").asString();
 	LoginCount = 0;
 
 	if (_root["server"]["world"]["loginserver"].isObject()) {
 		LoginHost = _root["server"]["world"]["loginserver"].get("host", "").asString();
-		LoginPort = Strings::ToUnsignedInt(_root["server"]["world"]["loginserver"].get("port", "").asString());
+		LoginPort = atoi(_root["server"]["world"]["loginserver"].get("port", "").asString().c_str());
 		LoginAccount = _root["server"]["world"]["loginserver"].get("account", "").asString();
 		LoginPassword = _root["server"]["world"]["loginserver"].get("password", "").asString();
-		LoginType = Strings::ToUnsignedInt(_root["server"]["world"]["loginserver"].get("legacy", "").asString());
+		LoginType = atoi(_root["server"]["world"]["loginserver"].get("type", "").asString().c_str());
 
 
 	}
@@ -59,10 +55,10 @@ void EQEmuConfig::parse_config() {
 
 			auto loginconfig = new LoginConfig;
 			loginconfig->LoginHost = _root["server"]["world"][str].get("host", "").asString();
-			loginconfig->LoginPort = Strings::ToUnsignedInt(_root["server"]["world"][str].get("port", "").asString());
+			loginconfig->LoginPort = atoi(_root["server"]["world"][str].get("port", "").asString().c_str());
 			loginconfig->LoginAccount = _root["server"]["world"][str].get("account", "").asString();
 			loginconfig->LoginPassword = _root["server"]["world"][str].get("password", "").asString();
-			loginconfig->LoginType = Strings::ToUnsignedInt(_root["server"]["world"][str].get("legacy", "").asString());
+			loginconfig->LoginType = atoi(_root["server"]["world"][str].get("type", "").asString().c_str());
 
 			loginlist.Insert(loginconfig);
 
@@ -73,44 +69,30 @@ void EQEmuConfig::parse_config() {
 	//The only way to enable locked is by switching to true, meaning this value is always false until manually set true
 	Locked = false;
 	if (_root["server"]["world"].get("locked", "false").asString() == "true") Locked = true;
-	WorldIP = _root["server"]["world"]["tcp"].get("ip", "127.0.0.1").asString();
-	WorldTCPPort = Strings::ToUnsignedInt(_root["server"]["world"]["tcp"].get("port", "9000").asString());
+	WorldIP = _root["server"]["world"]["tcp"].get("host", "127.0.0.1").asString();
+	WorldTCPPort = atoi(_root["server"]["world"]["tcp"].get("port", "9000").asString().c_str());
 
-	TelnetIP = _root["server"]["world"]["telnet"].get("ip", "127.0.0.1").asString();
-	TelnetTCPPort = Strings::ToUnsignedInt(_root["server"]["world"]["telnet"].get("port", "9001").asString());
 	TelnetEnabled = false;
 	if (_root["server"]["world"]["telnet"].get("enabled", "false").asString() == "true") TelnetEnabled = true;
 
-	WorldHTTPMimeFile = _root["server"]["world"]["http"].get("mimefile", "mime.types").asString();
-	WorldHTTPPort = Strings::ToUnsignedInt(_root["server"]["world"]["http"].get("port", "9080").asString());
-	WorldHTTPEnabled = false;
-
-	if (_root["server"]["world"]["http"].get("enabled", "false").asString() == "true") {
-		WorldHTTPEnabled = true;
-	}
-
-	if (_root["server"].get("disable_config_checks", "false").asString() == "true") {
-		DisableConfigChecks = true;
-	}
-
-	ChatHost = _root["server"]["ucs"].get("host", "eqchat.eqemulator.net").asString();
-	ChatPort = Strings::ToUnsignedInt(_root["server"]["ucs"].get("port", "7778").asString());
+	ChatHost = _root["server"]["chatserver"].get("host", "eqchat.eqemulator.net").asString();
+	ChatPort = atoi(_root["server"]["chatserver"].get("port", "7778").asString().c_str());
 
 	DatabaseUsername = _root["server"]["database"].get("username", "eq").asString();
 	DatabasePassword = _root["server"]["database"].get("password", "eq").asString();
 	DatabaseHost = _root["server"]["database"].get("host", "localhost").asString();
-	DatabasePort = Strings::ToUnsignedInt(_root["server"]["database"].get("port", "3306").asString());
+	DatabasePort = atoi(_root["server"]["database"].get("port", "3306").asString().c_str());
 	DatabaseDB = _root["server"]["database"].get("db", "eq").asString();
 
 	QSDatabaseHost = _root["server"]["qsdatabase"].get("host", "localhost").asString();
-	QSDatabasePort = Strings::ToUnsignedInt(_root["server"]["qsdatabase"].get("port", "3306").asString());
+	QSDatabasePort = atoi(_root["server"]["qsdatabase"].get("port", "3306").asString().c_str());
 	QSDatabaseUsername = _root["server"]["qsdatabase"].get("username", "eq").asString();
 	QSDatabasePassword = _root["server"]["qsdatabase"].get("password", "eq").asString();
 	QSDatabaseDB = _root["server"]["qsdatabase"].get("db", "eq").asString();
 
-	DefaultStatus = Strings::ToUnsignedInt(_root["server"]["zones"].get("defaultstatus", "0").asString());
-	ZonePortLow = Strings::ToUnsignedInt(_root["server"]["zones"]["ports"].get("low", "7000").asString());
-	ZonePortHigh = Strings::ToUnsignedInt(_root["server"]["zones"]["ports"].get("high", "7999").asString());
+	DefaultStatus = atoi(_root["server"]["zones"].get("defaultstatus", "0").asString().c_str());
+	ZonePortLow = atoi(_root["server"]["zones"]["ports"].get("low", "7000").asString().c_str());
+	ZonePortHigh = atoi(_root["server"]["zones"]["ports"].get("high", "7999").asString().c_str());
 
 	SpellsFile = _root["server"]["files"].get("spells", "spells_us.txt").asString();
 	OpCodesFile = _root["server"]["files"].get("opcodes", "opcodes.conf").asString();
@@ -120,17 +102,15 @@ void EQEmuConfig::parse_config() {
 	QuestDir = _root["server"]["directories"].get("quests", "quests/").asString();
 	LuaModuleDir = _root["server"]["directories"].get("lua_modules", "quests/lua_modules/").asString();
 	PatchDir = _root["server"]["directories"].get("patches", "./").asString();
-	OpcodeDir = _root["server"]["directories"].get("opcodes", "./").asString();
 	SharedMemDir = _root["server"]["directories"].get("shared_memory", "shared/").asString();
 	LogDir = _root["server"]["directories"].get("logs", "logs/").asString();
 
 	LogPrefix = _root["server"]["launcher"].get("logprefix", "logs/zone-").asString();
 	LogSuffix = _root["server"]["launcher"].get("logsuffix", ".log").asString();
-
-	RestartWait = Strings::ToInt(_root["server"]["launcher"]["timers"].get("restart", "10000").asString());
-	TerminateWait = Strings::ToInt(_root["server"]["launcher"]["timers"].get("reterminate", "10000").asString());
-	InitialBootWait = Strings::ToInt(_root["server"]["launcher"]["timers"].get("initial", "20000").asString());
-	ZoneBootInterval = Strings::ToInt(_root["server"]["launcher"]["timers"].get("interval", "2000").asString());
+	RestartWait = atoi(_root["server"]["launcher"]["timers"].get("restart", "10000").asString().c_str());
+	TerminateWait = atoi(_root["server"]["launcher"]["timers"].get("reterminate", "10000").asString().c_str());
+	InitialBootWait = atoi(_root["server"]["launcher"]["timers"].get("initial", "20000").asString().c_str());
+	ZoneBootInterval = atoi(_root["server"]["launcher"]["timers"].get("interval", "2000").asString().c_str());
 #ifdef WIN32
 	ZoneExe = _root["server"]["launcher"].get("exe", "zone.exe").asString();
 #else
@@ -171,23 +151,8 @@ std::string EQEmuConfig::GetByName(const std::string &var_name) const
 	if (var_name == "WorldIP") {
 		return (WorldIP);
 	}
-	if (var_name == "TelnetTCPPort") {
-		return (itoa(TelnetTCPPort));
-	}
-	if (var_name == "TelnetIP") {
-		return (TelnetIP);
-	}
 	if (var_name == "TelnetEnabled") {
 		return (TelnetEnabled ? "true" : "false");
-	}
-	if (var_name == "WorldHTTPPort") {
-		return (itoa(WorldHTTPPort));
-	}
-	if (var_name == "WorldHTTPMimeFile") {
-		return (WorldHTTPMimeFile);
-	}
-	if (var_name == "WorldHTTPEnabled") {
-		return (WorldHTTPEnabled ? "true" : "false");
 	}
 	if (var_name == "ChatHost") {
 		return (ChatHost);
@@ -290,8 +255,6 @@ void EQEmuConfig::Dump() const
 	std::cout << "Locked = " << Locked << std::endl;
 	std::cout << "WorldTCPPort = " << WorldTCPPort << std::endl;
 	std::cout << "WorldIP = " << WorldIP << std::endl;
-	std::cout << "TelnetTCPPort = " << TelnetTCPPort << std::endl;
-	std::cout << "TelnetIP = " << TelnetIP << std::endl;
 	std::cout << "TelnetEnabled = " << TelnetEnabled << std::endl;
 	std::cout << "ChatHost = " << ChatHost << std::endl;
 	std::cout << "ChatPort = " << ChatPort << std::endl;

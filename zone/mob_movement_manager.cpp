@@ -8,7 +8,6 @@
 #include "../common/misc_functions.h"
 #include "../common/data_verification.h"
 #include "../common/fastmath.h"
-#include "../common/misc_functions.h"
 #include "pathfinder_interface.h"
 #include <vector>
 #include <deque>
@@ -1564,7 +1563,7 @@ void MobMovementManager::UpdatePathBoat(Mob *who, float x, float y, float z, Mob
  */
 void MobMovementManager::PushTeleportTo(MobMovementEntry &ent, float x, float y, float z, float heading)
 {
-	ent.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new TeleportToCommand(x, y, z, heading)));
+	ent.Commands.push_back(std::unique_ptr<IMovementCommand>(new TeleportToCommand(x, y, z, heading)));
 }
 
 /**
@@ -1576,7 +1575,7 @@ void MobMovementManager::PushTeleportTo(MobMovementEntry &ent, float x, float y,
  */
 void MobMovementManager::PushMoveTo(MobMovementEntry &ent, float x, float y, float z, MobMovementMode mob_movement_mode)
 {
-	ent.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new MoveToCommand(x, y, z, mob_movement_mode)));
+	ent.Commands.push_back(std::unique_ptr<IMovementCommand>(new MoveToCommand(x, y, z, mob_movement_mode)));
 }
 
 /**
@@ -1588,7 +1587,7 @@ void MobMovementManager::PushMoveTo(MobMovementEntry &ent, float x, float y, flo
  */
 void MobMovementManager::PushSwimTo(MobMovementEntry &ent, float x, float y, float z, MobMovementMode mob_movement_mode)
 {
-	ent.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new SwimToCommand(x, y, z, mob_movement_mode)));
+	ent.Commands.push_back(std::unique_ptr<IMovementCommand>(new SwimToCommand(x, y, z, mob_movement_mode)));
 }
 
 /**
@@ -1612,7 +1611,7 @@ void MobMovementManager::PushRotateTo(MobMovementEntry &ent, Mob *who, float to,
 		diff -= 256.0;
 	}
 
-	ent.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new RotateToCommand(to, diff > 0 ? 1.0 : -1.0, mob_movement_mode, at_guardpoint)));
+	ent.Commands.push_back(std::unique_ptr<IMovementCommand>(new RotateToCommand(to, diff > 0 ? 1.0 : -1.0, mob_movement_mode, at_guardpoint)));
 }
 
 /**
@@ -1624,7 +1623,7 @@ void MobMovementManager::PushRotateTo(MobMovementEntry &ent, Mob *who, float to,
  */
 void MobMovementManager::PushFlyTo(MobMovementEntry &ent, float x, float y, float z, MobMovementMode mob_movement_mode)
 {
-	ent.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new FlyToCommand(x, y, z, mob_movement_mode)));
+	ent.Commands.push_back(std::unique_ptr<IMovementCommand>(new FlyToCommand(x, y, z, mob_movement_mode)));
 }
 
 /**
@@ -1632,7 +1631,7 @@ void MobMovementManager::PushFlyTo(MobMovementEntry &ent, float x, float y, floa
  */
 void MobMovementManager::PushStopMoving(MobMovementEntry &mob_movement_entry)
 {
-	mob_movement_entry.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new StopMovingCommand()));
+	mob_movement_entry.Commands.push_back(std::unique_ptr<IMovementCommand>(new StopMovingCommand()));
 }
 
 /**
@@ -1640,7 +1639,7 @@ void MobMovementManager::PushStopMoving(MobMovementEntry &mob_movement_entry)
 */
 void MobMovementManager::PushStopSwimming(MobMovementEntry &mob_movement_entry)
 {
-	mob_movement_entry.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new StopSwimmingCommand()));
+	mob_movement_entry.Commands.push_back(std::unique_ptr<IMovementCommand>(new StopSwimmingCommand()));
 }
 
 /**
@@ -1648,7 +1647,7 @@ void MobMovementManager::PushStopSwimming(MobMovementEntry &mob_movement_entry)
  */
 void MobMovementManager::PushEvadeCombat(MobMovementEntry &mob_movement_entry)
 {
-	mob_movement_entry.Commands.emplace_back(std::unique_ptr<IMovementCommand>(new EvadeCombatCommand()));
+	mob_movement_entry.Commands.push_back(std::unique_ptr<IMovementCommand>(new EvadeCombatCommand()));
 }
 
 /**

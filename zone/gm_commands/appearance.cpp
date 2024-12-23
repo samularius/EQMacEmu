@@ -17,7 +17,7 @@ void command_appearance(Client *c, const Seperator *sep)
 				).c_str()
 			);
 		}
-
+	// sends any appearance packet
 		return;
 	}
 	Mob *t = c;
@@ -41,3 +41,4 @@ void command_appearance(Client *c, const Seperator *sep)
 		).c_str()
 	);
 }
+

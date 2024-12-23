@@ -8,7 +8,6 @@ SET(eqlogin_sources
 	main.cpp
 	server_manager.cpp
 	world_server.cpp
-	salt.cpp
 )
 
 SET(eqlogin_headers
@@ -21,7 +20,6 @@ SET(eqlogin_headers
 	options.h
 	server_manager.h
 	world_server.h
-	salt.h
 )
 
 ADD_EXECUTABLE(loginserver ${eqlogin_sources} ${eqlogin_headers})

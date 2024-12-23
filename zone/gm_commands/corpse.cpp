@@ -23,8 +23,8 @@ void command_corpse(Client *c, const Seperator *sep)
 	std::string help17 = "  #corpse reset - Resets looter status on targetted corpse for debugging.";
 	std::string help18 = "  #corpse backups - List of current target's corpse backups.";
 	std::string help19 = "  #corpse restore [corpse_id] - Summons the specified corpse from a player's backups.";
-	std::string help20 = "  #corpse summonall [name] - Summons all of [name]'s oldest buried corpse, if any exist.";
-	std::string help[] = { help0, help1, help2, help3, help4, help5, help6, help7, help8, help9, help10, help11, help12, help13, help14, help15, help16, help17, help18, help19, help20 };
+
+	std::string help[] = { help0, help1, help2, help3, help4, help5, help6, help7, help8, help9, help10, help11, help12, help13, help14, help15, help16, help17, help18, help19 };
 
 	Mob *target = c->GetTarget();
 
@@ -201,7 +201,7 @@ void command_corpse(Client *c, const Seperator *sep)
 			for (auto row = results.begin(); row != results.end(); ++row)
 			{
 
-				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], ZoneName(atoi(row[1])), row[6], row[2], row[3], row[4], row[5]);
+				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[6], row[2], row[3], row[4], row[5]);
 			}
 		}
 	}
@@ -274,7 +274,7 @@ void command_corpse(Client *c, const Seperator *sep)
 				auto ic_results = database.QueryDatabase(ic_query);
 				auto ic_row = ic_results.begin();
 
-				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], ZoneName(atoi(row[1])), row[5], row[2], row[3], row[4], ic_row[0]);
+				c->Message(Chat::Yellow, " %s:	%s (%s), %s, %s, %s, (%s)", row[0], database.GetZoneName(atoi(row[1])), row[5], row[2], row[3], row[4], ic_row[0]);
 			}
 		}
 	}
@@ -323,40 +323,7 @@ void command_corpse(Client *c, const Seperator *sep)
 		}
 		else
 		{
-			c->Message(Chat::Default, "Insufficient status to summon backup corpses.");
-		}
-	}
-	else if (strcasecmp(sep->arg[1], "summonall") == 0)
-	{
-		if (sep->arg[2][0] != 0 && !sep->IsNumber(2))
-		{
-			std::string summon_corpse_char_name = sep->arg[2];
-			auto corpse_list_copy = entity_list.GetCorpseList();
-			int nCorpseCount = 0;
-			for (auto corpse : corpse_list_copy)
-			{
-				Corpse* pCorpse = corpse.second;
-				if (pCorpse && pCorpse->IsPlayerCorpse())
-				{
-					if (strcmp(pCorpse->GetOwnerName(), summon_corpse_char_name.c_str()) == 0)
-					{
-						pCorpse->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
-						nCorpseCount++;
-					}
-				}
-			}
-			if (nCorpseCount > 0)
-			{
-				c->Message(Chat::Default, "Summoned %d corpses to your location from player %s", nCorpseCount, summon_corpse_char_name.c_str());
-			}
-			else
-			{
-				c->Message(Chat::Red, "No corpses with name %s exist in this zone.", summon_corpse_char_name.c_str());
-			}
-		}
-		else
-		{
-			c->Message(Chat::Red, "Invalid character ID or parameter count for #corpse summonall");
+			c->Message(Chat::White, "Insufficient status to summon backup corpses.");
 		}
 	}
 	else if (strcasecmp(sep->arg[1], "summonall") == 0)
