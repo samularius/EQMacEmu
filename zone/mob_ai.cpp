@@ -619,9 +619,11 @@ void NPC::AI_Start() {
 		AIautocastspell_timer = std::unique_ptr<Timer>(new Timer(750));
 	}
 
-	AI_AddNPCSpells(NPCTypedata.npc_spells_id);
-	ProcessSpecialAbilities(NPCTypedata.special_abilities);
-	AI_AddNPCSpellsEffects(NPCTypedata.npc_spells_effects_id);
+	if (NPCTypedata) {
+		AI_AddNPCSpells(NPCTypedata->npc_spells_id);
+		ProcessSpecialAbilities(NPCTypedata->special_abilities);
+		AI_AddNPCSpellsEffects(NPCTypedata->npc_spells_effects_id);
+	}
 
 	SendTo(GetX(), GetY(), GetZ());
 	SaveGuardSpot();

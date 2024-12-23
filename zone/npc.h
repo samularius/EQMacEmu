@@ -390,10 +390,10 @@ public:
 	void SetCombatEvent(bool b) { combat_event = b; }
 
 	/* Only allows players that killed corpse to loot */
-	const bool HasPrivateCorpse() const { return NPCTypedata.private_corpse; }
+	const bool HasPrivateCorpse() const { return NPCTypedata->private_corpse; }
 	const bool IsAggroOnPC() const { return aggro_pc; }
 	const bool IsUnderwaterOnly() const { return underwater; }
-	const char* GetRawNPCTypeName() const { return NPCTypedata.name; }
+	const char* GetRawNPCTypeName() const { return NPCTypedata->name; }
 
 	inline bool GetIgnoreDespawn() { return ignore_despawn; }
 	inline void GiveNPCTypeData() { NPCTypedata_ours = true; }
@@ -489,7 +489,7 @@ public:
 
 protected:
 
-	NPCType	NPCTypedata;
+	const NPCType*	NPCTypedata;
 	bool NPCTypedata_ours;	//special case for npcs with uniquely created data.
 
 
