@@ -74,13 +74,13 @@ void NPC::AI_SetRoambox(float iMaxX, float iMinX, float iMaxY, float iMinY, uint
 
 void NPC::DisplayWaypointInfo(Client *c) {
 
-	SpawnGroup* sg = zone->spawn_group_list.GetSpawnGroup(GetSp2());
+	SpawnGroup* sg = zone->spawn_group_list.GetSpawnGroup(GetSpawnGroupId());
 	std::string spawn2 = GetSpawnedString();
 
 	//Mob is on a roambox.
 	if(sg && GetGrid() == 0 && roambox_distance)
 	{
-		c->Message(Chat::White, "Mob in spawn group %d is on a roambox.", GetSp2());
+		c->Message(Chat::White, "Mob in spawn group %d is on a roambox.", GetSpawnGroupId());
 		c->Message(Chat::White, "MinX: %0.2f MaxX: %0.2f MinY: %0.2f MaxY: %0.2f", sg->roambox[1], sg->roambox[0], sg->roambox[3], sg->roambox[2]);
 		c->Message(Chat::White, "MinDelay: %d Delay: %d", sg->min_delay, sg->delay);
 		c->Message(Chat::White, "Spawned Type/Point: %s", spawn2.c_str());
@@ -114,13 +114,13 @@ void NPC::DisplayWaypointInfo(Client *c) {
 		if (GetGrid() == 999999) // grids generated from scripts have this grid ID
 		{
 			c->Message(Chat::White, "Mob has script generated grid, in spawn group %d, on waypoint %d/%d",
-				GetSp2(), GetCurWp() + 1, MaxWp);
+				GetSpawnGroupId(), GetCurWp() + 1, MaxWp);
 		}
 		else
 		{
 			c->Message(Chat::White, "Mob is on grid %d, in spawn group %d, on waypoint %d/%d",
 				GetGrid(),
-				GetSp2(),
+				GetSpawnGroupId(),
 				GetCurWp() + 1, //We start from 0 internally, but in the DB and lua functions we start from 1.
 				MaxWp);
 			std::string type = "unknown";
@@ -195,7 +195,7 @@ void NPC::StopWandering()
 	CastToNPC()->SetGrid(0);
 	StopNavigation();
 	AIwalking_timer->Start(2000);
-	Log(Logs::Detail, Logs::Pathing, "Stop Wandering requested.");
+	LogPathing("Stop Wandering requested.");
 	return;
 }
 
@@ -219,22 +219,22 @@ void NPC::ResumeWandering()
 				cur_wp=save_wp;
 				UpdateWaypoint(cur_wp);	// have him head to last destination from here
 			}
-			Log(Logs::Detail, Logs::Pathing, "Resume Wandering requested. Grid %d, wp %d", GetGrid(), cur_wp);
+			LogPathing("Resume Wandering requested. Grid [{}], wp [{}]", GetGrid(), cur_wp);
 		}
 		else if (AIwalking_timer->Enabled())
 		{	// we are at a waypoint paused normally
-			Log(Logs::Detail, Logs::Pathing, "Resume Wandering on timed pause. Grid %d, wp %d", GetGrid(), cur_wp);
+			LogPathing("Resume Wandering on timed pause. Grid [{}], wp [{}]", GetGrid(), cur_wp);
 			AIwalking_timer->Trigger();	// disable timer to end pause now
 		}
 		else
 		{
-			Log(Logs::General, Logs::Error, "NPC not paused - can't resume wandering: %lu", (unsigned long)GetNPCTypeID());
+			LogPathing("NPC not paused - can't resume wandering: [{}]", (unsigned long)GetNPCTypeID());
 			return;
 		}
 	}
 	else
 	{
-		Log(Logs::General, Logs::Error, "NPC not on grid - can't resume wandering: %lu", (unsigned long)GetNPCTypeID());
+		LogPathing("NPC not on grid - can't resume wandering: [{}]", (unsigned long)GetNPCTypeID());
 	}
 	return;
 }
@@ -265,7 +265,7 @@ void NPC::PauseWandering(int pausetime)
 	}
 	else 
 	{
-		Log(Logs::General, Logs::Error, "NPC not on grid - can't pause wandering: %lu", (unsigned long)GetNPCTypeID());
+		LogPathing("NPC not on grid - can't pause wandering: [{}]", (unsigned long)GetNPCTypeID());
 		return;
 	}
 
@@ -281,7 +281,7 @@ void NPC::MoveTo(const glm::vec4& position, bool saveguardspot, uint32 delay)
 		if (GetGrid() < 0)
 		{	// currently stopped by a quest command
 			SetGrid( 0 - GetGrid());	// get him moving again
-			Log(Logs::Detail, Logs::AI, "MoveTo during quest wandering. Canceling quest wandering and going back to grid %d when MoveTo is done.", GetGrid());
+			LogAI("MoveTo during quest wandering. Canceling quest wandering and going back to grid [{}] when MoveTo is done.", GetGrid());
 		}
 		AIwalking_timer->Disable();    // disable timer in case he is paused at a wp
 		if (cur_wp >= 0)
@@ -289,14 +289,14 @@ void NPC::MoveTo(const glm::vec4& position, bool saveguardspot, uint32 delay)
 			save_wp = cur_wp;	// save the current waypoint
 			cur_wp = EQ::WaypointStatus::QuestControlGrid;
 		}
-		Log(Logs::Detail, Logs::AI, "MoveTo %s, pausing regular grid wandering. Grid %d, save_wp %d",to_string(static_cast<glm::vec3>(position)).c_str(), -GetGrid(), save_wp);
+		LogAI("MoveTo [{}], pausing regular grid wandering. Grid [{}], save_wp [{}]",to_string(static_cast<glm::vec3>(position)).c_str(), GetGrid(), save_wp);
 	}
 	else
 	{	// not on a grid
 		roamer = true;
 		save_wp = 0;
 		cur_wp = EQ::WaypointStatus::QuestControlNoGrid;
-		Log(Logs::Detail, Logs::AI, "MoveTo %s without a grid.", to_string(static_cast<glm::vec3>(position)).c_str());
+		LogAI("MoveTo [{}] without a grid.", to_string(static_cast<glm::vec3>(position)).c_str());
 	}
 	if (saveguardspot)
 	{
@@ -310,7 +310,7 @@ void NPC::MoveTo(const glm::vec4& position, bool saveguardspot, uint32 delay)
 		if (m_GuardPoint.w == 0.0f)
 			m_GuardPoint.w  = 0.0001f;		//hack to make IsGuarding simpler
 
-		Log(Logs::Detail, Logs::AI, "Setting guard position to %s", to_string(static_cast<glm::vec3>(m_GuardPoint)).c_str());
+		LogAI("Setting guard position to [{}]", to_string(static_cast<glm::vec3>(m_GuardPoint)).c_str());
 	}
 
 	m_CurrentWayPoint = position;
@@ -325,7 +325,7 @@ void NPC::MoveTo(const glm::vec4& position, bool saveguardspot, uint32 delay)
 void NPC::UpdateWaypoint(int wp_index)
 {
 	if(wp_index >= static_cast<int>(Waypoints.size())) {
-		Log(Logs::Detail, Logs::AI, "Update to waypoint %d failed. Not found.", wp_index);
+		LogAI("Update to waypoint [{}] failed. Not found.", wp_index);
 		return;
 	}
 	std::vector<wplist>::iterator cur;
@@ -335,7 +335,7 @@ void NPC::UpdateWaypoint(int wp_index)
 
 	m_CurrentWayPoint = glm::vec4(cur->x, cur->y, cur->z, cur->heading);
 	cur_wp_pause = cur->pause;
-	Log(Logs::Detail, Logs::AI, "Next waypoint %d: (%.3f, %.3f, %.3f, %.3f)", wp_index, m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z, m_CurrentWayPoint.w);
+	LogAIDetail("Next waypoint [{}]: ({}, {}, {}, {})", wp_index, m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z, m_CurrentWayPoint.w);
 }
 
 void NPC::CalculateNewWaypoint()
@@ -543,7 +543,7 @@ void NPC::CalculateNewWaypoint()
 	if (cur_wp >= 0 && cur_wp < Waypoints.size() && cur_wp != old_wp)
 		UpdateWaypoint(cur_wp);
 
-	if(IsNPC() && GetClass() == MERCHANT && CastToNPC()->IsMerchantOpen())
+	if(IsNPC() && GetClass() == Class::Merchant && CastToNPC()->IsMerchantOpen())
 		entity_list.SendMerchantEnd(this);
 }
 
@@ -643,7 +643,7 @@ void NPC::SetWaypointPause()
 void NPC::SaveGuardSpot(bool iClearGuardSpot)
 {
 	if (iClearGuardSpot) {
-		Log(Logs::Detail, Logs::AI, "Clearing guard order.");
+		LogAI("Clearing guard order.");
 		m_GuardPoint = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	else {
@@ -653,7 +653,7 @@ void NPC::SaveGuardSpot(bool iClearGuardSpot)
 
 		if (m_GuardPoint.w == 0.0f)
 			m_GuardPoint.w = 0.0001f;		//hack to make IsGuarding simpler
-		Log(Logs::Detail, Logs::AI, "Setting guard position to {0}", to_string(static_cast<glm::vec3>(m_GuardPoint)));
+		LogAI("Setting guard position to [{}]", to_string(static_cast<glm::vec3>(m_GuardPoint)));
 	}
 }
 
@@ -919,7 +919,7 @@ void Mob::SendTo(float new_x, float new_y, float new_z) {
 	m_Position.x = new_x;
 	m_Position.y = new_y;
 	m_Position.z = new_z;
-	Log(Logs::Detail, Logs::AI, "Sent To (%.3f, %.3f, %.3f)", new_x, new_y, new_z);
+	LogAIDetail("Sent To ({}, {}, {})", new_x, new_y, new_z);
 
 	if(flymode == GravityBehavior::Flying)
 		return;
@@ -948,7 +948,7 @@ void Mob::SendTo(float new_x, float new_y, float new_z) {
 
 			float newz = zone->zonemap->FindBestZ(dest, nullptr);
 
-			Log(Logs::Detail, Logs::AI, "BestZ returned %4.3f at %4.3f, %4.3f, %4.3f", newz,m_Position.x,m_Position.y,m_Position.z);
+			LogAIDetail("BestZ returned {} at {}, {}, {}", newz, m_Position.x, m_Position.y, m_Position.z);
 
 			if ((newz != BEST_Z_INVALID) &&
 			    std::abs(newz - dest.z) < RuleR(Map, FixPathingZMaxDeltaSendTo)) // Sanity check.
@@ -1220,33 +1220,65 @@ void ZoneDatabase::AssignGrid(Client *client, int grid, int spawn2id) {
 }
 
 
-/******************
-* ModifyGrid - Either adds an empty grid, or removes a grid and all its waypoints, for a particular zone.
-*	remove:		TRUE if we are deleting the specified grid, FALSE if we are adding it
-*	id:		The ID# of the grid to add or delete
-*	type,type2:	The type and type2 values for the grid being created (ignored if grid is being deleted)
-*	zoneid:		The ID number of the zone the grid is being created/deleted in
-*/
-void ZoneDatabase::ModifyGrid(Client *client, bool remove, uint32 id, uint8 type, uint8 type2, uint16 zoneid) {
-
-	if (!remove)
-	{
-        std::string query = StringFormat("INSERT INTO grid(id, zoneid, type, type2) "
-                                            "VALUES (%i, %i, %i, %i)", id, zoneid, type, type2);
-        auto results = QueryDatabase(query);
-        if (!results.Success()) {
-            return;
-        }
+void ZoneDatabase::ModifyGrid(
+	Client* c,
+	bool remove,
+	uint32 grid_id,
+	uint8 type,
+	uint8 type2,
+	uint32 zone_id
+)
+{
+	if (!remove) {
+		GridRepository::InsertOne(
+			*this,
+			GridRepository::Grid{
+				.id = static_cast<int32_t>(grid_id),
+				.zoneid = static_cast<int32_t>(zone_id),
+				.type = type,
+				.type2 = type2
+			}
+		);
 
 		return;
 	}
 
-	std::string query = StringFormat("DELETE FROM grid where id=%i and zoneid=%i", id, zoneid);
-    auto results = QueryDatabase(query);
+	GridRepository::DeleteWhere(
+		*this,
+		fmt::format(
+			"`id` = {} AND `zoneid` = {}",
+			grid_id,
+			zone_id
+		)
+	);
 
-    query = StringFormat("DELETE FROM grid_entries WHERE zoneid = %i AND gridid = %i", zoneid, id);
-    results = QueryDatabase(query);
+	GridEntriesRepository::DeleteWhere(
+		*this,
+		fmt::format(
+			"`gridid` = {} AND `zoneid` = {}",
+			grid_id,
+			zone_id
+		)
+	);
+}
 
+
+bool ZoneDatabase::GridExistsInZone(uint32 zone_id, uint32 grid_id)
+{
+	const auto& l = GridRepository::GetWhere(
+		*this,
+		fmt::format(
+			"`id` = {} AND `zoneid` = {}",
+			grid_id,
+			zone_id
+		)
+	);
+
+	if (l.empty()) {
+		return false;
+	}
+
+	return true;
 }
 
 /**************************************
@@ -1439,7 +1471,7 @@ int ZoneDatabase::GetRandomWaypointLocFromGrid(glm::vec4 &loc, uint16 zoneid, in
 		"FROM grid_entries WHERE `gridid` = %i AND `zoneid` = %u ORDER BY `number`", grid, zone->GetZoneID());
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
-		Log(Logs::General, Logs::Error, "MySQL Error while trying get random waypoint loc from grid %i in zoneid %u;  %s", grid, zoneid, results.ErrorMessage().c_str());
+		LogError("MySQL Error while trying get random waypoint loc from grid [{}] in zoneid [{}];  [{}]", grid, zoneid, results.ErrorMessage().c_str());
 		return 0;
 	}
 

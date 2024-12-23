@@ -18,6 +18,8 @@
 
 #include "../common/global_define.h"
 #include "../common/strings.h"
+#include "../common/zone_store.h"
+#include "../common/misc_functions.h"
 
 #include "client.h"
 #include "entity.h"
@@ -228,16 +230,19 @@ bool Spawn2::Process() {
 		//try to find our NPC type.
 		const NPCType* tmp = database.LoadNPCTypesData(npcid);
 		if (tmp == nullptr) {
-			Log(Logs::Detail, Logs::Spawns, "Spawn2 %d: Spawn group %d yielded an invalid NPC type %d", spawn2_id, spawngroup_id_, npcid);
+			LogSpawns("Spawn2 [{}]: Spawn group [{}] yeilded an invalid NPC type [{}]", spawn2_id, spawngroup_id_, npcid);
 			Reset();	//try again later
 			return(true);
 		}
 
-		if (tmp->unique_spawn_by_name)
-		{
-			if (!entity_list.LimitCheckName(tmp->name))
-			{
-				Log(Logs::Detail, Logs::Spawns, "Spawn2 %d: Spawn group %d yielded NPC type %d, which is unique and one already exists.", spawn2_id, spawngroup_id_, npcid);
+		if (tmp->npc_id == 0) {
+			LogError("NPC type did not load for npc_id [{}]", npcid);
+			return true;
+		}
+
+		if (tmp->unique_spawn_by_name) {
+			if (!entity_list.LimitCheckName(tmp->name)) {
+				LogSpawns("Spawn2 [{}]: Spawn group [{}] yeilded NPC type [{}], which is unique and one already exists", spawn2_id, spawngroup_id_, npcid);
 				timer.Start(5000);	//try again in five seconds.
 				return(true);
 			}
@@ -245,30 +250,26 @@ bool Spawn2::Process() {
 
 		if (tmp->spawn_limit > 0) {
 			if (!entity_list.LimitCheckType(npcid, tmp->spawn_limit)) {
-				Log(Logs::Detail, Logs::Spawns, "Spawn2 %d: Spawn group %d yielded NPC type %d, which is over its spawn limit (%d)", spawn2_id, spawngroup_id_, npcid, tmp->spawn_limit);
+				LogSpawns("Spawn2 [{}]: Spawn group [{}] yeilded NPC type [{}], which is over its spawn limit ([{}])", spawn2_id, spawngroup_id_, npcid, tmp->spawn_limit);
 				timer.Start(5000);	//try again in five seconds.
 				return(true);
 			}
 		}
 
 		bool ignore_despawn = false;
-		if (npcthis)
-		{
+		if (npcthis) {
 			ignore_despawn = npcthis->IgnoreDespawn();
 		}
 
-		if (ignore_despawn)
-		{
+		if (ignore_despawn) {
 			return true;
 		}
 
-		if (spawn_group->despawn != 0 && condition_id == 0 && !ignore_despawn)
-		{
+		if (spawn_group->despawn != 0 && condition_id == 0 && !ignore_despawn) {
 			zone->Despawn(spawn2_id);
 		}
 
-		if (IsDespawned)
-		{
+		if (IsDespawned) {
 			return true;
 		}
 
@@ -323,7 +324,7 @@ bool Spawn2::Process() {
 		if (npc->DropsGlobalLoot()) {
 			npc->CheckGlobalLootTables();
 		}
-		npc->SetSp2(spawngroup_id_);
+		npc->SetSpawnGroupId(spawngroup_id_);
 		npc->SaveGuardPointAnim(anim);
 		npc->SetAppearance((EmuAppearance)anim);
 		last_level_attempt = tmp->level;
@@ -570,7 +571,7 @@ bool ZoneDatabase::PopulateZoneSpawnListClose(uint32 zoneid, LinkedList<Spawn2*>
 		}
 	}
 
-	const char *zone_name = database.GetZoneName(zoneid);
+	const char *zone_name = ZoneName(zoneid);
 	std::string query = StringFormat(
 		"SELECT "
 		"id, "
@@ -678,7 +679,7 @@ bool ZoneDatabase::PopulateZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spa
 		}
 	}
 
-	const char *zone_name = database.GetZoneName(zoneid);
+	const char *zone_name = ZoneName(zoneid);
 	std::string query = fmt::format(
 		"SELECT "
 		"id, "
@@ -745,7 +746,7 @@ bool ZoneDatabase::PopulateZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spa
 
 bool ZoneDatabase::PopulateRandomZoneSpawnList(uint32 zoneid, LinkedList<Spawn2*> &spawn2_list, uint32 guild_id) 
 {
-	const char *zone_name = database.GetZoneName(zoneid);
+	const char *zone_name = ZoneName(zoneid);
 	uint32 next_id = RANDOM_SPAWNID + (zoneid * 1000);
 
 	std::string query2 = fmt::format(
@@ -972,7 +973,7 @@ void SpawnConditionManager::Process() {
 
 		//get our current time
 		TimeOfDay_Struct tod;
-		zone->zone_time.getEQTimeOfDay(&tod);
+		zone->zone_time.GetCurrentEQTimeOfDay(&tod);
 
 		//see if time is past our nearest event.
 		if(EQTime::IsTimeBefore(&next_event, &tod))
@@ -1024,7 +1025,7 @@ void SpawnConditionManager::ExecEvent(SpawnEvent &event, bool send_update) {
 	}
 
 	TimeOfDay_Struct tod;
-	zone->zone_time.getEQTimeOfDay(&tod);
+	zone->zone_time.GetCurrentEQTimeOfDay(&tod);
 	//If we're here, strict has already been checked. Check again in case hour has changed.
 	if(event.strict && (event.next.hour != tod.hour || event.next.day != tod.day || event.next.month != tod.month || event.next.year != tod.year))
 	{
@@ -1224,7 +1225,7 @@ bool SpawnConditionManager::LoadSpawnConditions(const char* zone_name, uint32 in
 	//better solution, and I just dont care thats much.
 	//get our current time
 	TimeOfDay_Struct tod;
-	zone->zone_time.getEQTimeOfDay(&tod);
+	zone->zone_time.GetCurrentEQTimeOfDay(&tod);
 
 	for(auto cur = spawn_events.begin(); cur != spawn_events.end(); ++cur) {
 		SpawnEvent &cevent = *cur;
@@ -1378,7 +1379,8 @@ void SpawnConditionManager::SetCondition(const char *zone_short, uint32 instance
 		auto pack = new ServerPacket(ServerOP_SpawnCondition, sizeof(ServerSpawnCondition_Struct));
 		ServerSpawnCondition_Struct* ssc = (ServerSpawnCondition_Struct*)pack->pBuffer;
 
-		ssc->zoneID = database.GetZoneID(zone_short);
+		ssc->zoneID = ZoneID(zone_short);
+		ssc->zoneGuildID = zone->GetGuildID();
 		ssc->condition_id = condition_id;
 		ssc->value = new_value;
 
@@ -1450,7 +1452,7 @@ void SpawnConditionManager::ToggleEvent(uint32 event_id, bool enabled, bool stri
 				if(reset_base) {
 					Log(Logs::Detail, Logs::Spawns, "Spawn event %d located in this zone. State set. Trigger time reset (period %d).", event_id, cevent.period);
 					//start with the time now
-					zone->zone_time.getEQTimeOfDay(&cevent.next);
+					zone->zone_time.GetCurrentEQTimeOfDay(&cevent.next);
 					//advance the next time by our period
 					EQTime::AddMinutes(cevent.period, &cevent.next);
 				} else {
@@ -1495,7 +1497,7 @@ void SpawnConditionManager::ToggleEvent(uint32 event_id, bool enabled, bool stri
 	if(reset_base) {
 		Log(Logs::Detail, Logs::Spawns, "Spawn event %d is in zone %s. State set. Trigger time reset (period %d). Notifying world.", event_id, zone_short_name.c_str(), e.period);
 		//start with the time now
-		zone->zone_time.getEQTimeOfDay(&e.next);
+		zone->zone_time.GetCurrentEQTimeOfDay(&e.next);
 		//advance the next time by our period
 		EQTime::AddMinutes(e.period, &e.next);
 	} else {
@@ -1509,7 +1511,7 @@ void SpawnConditionManager::ToggleEvent(uint32 event_id, bool enabled, bool stri
 	auto pack = new ServerPacket(ServerOP_SpawnEvent, sizeof(ServerSpawnEvent_Struct));
 	ServerSpawnEvent_Struct* sse = (ServerSpawnEvent_Struct*)pack->pBuffer;
 
-	sse->zoneID = database.GetZoneID(zone_short_name.c_str());
+	sse->zoneID = ZoneID(zone_short_name.c_str());
 	sse->event_id = event_id;
 
 	worldserver.SendPacket(pack);

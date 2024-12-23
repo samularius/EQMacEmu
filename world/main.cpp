@@ -30,11 +30,10 @@
 
 #include <signal.h>
 
-#include "../common/global_define.h"
+#include "../common/strings.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/queue.h"
 #include "../common/timer.h"
-#include "../common/eq_stream_factory.h"
 #include "../common/eq_packet.h"
 #include "../common/seperator.h"
 #include "../common/version.h"
@@ -42,65 +41,59 @@
 #include "../common/timeoutmgr.h"
 #include "../common/strings.h"
 #include "../common/emu_constants.h"
-
+#include "../common/event/event_loop.h"
+#include "../common/eq_stream_factory.h"
+#include "../common/net/eqstream.h"
 #include "../common/opcodemgr.h"
 #include "../common/guilds.h"
 #include "../common/eq_stream_ident.h"
 #include "../common/rulesys.h"
 #include "../common/platform.h"
 #include "../common/crash.h"
-#include "../common/event/timer.h"
+#include "../common/misc.h"
 #include "client.h"
 #include "worlddb.h"
+#include "wguild_mgr.h"
+
 #ifdef _WINDOWS
-	#include <process.h>
-	#define snprintf	_snprintf
-	#define strncasecmp	_strnicmp
-	#define strcasecmp	_stricmp
-	#include <conio.h>
+#include <process.h>
+#define snprintf	_snprintf
+#define strncasecmp	_strnicmp
+#define strcasecmp	_stricmp
+#include <conio.h>
 #else
-	#include <pthread.h>
-	#include "../common/unix.h"
-	#include <sys/types.h>
-	#include <sys/ipc.h>
-	#include <sys/sem.h>
-	#include <sys/shm.h>
-	#if not defined (FREEBSD) && not defined (DARWIN)
-		union semun {
-			int val;
-			struct semid_ds *buf;
-			ushort *array;
-			struct seminfo *__buf;
-			void *__pad;
-		};
-	#endif
+
+#include <sys/sem.h>
+#include <thread>
 
 #endif
 
-#include "../common/emu_tcp_server.h"
 #include "../common/patches/patches.h"
-#include "../common/random.h"
-#include "../common/path_manager.h"
 #include "zoneserver.h"
-#include "console.h"
 #include "login_server.h"
 #include "login_server_list.h"
 #include "world_config.h"
-#include "zoneserver.h"
 #include "zonelist.h"
 #include "clientlist.h"
 #include "launcher_list.h"
-#include "wguild_mgr.h"
 #include "ucs.h"
 #include "queryserv.h"
+#include "web_interface.h"
+#include "console.h"
+#include "world_boot.h"
+
 #include "world_server_cli.h"
 #include "../common/content/world_content_service.h"
+#include "../common/zone_store.h"
 #include "world_event_scheduler.h"
-#include "../zone/data_bucket.h"
+#include "../common/path_manager.h"
+#include "../common/skill_caps.h"
+#include "../common/ip_util.h"
 
+SkillCaps skill_caps;
+ZoneStore zone_store;
 TimeoutManager timeout_manager;
 EQStreamFactory eqsf(WorldStream,9000);
-EmuTCPServer tcps;
 ClientList client_list;
 ZSList zoneserver_list;
 LoginServerList loginserverlist;
@@ -116,34 +109,20 @@ bool holdzones = false;
 const WorldConfig *Config;
 EQEmuLogSys LogSys;
 ServerEarthquakeImminent_Struct next_quake;
-WorldContentService content_service;
-PathManager         path;
 std::unordered_set<uint32> ipWhitelist;
 std::mutex		ipMutex;
 bool bSkipFactoryAuth = false;
-extern ConsoleList console_list;
+WebInterfaceList web_interface;
+WorldContentService content_service;
+PathManager         path;
 
 void CatchSignal(int sig_num);
 
-void LoadDatabaseConnections()
+inline void UpdateWindowTitle(std::string new_title)
 {
-	LogInfo(
-			"Connecting to MySQL {0}@{1}:{2}...", 
-			Config->DatabaseUsername.c_str(), 
-			Config->DatabaseHost.c_str(), 
-			Config->DatabasePort
-	);
-	if (!database.Connect(
-			Config->DatabaseHost.c_str(),
-			Config->DatabaseUsername.c_str(),
-			Config->DatabasePassword.c_str(),
-			Config->DatabaseDB.c_str(),
-			Config->DatabasePort
-	)) {
-		LogError("Cannot continue without a database connection.");
-
-		std::exit(1);
-	}
+#ifdef _WINDOWS
+	SetConsoleTitle(new_title.c_str());
+#endif
 }
 
 Timer NextQuakeTimer(900000);
@@ -199,45 +178,6 @@ void LoadServerConfig()
 	}
 }
 
-void RegisterLoginservers()
-{
-	// add login server config to list
-	if (Config->LoginCount == 0) {
-		if (Config->LoginHost.length()) {
-			loginserverlist.Add(
-				Config->LoginHost.c_str(), 
-				Config->LoginPort, 
-				Config->LoginAccount.c_str(), 
-				Config->LoginPassword.c_str(), 
-				Config->LoginType
-			);
-			LogInfo("Added loginserver [{0}]:[{1}]", Config->LoginHost.c_str(), Config->LoginPort);
-		}
-	}
-	else {
-		LinkedList<LoginConfig*> loginlist = Config->loginlist;
-		LinkedListIterator<LoginConfig*> iterator(loginlist);
-		iterator.Reset();
-		while (iterator.MoreElements()) {
-			if (iterator.GetData()->LoginHost.length()) {
-				loginserverlist.Add(
-					iterator.GetData()->LoginHost.c_str(),
-					iterator.GetData()->LoginPort,
-					iterator.GetData()->LoginAccount.c_str(),
-					iterator.GetData()->LoginPassword.c_str(),
-					iterator.GetData()->LoginType
-				);
-				LogInfo(
-					"Added loginserver [{0}]:[{1}]",
-					iterator.GetData()->LoginHost.c_str(),
-					iterator.GetData()->LoginPort
-				);
-			}
-			iterator.Advance();
-		}
-	}
-}
-
 /**
  * World process entrypoint
  *
@@ -245,29 +185,27 @@ void RegisterLoginservers()
  * @param argv
  * @return
  */
-
 int main(int argc, char** argv) {
 	RegisterExecutablePlatform(ExePlatformWorld);
 	LogSys.LoadLogSettingsDefaults();
 	set_exception_handler();
 
-	if (argc > 1) {
-		WorldserverCLI::CommandHandler(argc, argv);
+	if (WorldBoot::HandleCommandInput(argc, argv)) {
+		return 0;
 	}
 
 	path.LoadPaths();
 
-	LoadServerConfig();
+	if (!WorldBoot::LoadServerConfig()) {
+		return 0;
+	}
 
 	Config = WorldConfig::get();
 
 	LogInfo("CURRENT_VERSION: [{0}]", CURRENT_VERSION);
 
-#ifdef _DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
 
-	if (signal(SIGINT, CatchSignal) == SIG_ERR) {
+	if (signal(SIGINT, CatchSignal) == SIG_ERR)	{
 		LogError("Could not set signal handler");
 		return 1;
 	}
@@ -281,140 +219,6 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 #endif
-
-	RegisterLoginservers();
-	LoadDatabaseConnections();
-
-	guild_mgr.SetDatabase(&database);
-
-	LogSys.SetDatabase(&database)
-		->SetLogPath(path.GetLogPath())
-		->LoadLogDatabaseSettings()
-		->StartFileLogs();
-
-	bool ignore_db = false;
-	if (argc >= 2) {
-		if (strcasecmp(argv[1], "ignore_db") == 0) {
-			ignore_db = true;
-		}
-		else {
-			std::cerr << "Error, unknown command line option" << std::endl;
-			return 1;
-		}
-		std::string tmp;
-		if (strcasecmp(argv[1], "help") == 0 || strcasecmp(argv[1], "?") == 0 || strcasecmp(argv[1], "/?") == 0 || strcasecmp(argv[1], "-?") == 0 || strcasecmp(argv[1], "-h") == 0 || strcasecmp(argv[1], "-help") == 0) {
-			std::cout << "Worldserver command line commands:" << std::endl;
-			std::cout << "adduser username password flag    - adds a user account" << std::endl;
-			std::cout << "flag username flag    - sets GM flag on the account" << std::endl;
-			std::cout << "startzone zoneshortname    - sets the starting zone" << std::endl;
-			std::cout << "-holdzones    - reboots lost zones" << std::endl;
-			return 0;
-		}
-		else if (strcasecmp(argv[1], "-holdzones") == 0) {
-			std::cout << "Reboot Zones mode ON" << std::endl;
-			holdzones = true;
-		}
-		else if (strcasecmp(argv[1], "flag") == 0) {
-			if (argc == 4) {
-				if (Seperator::IsNumber(argv[3])) {
-					if (atoi(argv[3]) >= 0 && atoi(argv[3]) <= 255) {
-						if (database.SetAccountStatus(argv[2], atoi(argv[3]))) {
-							std::cout << "Account flagged: Username='" << argv[2] << "', status=" << argv[3] << std::endl;
-							return 0;
-						}
-						else {
-							std::cerr << "database.SetAccountStatus failed." << std::endl;
-							return 1;
-						}
-					}
-				}
-			}
-			std::cout << "Usage: world flag username flag" << std::endl;
-			std::cout << "flag = 0-200" << std::endl;
-			return 0;
-		}
-	}
-
-	LogInfo("Loading variables..");
-	database.LoadVariables();
-
-	std::string hotfix_name;
-	if (database.GetVariable("hotfix_name", hotfix_name)) {
-		if (!hotfix_name.empty()) {
-			LogInfo("Current hotfix in use: [{0}]", hotfix_name.c_str());
-		}
-	}
-
-	LogInfo("Purging expiring data buckets...");
-	database.PurgeAllDeletedDataBuckets();
-	LogInfo("Loading zones..");
-	database.LoadZoneNames();
-	database.LoadZoneFileNames();
-	LogInfo("Clearing groups..");
-	database.ClearGroup();
-	LogInfo("Clearing raids..");
-	database.ClearRaid();
-	database.ClearRaidDetails();
-	LogInfo("Loading items..");
-	if (!database.LoadItems(hotfix_name))
-		LogError("Error: Could not load item data. But ignoring");
-
-	LogInfo("Loading skill caps..");
-	if (!database.LoadSkillCaps(std::string(hotfix_name)))
-		LogError("Error: Could not load skill cap data. But ignoring");
-
-	LogInfo("Loading guilds..");
-	guild_mgr.LoadGuilds();
-
-	//rules:
-	{
-		if (!RuleManager::Instance()->UpdateOrphanedRules(&database)) {
-			LogInfo("Failed to process 'Orphaned Rules' update operation.");
-		}
-
-		if (!RuleManager::Instance()->UpdateInjectedRules(&database, "default")) {
-			LogInfo("Failed to process 'Injected Rules' for ruleset 'default' update operation.");
-		}
-
-		std::string tmp;
-		if (database.GetVariable("RuleSet", tmp)) {
-			LogInfo("Loading rule set [{0}]", tmp.c_str());
-			if (!RuleManager::Instance()->LoadRules(&database, tmp.c_str())) {
-				LogInfo("Failed to load ruleset [{0}], falling back to defaults.", tmp.c_str());
-			}
-		}
-		else {
-			if (!RuleManager::Instance()->LoadRules(&database, "default")) {
-				LogInfo("No rule set configured, using default rules");
-			}
-			else {
-				LogInfo("Loaded default rule set 'default'", tmp.c_str());
-			}
-		}
-
-		if (!RuleManager::Instance()->RestoreRuleNotes(&database)) {
-			LogInfo("Failed to process 'Restore Rule Notes' update operation.");
-		}
-	}
-
-	if(RuleB(World, ClearTempMerchantlist)){
-		LogInfo("Clearing temporary merchant lists...");
-		database.ClearMerchantTemp();
-	}
-
-	if (RuleB(World, AdjustRespawnTimes)) {
-		LogInfo("Clearing and adjusting boot time spawn timers...");
-		database.AdjustSpawnTimes();
-	}
-
-	LogInfo("Loading EQ time of day..");
-	TimeOfDay_Struct eqTime;
-	time_t realtime;
-	eqTime = database.LoadTime(realtime);
-	zoneserver_list.worldclock.setEQTimeOfDay(eqTime, realtime);
-	Timer EQTimeTimer(600000);
-	EQTimeTimer.Start(600000);
-
 	memset(&next_quake, 0, sizeof(ServerEarthquakeImminent_Struct));
 	NextQuakeTimer.Disable();
 	DisableQuakeTimer.Disable();
@@ -442,41 +246,172 @@ int main(int argc, char** argv) {
 			NextQuakeTimer.Start((next_quake.start_timestamp - Timer::GetTimeSeconds()) * 1000);
 		}
 	}
-
-
-	LogInfo("Loading launcher list..");
-	launcher_list.LoadList();
-
-	LogInfo("Clearing Saylinks..");
-	database.ClearSayLink();
-
-	LogInfo("Deleted [{0}] stale player corpses from database", database.DeleteStalePlayerCorpses());
-
-	LogInfo("Clearing active accounts...");
-	database.ClearAllActive();
-
-	LogInfo("Clearing consented characters...");
-	database.ClearAllConsented();
-
-	LogInfo("Loading char create info...");
-	database.LoadCharacterCreateAllocations();
-	database.LoadCharacterCreateCombos();
-
-	event_scheduler.SetDatabase(&database)->LoadScheduledEvents();
-
-	LogInfo("Initializing [WorldContentService]");
-	content_service.SetDatabase(&database)
-		->SetExpansionContext()
-		->ReloadContentFlags();
-
-	char errbuf[TCPConnection_ErrorBufferSize];
-	if (tcps.Open(Config->WorldTCPPort, errbuf)) {
-		LogInfo("Zone (TCP) listener started.");
-	} else {
-		LogInfo("Failed to start zone (TCP) listener on port [{0}]:",Config->WorldTCPPort);
-		LogError("        {0}",errbuf);
+	
+	WorldBoot::RegisterLoginservers();
+	WorldBoot::LoadDatabaseConnections();
+	if (!WorldBoot::DatabaseLoadRoutines(argc, argv)) {
 		return 1;
 	}
+
+	Timer EQTimeTimer(600000);
+	EQTimeTimer.Start(600000);
+	
+	// global loads
+	LogInfo("Loading launcher list..");
+	launcher_list.LoadList();
+	zoneserver_list.Init();
+
+	std::unique_ptr<EQ::Net::ConsoleServer> console;
+	if (Config->TelnetEnabled) {
+		LogInfo("Console (TCP) listener started on [{}:{}]", Config->TelnetIP, Config->TelnetTCPPort);
+		console = std::make_unique<EQ::Net::ConsoleServer>(Config->TelnetIP, Config->TelnetTCPPort);
+		RegisterConsoleFunctions(console);
+	}
+
+	skill_caps.SetContentDatabase(&database)->LoadSkillCaps();
+
+	std::unique_ptr<EQ::Net::ServertalkServer> server_connection;
+	server_connection = std::make_unique<EQ::Net::ServertalkServer>();
+
+	EQ::Net::ServertalkServerOptions server_opts;
+	server_opts.port        = Config->WorldTCPPort;
+	server_opts.ipv6        = false;
+	server_opts.credentials = Config->SharedKey;
+	server_connection->Listen(server_opts);
+	LogInfo("Server (TCP) listener started on port [{}]", Config->WorldTCPPort);
+		
+	server_connection->OnConnectionIdentified(
+		"Zone", [&console](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			numzones++;
+			zoneserver_list.Add(new ZoneServer(connection, console.get()));
+
+			LogInfo(
+				"New Zone Server connection from [{}] at [{}:{}] zone_count [{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID(),
+				numzones
+			);
+		}
+	);
+
+	server_connection->OnConnectionRemoved(
+		"Zone", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			numzones--;
+			zoneserver_list.Remove(connection->GetUUID());
+
+			LogInfo(
+				"Removed Zone Server connection from [{}] total zone_count [{}]",
+				connection->GetUUID(),
+				numzones
+			);
+		}
+	);
+
+	server_connection->OnConnectionIdentified(
+		"Launcher", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"New Launcher connection from [{}] at [{}:{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID()
+			);
+
+			launcher_list.Add(connection);
+		}
+	);
+
+	server_connection->OnConnectionRemoved(
+		"Launcher", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"Removed Launcher connection from [{0}]",
+				connection->GetUUID()
+			);
+
+			launcher_list.Remove(connection);
+		}
+	);
+
+	server_connection->OnConnectionIdentified(
+		"QueryServ", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"New Query Server connection from [{}] at [{}:{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID());
+
+			QSLink.AddConnection(connection);
+		}
+	);
+
+	server_connection->OnConnectionRemoved(
+		"QueryServ", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"Removed Query Server connection from [{}]",
+				connection->GetUUID()
+			);
+
+			QSLink.RemoveConnection(connection);
+		}
+	);
+
+	server_connection->OnConnectionIdentified(
+		"UCS", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"New UCS Server connection from [{}] at [{}:{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID()
+			);
+
+			UCSLink.SetConnection(connection);
+
+			zoneserver_list.UpdateUCSServerAvailable();
+
+			
+		}
+	);
+
+	server_connection->OnConnectionRemoved(
+		"UCS", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo("Connection lost from UCS Server [{}]", connection->GetUUID());
+
+			auto ucs_connection = UCSLink.GetConnection();
+
+			if (ucs_connection->GetUUID() == connection->GetUUID()) {
+				LogInfo("Removing currently active UCS connection");
+				UCSLink.SetConnection(nullptr);
+				zoneserver_list.UpdateUCSServerAvailable(false);
+			}
+		}
+	);
+
+	server_connection->OnConnectionIdentified(
+		"WebInterface", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"New WebInterface Server connection from [{}] at [{}:{}]",
+				connection->Handle()->RemoteIP(),
+				connection->Handle()->RemotePort(),
+				connection->GetUUID()
+			);
+
+			web_interface.AddConnection(connection);
+		}
+	);
+
+	server_connection->OnConnectionRemoved(
+		"WebInterface", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
+			LogInfo(
+				"Removed WebInterface Server connection from [{}]",
+				connection->GetUUID()
+			);
+
+			web_interface.RemoveConnection(connection);
+		}
+	);
+
+	WorldBoot::CheckForPossibleConfigurationIssues();
+
 	if (eqsf.Open()) {
 		LogInfo("Client (UDP) listener started.");
 	} else {
@@ -496,7 +431,6 @@ int main(int argc, char** argv) {
 	uint8 ReconnectCounter = 100;
 	std::shared_ptr<EQStream> eqs;
 	std::shared_ptr<EQOldStream> eqos;
-	EmuTCPConnection* tcpc;
 	EQStreamInterface *eqsi;
 
 	auto loop_fn = [&](EQ::Timer* t) {
@@ -538,7 +472,6 @@ int main(int argc, char** argv) {
 			i++;
 		}
 
-		i = 0;
 		//check the stream identifier for any now-identified streams
 		while((eqsi = stream_identifier.PopIdentified())) {
 			//now that we know what patch they are running, start up their client object
@@ -557,7 +490,7 @@ int main(int argc, char** argv) {
 				}
 			}
 			if (!RuleB(World, UseBannedIPsTable)){
-					LogRulesDetail("New connection from [{0}]:[{1}], processing connection", inet_ntoa(in), ntohs(eqsi->GetRemotePort()));
+					//LogRulesDetail("New connection from [{0}]:[{1}], processing connection", inet_ntoa(in), ntohs(eqsi->GetRemotePort()));
 					auto client = new Client(eqsi);
 					// @merth: client->zoneattempt=0;
 					client_list.Add(client);
@@ -567,27 +500,21 @@ int main(int argc, char** argv) {
 		event_scheduler.Process(&zoneserver_list);
 
 		client_list.Process();
-		i = 0;
-		endTime = std::chrono::high_resolution_clock::now() + std::chrono::duration_cast<std::chrono::nanoseconds>(mSeconds);
-		while (std::chrono::high_resolution_clock::now() <= endTime && (tcpc = tcps.NewQueuePop())) {
-			struct in_addr in{};
-			in.s_addr = tcpc->GetrIP();
-			LogInfo("New TCP connection from {0}:{1}", inet_ntoa(in),tcpc->GetrPort());
-			console_list.Add(new Console(tcpc));
-			i++;
-		}
-
-		if(EQTimeTimer.Check())
-		{
+		
+		if(EQTimeTimer.Check()) {
 			TimeOfDay_Struct tod;
-			zoneserver_list.worldclock.getEQTimeOfDay(time(0), &tod);
-			if (!database.SaveTime(tod.minute, tod.hour, tod.day, tod.month, tod.year))
-			{
-				LogError("Failed to save eqtime.");
+			zoneserver_list.worldclock.GetCurrentEQTimeOfDay(time(0), &tod);
+			if (!database.SaveTime(tod.minute, tod.hour, tod.day, tod.month, tod.year)) {
+				LogEqTime("Failed to save eqtime");
 			}
-			else
-			{
-				LogInfo("EQTime successfully saved.");
+			else {
+				LogEqTimeDetail("EQTime successfully saved - time is now year [{}] month [{}] day [{}] hour [{}] minute [{}]",
+					tod.year,
+					tod.month,
+					tod.day,
+					tod.hour,
+					tod.minute
+				);
 			}
 		}
 
@@ -671,30 +598,23 @@ int main(int argc, char** argv) {
 
 		//check for timeouts in other threads
 		timeout_manager.CheckTimeouts();
-		loginserverlist.Process();
-		console_list.Process();
 		zoneserver_list.Process();
 		launcher_list.Process();
-		UCSLink.Process();
-		QSLink.Process();
-
-		//WILink.Process();
 
 		if (InterserverTimer.Check()) {
 			InterserverTimer.Start();
 			database.ping();
-			// AsyncLoadVariables(dbasync, &database);
+
+			std::string window_title = fmt::format(
+				"World [{}] Clients [{}]",
+				Config->LongName,
+				client_list.GetClientCount()
+			);
+			UpdateWindowTitle(window_title);
+
 			ReconnectCounter++;
 			if (ReconnectCounter >= 12) { // only create thread to reconnect every 10 minutes. previously we were creating a new thread every 10 seconds
 				ReconnectCounter = 0;
-				if (loginserverlist.AllConnected() == false) {
-#ifdef _WINDOWS
-					_beginthread(AutoInitLoginServer, 0, nullptr);
-#else
-					pthread_t thread;
-					pthread_create(&thread, nullptr, &AutoInitLoginServer, nullptr);
-#endif
-				}
 			}
 		}
 	};
@@ -705,12 +625,9 @@ int main(int argc, char** argv) {
 	EQ::EventLoop::Get().Run();
 
 	LogInfo("World main loop completed.");
-	LogInfo("Shutting down console connections (if any).");
-	console_list.KillAll();
 	LogInfo("Shutting down zone connections (if any).");
 	zoneserver_list.KillAll();
 	LogInfo("Zone (TCP) listener stopped.");
-	tcps.Close();
 	LogInfo("Client (UDP) listener stopped.");
 	eqsf.Close();
 	LogSys.CloseFileLogs();
@@ -722,17 +639,3 @@ void CatchSignal(int sig_num) {
 	Log(Logs::General, Logs::WorldServer,"Caught signal %d",sig_num);
 	RunLoops = false;
 }
-
-void UpdateWindowTitle(char* iNewTitle) {
-#ifdef _WINDOWS
-	char tmp[500];
-	if (iNewTitle) {
-		snprintf(tmp, sizeof(tmp), "World: %s", iNewTitle);
-	}
-	else {
-		snprintf(tmp, sizeof(tmp), "World");
-	}
-	SetConsoleTitle(tmp);
-#endif
-}
-

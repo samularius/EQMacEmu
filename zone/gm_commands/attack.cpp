@@ -1,4 +1,4 @@
-#include "../client.h"
+ #include "../client.h"
 
 void command_attack(Client *c, const Seperator *sep){
 	if (c->GetTarget() && c->GetTarget()->IsNPC() && sep->arg[1] != 0) {

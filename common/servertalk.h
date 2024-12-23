@@ -4,6 +4,9 @@
 #include "../common/types.h"
 #include "../common/packet_functions.h"
 #include "../common/eq_packet_structs.h"
+#include "../common/net/packet.h"
+#include <cereal/cereal.hpp>
+#include <cereal/types/string.hpp>
 
 #define SERVER_TIMEOUT	30000	// how often keepalive gets sent
 #define INTERSERVER_TIMER					10000
@@ -57,7 +60,7 @@
 #define ServerOP_ItemStatus			0x002C
 #define ServerOP_OOCMute			0x002D
 #define ServerOP_Revoke				0x002E
-//#define			0x002F
+#define	ServerOP_WebInterfaceCall   0x002F
 #define ServerOP_GroupIDReq			0x0030
 #define ServerOP_GroupIDReply		0x0031
 #define ServerOP_GroupLeave			0x0032	// for disbanding out of zone folks
@@ -79,16 +82,19 @@
 #define ServerOP_IsOwnerOnline		0x0042
 #define ServerOP_CheckGroupLeader	0x0043
 #define ServerOP_RaidGroupJoin		0x0044
+#define ServerOP_DropClient         0x0045	// DropClient
 
-#define ServerOP_DepopAllPlayersCorpses	0x0061
-
-#define ServerOP_QGlobalUpdate		0x0063
-#define ServerOP_QGlobalDelete		0x0064
-#define ServerOP_DepopPlayerCorpse	0x0065
-#define ServerOP_RequestTellQueue	0x0066 // client asks for it's tell queues
-#define ServerOP_ChangeSharedMem	0x0067
-#define ServerOP_ConsentDeny		0x0068
-#define ServerOP_ConsentDenyByID	0x0069
+#define ServerOP_DepopAllPlayersCorpses	0x0060
+#define ServerOP_QGlobalUpdate		0x0061
+#define ServerOP_QGlobalDelete		0x0062
+#define ServerOP_DepopPlayerCorpse	0x0063
+#define ServerOP_RequestTellQueue	0x0064 // client asks for it's tell queues
+#define ServerOP_ChangeSharedMem	0x0065
+#define ServerOP_ConsentDeny		0x0066
+#define ServerOP_ConsentDenyByID	0x0067
+#define	ServerOP_WebInterfaceEvent  0x0068
+#define ServerOP_WebInterfaceSubscribe 0x0069
+#define ServerOP_WebInterfaceUnsubscribe 0x0070
 
 #define ServerOP_RaidAdd			0x0100 //in use
 #define ServerOP_RaidRemove			0x0101 //in use
@@ -131,7 +137,7 @@
 #define ServerOP_PeerConnect		0x1007
 #define ServerOP_NewLSInfo			0x1008
 #define ServerOP_LSRemoteAddr		0x1009
-#define ServerOP_LSAccountUpdate		0x100A
+#define ServerOP_LSAccountUpdate	0x100A
 
 #define ServerOP_EncapPacket		0x2007	// Packet within a packet
 #define ServerOP_WorldListUpdate	0x2008
@@ -141,6 +147,7 @@
 #define ServerOP_SetWorldTime		0x200B
 #define ServerOP_GetWorldTime		0x200C
 #define ServerOP_SyncWorldTime		0x200E
+#define ServerOP_RefreshCensorship	0x200F
 
 #define ServerOP_LSZoneInfo			0x3001
 #define ServerOP_LSZoneStart		0x3002
@@ -154,34 +161,50 @@
 #define	ServerOP_UsertoWorldReq		0xAB00
 #define	ServerOP_UsertoWorldResp	0xAB01
 
+
 #define ServerOP_LauncherConnectInfo	0x3000
 #define ServerOP_LauncherZoneRequest	0x3001
 #define ServerOP_LauncherZoneStatus		0x3002
 #define ServerOP_DoZoneCommand		0x3003
 #define ServerOP_BootDownZones		0x3004
 
-#define ServerOP_UCSMessage		0x4000
-#define ServerOP_UCSMailMessage 0x4001
+#define ServerOP_CZMessagePlayer 0x4000
+#define ServerOP_CZSignalClient 0x4001
+#define ServerOP_CZSignalClientByName 0x4002
+#define ServerOP_HotReloadQuests 0x4003
+#define ServerOP_QueryServGeneric	0x4004
+#define ServerOP_UCSMessage		0x4005
+#define ServerOP_DiscordWebhookMessage 0x4006
+#define ServerOP_UpdateSchedulerEvents 0x4007
+#define ServerOP_UCSServerStatusRequest		0x4008
+#define ServerOP_UCSServerStatusReply		0x4009
 
-#define ServerOP_QueryServGeneric	0x4005
-#define ServerOP_CZSignalClient 0x4006
-#define ServerOP_CZSignalClientByName 0x4007
-#define ServerOP_CZMessagePlayer 0x4008
-#define ServerOP_UpdateSchedulerEvents 0x4012
-
-#define ServerOP_ReloadContentFlags 0x4013
-#define ServerOP_ReloadSkills		0x0218
-#define ServerOP_ReloadWorld 0x4009
-#define ServerOP_ReloadLogs 0x4010
-#define ServerOP_QuakeImminent 0x4011
-#define ServerOP_UpdateSchedulerEvents 0x4012
-#define ServerOP_ReloadContentFlags 0x4013
-#define ServerOP_QuakeRequest 0x4014
-#define ServerOP_QuakeEnded 0x4015
-#define ServerOP_ReloadRules	0x4002
-#define ServerOP_ReloadRulesWorld	0x4003
-#define ServerOP_ReloadTitles		0x0062
-#define ServerOP_ReloadSpellModifiers	0x4016
+#define ServerOP_ReloadAAData 0x4100
+#define ServerOP_ReloadBlockedSpells 0x4101
+#define ServerOP_ReloadCommands 0x4102
+#define ServerOP_ReloadContentFlags 0x4103
+#define ServerOP_ReloadDoors 0x4104
+#define ServerOP_ReloadGroundSpawns 0x4105
+#define ServerOP_ReloadLevelEXPMods 0x4106
+#define ServerOP_ReloadLogs 0x4107
+#define ServerOP_ReloadMerchants 0x4108
+#define ServerOP_ReloadNPCEmotes 0x4109
+#define ServerOP_ReloadObjects 0x4110
+#define ServerOP_ReloadOpcodes 0x4111
+#define ServerOP_ReloadRules 0x4112
+#define ServerOP_ReloadSkills 0x4113
+#define ServerOP_ReloadStaticZoneData 0x4114
+#define ServerOP_ReloadTitles 0x4115
+#define ServerOP_ReloadTraps 0x4116
+#define ServerOP_ReloadVariables 0x4117
+#define ServerOP_ReloadWorld 0x4118
+#define ServerOP_ReloadZonePoints 0x4119
+#define ServerOP_ReloadZoneData 0x4120
+#define ServerOP_ReloadLoot 0x4121
+#define ServerOP_ReloadNPCSpells 0x4122
+#define ServerOP_ReloadKeyRings 0x4123
+#define ServerOP_ReloadFactions 0x4124
+#define ServerOP_ReloadSkillCaps 0x4125
 
 /* Query Server OP Codes */
 #define ServerOP_QSPlayerLogItemDeletes				0x5013
@@ -195,6 +218,13 @@
 #define ServerOP_QSPlayerTSEvents					0x5022
 #define ServerOP_QSPlayerQGlobalUpdates				0x5023
 #define ServerOP_QSPlayerLootRecords				0x5024
+
+/*Quarm*/
+#define ServerOP_QuakeImminent 0x4200
+#define ServerOP_QuakeRequest 0x4201
+#define ServerOP_QuakeEnded 0x4202
+#define ServerOP_ReloadSpellModifiers	0x4203
+#define ServerOP_ReloadRulesWorld 0x4204
 
 #define ServerOP_WIRemoteCall 0x5001
 #define ServerOP_WIRemoteCallResponse 0x5002
@@ -234,6 +264,22 @@ public:
 		_wpos = 0;
 		_rpos = 0;
 	}
+
+	ServerPacket(uint16 in_opcode, const EQ::Net::Packet& p) {
+		this->compressed = false;
+		size = (uint32)p.Length();
+		opcode = in_opcode;
+		if (size == 0) {
+			pBuffer = 0;
+		}
+		else {
+			pBuffer = new uchar[size];
+			memcpy(pBuffer, p.Data(), size);
+		}
+		_wpos = 0;
+		_rpos = 0;
+	}
+
 	ServerPacket* Copy() {
 		ServerPacket* ret = new ServerPacket(this->opcode, this->size);
 		if (this->size)
@@ -242,51 +288,17 @@ public:
 		ret->InflatedSize = this->InflatedSize;
 		return ret;
 	}
-	bool Deflate() {
-		if (compressed)
-			return false;
-		if ((!this->pBuffer) || (!this->size))
-			return false;
-		uchar* tmp = new uchar[this->size + 128];
-		uint32 tmpsize = DeflatePacket(this->pBuffer, this->size, tmp, this->size + 128);
-		if (!tmpsize) {
-			safe_delete_array(tmp);
-			return false;
-		}
-		this->compressed = true;
-		this->InflatedSize = this->size;
-		this->size = tmpsize;
-		uchar* tmpdel = this->pBuffer;
-		this->pBuffer = tmp;
-		safe_delete_array(tmpdel);
-		return true;
-	}
-	bool Inflate() {
-		if (!compressed)
-			return false;
-		if ((!this->pBuffer) || (!this->size))
-			return false;
-		uchar* tmp = new uchar[InflatedSize];
-		uint32 tmpsize = InflatePacket(this->pBuffer, this->size, tmp, InflatedSize);
-		if (!tmpsize) {
-			safe_delete_array(tmp);
-			return false;
-		}
-		compressed = false;
-		this->size = tmpsize;
-		uchar* tmpdel = this->pBuffer;
-		this->pBuffer = tmp;
-		safe_delete_array(tmpdel);
-		return true;
-	}
 
-	void WriteUInt8(uint8 value) { *(uint8 *)(pBuffer + _wpos) = value; _wpos += sizeof(uint8); }
-	void WriteUInt32(uint32 value) { *(uint32 *)(pBuffer + _wpos) = value; _wpos += sizeof(uint32); }
-	void WriteString(const char * str) { uint32 len = static_cast<uint32>(strlen(str)) + 1; memcpy(pBuffer + _wpos, str, len); _wpos += len; }
+	void WriteUInt8(uint8 value) { *(uint8*)(pBuffer + _wpos) = value; _wpos += sizeof(uint8); }
+	void WriteInt8(uint8_t value) { *(uint8_t*)(pBuffer + _wpos) = value; _wpos += sizeof(uint8_t); }
+	void WriteUInt32(uint32 value) { *(uint32*)(pBuffer + _wpos) = value; _wpos += sizeof(uint32); }
+	void WriteInt32(int32_t value) { *(int32_t*)(pBuffer + _wpos) = value; _wpos += sizeof(int32_t); }
 
-	uint8 ReadUInt8() { uint8 value = *(uint8 *)(pBuffer + _rpos); _rpos += sizeof(uint8); return value; }
-	uint32 ReadUInt32() { uint32 value = *(uint32 *)(pBuffer + _rpos); _rpos += sizeof(uint32); return value; }
-	void ReadString(char *str) { uint32 len = static_cast<uint32>(strlen((char *)(pBuffer + _rpos))) + 1; memcpy(str, pBuffer + _rpos, len); _rpos += len; }
+	void WriteString(const char* str) { uint32 len = static_cast<uint32>(strlen(str)) + 1; memcpy(pBuffer + _wpos, str, len); _wpos += len; }
+
+	uint8 ReadUInt8() { uint8 value = *(uint8*)(pBuffer + _rpos); _rpos += sizeof(uint8); return value; }
+	uint32 ReadUInt32() { uint32 value = *(uint32*)(pBuffer + _rpos); _rpos += sizeof(uint32); return value; }
+	void ReadString(char* str) { uint32 len = static_cast<uint32>(strlen((char*)(pBuffer + _rpos))) + 1; memcpy(str, pBuffer + _rpos, len); _rpos += len; }
 
 	uint32 GetWritePosition() { return _wpos; }
 	uint32 GetReadPosition() { return _rpos; }
@@ -297,7 +309,7 @@ public:
 
 	uint32	size;
 	uint16	opcode;
-	uchar*	pBuffer;
+	uchar*  pBuffer;
 	uint32	_wpos;
 	uint32	_rpos;
 	bool	compressed;
@@ -332,6 +344,7 @@ struct ServerZoneIncomingClient_Struct {
 	uint32	accid;
 	int16	admin;
 	uint32	charid;
+	uint32  lsid;
 	bool	tellsoff;
 	char	charname[64];
 	char	lskey[30];
@@ -367,6 +380,7 @@ struct ServerChannelMessage_Struct {
 	char to[64];
 	char from[64];
 	uint8 fromadmin;
+	bool noreply;
 	uint16 chan_num;
 	uint32 guilddbid;
 	uint8 language;
@@ -543,16 +557,22 @@ struct ServerLSPlayerZoneChange_Struct {
 	uint32 to; // 0 = world
 };
 
-struct ServerLSClientAuth {
-	uint32	lsaccount_id;	// ID# in login server's db
-	char	name[30];		// username in login server's db
+struct ClientAuth_Struct {
+	uint32	loginserver_account_id;	// ID# in login server's db
+	char	account_name[30];		// username in login server's db
 	char	key[30];		// the Key the client will present
 	uint8	lsadmin;		// login server admin level
-	int16	worldadmin;		// login's suggested worldadmin level setting for this user, up to the world if they want to obey it
+	int16	is_world_admin;		// login's suggested worldadmin level setting for this user, up to the world if they want to obey it
 	uint32	ip;
-	uint8	local;			// 1 if the client is from the local network
+	uint8	is_client_from_local_network;			// 1 if the client is from the local network
 	uint8	version;		// Client version if Mac
 	char	forum_name[31];
+
+	template <class Archive>
+	void serialize(Archive& ar)
+	{
+		ar(loginserver_account_id, account_name, key, lsadmin, is_world_admin, ip, is_client_from_local_network, version, forum_name);
+	}
 };
 
 struct ServerSystemwideMessage {
@@ -697,6 +717,7 @@ struct UsertoWorldRequest_Struct {
 	uint32  ip;
 	uint32	FromID;
 	uint32	ToID;
+	char	IPAddr[64];
 	char	forum_name[31];
 };
 
@@ -792,6 +813,7 @@ struct SimpleName_Struct{
 
 struct ServerSpawnCondition_Struct {
 	uint32 zoneID;
+	uint32 zoneGuildID;
 	uint16 condition_id;
 	int16 value;
 };
@@ -1146,6 +1168,11 @@ struct QSPlayerLootRecords_struct {
 	MoneyUpdate_Struct money;
 };
 
+struct DiscordWebhookMessage_Struct {
+	uint32 webhook_id;
+	char message[2000];
+};
+
 struct QSGeneralQuery_Struct {
 	char QueryString[0];
 };
@@ -1174,11 +1201,15 @@ struct CZSetEntVarByNPCTypeID_Struct {
 };
 
 struct ReloadWorld_Struct{
-	uint32 Option;
+	uint8 global_repop;
+};
+
+struct HotReloadQuestsStruct {
+	char zone_short_name[200];
 };
 
 struct ServerRequestTellQueue_Struct {
-	char	name[64];
+	char name[64];
 };
 
 struct ServerRequestSoulMark_Struct {
@@ -1227,6 +1258,27 @@ struct ServerEarthquakeImminent_Struct {
 
 struct ServerEarthquakeRequest_Struct {
 	QuakeType	type; // Time the last quake began, in seconds. UNIX Timestamp. QuakeType enforcement is supposed to cease 84600 seconds following this time. Raid mobs are supposed to respawn 86400 seconds after this time. Actual type will be unknown and stored in memory.
+};
+
+struct ServerZoneStatus_Struct {
+	char  name[64];
+	int16 admin;
+};
+
+struct UCSServerStatus_Struct {
+	uint8 available; // non-zero=true, 0=false
+	union {
+		struct {
+			uint16 port;
+			uint16 unused;
+		};
+		uint32 timestamp;
+	};
+};
+
+struct ServerZoneDropClient_Struct
+{
+	uint32 lsid;
 };
 
 #pragma pack()

@@ -51,6 +51,7 @@
 #include "../common/spdat.h"
 #include "../common/strings.h"
 #include "../common/zone_numbers.h"
+#include "../common/skill_caps.h"
 #include "data_bucket.h"
 #include "event_codes.h"
 #include "guild_mgr.h"
@@ -77,6 +78,7 @@ extern volatile bool is_zone_loaded;
 extern WorldServer worldserver;
 extern PetitionList petition_list;
 extern EntityList entity_list;
+
 typedef void (Client::*ClientPacketProc)(const EQApplicationPacket *app);
 
 //Use a map for connecting opcodes since it doesn't get used a lot and is sparse
@@ -682,10 +684,10 @@ void Client::CompleteConnect()
 			if (IsMule() && GetBaseRace() != IKSAR)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 				else {
-					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else if (IsMule() && GetBaseRace() == IKSAR)
@@ -694,11 +696,11 @@ void Client::CompleteConnect()
 			}
 			else if (GetBaseRace() == IKSAR && zone->GetZoneExpansion() != KunarkEQ)
 			{
-				DoZoneMove(database.GetZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
+				DoZoneMove(ZoneID("fieldofbone"), GUILD_NONE, 1617.0f, -1684.0f, -50.0f, 0.0f);
 			}
 			else if (GetBaseRace() != IKSAR && zone->GetZoneExpansion() == KunarkEQ)
 			{
-				DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+				DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 			}
 		}
 		else
@@ -707,11 +709,11 @@ void Client::CompleteConnect()
 			if (m_pp.expansions & LuclinEQ)
 			{
 				if (RuleB(Quarm, EastCommonMules)) {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 
 				}
 				else {
-					DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+					DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 				}
 			}
 			else
@@ -720,14 +722,14 @@ void Client::CompleteConnect()
 				if (IsMule())
 				{
 					if (RuleB(Quarm, EastCommonMules)) {
-						DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+						DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 					}
 					else {
-						DoZoneMove(database.GetZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
+						DoZoneMove(ZoneID("bazaar"), GUILD_NONE, 140.0f, -821.0f, 5.0f, 0.0f);
 					}
 				}
 				else {
-					DoZoneMove(database.GetZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
+					DoZoneMove(ZoneID("ecommons"), GUILD_NONE, -164.0f, -1651.0f, 4.0f, 0.0f);
 				}
 			}
 		}
@@ -750,6 +752,10 @@ void Client::CompleteConnect()
 	if (GetGM() && IsDevToolsEnabled()) {
 		ShowDevToolsMenu();
 	}
+
+	// this was put in to appease concerns about the RNG being affected by the time of day or day of week the server was started on, resulting in bad loot
+	// this adds some external entropy to the process of generating random numbers by discarding some numbers in the sequence when a client connects
+	zone->random.Discard(Timer::GetCurrentTime() % 300);
 }
 
 
@@ -824,7 +830,7 @@ void Client::CheatDetected(CheatTypes CheatType, float x, float y, float z)
 		if (RuleB(Zone, EnableMQGateDetector) && ((this->Admin() < RuleI(Zone, MQGateExemptStatus) || (RuleI(Zone, MQGateExemptStatus)) == -1))) {
 			Message(Chat::Red, "Illegal gate request.");
 			char hString[250];
-			sprintf(hString, "/MQGate style hack, zone: %s:%d, loc: %.2f, %.2f, %.2f", database.GetZoneName(GetZoneID()), GetZoneID(), GetX(), GetY(), GetZ());
+			sprintf(hString, "/MQGate style hack, zone: %s:%d, loc: %.2f, %.2f, %.2f", ZoneName(GetZoneID()), GetZoneID(), GetX(), GetY(), GetZ());
 			database.SetMQDetectionFlag(this->account_name, this->name, hString, zone->GetShortName());
 			this->SetZone(this->GetZoneID(), zone ? zone->GetGuildID() : GUILD_NONE); //Prevent the player from zoning, place him back in the zone where he tried to originally /gate.
 		}
@@ -1079,10 +1085,10 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	*/
 	Client* client = entity_list.GetClientByName(cze->char_name);
 	if (!zone->GetAuth(ip, cze->char_name, &WID, &account_id, &character_id, &admin, lskey, &tellsoff, &versionbit, GetID())) {
-		if (client != 0 && client_state != CLIENT_AUTH_RECEIVED) {
-			Log(Logs::General, Logs::Error, "GetAuth() returned false kicking client");
+		LogClientLogin("[{}] failed zone auth check", cze->char_name);
+		if (nullptr != client && client_state != CLIENT_AUTH_RECEIVED) {
 			client->Save();
-			client->Disconnect();
+			client->Kick("Failed auth check");
 			return;
 		}
 		else {
@@ -1112,7 +1118,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	/**
 	 * DevTools Load Settings
 	 */
-	if (Admin() > 200) {
+	if (Admin() > EQ::DevTools::GM_ACCOUNT_STATUS_LEVEL) {
 		std::string dev_tools_window_key = StringFormat("%i-dev-tools-disabled", AccountID());
 		if (DataBucket::GetData(dev_tools_window_key) == "true") {
 			dev_tools_enabled = false;
@@ -1378,6 +1384,16 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	hairstyle = m_pp.hairstyle;
 	luclinface = m_pp.face;
 	beard = m_pp.beard;
+
+	// Max Level for Character:PerCharacterQglobalMaxLevel and Character:PerCharacterBucketMaxLevel
+	uint8 client_max_level = 0;
+	if (RuleB(Character, PerCharacterQglobalMaxLevel)) {
+		client_max_level = GetCharMaxLevelFromQGlobal();
+	}
+	else if (RuleB(Character, PerCharacterBucketMaxLevel)) {
+		client_max_level = GetCharMaxLevelFromBucket();
+	}
+	SetClientMaxLevel(client_max_level);
 
 	/* If GM not set in DB, and does not meet min status to be GM, reset */
 	if (m_pp.gm && admin < minStatusToBeGM)
@@ -1645,9 +1661,9 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			m_pp.spellSlotRefresh[i] = p_timers.GetRemainingTime(pTimerSpellStart + m_pp.mem_spells[i]) * 1000;
 
 	/* Ability slot refresh send SK/PAL */
-	if (m_pp.class_ == SHADOWKNIGHT || m_pp.class_ == PALADIN) {
+	if (m_pp.class_ == Class::ShadowKnight || m_pp.class_ == Class::Paladin) {
 		uint32 abilitynum = 0;
-		if (m_pp.class_ == SHADOWKNIGHT)
+		if (m_pp.class_ == Class::ShadowKnight)
 		{ 
 			abilitynum = pTimerHarmTouch; 
 		}
@@ -1739,7 +1755,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 				pps->skills[s] = 254;
 				//If we never get the skill, value is 255. If we qualify for it AND do not need to train it it's 0, 
 				//if we get it but don't yet qualify or it needs to be trained it's 254.
-				uint16 t_level = SkillTrainLevel(currentskill, GetClass());
+				uint16 t_level = GetSkillTrainLevel(currentskill, GetClass());
 				if (t_level <= GetLevel())
 				{
 					if (t_level == 1)
@@ -1927,11 +1943,12 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	entity_list.SendZoneSpawnsBulk(this);
 	entity_list.SendZoneCorpsesBulk(this);
 	entity_list.SendClientAppearances(this);
+	UpdateLFG(LFG, true);
 
 	/* Time of Day packet */
 	outapp = new EQApplicationPacket(OP_TimeOfDay, sizeof(TimeOfDay_Struct));
 	TimeOfDay_Struct* tod = (TimeOfDay_Struct*)outapp->pBuffer;
-	zone->zone_time.getEQTimeOfDay(time(0), tod);
+	zone->zone_time.GetCurrentEQTimeOfDay(time(0), tod);
 	outapp->priority = 6;
 	FastQueuePacket(&outapp);
 
@@ -2110,7 +2127,7 @@ void Client::Handle_OP_ApplyPoison(const EQApplicationPacket *app)
 		Log(Logs::General, Logs::Skills, "Item %s used to cast spell effect from a poison item was missing from inventory slot %d after casting, or is not a poison! Item type is %d", PoisonItemInstance->GetItem()->Name, ApplyPoisonData->inventorySlot, PoisonItemInstance->GetItem()->ItemType);
 		Message_StringID(Chat::White, ITEM_OUT_OF_CHARGES);
 	}
-	else if (GetClass() == ROGUE)
+	else if (GetClass() == Class::Rogue)
 	{
 		if (PrimaryWeapon && PrimaryWeapon->GetItem()->ItemType == EQ::item::ItemType1HPiercing)
 		{
@@ -2256,7 +2273,7 @@ void Client::Handle_OP_BazaarSearch(const EQApplicationPacket *app)
 		{
 			// Doing a bazaar search from outside the bazaar
 			char hString[250];
-			sprintf(hString, "Bazaar Search hack, search performed from outside bazaar.\nzone: %s:%d, loc: %.2f, %.2f, %.2f", database.GetZoneName(GetZoneID()), GetZoneID(), GetX(), GetY(), GetZ());
+			sprintf(hString, "Bazaar Search hack, search performed from outside bazaar.\nzone: %s:%d, loc: %.2f, %.2f, %.2f", ZoneName(GetZoneID()), GetZoneID(), GetX(), GetY(), GetZ());
 		}
 
 		BazaarSearch_Struct* bss = (BazaarSearch_Struct*)app->pBuffer;
@@ -2317,7 +2334,7 @@ void Client::Handle_OP_Begging(const EQApplicationPacket *app)
 	if (GetTarget() && GetTarget()->IsNPC())
 		npc = GetTarget()->CastToNPC();
 
-	if (npc && npc->GetSpecialAbility(NO_HARM_FROM_CLIENT))
+	if (npc && npc->GetSpecialAbility(SpecialAbility::HarmFromClientImmunity))
 	{
 		return;
 	}
@@ -2908,11 +2925,11 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		uint16 spell_to_cast = 0;
 
 		//Reuse timers are handled by SpellFinished()
-		if (castspell->spell_id == SPELL_LAY_ON_HANDS && GetClass() == PALADIN)
+		if (castspell->spell_id == SPELL_LAY_ON_HANDS && GetClass() == Class::Paladin)
 		{
 			spell_to_cast = SPELL_LAY_ON_HANDS;
 		}
-		else if (castspell->spell_id == SPELL_HARM_TOUCH && GetClass() == SHADOWKNIGHT) 
+		else if (castspell->spell_id == SPELL_HARM_TOUCH && GetClass() == Class::ShadowKnight) 
 		{
 			if (HasInstantDisc(castspell->spell_id))
 				spell_to_cast = SPELL_HARM_TOUCH2;		// unholy aura uses disease resist version, unless it's the AA skill, which is unresistable
@@ -2957,10 +2974,10 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 
 void Client::Handle_OP_ChannelMessage(const EQApplicationPacket *app)
 {
-	ChannelMessage_Struct* cm = (ChannelMessage_Struct*)app->pBuffer;
+	auto* cm = (ChannelMessage_Struct*) app->pBuffer;
 
 	if (app->size < sizeof(ChannelMessage_Struct)) {
-		std::cout << "Wrong size " << app->size << ", should be " << sizeof(ChannelMessage_Struct) << "+ on 0x" << std::hex << std::setfill('0') << std::setw(4) << app->GetOpcode() << std::dec << std::endl;
+		LogDebug("Size mismatch in OP_ChannelMessage expected [{}] got [{}]", sizeof(ChannelMessage_Struct), app->size);
 		return;
 	}
 
@@ -2970,12 +2987,11 @@ void Client::Handle_OP_ChannelMessage(const EQApplicationPacket *app)
 	if (app->size > 2184) // size is 136 + strlen(message) + 1 but the client adds an extra 4 bytes to the length when it sends the packet.
 		cm->message[2047] = 0; // the client also does this but only for this message field
 
-	uint8 skill_in_language = 100;
-	if (cm->language < MAX_PP_LANGUAGE)
-	{
-		skill_in_language = m_pp.languages[cm->language];
+	uint8 language_skill = Language::MaxValue;
+	if (EQ::ValueWithin(cm->language, Language::CommonTongue, Language::Unknown26)) {
+		language_skill = m_pp.languages[cm->language];
 	}
-	ChannelMessageReceived(cm->chan_num, cm->language, skill_in_language, cm->message, cm->targetname);
+	ChannelMessageReceived(cm->chan_num, cm->language, language_skill, cm->message, cm->targetname);
 	return;
 }
 
@@ -3165,9 +3181,15 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 				BoatID = 0;
 				return;
 			}
+
+			auto outapp = new EQApplicationPacket(OP_MobUpdate, sizeof(SpawnPositionUpdates_Struct));
+			SpawnPositionUpdates_Struct* ppus = (SpawnPositionUpdates_Struct*)outapp->pBuffer;
+			boat->SetSpawnUpdate(ppu, &ppus->spawn_update);
+			ppus->num_updates = 1;
+			entity_list.QueueCloseClients(boat, outapp, true, 1000, this, false);
+			safe_delete(outapp);
+
 			boat->GMMove(ppu->x_pos, ppu->y_pos, ppu->z_pos / 10.f, boat->GetHeading(), false);
-			boat->SendRealPosition();
-			boat->CastToNPC()->SaveGuardSpot();
 			return;
 		}
 		else return;	// if not a boat, do nothing
@@ -3184,7 +3206,7 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 	// note that this isn't perfect and can leave the client buffs desynced but it attempts to prevent exploiting minor illusion to move around while avoiding NPC aggro.
 	// if a client casts minor illusion then gets a buff on them before moving, they will be in a bad state and need to zone to reload buffs but we aren't forcing that here
 	// TODO: the proper fix is to know about zone objects and predict when the client will fail to illusion, to keep buffs in sync
-	if(GetRace() == TREEFORM || GetRace() == MINOR_ILLUSION)
+	if(GetRace() == Race::Tree || GetRace() == Race::MinorIllusion)
 	{ 
 		if ((ppu->x_pos != m_Position.x && (ppu->x_pos > m_Position.x + 1 || ppu->x_pos < m_Position.x - 1)) || 
 			(ppu->y_pos != m_Position.y && (ppu->y_pos > m_Position.y + 1 || ppu->y_pos < m_Position.y - 1)))
@@ -3392,6 +3414,8 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 		entity_list.OpenFloorTeleportNear(this);
 	}
 
+	CheckClientToNpcAggroTimer();
+
 	//last_update = Timer::GetCurrentTime();
 	m_Position.x = ppu->x_pos;
 	m_Position.y = ppu->y_pos;
@@ -3435,6 +3459,8 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 	*/
 
 	CorpseSummonOnPositionUpdate();
+
+	CheckVirtualZoneLines();
 
 #if false // just for debugging
 	static auto lastpos = glm::vec4();
@@ -3556,7 +3582,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	// If we're feigned show NPC as indifferent
 	if (tmob->IsNPC())
 	{
-		if (IsFeigned() && !tmob->GetSpecialAbility(IMMUNE_FEIGN_DEATH))
+		if (IsFeigned() && !tmob->GetSpecialAbility(SpecialAbility::FeignDeathImmunity))
 			con->faction = FACTION_INDIFFERENTLY;
 	}
 
@@ -3564,7 +3590,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	{
 		if (tmob->IsNPC())
 		{
-			if (tmob->CastToNPC()->IsOnHatelist(this) && (!IsFeigned() || tmob->GetSpecialAbility(IMMUNE_FEIGN_DEATH)))
+			if (tmob->CastToNPC()->IsOnHatelist(this) && (!IsFeigned() || tmob->GetSpecialAbility(SpecialAbility::FeignDeathImmunity)))
 				con->faction = FACTION_THREATENINGLY;
 		}
 	}
@@ -3787,7 +3813,7 @@ void Client::Handle_OP_ControlBoat(const EQApplicationPacket *app)
 	if (boat == 0)
 		return;	// do nothing if the boat isn't valid
 
-	if (!boat->IsNPC() || (boat->GetRace() != CONTROLLED_BOAT))
+	if (!boat->IsNPC() || (boat->GetRace() != Race::Boat))
 	{
 		auto hacked_string = fmt::format("OP_Control Boat was sent against {} which is of race {} ", boat->GetName(), boat->GetRace());
 		database.SetMQDetectionFlag(this->AccountName(), this->GetName(), hacked_string, zone->GetShortName());
@@ -3855,7 +3881,7 @@ void Client::Handle_OP_CorpseDrag(const EQApplicationPacket *app)
 	if (!corpse->CastToCorpse()->Summon(this, false, true))
 		return;
 
-	DraggedCorpses.push_back(std::pair<std::string, uint16>(cds->CorpseName, corpse->GetID()));
+	DraggedCorpses.emplace_back(std::pair<std::string, uint16>(cds->CorpseName, corpse->GetID()));
 
 	Message_StringID(Chat::DefaultText, CORPSEDRAG_BEGIN, cds->CorpseName);
 }
@@ -4429,7 +4455,7 @@ void Client::Handle_OP_FaceChange(const EQApplicationPacket *app)
 
 void Client::Handle_OP_FeignDeath(const EQApplicationPacket *app)
 {
-	if (GetClass() != MONK)
+	if (GetClass() != Class::Monk)
 		return;
 	if (!p_timers.Expired(&database, pTimerFeignDeath, false)) {
 		Log(Logs::General, Logs::Error, "Ability recovery time not yet met.");
@@ -4962,19 +4988,20 @@ void Client::Handle_OP_GMSearchCorpse(const EQApplicationPacket *app)
 
 void Client::Handle_OP_GMServers(const EQApplicationPacket *app)
 {
-	if (Admin() < 20)
+	if (Admin() < 20) {
 		return;
-	QServ->QSLogCommands(this, "/server", 0);
-	if (!worldserver.Connected())
-		Message(Chat::White, "Error: World server disconnected");
-	else {
-		auto pack = new ServerPacket(ServerOP_ZoneStatus, strlen(this->GetName()) + 2);
-		memset(pack->pBuffer, (uint8)admin, 1);
-		strcpy((char *)&pack->pBuffer[1], this->GetName());
-		worldserver.SendPacket(pack);
-		safe_delete(pack);
 	}
-	return;
+
+	QServ->QSLogCommands(this, "/server", 0);
+
+	auto pack = new ServerPacket(ServerOP_ZoneStatus, sizeof(ServerZoneStatus_Struct));
+
+	auto z = (ServerZoneStatus_Struct*)pack->pBuffer;
+	z->admin = Admin();
+	strn0cpy(z->name, GetName(), sizeof(z->name));
+
+	worldserver.SendPacket(pack);
+	delete pack;
 }
 
 void Client::Handle_OP_GMSummon(const EQApplicationPacket *app)
@@ -5061,7 +5088,7 @@ void Client::Handle_OP_GMZoneRequest(const EQApplicationPacket *app)
 	uint16 zid = gmzr->zone_id;
 	if (gmzr->zone_id == 0)
 		zid = zonesummon_id;
-	const char * zname = database.GetZoneName(zid);
+	const char * zname = ZoneName(zid);
 	if (zname == nullptr)
 		target_zone[0] = 0;
 	else
@@ -6081,7 +6108,7 @@ void Client::Handle_OP_Hide(const EQApplicationPacket *app)
 	{
 		hidden = false;
 		improved_hidden = false;
-		bool skipself = GetClass() != ROGUE;
+		bool skipself = GetClass() != Class::Rogue;
 
 		// This will also "bug" invisible spells and is intentional.
 		SetInvisible(INVIS_OFF, true, skipself);
@@ -6092,7 +6119,7 @@ void Client::Handle_OP_Hide(const EQApplicationPacket *app)
 		}
 	}
 
-	if (GetClass() == ROGUE)
+	if (GetClass() == Class::Rogue)
 	{
 		Mob *evadetar = GetTarget();
 		if (!auto_attack && (evadetar && evadetar->CheckAggro(this)
@@ -6123,7 +6150,7 @@ void Client::Handle_OP_Hide(const EQApplicationPacket *app)
 
 	CheckIncreaseSkill(EQ::skills::SkillHide, nullptr, zone->skill_difficulty[EQ::skills::SkillHide].difficulty, success);
 
-	Log(Logs::General, Logs::Skills, "Hide setting hide to %d. %s", hidden, !hidden && GetClass() != ROGUE ? "Sending to self only..." : "");
+	Log(Logs::General, Logs::Skills, "Hide setting hide to %d. %s", hidden, !hidden && GetClass() != Class::Rogue ? "Sending to self only..." : "");
 
 	return;
 }
@@ -6263,7 +6290,7 @@ void Client::Handle_OP_ItemLinkResponse(const EQApplicationPacket *app)
 				Message(Chat::LightGray, "You say, '%s'", response.c_str());
 			}
 
-			ChannelMessageReceived(ChatChannel_Say, 0, 100, response.c_str());
+			ChannelMessageReceived(ChatChannel_Say, Language::CommonTongue, Language::MaxValue, response.c_str());
 
 			return;
 		}
@@ -6480,7 +6507,7 @@ void Client::Handle_OP_MemorizeSpell(const EQApplicationPacket *app)
 
 void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 {
-	if (GetClass() != MONK)
+	if (GetClass() != Class::Monk)
 		return;
 
 	if (!p_timers.Expired(&database, pTimerMend, false)) 
@@ -6847,7 +6874,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (!mypet->IsCharmedPet() && GetAA(aaFeignedMinion)) 
 		{
 			// using one of these otherwise never used timers so we don't have to make a new member just for this.  hopefully this is not confusing
-			Timer* timer = GetSpecialAbilityTimer(IMMUNE_FEIGN_DEATH);
+			Timer* timer = GetSpecialAbilityTimer(SpecialAbility::FeignDeathImmunity);
 			if (timer && timer->Enabled() && !timer->Check())
 			{
 				Message(Chat::LightBlue, "You must wait longer before your pet can feign death.");
@@ -6878,7 +6905,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			mypet->SetPetOrder(SPO_Sit);
 			mypet->SendAppearancePacket(AppearanceType::Animation, Animation::Lying);
 
-			StartSpecialAbilityTimer(IMMUNE_FEIGN_DEATH, FeignDeathReuseTime*1000);
+			StartSpecialAbilityTimer(SpecialAbility::FeignDeathImmunity, FeignDeathReuseTime*1000);
 
 			if (zone->random.Roll(chance))
 				entity_list.RemoveFromNPCTargets(mypet);
@@ -7734,11 +7761,11 @@ void Client::Handle_OP_Sacrifice(const EQApplicationPacket *app)
 	}
 
 	if (ss->Confirm) {
-		Client *Caster = entity_list.GetClientByName(SacrificeCaster.c_str());
+		Mob *Caster = entity_list.GetMob(sacrifice_caster_id);
 		if (Caster) Sacrifice(Caster);
 	}
 	PendingSacrifice = false;
-	SacrificeCaster.clear();
+	sacrifice_caster_id = 0;
 }
 
 void Client::Handle_OP_SafeFallSuccess(const EQApplicationPacket *app)	// bit of a misnomer, sent whenever safe fall is used (success of fail)
@@ -7944,7 +7971,7 @@ void Client::Handle_OP_Shielding(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (GetClass() != WARRIOR || GetLevel() < 30 || IsMezzed() || IsFeared() || IsDead())
+	if (GetClass() != Class::Warrior || GetLevel() < 30 || IsMezzed() || IsFeared() || IsDead())
 	{
 		return;
 	}
@@ -8056,7 +8083,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	mss->IsSold=1;
 	mss->quantity=0;
 
-	if (tmp == nullptr || !tmp->IsNPC() || tmp->GetClass() != MERCHANT)
+	if (tmp == nullptr || !tmp->IsNPC() || tmp->GetClass() != Class::Merchant)
 	{
 		QueuePacket(returnapp);
 		safe_delete(returnapp);
@@ -8424,7 +8451,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 
 	Mob* vendor = entity_list.GetMob(mp->npcid);
 
-	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != MERCHANT)
+	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != Class::Merchant)
 		return;
 
 	++vendor->CastToNPC()->shop_count;
@@ -8634,7 +8661,7 @@ void Client::Handle_OP_ShopRequest(const EQApplicationPacket *app)
 	int merchantid = 0;
 	Mob* tmp = entity_list.GetMob(mc->npcid);
 
-	if (tmp == 0 || !tmp->IsNPC() || tmp->GetClass() != MERCHANT)
+	if (tmp == 0 || !tmp->IsNPC() || tmp->GetClass() != Class::Merchant)
 		return;
 
 	//you have to be somewhat close to them to be properly using them
@@ -8719,7 +8746,7 @@ void Client::Handle_OP_Sneak(const EQApplicationPacket *app)
 		sneaking = false;
 	}
 
-	if (GetClass() == ROGUE)
+	if (GetClass() == Class::Rogue)
 	{
 		if (sneaking)
 		{
@@ -9210,7 +9237,7 @@ void Client::Handle_OP_TGB(const EQApplicationPacket *app)
 
 void Client::Handle_OP_Track(const EQApplicationPacket *app)
 {
-	if (GetClass() != RANGER && GetClass() != DRUID && GetClass() != BARD)
+	if (GetClass() != Class::Ranger && GetClass() != Class::Druid && GetClass() != Class::Bard)
 	{
 		Kick(); //The client handles tracking for us, simply returning is not enough if they are cheating.
 		return;

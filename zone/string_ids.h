@@ -517,6 +517,7 @@
 #define SPLIT_FAIL					13112	//There is not enough to split, keep it.
 #define TOGGLE_ON					13172	//Asking server to turn ON your incoming tells.
 #define TOGGLE_OFF					13173	//Asking server to turn OFF all incoming tells for you.
+#define TARGET_HORSE_TO_MOUNT		13191	//Target a horse to mount first!
 #define DUEL_INPROGRESS				13251	//You have already accepted a duel with someone else cowardly dog.
 #define GENERIC_MISS				15041	//%1 missed %2
 

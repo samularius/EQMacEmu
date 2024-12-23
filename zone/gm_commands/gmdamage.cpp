@@ -3,7 +3,7 @@
 void command_gmdamage(Client *c, const Seperator *sep)
 {
 	if (c->GetTarget() == 0)
-		c->Message(Chat::White, "Error: #gmamage: No Target.");
+		c->Message(Chat::White, "Error: #gmdamage: No Target.");
 	else if (!sep->IsNumber(1)) {
 		c->Message(Chat::White, "Usage: #gmdamage [dmg] [skipaggro] [spell]");
 	}

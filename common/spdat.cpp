@@ -286,7 +286,7 @@ bool IsMemBlurSpell(uint16 spell_id)
 
 bool IsBardAOEDamageSpell(uint16 spell_id)
 {
-	if (IsValidSpell(spell_id) && GetSpellLevel(spell_id, BARD) < 100 && IsDamageSpell(spell_id) && spells[spell_id].aoerange > 0)
+	if (IsValidSpell(spell_id) && GetSpellLevel(spell_id, Class::Bard) < 100 && IsDamageSpell(spell_id) && spells[spell_id].aoerange > 0)
 	{
 		return true;
 	}
@@ -728,7 +728,7 @@ int GetMinLevel(uint16 spell_id)
 
 int GetSpellLevel(uint16 spell_id, int classa)
 {
-	if (classa >= PLAYER_CLASS_COUNT)
+	if (classa >= Class::PLAYER_CLASS_COUNT)
 		return 255;
 
 	const SPDat_Spell_Struct &spell = spells[spell_id];
@@ -759,7 +759,7 @@ int CanUseSpell(uint16 spellid, int classa, int level)
 {
 	int level_to_use;
 
-	if (!IsValidSpell(spellid) || classa >= PLAYER_CLASS_COUNT)
+	if (!IsValidSpell(spellid) || classa >= Class::PLAYER_CLASS_COUNT)
 		return 0;
 
 	level_to_use = spells[spellid].classes[classa - 1];

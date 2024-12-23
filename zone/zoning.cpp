@@ -144,7 +144,7 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 	}
 
 	/* Check for Valid Zone */
-	const char *target_zone_name = database.GetZoneName(target_zone_id);
+	const char *target_zone_name = ZoneName(target_zone_id);
 	if(target_zone_name == nullptr) {
 		//invalid zone...
 		Message(Chat::Red, "Invalid target zone ID.");
@@ -426,14 +426,14 @@ void Client::DoZoneSuccess(ZoneChange_Struct *zc, uint16 zone_id, uint32 zone_gu
 
 	/* Dont clear aggro until the zone is successful */
 	entity_list.RemoveFromHateLists(this);
-	scanarea_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
+	m_client_npc_aggro_scan_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
 
 	EndShield();		// warrior /shield
 
 	// depop pet
 	DepopPet();
 
-	Log(Logs::General, Logs::Status, "Zoning '%s' to: %s (%i) x=%f, y=%f, z=%f", m_pp.name, database.GetZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
+	LogInfo("Zoning [{}] to: [{}] ([{}]) x = [{}], y = [{}], z = [{}]", m_pp.name, ZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
 
 	//set the player's coordinates in the new zone so they have them
 	//when they zone into it
@@ -496,14 +496,14 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 
 	/* Dont clear aggro until the zone is successful */
 	entity_list.RemoveFromHateLists(this);
-	scanarea_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
+	m_client_npc_aggro_scan_timer.Reset(); // prevent mobs from immediately reaggroing before player is actually gone
 
 	EndShield();		// warrior /shield
 
 	// depop pet
 	DepopPet();
 
-	Log(Logs::General, Logs::Status, "Zoning '%s' to: %s (%i) x=%f, y=%f, z=%f", m_pp.name, database.GetZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
+	Log(Logs::General, Logs::Status, "Zoning '%s' to: %s (%i) x=%f, y=%f, z=%f", m_pp.name, ZoneName(zone_id), zone_id, dest_x, dest_y, dest_z);
 
 	//set the player's coordinates in the new zone so they have them
 	//when they zone into it
@@ -522,7 +522,7 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 }
 
 void Client::MovePC(const char* zonename, float x, float y, float z, float heading, uint8 ignorerestrictions, ZoneMode zm) {
-	ProcessMovePC(database.GetZoneID(zonename), database.GetZoneID(zonename) == zone->GetZoneID() ? zone->GetGuildID() : GUILD_NONE, x, y, z, heading, ignorerestrictions, zm);
+	ProcessMovePC(ZoneID(zonename), ZoneID(zonename) == zone->GetZoneID() ? zone->GetGuildID() : GUILD_NONE, x, y, z, heading, ignorerestrictions, zm);
 }
 
 //designed for in zone moving
@@ -626,7 +626,7 @@ void Client::ZonePC(uint32 zoneID, uint32 zoneGuildID, float x, float y, float z
 	const char*	pShortZoneName = nullptr;
 	char* pZoneName = nullptr;
 
-	pShortZoneName = database.GetZoneName(zoneID);
+	pShortZoneName = ZoneName(zoneID);
 	database.GetZoneLongName(pShortZoneName, &pZoneName);
 
 	SetPortExemption(true);
@@ -1155,7 +1155,7 @@ void Client::SendZoneFlagInfo(Client *to) {
 		ZoneFlags_Struct* zfs = iterator.GetData();
 		uint32 zoneid = zfs->zoneid;
 
-		const char *short_name = database.GetZoneName(zoneid);
+		const char *short_name = ZoneName(zoneid);
 
 		char *long_name = nullptr;
 		database.GetZoneLongName(short_name, &long_name);
@@ -1194,7 +1194,7 @@ bool Client::CanBeInZone(uint32 zoneid, uint32 guild_id)
 	}
 	// If zoneid is 0, then we are just checking the current zone. In that case the player has already been allowed 
 	// to zone, and we're checking if we should boot them to bazaar.
-	const char *target_zone_name = zoneid > 0 ? database.GetZoneName(zoneid) : zone->GetShortName();
+	const char *target_zone_name = zoneid > 0 ? ZoneName(zoneid) : zone->GetShortName();
 	uint32 target_zone_id = zoneid > 0 ? zoneid : zone->GetZoneID();
 
 	uint32 target_zone_guild_id = zone->GetGuildID();

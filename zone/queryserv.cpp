@@ -25,11 +25,15 @@ Copyright (C) 2001-2014 EQEMu Development Team (http://eqemulator.net)
 #include "guild_mgr.h"
 
 extern WorldServer worldserver;
-extern QueryServ* QServ;
+extern QueryServ *QServ;
 
-QueryServ::QueryServ() {}
+QueryServ::QueryServ() 
+{
+}
 
-QueryServ::~QueryServ() {}
+QueryServ::~QueryServ() 
+{
+}
 
 void QueryServ::SendQuery(std::string Query)
 {
@@ -43,8 +47,10 @@ void QueryServ::SendQuery(std::string Query)
 void QueryServ::PlayerLogEvent(int Event_Type, int Character_ID, std::string Event_Desc)
 {
 	std::string query = StringFormat(
-		"INSERT INTO `qs_player_events` (event, char_id, event_desc, time) VALUES (%i, %i, '%s', now())",
-		Event_Type, Character_ID, Strings::Escape(Event_Desc).c_str());
+		"INSERT INTO `qs_player_events` (event, char_id, event_desc, time) VALUES(% i, % i, '%s', UNIX_TIMESTAMP(now()))",
+		Event_Type,
+		Character_ID,
+		Strings::Escape(Event_Desc).c_str());
 	SendQuery(query);
 }
 
@@ -70,7 +76,6 @@ void QueryServ::QSQGlobalUpdate(uint32 char_id, uint32 zone_id, const char* varn
 	QS->zone_id = zone_id;
 	strncpy(QS->varname, varname, 32);
 	strncpy(QS->newvalue, newvalue, 32);
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);
@@ -88,7 +93,6 @@ void QueryServ::QSAAPurchases(uint32 char_id, uint32 zone_id, char aa_type[8], c
 	QS->aaid = aa_id;
 	QS->cost = cost;
 	QS->zone_id = zone_id;
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);
@@ -102,7 +106,6 @@ void QueryServ::QSAARate(uint32 char_id, uint32 aapoints, uint32 last_unspentAA)
 	QSPlayerAARateHourly_Struct* QS = (QSPlayerAARateHourly_Struct*)pack->pBuffer;
 	QS->charid = char_id;
 	QS->add_points = aapoints - last_unspentAA;
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);
@@ -177,7 +180,6 @@ void QueryServ::QSTSEvents(uint32 char_id, uint32 zone_id, const char results[8]
 	QS->tradeskill = tradeskill;
 	QS->trivial = trivial;
 	QS->chance = chance;
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);
@@ -211,7 +213,6 @@ void QueryServ::QSMerchantTransactions(uint32 char_id, uint32 zone_id, int16 slo
 
 	if (slot_id == INVALID_INDEX) {}
 
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);
@@ -234,7 +235,6 @@ void QueryServ::QSLootRecords(uint32 char_id, const char* corpsename, const char
 	QS->money.gold = gold;
 	QS->money.silver = silver;
 	QS->money.copper = copper;
-	pack->Deflate();
 	if (worldserver.Connected())
 	{
 		worldserver.SendPacket(pack);

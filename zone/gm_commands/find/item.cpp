@@ -101,9 +101,10 @@ void FindItem(Client *c, const Seperator *sep)
 		c->Message(
 			Chat::White,
 			fmt::format(
-				"{} | {}",
+				"{} | {} ({})",
+				summon_links,
 				database.CreateItemLink(e),
-				summon_links
+				Strings::Commify(item->ID)
 			).c_str()
 		);
 

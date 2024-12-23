@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 SET(zone_sources
 	aa.cpp
 	aggro.cpp
+	api_service.cpp
 	attack.cpp
 	beacon.cpp
 	bonuses.cpp
@@ -91,11 +92,14 @@ SET(zone_sources
 	zone_config.cpp
 	zonedb.cpp
 	zone_event_scheduler.cpp
+	zone_npc_factions.cpp
+	zone_reload.cpp
 	zoning.cpp
 )
 
 SET(zone_headers
 	aa.h
+	api_service.h
 	beacon.h
 	client.h
 	client_packet.h
@@ -106,7 +110,6 @@ SET(zone_headers
 	doors.h
 	encounter.h
 	entity.h
-	errmsg.h
 	event_codes.h
 	forage.h
 	global_loot_manager.h
@@ -171,6 +174,7 @@ SET(zone_headers
 	zone_config.h
 	zonedb.h
 	zonedump.h
+	zone_reload.h
 )
 
 IF(EQEMU_DEPOP_INVALIDATES_CACHE)

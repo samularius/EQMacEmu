@@ -48,15 +48,15 @@ int Mob::DoSpecialAttackDamage(Mob *defender, EQ::skills::SkillType skill, int b
 		hate = base;
 	}
 
-	bool noRiposte = false;
+	bool rangedAttack = false;
 	if (skill == EQ::skills::SkillThrowing || skill == EQ::skills::SkillArchery)
-		noRiposte = true;
+		rangedAttack = true;
 
-	if (minDamage == DMG_INVUL || defender->GetSpecialAbility(IMMUNE_MELEE))
+	if (minDamage == DMG_INVUL || defender->GetSpecialAbility(SpecialAbility::MeleeImmunity))
 		damage = DMG_INVUL;
 
 	if (damage > 0)
-		defender->AvoidDamage(this, damage, noRiposte);
+		defender->AvoidDamage(this, damage, rangedAttack);
 
 	if (damage > 0 && !defender->AvoidanceCheck(this, skill))
 		damage = DMG_MISS;
@@ -100,14 +100,14 @@ int Mob::DoSpecialAttackDamage(Mob *defender, EQ::skills::SkillType skill, int b
 void Mob::TryBashKickStun(Mob* defender, uint8 skill)
 {
 	// bash and kick stuns. (and silentfisted dragonpunch)  Stuns hit even through runes
-	if (!defender || defender->GetSpecialAbility(UNSTUNABLE) || defender->DivineAura() || defender->GetInvul()
+	if (!defender || defender->GetSpecialAbility(SpecialAbility::StunImmunity) || defender->DivineAura() || defender->GetInvul()
 		|| (skill != EQ::skills::SkillBash && skill != EQ::skills::SkillKick && skill != EQ::skills::SkillDragonPunch))
 	{
 		return;
 	}
 	
 	// both PC and NPC warrior kicks stun starting at 55
-	if (skill == EQ::skills::SkillKick && ((GetClass() != WARRIOR && GetClass() != WARRIORGM) || GetLevel() < 55))
+	if (skill == EQ::skills::SkillKick && ((GetClass() != Class::Warrior && GetClass() != Class::WarriorGM) || GetLevel() < 55))
 		return;
 
 	if (skill == EQ::skills::SkillDragonPunch && (!IsClient() || !CastToClient()->HasInstantDisc(skill)))
@@ -220,7 +220,7 @@ void Mob::DoBash(Mob* defender)
 	int hate = base;
 	bool shieldBash = false;
 
-	if (is_trained && IsClient() && (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN || GetClass() == CLERIC)) {
+	if (is_trained && IsClient() && (GetClass() == Class::Warrior || GetClass() == Class::ShadowKnight || GetClass() == Class::Paladin || GetClass() == Class::Cleric)) {
 		CastToClient()->CheckIncreaseSkill(EQ::skills::SkillBash, GetTarget(), zone->skill_difficulty[EQ::skills::SkillBash].difficulty);
 
 		EQ::ItemInstance* item = nullptr;
@@ -464,13 +464,13 @@ void Client::OPCombatAbility(const EQApplicationPacket *app)
 	}
 
 	// not sure what the '100' indicates..if ->m_atk is not used as 'slot' reference, then change SlotRange above back to '11'
-	if (ca_atk->m_atk != 100 && GetClass() != MONK)
+	if (ca_atk->m_atk != 100 && GetClass() != Class::Monk)
 		return;
 
 	int reuseTime = 10;
 
 	// Slam or possibly shield bash
-	if (ca_atk->m_skill == EQ::skills::SkillBash && (GetRace() == OGRE || GetRace() == TROLL || GetRace() == BARBARIAN))
+	if (ca_atk->m_skill == EQ::skills::SkillBash && (GetRace() == Race::Ogre || GetRace() == Race::Troll || GetRace() == Race::Barbarian))
 	{
 		DoBash();
 		reuseTime = BashReuseTime;
@@ -479,10 +479,10 @@ void Client::OPCombatAbility(const EQApplicationPacket *app)
 	{
 		switch (GetClass())
 		{
-			case WARRIOR:
-			case PALADIN:
-			case SHADOWKNIGHT:
-			case CLERIC:
+			case Class::Warrior:
+			case Class::Paladin:
+			case Class::ShadowKnight:
+			case Class::Cleric:
 			{
 				if (ca_atk->m_skill == EQ::skills::SkillBash)
 				{
@@ -492,22 +492,22 @@ void Client::OPCombatAbility(const EQApplicationPacket *app)
 						reuseTime = BashReuseTime;
 					}
 				}
-				if (GetClass() != WARRIOR) break;
+				if (GetClass() != Class::Warrior) break;
 			}
-			case RANGER:
-			case BEASTLORD:
+			case Class::Ranger:
+			case Class::Beastlord:
 				if (ca_atk->m_skill == EQ::skills::SkillKick)
 				{
 					DoKick();
 					reuseTime = KickReuseTime;
 				}
 				break;
-			case MONK:
+			case Class::Monk:
 			{
 				reuseTime = DoMonkSpecialAttack(GetTarget(), ca_atk->m_skill);
 				break;
 			}
-			case ROGUE:
+			case Class::Rogue:
 			{
 				if (ca_atk->m_skill == EQ::skills::SkillBackstab)
 				{
@@ -864,9 +864,9 @@ void Mob::DoArcheryAttackDmg(Mob* other)
 		// There were a few known edge cases of archery hitting cornered mobs.  Hardcoding these here
 		// Our NPC Z offsets are way off from Sony's, so can't do this purely algorithmically
 		// There seems to have been something other than Z offsets involved because the blob case makes no sense as the angle was rather shallow
-		if (other->GetRace() == GOO && height_diff > 8.0f)	// blobs (for Vex Thal bosses)
+		if (other->GetRace() == Race::Goo && height_diff > 8.0f)	// blobs (for Vex Thal bosses)
 			z_angle = 0.0f;
-		else if (other->GetRace() == MITHANIEL_MARR && Distance(GetPosition(), other->GetPosition()) < 45.0f)	// Mith Marr on pedastal (he doesn't end up on top of it server-side)
+		else if (other->GetRace() == Race::MithanielMarr && Distance(GetPosition(), other->GetPosition()) < 45.0f)	// Mith Marr on pedastal (he doesn't end up on top of it server-side)
 			z_angle = 0.0f;
 
 		if (z_angle > 0.85f || z_angle < -0.85f)
@@ -958,7 +958,7 @@ void NPC::RangedAttack(Mob* other)
 		return;
 	}
 
-	if (!HasBowAndArrowEquipped() && !GetSpecialAbility(SPECATK_RANGED_ATK)) {
+	if (!HasBowAndArrowEquipped() && !GetSpecialAbility(SpecialAbility::RangedAttack)) {
 		return;
 	}
 
@@ -966,7 +966,7 @@ void NPC::RangedAttack(Mob* other)
 		return;
 	}
 
-	bool require_ammo = GetSpecialAbility(SPECATK_RANGED_ATK) >= 2;
+	bool require_ammo = GetSpecialAbility(SpecialAbility::RangedAttack) >= 2;
 	const EQ::ItemData* weapon = nullptr;
 	const EQ::ItemData* ammo = nullptr;
 	EQ::skills::SkillType skillInUse = EQ::skills::SkillArchery;
@@ -1009,11 +1009,11 @@ void NPC::RangedAttack(Mob* other)
 	float max_range = 250.0f; // needs to be longer than 200(most spells)
 	int16 damage_mod = 0;
 
-	if (GetSpecialAbility(SPECATK_RANGED_ATK)) {
+	if (GetSpecialAbility(SpecialAbility::RangedAttack)) {
 		//if we have SPECATK_RANGED_ATK set then we range attack without weapon or ammo
-		int sa_min_range = GetSpecialAbilityParam(SPECATK_RANGED_ATK, 2); //Min Range of NPC attack
-		int sa_max_range = GetSpecialAbilityParam(SPECATK_RANGED_ATK, 1); //Max Range of NPC attack
-		damage_mod = GetSpecialAbilityParam(SPECATK_RANGED_ATK, 3);
+		int sa_min_range = GetSpecialAbilityParam(SpecialAbility::RangedAttack, 2); //Min Range of NPC attack
+		int sa_max_range = GetSpecialAbilityParam(SpecialAbility::RangedAttack, 1); //Max Range of NPC attack
+		damage_mod = GetSpecialAbilityParam(SpecialAbility::RangedAttack, 3);
 
 		if (sa_max_range) {
 			max_range = static_cast<float>(sa_max_range);
@@ -1094,7 +1094,7 @@ void NPC::RangedAttack(Mob* other)
 
 	CommonBreakInvisible();
 
-	if (ammo && GetSpecialAbility(SPECATK_RANGED_ATK) == 3)	{
+	if (ammo && GetSpecialAbility(SpecialAbility::RangedAttack) == 3)	{
 		LootItem* sitem = GetItem(EQ::invslot::slotAmmo);
 		RemoveItem(sitem, 1);
 	}
@@ -1192,7 +1192,7 @@ void Mob::DoThrowingAttackDmg(Mob* other)
 	}
 	else
 	{
-		other->AvoidDamage(this, damage, true); //noRiposte=true - Can not riposte throw attacks.
+		other->AvoidDamage(this, damage, true);
 	}
 
 	if (damage > 0 && !other->AvoidanceCheck(this, EQ::skills::SkillThrowing))
@@ -1381,13 +1381,13 @@ void NPC::DoClassAttacks(Mob *target)
 		int knightreuse = 1; //lets give it a small cooldown actually.
 		switch(GetClass())
 		{
-			case SHADOWKNIGHT: case SHADOWKNIGHTGM:
+			case Class::ShadowKnight: case Class::ShadowKnightGM:
 			{
 				CastSpell(SPELL_HARM_TOUCH, target->GetID());
 				knightreuse = HarmTouchReuseTimeNPC;
 				break;
 			}
-			case PALADIN: case PALADINGM:
+			case Class::Paladin: case Class::PaladinGM:
 			{
 				if(GetHPRatio() < 20)
 				{
@@ -1409,7 +1409,7 @@ void NPC::DoClassAttacks(Mob *target)
 		// most times it's 6 seconds between 'taunting attacker master', sometimes 12, somtimes 18, etc
 		// mage pets seem to taunt ~66%.  Enchanter pets ~40%
 		int tauntChance = 66;
-		if (this->GetOwner()->GetClass() == ENCHANTER || this->GetOwner()->GetClass() == SHAMAN)
+		if (this->GetOwner()->GetClass() == Class::Enchanter || this->GetOwner()->GetClass() == Class::Shaman)
 			tauntChance = 40;
 
 		if (zone->random.Roll(tauntChance))
@@ -1500,16 +1500,16 @@ void Client::DoClassAttacks(Mob *ca_target, uint16 skill, bool IsRiposte)
 	if (skill == -1)
 	{
 		switch(GetClass()){
-		case WARRIOR:
-		case RANGER:
-		case BEASTLORD:
+		case Class::Warrior:
+		case Class::Ranger:
+		case Class::Beastlord:
 			skill_to_use = EQ::skills::SkillKick;
 			break;
-		case SHADOWKNIGHT:
-		case PALADIN:
+		case Class::ShadowKnight:
+		case Class::Paladin:
 			skill_to_use = EQ::skills::SkillBash;
 			break;
-		case MONK:
+		case Class::Monk:
 			if(GetLevel() >= 30)
 			{
 				skill_to_use = EQ::skills::SkillFlyingKick;
@@ -1535,7 +1535,7 @@ void Client::DoClassAttacks(Mob *ca_target, uint16 skill, bool IsRiposte)
 				skill_to_use = EQ::skills::SkillKick;
 			}
 			break;
-		case ROGUE:
+		case Class::Rogue:
 			skill_to_use = EQ::skills::SkillBackstab;
 			break;
 		}
@@ -1584,59 +1584,62 @@ void Mob::Taunt(NPC* who, bool always_succeed, int32 overhate)
 	if (IsPet() && who->GetLevel() >= 50)
 		return;
 
-	if(!always_succeed && IsClient())
-		CastToClient()->CheckIncreaseSkill(EQ::skills::SkillTaunt, who, zone->skill_difficulty[EQ::skills::SkillTaunt].difficulty);
-
 	int levelDifference = GetLevel() - who->GetLevel();
 
-	//Support for how taunt worked pre 2000 on LIVE - Can not taunt NPC over your level.
-	if (((RuleB(Combat, TauntOverLevel) == false) && (levelDifference < 0)) || who->GetSpecialAbility(IMMUNE_TAUNT)){
+	// Support for how taunt worked pre March 2001 - Can not taunt whites yellows or reds
+	if (((RuleB(Combat, TauntOverLevel) == false) && (levelDifference <= 0)) || who->GetSpecialAbility(SpecialAbility::TauntImmunity)){
 		//Message_StringID(Chat::SpellFailure,FAILED_TAUNT);
 		return;
 	}
 
-	int tauntChance = 50;
+	int tauntChance = 0;
 
 	if (always_succeed)
 	{
 		tauntChance = 100;
 	}
-	else
+	else if (GetSkill(EQ::skills::SkillTaunt) > 0)
 	{
-		/* This is not how Sony did it.  This is a guess that fits the very limited data available.
-		 * Low level players with maxed taunt for their level taunted about 50% on white cons.
-		 * A 65 ranger with 150 taunt skill (max) taunted about 50% on level 60 and under NPCs.
-		 * A 65 warrior with maxed taunt (230) was taunting around 50% on SSeru NPCs.		*/
-
-		/* Rashere in 2006: "your taunt skill was irrelevant if you were above level 60 and taunting
-		 * something that was also above level 60."
-		 * Also: "The chance to taunt an NPC higher level than yourself dropped off at double the rate
-		 * if you were above level 60 than if you were below level 60 making it very hard to taunt creature
-		 * higher level than yourself if you were above level 60."
+		/* Taunt worked in two ways: a skill check for targets under level 60 and a non-skill chance
+		 * for targets 60 and above if the player was also 60 and above.
+		 * Before November 2000, mobs above level 50 were untauntable.  After that patch players could
+		 * taunt mobs above 50 but still not equal to and above their level.
+		 * After March 2001, Sony allowed level 60+ mobs to be tauntable, but they added this in a way
+		 * that did not check the player's skill, which was seemingly an implementation oversight.
+		 * 2001 logs show lower level players taunting mobs above their level, so that March patch
+		 * seems to have allowed mobs above the player's level to be taunted at all levels, not just at 60.
+		 * Old player tests and logs show about a 60% chance to succeed for level 60+ players taunting
+		 * on white or lower targets, including greens.
 		 * 
-		 * See http://www.elitegamerslounge.com/home/soearchive/viewtopic.php?t=81156 */
+		 * See http://www.elitegamerslounge.com/home/soearchive/viewtopic.php?t=81156 
+		 * https://web.archive.org/web/20050101085413/http://www.thesteelwarrior.org/forum/archive/index.php/t-8608.html
+		 * https://web.archive.org/web/20041217221816/http://www.thesteelwarrior.org/forum/archive/index.php/t-1439.html
+		 * https://web.archive.org/web/20060903140908/http://eqforums.station.sony.com/eq/board/message?board.id=warriorbalance&message.id=12360&page=1
+		 */
+		
 		if (GetLevel() >= 60 && levelDifference < 0)
 		{
-			if (levelDifference < -5)
-				tauntChance = 0;
-			else if (levelDifference == -5)
-				tauntChance = 10;
-			else
-				tauntChance = 50 + levelDifference * 10;
+			// This is likely accurate
+			tauntChance = 60 + levelDifference * 10;
 		}
 		else
 		{
-			// this will make the skill difference between the tank classes actually affect success rates
-			// but only for NPCs near the player's level.  Mid to low blues will start to taunt at 50%
-			// even with lower skill
-			tauntChance = 50 * GetSkill(EQ::skills::SkillTaunt) / (who->GetLevel() * 5 + 5);
+			// This is not how Sony did it and is basically made-up.  Logs don't show sub level 60 player
+			// taunt successes because most NPCs were made not to talk during Luclin and most old logs are PoP era,
+			// so there is virtually no data to base this on and we must pull something out of our butts here
+			tauntChance = 60 * GetSkill(EQ::skills::SkillTaunt) / (who->GetLevel() * 5 + 5);
 			tauntChance += levelDifference * 5;
 
-			if (tauntChance > 50)
-				tauntChance = 50;
-			else if (tauntChance < 10)
+			if (tauntChance > 60)
+				tauntChance = 60;
+			else if (tauntChance < 10 && who->GetLevel() < 66)
 				tauntChance = 10;
 		}
+
+		if (IsClient())
+			CastToClient()->CheckIncreaseSkill(EQ::skills::SkillTaunt, who, zone->skill_difficulty[EQ::skills::SkillTaunt].difficulty);
+
+		Log(Logs::Detail, Logs::Aggro, "Attempting to Taunt with a chance of %i", tauntChance);
 	}
 
 	if (!who->IsOnHatelist(this))
@@ -1644,7 +1647,7 @@ void Mob::Taunt(NPC* who, bool always_succeed, int32 overhate)
 		who->CastToNPC()->AddToHateList(this, 20);
 	}
 
-	if (zone->random.Roll(tauntChance))
+	if (tauntChance > 0 && zone->random.Roll(tauntChance))
 	{
 		Mob *topHaterNoBonus = who->GetHateMost(false);
 		Mob *topHater = who->GetHateMost(true);
@@ -1723,7 +1726,7 @@ void Mob::InstillDoubt(Mob *who, int stage)
 				return;
 			}
 
-			if (instillTarget->IsNPC() && instillTarget->CastToNPC()->GetSpecialAbility(IMMUNE_AGGRO) || !IsAttackAllowed(instillTarget))
+			if (instillTarget->IsNPC() && instillTarget->CastToNPC()->GetSpecialAbility(SpecialAbility::AggroImmunity) || !IsAttackAllowed(instillTarget))
 				return;
 
 			// base damage is 2, this function scales it up some based on skill level
@@ -1749,7 +1752,7 @@ void Mob::InstillDoubt(Mob *who, int stage)
 
 int Client::TryAssassinate(Mob* defender, EQ::skills::SkillType skillInUse)
 {
-	if (defender && (defender->GetBodyType() == BT_Humanoid) && !defender->IsClient() &&
+	if (defender && (defender->GetBodyType() == BodyType::Humanoid) && !defender->IsClient() &&
 		(skillInUse == EQ::skills::SkillBackstab || skillInUse == EQ::skills::SkillThrowing))
 	{
 		if (GetLevel() >= 60 && defender->GetLevel() <= 46)
@@ -1776,7 +1779,7 @@ bool Mob::CanDoSpecialAttack(Mob *other) {
 		return false;
 	}
 
-	if(other->GetInvul() || other->GetSpecialAbility(IMMUNE_MELEE))
+	if(other->GetInvul() || other->GetSpecialAbility(SpecialAbility::MeleeImmunity))
 		return false;
 
 	return true;

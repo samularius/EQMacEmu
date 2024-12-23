@@ -37,7 +37,7 @@
 #define RuleB(category_name, rule_name) \
     RuleManager::Instance()->GetBoolRule( RuleManager::Bool__##rule_name )
 #define RuleS(category_name, rule_name) \
-    RuleManager::Instance()->GetStringRule( RuleManager::String__##rule_name )	
+    RuleManager::Instance()->GetStringRule( RuleManager::String__##rule_name )
 
 
 #include <vector>
@@ -106,11 +106,11 @@ public:
 		return &rules;
 	}
 
-	static const IntType        InvalidInt = _IntRuleCount;
-	static const RealType       InvalidReal = _RealRuleCount;
-	static const BoolType       InvalidBool = _BoolRuleCount;
-	static const StringType     InvalidString = _StringRuleCount;
-	static const CategoryType   InvalidCategory = _CatCount;
+	static const IntType      InvalidInt      = _IntRuleCount;
+	static const RealType     InvalidReal     = _RealRuleCount;
+	static const BoolType     InvalidBool     = _BoolRuleCount;
+	static const StringType   InvalidString   = _StringRuleCount;
+	static const CategoryType InvalidCategory = _CatCount;
 
 	static const uint32 RulesCount = IntRuleCount + RealRuleCount + BoolRuleCount + StringRuleCount;
 
@@ -124,34 +124,35 @@ public:
 	static std::string GetRuleName(IntType t) { return s_RuleInfo[static_cast<int>(t)].name; }
 	static std::string GetRuleName(RealType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount].name; }
 	static std::string GetRuleName(BoolType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount].name; }
-	static std::string GetRuleName(StringType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount + BoolRuleCount].name; }
-	static const std::string &GetRuleNotes(IntType t) { return s_RuleInfo[static_cast<int>(t)].notes; }
-	static const std::string &GetRuleNotes(RealType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount].notes; }
-	static const std::string &GetRuleNotes(BoolType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount].notes; }
-	static const std::string &GetRuleNotes(StringType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount + BoolRuleCount].notes; }
+
+	static std::string GetRuleName(StringType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount + StringRuleCount].name; }
+	static const std::string& GetRuleNotes(IntType t) { return s_RuleInfo[static_cast<int>(t)].notes; }
+	static const std::string& GetRuleNotes(RealType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount].notes; }
+	static const std::string& GetRuleNotes(BoolType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount].notes; }
+	static const std::string& GetRuleNotes(StringType t) { return s_RuleInfo[static_cast<int>(t) + IntRuleCount + RealRuleCount + StringRuleCount].notes; }
 	static uint32 CountRules() { return RulesCount; }
-	static CategoryType FindCategory(const std::string &category_name);
-	bool ListRules(const std::string &category_name, std::vector <std::string> &l);
-	bool ListCategories(std::vector <std::string> &l);
-	bool GetRule(const std::string &rule_name, std::string &rule_value);
+	static CategoryType FindCategory(const std::string& category_name);
+	bool ListRules(const std::string& category_name, std::vector<std::string>& l);
+	bool ListCategories(std::vector<std::string>& l);
+	bool GetRule(const std::string& rule_name, std::string& rule_value);
 	bool SetRule(
-		const std::string &rule_name,
-		const std::string &rule_value,
-		Database *db = nullptr,
+		const std::string& rule_name,
+		const std::string& rule_value,
+		Database* db = nullptr,
 		bool db_save = false,
 		bool reload = false
 	);
 
 	int GetActiveRulesetID() const { return m_activeRuleset; }
 	std::string GetActiveRuleset() const { return m_activeName; }
-	static bool ListRulesets(Database *db, std::map<int, std::string> &l);
-	
+	static bool ListRulesets(Database* db, std::map<int, std::string>& l);
+
 	void ResetRules(bool reload = false);
-	bool LoadRules(Database *db, const std::string &rule_set_name, bool reload = false);
-	void SaveRules(Database *db, const std::string &rule_set_name);
-	bool UpdateInjectedRules(Database *db, const std::string &rule_set_name, bool quiet_update = false);
-	bool UpdateOrphanedRules(Database *db, bool quiet_update = false);
-	bool RestoreRuleNotes(Database *db);
+	bool LoadRules(Database* db, const std::string& rule_set_name, bool reload = false);
+	void SaveRules(Database* db, const std::string& rule_set_name);
+	bool UpdateInjectedRules(Database* db, const std::string& rule_set_name, bool quiet_update = false);
+	bool UpdateOrphanedRules(Database* db, bool quiet_update = false);
+	bool RestoreRuleNotes(Database* db);
 
 private:
 	RuleManager();
@@ -173,13 +174,13 @@ private:
 		StringRule
 	} RuleType;
 
-	static bool _FindRule(const std::string &rule_name, RuleType &type_into, uint16 &index_into);
+	static bool _FindRule(const std::string& rule_name, RuleType& type_into, uint16& index_into);
 	static std::string _GetRuleName(RuleType type, uint16 index);
-	static const std::string &_GetRuleNotes(RuleType type, uint16 index);
-	static int _FindOrCreateRuleset(Database *db, const std::string &rule_set_name);
-	void _SaveRule(Database *db, RuleType type, uint16 index);
+	static const std::string& _GetRuleNotes(RuleType type, uint16 index);
+	static int _FindOrCreateRuleset(Database* db, const std::string& rule_set_name);
+	void _SaveRule(Database* db, RuleType type, uint16 index);
 
-	static const char *s_categoryNames[];
+	static const char* s_categoryNames[];
 	typedef struct {
 		std::string       name;
 		CategoryType      category;
