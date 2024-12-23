@@ -222,6 +222,7 @@ public:
 	bool	GetZoneLongName(const char* short_name, char** long_name, char* file_name = 0, float* safe_x = 0, float* safe_y = 0, float* safe_z = 0, uint32* graveyard_id = 0, uint16* graveyard_time = 0, uint32* maxclients = 0);
 	bool	GetZoneGraveyard(const uint32 graveyard_id, uint32* graveyard_zoneid = 0, float* graveyard_x = 0, float* graveyard_y = 0, float* graveyard_z = 0, float* graveyard_heading = 0);
 	uint32	GetZoneGraveyardID(uint32 zone_id);
+	uint32	GetZoneID(const char* zonename);
 	uint16	GetGraveyardTime(uint16 zone_id);
 	uint8	GetPEQZone(uint32 zoneID);
 	uint8	GetMinStatus(uint32 zone_id);

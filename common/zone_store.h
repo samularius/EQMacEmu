@@ -43,6 +43,7 @@ public:
 	const char* GetZoneLongName(uint32 zone_id, bool error_unknown = false);
 private:
 	std::vector<ZoneRepository::Zone> m_zones;
+
 };
 
 extern ZoneStore zone_store;

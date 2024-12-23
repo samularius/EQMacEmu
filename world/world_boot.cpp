@@ -229,6 +229,9 @@ bool WorldBoot::DatabaseLoadRoutines(int argc, char** argv)
 		return 1;
 	}
 
+	database.LoadZoneNames();
+	database.LoadZoneFileNames();
+
 	LogInfo("Clearing groups");
 	database.ClearGroup();
 	LogInfo("Clearing raids");

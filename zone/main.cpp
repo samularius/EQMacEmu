@@ -288,6 +288,8 @@ int main(int argc, char** argv) {
 	}
 
 	zone_store.LoadZones(database);
+	database.LoadZoneNames();
+	database.LoadZoneFileNames();
 
 	if (zone_store.GetZones().empty()) {
 		LogError("Failed to load zones data, check your schema for possible errors");

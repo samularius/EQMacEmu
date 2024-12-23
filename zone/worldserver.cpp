@@ -1987,6 +1987,8 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 		}
 		case ServerOP_ReloadRules: {
 			zone->SendReloadMessage("Rules");
+			database.LoadZoneNames();
+			database.LoadZoneFileNames();
 			RuleManager::Instance()->LoadRules(&database, RuleManager::Instance()->GetActiveRuleset());
 			break;
 		}
@@ -2041,6 +2043,8 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 		}
 		case ServerOP_ReloadZoneData: {
 			zone_store.LoadZones(database);
+			database.LoadZoneNames();
+			database.LoadZoneFileNames();
 			if (zone && zone->IsLoaded()) {
 				zone->SendReloadMessage("Zone Data");
 				zone->LoadZoneCFG(zone->GetShortName());
