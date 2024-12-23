@@ -437,7 +437,11 @@ void lua_create_guild(const char *name, const char *leader) {
 }
 
 void lua_set_time(int hour, int min) {
-	quest_manager.settime(hour, min);
+	quest_manager.settime(hour, min, true);
+}
+
+void lua_set_time(int hour, int min, bool update_world) {
+	quest_manager.settime(hour, min, update_world);
 }
 
 void lua_signal(int npc_id) {
@@ -619,8 +623,8 @@ void lua_create_door(const char *model, float x, float y, float z, float h, int 
 	quest_manager.CreateDoor(model, x, y, z, h, open_type, size);
 }
 
-void lua_modify_npc_stat(const char *id, const char *value) {
-	quest_manager.ModifyNPCStat(id, value);
+void lua_modify_npc_stat(std::string stat, std::string value) {
+	quest_manager.ModifyNPCStat(stat, value);
 }
 
 int lua_collect_items(uint32 item_id, bool remove) {
@@ -690,6 +694,14 @@ bool lua_delete_data(std::string bucket_key) {
 	return DataBucket::DeleteData(bucket_key);
 }
 
+std::string lua_get_char_name_by_id(uint32 char_id) {
+	return database.GetCharNameByID(char_id);
+}
+
+std::string lua_get_npc_name_by_id(uint32 npc_id) {
+	return quest_manager.getnpcnamebyid(npc_id);
+}
+
 void lua_set_rule(std::string rule_name, std::string rule_value) {
 	RuleManager::Instance()->SetRule(rule_name.c_str(), rule_value.c_str());
 }
@@ -702,6 +714,14 @@ std::string lua_get_rule(std::string rule_name) {
 
 const char *lua_get_guild_name_by_id(uint32 guild_id) {
 	return quest_manager.getguildnamebyid(guild_id);
+}
+
+int lua_get_guild_id_by_char_id(uint32 char_id) {
+	return database.GetGuildIDByCharID(char_id);
+}
+
+int lua_get_group_id_by_char_id(uint32 char_id) {
+	return database.GetGroupIDByCharID(char_id);
 }
 
 void lua_fly_mode(int flymode) {
@@ -726,10 +746,6 @@ void lua_remove_title(uint32 title_set) {
 
 void lua_wear_change(uint32 slot, uint32 texture) {
 	quest_manager.wearchange(slot, texture);
-}
-
-void lua_send_mail(const char *to, const char *from, const char *subject, const char *message) {
-	quest_manager.SendMail(to, from, subject, message);
 }
 
 void lua_cross_zone_signal_client_by_char_id(uint32 player_id, int signal) {
@@ -862,7 +878,7 @@ int lua_get_zone_weather() {
 
 luabind::adl::object lua_get_zone_time(lua_State *L) {
 	TimeOfDay_Struct eqTime;
-	zone->zone_time.getEQTimeOfDay(time(0), &eqTime);
+	zone->zone_time.GetCurrentEQTimeOfDay(time(0), &eqTime);
 
 	luabind::adl::object ret = luabind::newtable(L);
 	ret["zone_hour"] = eqTime.hour;
@@ -1150,6 +1166,29 @@ void lua_reloadzonestaticdata() {
 	quest_manager.ReloadZoneStaticData();
 }
 
+bool lua_is_hotzone()
+{
+	if (!zone) {
+		return false;
+	}
+
+	return zone->IsHotzone();
+}
+
+void lua_set_hotzone(bool is_hotzone)
+{
+	if (!zone) {
+		return;
+	}
+
+	zone->SetIsHotzone(is_hotzone);
+}
+
+void lua_discord_send(std::string webhook_name, std::string message)
+{
+	zone->SendDiscordMessage(webhook_name, message);
+}
+
 /**
  * Expansions
  */
@@ -1286,7 +1325,7 @@ void lua_create_npc(luabind::adl::object table, float x, float y, float z, float
 	LuaCreateNPCParse(runspeed, float, 1.3f);
 	LuaCreateNPCParse(gender, uint8, 0);
 	LuaCreateNPCParse(race, uint16, 1);
-	LuaCreateNPCParse(class_, uint8, WARRIOR);
+	LuaCreateNPCParse(class_, uint8, Class::Warrior);
 	LuaCreateNPCParse(bodytype, uint8, 0);
 	LuaCreateNPCParse(deity, uint8, 0);
 	LuaCreateNPCParse(level, uint8, 1);
@@ -1368,6 +1407,7 @@ void lua_create_npc(luabind::adl::object table, float x, float y, float z, float
 	LuaCreateNPCParse(loot_lockout, uint32, false);
 	NPC* npc = new NPC(npc_type, nullptr, glm::vec4(x, y, z, heading),  GravityBehavior::Water);
 	entity_list.AddNPC(npc);
+	safe_delete(npc_type);
 }
 
 int get_rulei(int rule) {
@@ -1450,7 +1490,8 @@ luabind::scope lua_register_general() {
 		luabind::def("set_sky", &lua_set_sky),
 		luabind::def("set_guild", &lua_set_guild),
 		luabind::def("create_guild", &lua_create_guild),
-		luabind::def("set_time", &lua_set_time),
+		luabind::def("set_time", (void(*)(int, int)) & lua_set_time),
+		luabind::def("set_time", (void(*)(int, int, bool)) & lua_set_time),
 		luabind::def("signal", (void(*)(int))&lua_signal),
 		luabind::def("signal", (void(*)(int,int))&lua_signal),
 		luabind::def("signal", (void(*)(int,int,int))&lua_signal),
@@ -1509,15 +1550,18 @@ luabind::scope lua_register_general() {
 		luabind::def("set_data", (void(*)(std::string, std::string, std::string)) &lua_set_data),
 		luabind::def("delete_data", (bool(*)(std::string)) &lua_delete_data),
 		luabind::def("set_rule", (void(*)(std::string, std::string))& lua_set_rule),
-		luabind::def("get_rule", (std::string(*)(std::string))& lua_get_rule), 
+		luabind::def("get_rule", (std::string(*)(std::string))& lua_get_rule),
+		luabind::def("get_char_name_by_id", &lua_get_char_name_by_id),
+		luabind::def("get_npc_name_by_id", &lua_get_npc_name_by_id),
 		luabind::def("get_guild_name_by_id", &lua_get_guild_name_by_id),
+		luabind::def("get_guild_id_by_char_id", &lua_get_guild_id_by_char_id),
+		luabind::def("get_group_id_by_char_id", &lua_get_group_id_by_char_id),
 		luabind::def("fly_mode", &lua_fly_mode),
 		luabind::def("faction_value", &lua_faction_value),
 		luabind::def("check_title", &lua_check_title),
 		luabind::def("enable_title", &lua_enable_title),
 		luabind::def("remove_title", &lua_remove_title),
 		luabind::def("wear_change", &lua_wear_change),
-		luabind::def("send_mail", &lua_send_mail),
 		luabind::def("cross_zone_signal_client_by_char_id", &lua_cross_zone_signal_client_by_char_id),
 		luabind::def("cross_zone_signal_client_by_name", &lua_cross_zone_signal_client_by_name),
 		luabind::def("cross_zone_message_player_by_name", &lua_cross_zone_message_player_by_name),
@@ -1569,6 +1613,14 @@ luabind::scope lua_register_general() {
 		 * Expansions
 		 */
 		luabind::def("get_current_expansion", &lua_get_current_expansion),
+		luabind::def("is_hotzone", (bool(*)(void))& lua_is_hotzone),
+		luabind::def("set_hotzone", (void(*)(bool))& lua_set_hotzone),
+		luabind::def("discord_send", &lua_discord_send),
+		
+		
+		/**
+		* Expansions
+		 */
 		luabind::def("is_classic_enabled", &lua_is_classic_enabled),
 		luabind::def("is_the_ruins_of_kunark_enabled", &lua_is_the_ruins_of_kunark_enabled),
 		luabind::def("is_the_scars_of_velious_enabled", &lua_is_the_scars_of_velious_enabled),
@@ -1788,12 +1840,12 @@ luabind::scope lua_register_rules_const() {
 #define RULE_BOOL(cat, rule, default_value, notes) \
 		luabind::value(#rule, RuleManager::Bool__##rule),
 #include "../common/ruletypes.h"
-		luabind::value("_BoolRuleCount", RuleManager::_BoolRuleCount),
+			luabind::value("_BoolRuleCount", RuleManager::_BoolRuleCount),
 #undef RULE_BOOL
 #define RULE_STRING(cat, rule, default_value, notes) \
 		luabind::value(#rule, RuleManager::String__##rule),
 #include "../common/ruletypes.h"
-		luabind::value("_StringRuleCount", RuleManager::_StringRuleCount)
+			luabind::value("_StringRuleCount", RuleManager::_StringRuleCount)
 #undef RULE_STRING
 		];
 }
@@ -1816,6 +1868,13 @@ luabind::scope lua_register_ruleb() {
 	return luabind::namespace_("RuleB")
 		[
 			luabind::def("Get", &get_ruleb)
+		];
+}
+
+luabind::scope lua_register_rules() {
+	return luabind::namespace_("RuleS")
+		[
+			luabind::def("Get", &get_rules)
 		];
 }
 

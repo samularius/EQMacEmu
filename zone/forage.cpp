@@ -22,10 +22,11 @@
 #include "../common/misc_functions.h"
 #include "../common/rulesys.h"
 #include "../common/strings.h"
+#include "../common/zone_store.h"
 
 #include "entity.h"
 #include "forage.h"
-#include "npc.h"
+#include "client.h"
 #include "quest_parser_collection.h"
 #include "string_ids.h"
 #include "titles.h"
@@ -207,82 +208,79 @@ bool Client::CanFish() {
 		return false;
 	}
 
-	if(zone->zonemap != nullptr && zone->watermap != nullptr && RuleB(Watermap, CheckForWaterWhenFishing)) {
-		glm::vec3 rodPosition;
+	if (zone->zonemap != nullptr && zone->watermap != nullptr && RuleB(Watermap, CheckForWaterWhenFishing)) {
+		glm::vec3 rod_position;
 		// Tweak Rod and LineLength if required
-		const float RodLength = RuleR(Watermap, FishingRodLength);
-		const float LineLength = RuleR(Watermap, FishingLineLength);
-		const float LineExtension = RuleR(Watermap, FishingLineExtension);
-		int HeadingDegrees;
+		const float rod_length = RuleR(Watermap, FishingRodLength);
+		const float line_length = RuleR(Watermap, FishingLineLength);
+		const float line_extension = RuleR(Watermap, FishingLineExtension);
+		float client_heading = GetHeading() * 2;
+		int heading_degrees;
+		
+		heading_degrees = (int)((client_heading * 360) / 512);
+		heading_degrees = heading_degrees % 360;
 
-		// The heading for quarm client goes from 0 - 256
-		// This calculation turns a 0-256 rotation into 0-365
-		HeadingDegrees = (int)((GetHeading() * 360) / 256);
-		HeadingDegrees = HeadingDegrees % 360;
+		LogMaps("Heading is at {}, GetHeading() is {:.f}", heading_degrees, client_heading);
 
-		rodPosition.x = m_Position.x + RodLength * sin(HeadingDegrees * M_PI / 180.0f);
-		rodPosition.y = m_Position.y + RodLength * cos(HeadingDegrees * M_PI / 180.0f);
-
-		Log(Logs::General, Logs::Maps, "Heading is at %d, GetHeading() is %4.3f", HeadingDegrees, GetHeading());
+		rod_position.x = m_Position.x + rod_length * sin(heading_degrees * M_PI / 180.0f);
+		rod_position.y = m_Position.y + rod_length * cos(heading_degrees * M_PI / 180.0f);
 
 		glm::vec3 dest;
-		dest.x = rodPosition.x;
-		dest.y = rodPosition.y;
-		dest.z = m_Position.z;
+		dest.x = rod_position.x;
+		dest.y = rod_position.y;
+		dest.z = rod_position.z;
 
 		if (!CheckLosFN(dest.x, dest.y, dest.z, 0.0f)) {
-			Log(Logs::General, Logs::Maps, "Failing to fish because of CheckLosFN");
 			// fishing into a wall to reach water on other side?
 			Message_StringID(Chat::Skills, FISHING_LAND);	//Trying to catch land sharks perhaps?
 			return false;
 		}
 
-		rodPosition.z = dest.z - LineLength;
+		rod_position.z = dest.z - line_length;
 
-		bool in_lava = zone->watermap->InLava(rodPosition);
-		bool in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
+		bool in_lava = zone->watermap->InLava(rod_position);
+		bool in_water = zone->watermap->InWater(rod_position) || zone->watermap->InVWater(rod_position);
 		if (GetZoneID() == Zones::POWATER) {
-			if (zone->IsWaterZone(rodPosition.z)) {
+			if (zone->IsWaterZone(rod_position.z)) {
 				in_water = true;
 			} else {
 				in_water = false;
 			}
 		}
-		Log(Logs::General, Logs::Maps, "Fishing Rod is at %4.3f, %4.3f, %4.3f (dest.z: %4.3f), InWater says %d, InLava says %d Region is: %d RodLength: %f LineLength: %f", rodPosition.x, rodPosition.y, rodPosition.z, dest.z, in_water, in_lava, zone->watermap->ReturnRegionType(rodPosition), RodLength, LineLength);
+		Log(Logs::General, Logs::Maps, "Fishing Rod is at , %4.3f, %4.3f (dest.z: %4.3f), InWater says %d, InLava says %d Region is: %d RodLength: %f LineLength: %f", rod_position.x, rod_position.y, rod_position.z, dest.z, in_water, in_lava, zone->watermap->ReturnRegionType(rod_position), rod_length, line_length);
 		if (in_lava) {
 			Message_StringID(Chat::Skills, FISHING_LAVA);	//Trying to catch a fire elemental or something?
 			return false;
 		}
 		if (!in_water) {
 			// Our line may be too long, and we are going underworld. Reel our line in, and try again.
-			rodPosition.z = dest.z - (LineLength / 2);
-			in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
+			rod_position.z = dest.z - (line_length / 2);
+			in_water = zone->watermap->InWater(rod_position) || zone->watermap->InVWater(rod_position);
 			if (GetZoneID() == Zones::POWATER) {
-				if (zone->IsWaterZone(rodPosition.z)) {
+				if (zone->IsWaterZone(rod_position.z)) {
 					in_water = true;
 				} else {
 					in_water = false;
 				}
 			}
 
-			Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rodPosition.z, in_water);
+			Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rod_position.z, in_water);
 
 			if (!in_water) {
 				// Our line may be too short. Reel our line out using extension, and try again
-				rodPosition.z = dest.z - (LineLength + LineExtension);
-				in_water = zone->watermap->InWater(rodPosition) || zone->watermap->InVWater(rodPosition);
+				rod_position.z = dest.z - (line_length + line_extension);
+				in_water = zone->watermap->InWater(rod_position) || zone->watermap->InVWater(rod_position);
 
 				if (GetZoneID() == Zones::POWATER) {
-					if (zone->IsWaterZone(rodPosition.z)) {
+					if (zone->IsWaterZone(rod_position.z)) {
 						in_water = true;
 					} else {
 						in_water = false;
 					}
 				}
-				Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rodPosition.z, in_water);
+				Log(Logs::General, Logs::Maps, "Trying again with new Z %4.3f InWater now says %d", rod_position.z, in_water);
 
 				if (!in_water) {
-					Log(Logs::General, Logs::Maps, "Failing to fish because of !in_water");
 					Message_StringID(Chat::Skills, FISHING_LAND);	//Trying to catch land sharks perhaps?
 					return false;
 				}

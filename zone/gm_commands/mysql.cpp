@@ -3,7 +3,7 @@
 void command_mysql(Client *c, const Seperator *sep)
 {
 	if (!sep->arg[1][0] || !sep->arg[2][0]) {
-		c->Message(Chat::White, "Usage: #mysql query \"Query here\"");
+		c->Message(Chat::Default, "Usage: #mysql query \"Query here\"");
 		return;
 	}
 

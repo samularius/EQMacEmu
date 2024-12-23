@@ -38,13 +38,15 @@
 std::unordered_set<uint32> ipWhitelist;
 std::mutex		ipMutex;
 bool bSkipFactoryAuth = true;
+#include <thread>
 
 TimeoutManager timeout_manager;
 LoginServer server;
 EQEmuLogSys LogSys;
 EQCrypto eq_crypto;
-bool run_server = true;
 PathManager path;
+
+bool run_server = true;
 
 void CatchSignal(int sig_num)
 {
@@ -60,6 +62,25 @@ void LoadDatabaseConnection()
 		server.config.GetVariableString("database", "port", "3306"),
 		server.config.GetVariableString("database", "db", "eqemu")
 	);
+}
+
+void LoadLogSysDatabaseConnection()
+{
+	if (server.config.RawHandle()["logsys_database"].isObject())
+	{
+		LogInfo("LogSys MySQL Database Init.");
+		server.logsys_db = (Database *)new Database(
+			server.config.GetVariableString("logsys_database", "user", "user"),
+			server.config.GetVariableString("logsys_database", "password", "password"),
+			server.config.GetVariableString("logsys_database", "host", "127.0.0.1"),
+			server.config.GetVariableString("logsys_database", "port", "3306"),
+			server.config.GetVariableString("logsys_database", "db", "eqemu")
+		);
+	}
+	else
+	{
+		server.logsys_db = nullptr;
+	}
 }
 
 int main()
@@ -94,13 +115,15 @@ int main()
 	server.options.WorldAdminRegistrationTable(server.config.GetVariableString("schema", "world_admin_registration_table", "tblServerAdminRegistration"));
 	server.options.WorldServerTypeTable(server.config.GetVariableString("schema", "world_server_type_table", "tblServerListType"));
 	server.options.LoginSettingTable(server.config.GetVariableString("schema", "loginserver_setting_table", "tblloginserversettings"));
+	server.options.LoginPasswordSalt(server.config.GetVariableString("database", "salt", ""));
 
 	/* Create database connection */
 	if (server.config.GetVariableString("database", "subsystem", "MySQL").compare("MySQL") == 0) {
 		LoadDatabaseConnection();
+		LoadLogSysDatabaseConnection();
 	}
 
-	LogSys.SetDatabase(server.db)
+	LogSys.SetDatabase(server.logsys_db != nullptr ? server.logsys_db : server.db)
 		->SetLogPath("logs")
 		->LoadLogDatabaseSettings()
 		->StartFileLogs();
@@ -121,6 +144,10 @@ int main()
 
 		LogInfo("Database System Shutdown.");
 		delete server.db;
+		if (server.logsys_db != nullptr)
+		{
+			delete server.logsys_db;
+		}
 		return 1;
 	}
 
@@ -135,6 +162,10 @@ int main()
 
 		LogInfo("Database System Shutdown.");
 		delete server.db;
+		if (server.logsys_db != nullptr)
+		{
+			delete server.logsys_db;
+		}
 		return 1;
 	}
 
@@ -160,7 +191,6 @@ int main()
 		ipMutex.unlock();
 		
 		server.client_manager->Process();
-		server.server_manager->Process();
 		timeout_manager.CheckTimeouts();
 	};
 
@@ -179,6 +209,10 @@ int main()
 
 	LogInfo("Database System Shutdown.");
 	delete server.db;
+	if (server.logsys_db != nullptr)
+	{
+		delete server.logsys_db;
+	}
 
 	LogSys.CloseFileLogs();
 

@@ -83,9 +83,15 @@ public:
 	static bool ToBool(std::string bool_string);
 	static inline bool EqualFold(const std::string &string_one, const std::string &string_two) { return strcasecmp(string_one.c_str(), string_two.c_str()) == 0; }
 	static std::string Random(size_t length);
+	
+	static bool BeginsWith(const std::string& subject, const std::string& search);
+	static bool EndsWith(const std::string& subject, const std::string& search);
+	static std::string ZoneTime(const uint8 hours, const uint8 minutes);
+
 	static std::string IncrementRoman(const std::string& roman);
 	static std::string IntToRoman(int num);
 	static int RomanToInt(const std::string& roman);
+
 
 	template <typename T>
 	static std::string ImplodePair(const std::string &glue, const std::pair<char, char> &encapsulation, const std::vector<T> &src)
@@ -135,7 +141,7 @@ std::vector<std::string> join_pair(const std::string &glue, const std::pair<char
 	std::vector<std::string> output;
 
 	for (const std::pair<T1, T2> &src_iter : src) {
-		output.push_back(
+		output.emplace_back(
 
 			fmt::format(
 				"{}{}{}{}{}{}{}",
@@ -165,7 +171,7 @@ std::vector<std::string> join_tuple(const std::string &glue, const std::pair<cha
 
 	for (const std::tuple<T1, T2, T3, T4> &src_iter : src) {
 
-		output.push_back(
+		output.emplace_back(
 
 			fmt::format(
 				"{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",

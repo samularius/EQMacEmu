@@ -10,6 +10,7 @@
 #include "global_loot_manager.h"
 #include "../common/repositories/criteria/content_filter_criteria.h"
 #include "../common/repositories/global_loot_repository.h"
+#include "../common/zone_store.h"
 
 #include <iostream>
 #include <stdlib.h>
@@ -374,7 +375,7 @@ void NPC::AddLootDrop(
 	bool itemIs1h = item2->IsType1HWeapon();
 	bool offhandEmpty = GetEquipment(EQ::textures::weaponSecondary) == 0 ? true : false;
 
-	if (equipit && item2->IsClassCommon() && !GetSpecialAbility(DO_NOT_EQUIP)) {
+	if (equipit && item2->IsClassCommon() && !GetSpecialAbility(SpecialAbility::DisallowEquip)) {
 		bool upgrade = false;
 		bool special_slot = false; // Ear, Ring, and Wrist only allows 1 item for NPCs.
 		
@@ -450,11 +451,11 @@ void NPC::AddLootDrop(
 		}
 
 		if (found_slot == EQ::invslot::slotPrimary && !range_forced) {
-			if (mainhandIs1h && itemIs1h && offhandEmpty && GetSpecialAbility(INNATE_DUAL_WIELD)) {
+			if (mainhandIs1h && itemIs1h && offhandEmpty && GetSpecialAbility(SpecialAbility::DualWield)) {
 				found_slot = EQ::invslot::slotSecondary;	// level 66+ NPCs seem to ignore Primary/Secondary restrictions for 1handers. (e.g. elite diakus)  if MH is full, check offhand
 				upgrade = false;
 			}
-			else if (!itemIs2h || (offhandEmpty && !GetSpecialAbility(INNATE_DUAL_WIELD)))
+			else if (!itemIs2h || (offhandEmpty && !GetSpecialAbility(SpecialAbility::DualWield)))
 			{
 				if (d_melee_texture1 > 0) {
 					d_melee_texture1 = 0;
@@ -475,7 +476,7 @@ void NPC::AddLootDrop(
 		}
 
 		else if (found_slot == EQ::invslot::slotSecondary && !range_forced) {
-			if (!GetSpecialAbility(INNATE_DUAL_WIELD) || !item2->IsTypeShield()) {
+			if (!GetSpecialAbility(SpecialAbility::DualWield) || !item2->IsTypeShield()) {
 				// some 2handers are erroneously flagged as secondary; don't want to equip these in offhand
 				bool itemIs2h = item2->IsType2HWeapon();
 				if (!itemIs2h && (GetSkill(EQ::skills::SkillDualWield) || (!item2->IsType1HWeapon())))
@@ -1226,7 +1227,7 @@ void NPC::QueryLoot(Client* to)
 			to->Message(
 				Chat::White,
 				fmt::format(
-					"Item {} | Name: {} ({}){}",
+					"Item {} | Name: {} ({}){} [{}]",
 					item_number,
 					linker.GenerateLink().c_str(),
 					current_item->item_id,
@@ -1237,7 +1238,8 @@ void NPC::QueryLoot(Client* to)
 							current_item->charges
 						) :
 						""
-						)
+					),
+					Mac::invslot::GetInvPossessionsSlotName(current_item->equip_slot)
 				).c_str()
 			);
 			item_count++;

@@ -19,12 +19,11 @@
 #define EQEMU_WORLDSERVER_H
 
 #include "../common/global_define.h"
-#include "../common/eq_stream_factory.h"
-#include "../common/emu_tcp_connection.h"
-#include "../common/emu_tcp_server.h"
+#include "../common/net/servertalk_server_connection.h"
 #include "../common/servertalk.h"
 #include "../common/packet_dump.h"
 #include <string>
+#include <memory>
 
 /**
  * World server class, controls the connected server processing.
@@ -35,7 +34,7 @@ public:
 	/**
 	* Constructor, sets our connection to c.
 	*/
-	WorldServer(EmuTCPConnection *c);
+	WorldServer(std::shared_ptr<EQ::Net::ServertalkServerConnection> c);
 
 	/**
 	* Destructor, frees our connection if it exists.
@@ -48,39 +47,25 @@ public:
 	void Reset();
 
 	/**
-	* Does processing of all the connections for this world.
-	* Returns true except for a fatal error that requires disconnection.
-	*/
-	bool Process();
-
-	/**
 	* Accesses connection, it is intentional that this is not const (trust me).
 	*/
-	EmuTCPConnection *GetConnection() { return m_connection; }
+	std::shared_ptr<EQ::Net::ServertalkServerConnection> GetConnection() { return m_connection; }
 
 	/**
 	* Sets the connection to c.
 	*/
-	void SetConnection(EmuTCPConnection *c) { m_connection = c; }
+	void SetConnection(std::shared_ptr<EQ::Net::ServertalkServerConnection> c) { m_connection = c; }
 
 	/**
-	* Gets the runtime id of this server.
-	*/
-	unsigned int GetRuntimeID() const { return m_runtime_id; }
+	 * @return
+	 */
+	unsigned int GetServerId() const { return m_server_id; }
+	void SetServerId(unsigned int id) { m_server_id = id; }
 
 	/**
-	* Sets the runtime id of this server.
-	*/
-	void SetRuntimeID(unsigned int id) { m_runtime_id = id; }
-
-	/**
-	* Gets the long name of the server.
-	*/
+	 * @return
+	 */
 	std::string GetServerLongName() const { return m_long_name; }
-
-	/**
-	* Gets the short name of the server.
-	*/
 	std::string GetServerShortName() const { return m_short_name; }
 
 	/**
@@ -102,6 +87,7 @@ public:
 	* Gets what kind of server this server is (legends, preferred, normal)
 	*/
 	unsigned int GetServerListID() const { return m_server_list_type_id; }
+	WorldServer* SetServerListTypeId(unsigned int in_server_list_id);
 
 	/**
 	* Gets the status of the server.
@@ -128,19 +114,28 @@ public:
 	*/
 	void Handle_LSStatus(ServerLSStatus_Struct *server_login_status);
 
+\
 	/**
 	* Informs world that there is a client incoming with the following data.
 	*/
-	void SendClientAuth(unsigned int ip, std::string account, std::string key, unsigned int account_id, uint8 version = 0);
+	void SendClientAuth(std::string ip, std::string account, std::string key, unsigned int account_id, uint8 version = 0);
+
 
 private:
+	/**
+	* Packet processing functions:
+	*/
+	void ProcessNewLSInfo(uint16_t opcode, const EQ::Net::Packet& p);
+	void ProcessLSStatus(uint16_t opcode, const EQ::Net::Packet& p);
+	void ProcessUsertoWorldResp(uint16_t opcode, const EQ::Net::Packet& p);
+	void ProcessLSAccountUpdate(uint16_t opcode, const EQ::Net::Packet& p);
 
-	EmuTCPConnection *m_connection;
+	std::shared_ptr<EQ::Net::ServertalkServerConnection> m_connection;
 
 	unsigned int m_zones_booted;
 	unsigned int m_players_online;
 	int m_server_status;
-	unsigned int m_runtime_id;
+	unsigned int m_server_id;
 	unsigned int m_server_list_type_id;
 	unsigned int m_server_process_type;
 	std::string m_server_description;

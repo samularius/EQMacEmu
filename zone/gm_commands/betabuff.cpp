@@ -90,14 +90,14 @@ void command_betabuff(Client* c, const Seperator* sep)
 			//Armor Summoning Skeleton
 			switch (pClass)
 			{
-			case CLERIC:
-			case PALADIN:
-			case SHAMAN:
-			case RANGER:
-			case SHADOWKNIGHT:
-			case BARD:
-			case ROGUE:
-			case WARRIOR:
+			case Class::Cleric:
+			case Class::Paladin:
+			case Class::Shaman:
+			case Class::Ranger:
+			case Class::ShadowKnight:
+			case Class::Bard:
+			case Class::Rogue:
+			case Class::Warrior:
 				if (armorSize == 0) // Small
 				{
 					for (int i : smallBandedIDs)
@@ -152,10 +152,10 @@ void command_betabuff(Client* c, const Seperator* sep)
 					}
 				}
 				break;
-			case NECROMANCER:
-			case ENCHANTER:
-			case MAGICIAN:
-			case WIZARD:
+			case Class::Necromancer:
+			case Class::Enchanter:
+			case Class::Magician:
+			case Class::Wizard:
 				for (int i : rawSilkIDs)
 				{
 					const EQ::ItemData* banded_item = database.GetItem(i);
@@ -171,9 +171,9 @@ void command_betabuff(Client* c, const Seperator* sep)
 					}
 				}
 				break;
-			case DRUID:
-			case BEASTLORD:
-			case MONK:
+			case Class::Druid:
+			case Class::Beastlord:
+			case Class::Monk:
 				if (armorSize == 0)
 				{
 					for (int i : smallReinforcedIDs)
@@ -275,17 +275,17 @@ void command_betabuff(Client* c, const Seperator* sep)
 				//Pet Reagents
 				switch (pClass)
 				{
-				case NECROMANCER:
+				case Class::Necromancer:
 					slot = c->GetInv().FindFreeSlot(0, 0);
 					if(slot >= 20)
 						c->SummonItem(13073, 20, slot);
 					break;
-				case MAGICIAN:
+				case Class::Magician:
 					slot = c->GetInv().FindFreeSlot(0, 0);
 					if (slot >= 20)
 						c->SummonItem(10015, 20, slot);
 					break;
-				case ENCHANTER:
+				case Class::Enchanter:
 					slot = c->GetInv().FindFreeSlot(0, 0);
 					if (slot >= 20)
 						c->SummonItem(13080, 20, slot);
