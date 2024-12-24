@@ -278,7 +278,6 @@ NPC::NPC(const NPCType *npc_type_data, Spawn2* in_respawn, const glm::vec4& posi
 	AISpellVar.idle_beneficial_chance = static_cast<uint8> (RuleI(Spells, AI_IdleBeneficialChance));
 
 	AI_Init();
-	AI_Start();
 	
 	d_melee_texture1 = npc_type_data->d_melee_texture1;
 	d_melee_texture2 = npc_type_data->d_melee_texture2;
@@ -443,6 +442,7 @@ NPC::NPC(const NPCType *npc_type_data, Spawn2* in_respawn, const glm::vec4& posi
 	noQuestPause = false;
 	assisting = false;
 	pbaoe_damage = 0;
+	AI_Start();
 }
 
 NPC::~NPC()
