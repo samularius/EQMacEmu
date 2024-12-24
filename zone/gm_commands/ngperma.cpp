@@ -7,6 +7,39 @@
 
 #include "../client.h"
 
+int ng_find_race(std::string& input)
+{
+	if (input.find("human") != std::string::npos)
+		return 1;
+	else if (input.find("barbarian") != std::string::npos)
+		return 2;
+	else if (input.find("erudite") != std::string::npos)
+		return 3;
+	else if (input.find("wood elf") != std::string::npos || input.find("wood-elf") != std::string::npos)
+		return 4;
+	else if (input.find("high elf") != std::string::npos || input.find("high-elf") != std::string::npos)
+		return 5;
+	else if (input.find("dark elf") != std::string::npos || input.find("dark-elf") != std::string::npos)
+		return 6;
+	else if (input.find("half elf") != std::string::npos || input.find("half-elf") != std::string::npos)
+		return 7;
+	else if (input.find("dwarf") != std::string::npos)
+		return 8;
+	else if (input.find("troll") != std::string::npos)
+		return 9;
+	else if (input.find("ogre") != std::string::npos)
+		return 10;
+	else if (input.find("halfling") != std::string::npos)
+		return 11;
+	else if (input.find("gnome") != std::string::npos)
+		return 12;
+	else if (input.find("iksar") != std::string::npos)
+		return 128;
+	else if (input.find("vah shir") != std::string::npos || input.find("vahshir") != std::string::npos)
+		return 130;
+	return -1;
+}
+
 int ng_find_class(std::string& input)
 {
 	if (input.find("warrior") != std::string::npos)
@@ -112,7 +145,7 @@ int ng_find_city(std::string& input)
 	return -1;
 }
 
-bool ng_parse_attributes(std::string& in_input, std::unordered_map<std::string, uint16>& out)
+bool ng_parse_attributes(std::string& input, std::unordered_map<std::string, uint16>& out)
 {
 	// Initialize attributes with default value of 0
 	bool is_empty = true;
@@ -134,7 +167,7 @@ bool ng_parse_attributes(std::string& in_input, std::unordered_map<std::string, 
 			// Get the next token for the attribute name
 			if (iss >> token) {
 				// Check if the attribute exists in the map
-				if (attributes.find(token) != attributes.end()) {
+				if (out.find(token) != out.end()) {
 					if (value >= 0 && value <= 35) {
 						out[token] = value;
 						is_empty = false;
@@ -168,7 +201,7 @@ bool ng_perma_impl(Client* c, Client* t, int in_class, int in_race, bool in_forc
 	}
 	if (in_class == -1) {
 		c->Message(Chat::White, "Class was not specified.");
-		return;
+		return false;
 	}
 
 	if (in_race == -1) {
@@ -176,7 +209,7 @@ bool ng_perma_impl(Client* c, Client* t, int in_class, int in_race, bool in_forc
 	}
 	if (in_race == -1) {
 		c->Message(Chat::White, "Race was not specified.");
-		return;
+		return false;
 	}
 
 	int in_deity = ng_find_deity(input);
@@ -189,7 +222,7 @@ bool ng_perma_impl(Client* c, Client* t, int in_class, int in_race, bool in_forc
 	std::unordered_map<std::string, uint16> in_stats;
 	if (!ng_parse_attributes(input, in_stats)) {
 		c->Message(Chat::White, "Stats are invalid.");
-		return;
+		return false;
 	}
 
 	bool force = in_force || input.find("force") != std::string::npos;
@@ -256,6 +289,8 @@ void command_ngperma_stats(Client* c, const Seperator* sep) {
 	if (c->GetTarget() && c->GetTarget()->IsClient()) {
 		t = c->GetTarget()->CastToClient();
 	}
+	std::string input = sep->msg;
+	std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 	std::unordered_map<std::string, uint16> in_stats;
 	if (!ng_parse_attributes(input, in_stats)) {
 		c->Message(Chat::White, "Stats are invalid.");
