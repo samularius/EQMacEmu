@@ -222,7 +222,7 @@ void command_ngperma_race_class(Client* c, const Seperator* sep) {
 		t = c->GetTarget()->CastToClient();
 	}
 	if (!ng_perma_impl(c, t, -1, -1, false, sep)) {
-		c->Message(Chat::White, "Usage: #ngpermaraceclass <race> <class> [deity] [city] [stats...] [force]. Example: #permaraceclass human warrior agnostic freeport 25 str");
+		c->Message(Chat::White, "Usage: #ngpermaraceclass <race> <class> [deity] [city] [stats...] [force]. Example: #ngpermaraceclass human warrior agnostic freeport 25 str");
 	}
 }
 
@@ -234,7 +234,7 @@ void command_ngperma_class(Client *c, const Seperator *sep) {
 	}
 	int in_class = sep->IsNumber(1) ? atoi(sep->arg[1]) : -1; // Optionally allow passing in class as a number. 'force' will be needed if using invalid class
 	if (!ng_perma_impl(c, t, in_class, t->GetBaseRace(), false, sep)) {
-		c->Message(Chat::White, "Usage: #ngpermaclass <class> [deity] [city] [stats...] [force]. Example: #permaclass warrior agnostic freeport 25 str");
+		c->Message(Chat::White, "Usage: #ngpermaclass <class> [deity] [city] [stats...] [force]. Example: #ngpermaclass warrior agnostic freeport 25 str");
 	}
 }
 
@@ -246,7 +246,7 @@ void command_ngperma_race(Client* c, const Seperator* sep) {
 	}
 	int in_race = sep->IsNumber(1) ? atoi(sep->arg[1]) : -1; // Optionally allow passing in race as a number. 'force' will be needed if using a non-PC race.
 	if (!ng_perma_impl(c, t, t->GetBaseClass(), in_race, false, sep)) {
-		c->Message(Chat::White, "Usage: #ngpermaclass <class> [deity] [city] [force]. Example: #permarace human agnostic freeport 25 str");
+		c->Message(Chat::White, "Usage: #ngpermarace <race> [deity] [city] [stats...] [force]. Example: #ngpermarace human agnostic freeport 25 str");
 	}
 }
 
@@ -267,6 +267,6 @@ void command_ngperma_stats(Client* c, const Seperator* sep) {
 		Log(Logs::General, Logs::Normal, "Permanant stats change request from %s for %s, stats: %s", c->GetName(), t->GetName(), sep->argplus[1]);
 	}
 	else {
-		c->Message(Chat::White, "Usage: '#ngpermastats <stats>'. Example: '#permastats 10 str 20 sta");
+		c->Message(Chat::White, "Usage: '#ngpermastats <stats...>'. Example: '#ngpermastats 10 str 20 sta");
 	}
 }
