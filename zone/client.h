@@ -66,6 +66,7 @@ struct ItemData;
 #include <set>
 #include <algorithm>
 #include <chrono>
+#include <unordered_map>
 
 
 #define CLIENT_TIMEOUT		90000
@@ -83,6 +84,86 @@ public:
 	~CLIENTPACKET();
 	EQApplicationPacket *app;
 	bool ack_req;
+};
+
+struct BaseStatsStruct {
+	uint16 STR;
+	uint16 STA;
+	uint16 AGI;
+	uint16 DEX;
+	uint16 WIS;
+	uint16 INT;
+	uint16 CHA;
+	uint16 unspent;
+	void Add(const BaseStatsStruct& other) {
+		this->STR += other.STR;
+		this->STA += other.STA;
+		this->AGI += other.AGI;
+		this->DEX += other.DEX;
+		this->WIS += other.WIS;
+		this->INT += other.INT;
+		this->CHA += other.CHA;
+		this->unspent += other.unspent;
+	}
+};
+
+// Base Stats for each Race for PermaStats
+static const std::unordered_map<uint16, BaseStatsStruct> race_base_stats = {
+	//                  str sta agi dex wis  int cha
+	{ Race::Human,     { 75, 75, 75, 75, 75,  75, 75}},
+	{ Race::Barbarian, {103, 95, 82, 70, 70,  60, 55}},
+	{ Race::Erudite,   { 60, 70, 70, 70, 83, 107, 70}},
+	{ Race::WoodElf,   { 65, 65, 95, 80, 80,  75, 75}},
+	{ Race::HighElf,   { 55, 65, 85, 70, 95,  92, 80}},
+	{ Race::DarkElf,   { 60, 65, 90, 75, 83,  99, 60}},
+	{ Race::HalfElf,   { 70, 70, 90, 85, 60,  75, 75}},
+	{ Race::Dwarf,     { 90, 90, 70, 90, 83,  60, 45}},
+	{ Race::Troll,     {108,109, 83, 75, 60,  52, 40}},
+	{ Race::Ogre,      {130,122, 70, 70, 67,  60, 37}},
+	{ Race::Halfling,  { 70, 75, 95, 90, 80,  67, 50}},
+	{ Race::Gnome,     { 60, 70, 85, 85, 67,  98, 60}},
+	{ Race::Iksar,     { 70, 70, 90, 85, 80,  75, 55}},
+	{ Race::VahShir,   { 90, 75, 90, 70, 70,  65, 65}}
+};
+
+// Base stat allocation by class
+static const std::unordered_map<uint16, BaseStatsStruct> class_bonus_stats = {
+	//                    str sta agi dex wis int cha unspent
+	{0,                  {  0,  0,  0,  0,  0,  0,  0, 50}},
+	{Class::Warrior,     { 10, 10,  5,  0,  0,  0,  0, 25}},
+	{Class::Cleric,      {  5,  5,  0,  0, 10,  0,  0, 30}},
+	{Class::Paladin,     { 10,  5,  0,  0,  5,  0, 10, 20}},
+	{Class::Ranger,      {  5, 10, 10,  0,  5,  0,  0, 20}},
+	{Class::ShadowKnight,{ 10,  5,  0,  0,  0, 10,  5, 20}},
+	{Class::Druid,       {  0, 10,  0,  0, 10,  0,  0, 30}},
+	{Class::Monk,        {  5,  5, 10, 10,  0,  0,  0, 20}},
+	{Class::Bard,        {  5,  0,  0, 10,  0,  0, 10, 25}},
+	{Class::Rogue,       {  0,  0, 10, 10,  0,  0,  0, 30}},
+	{Class::Shaman,      {  0,  5,  0,  0, 10,  0,  5, 30}},
+	{Class::Necromancer, {  0,  0,  0, 10,  0, 10,  0, 30}},
+	{Class::Wizard,      {  0, 10,  0,  0,  0, 10,  0, 30}},
+	{Class::Magician,    {  0, 10,  0,  0,  0, 10,  0, 30}},
+	{Class::Enchanter,   {  0,  0,  0,  0,  0, 10, 10, 30}},
+	{Class::Beastlord,   {  0, 10,  5,  0, 10,  0,  5, 20}}
+};
+
+// Default startzone we can assign for someone when we don't know their default startzone
+static const std::unordered_map<uint16, BindStruct> default_race_bind = {
+	//            zone      x          y     z     heading
+	{ HUMAN,     {  22,   -1485,      9.2,    0,       0}},
+	{ ERUDITE,   {  38,     203,     2295,    0,       0}},
+	{ BARBARIAN, {  30,     629,     3139,    0,       0}},
+	{ HALFLING,  {  33,       0,        0,    0,       0}},
+	{ DWARF,     {  68,    -700,     2550,    0,       0}},
+	{ GNOME,     {  56, -272.86,   159.86,    0,       0}},
+	{ HALF_ELF,  {  54,      10,      -20,    0,       0}},
+	{ WOOD_ELF,  {  54,      10,      -20,    0,       0}},
+	{ HIGH_ELF,  {  54,      10,      -20,    0,       0}},
+	{ DARK_ELF,  {  25,    -279,    -1201,    0,       0}},
+	{ OGRE,      {  47,     905,     1051,    0,       0}},
+	{ TROLL,     {  46,    -588,    -2192,    0,       0}},
+	{ IKSAR,     {  78,    1617,    -1684,    0,       0}},
+	{ VAHSHIR,   { 165,   -3570,    -2122,    0,       0}}
 };
 
 enum { //Type arguments to the Message* routines.
@@ -327,10 +408,37 @@ public:
 	inline uint8 GetPVP() const { return m_pp.pvp; }
 	inline bool GetGM() const { return m_pp.gm != 0; }
 
-	inline void SetBaseClass(uint32 i) { m_pp.class_=i; }
-	void SetBaseRace(uint32 i, bool update_racial_skills = true);
+	void SetBaseClass(uint32 i, bool fix_skills = true, bool unscribe_spells = true);
+	void SetBaseRace(uint32 i, bool fix_skills = true);
 	inline void SetBaseGender(uint32 i) { m_pp.gender=i; }
 	inline void SetDeity(uint32 i) {m_pp.deity=i;deity=i;}
+
+	// Calculate the new base stats for a given race/class combination and the specified bonus point allocation.
+	// Returns true if valid, and sets the 'out' parameter with the final base stats.
+	static bool CalculateBaseStats(
+		Client* error_listener,
+		uint16 in_class, uint16 in_race,
+		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
+		BaseStatsStruct& out
+	);
+
+	// Lookup a race/class/deity/city combination.
+	// Only returns true if the combination is valid and available for the current player and expansion.
+	bool GetCharacterCreateCombination(
+		Client* error_listener,
+		uint16 in_class, uint16 in_race, uint16 in_deity, int in_player_choice_city,
+		BindStruct& out_start_zone_bind
+	);
+
+	bool HasCharacterCreateCombination(uint16 in_class, uint16 in_race, uint16 in_deity, int in_player_choice_city) {
+		BindStruct ignore;
+		return GetCharacterCreateCombination((Client*)nullptr, in_class, in_race, in_deity, in_player_choice_city, ignore);
+	}
+
+	// Unlocks a new character combination for this player by their character_id.
+	void AddCharacterCreateCombinationUnlock(
+		uint16 in_class, uint16 in_race, uint16 in_deity, int player_home_choice,
+		uint16 home_zone_id, float bind_x, float bind_y, float bind_z, float bind_heading);
 
 	// Changes the starting stats for the character. Returns false if invalid.
 	bool PermaStats(
@@ -340,11 +448,28 @@ public:
 	);
 
 	// Changes the starting race/deity/city combination for the character, along with the given stats. Returns false if invalid.
-	// Leaving all bonus values to default (0xFF) will default to using the character's current point distribution from their old race.
+	// Setting all bonus values to >=0xFF will default to using the character's current point distribution from their old race.
 	bool PermaRace(
 		Client* error_listener,
-		uint32 new_race, uint32 new_deity, uint32 player_choice_city,
-		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF
+		uint16 in_race, uint16 in_deity, int player_choice_city,
+		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF,
+		bool force = false) {
+		return PermaRaceClass(error_listener, GetBaseClass(), in_race, in_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, force);
+	}
+
+	bool PermaClass(
+		Client* error_listener,
+		uint16 in_class, uint16 in_deity, int player_choice_city,
+		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF,
+		bool force = false) {
+		return PermaRaceClass(error_listener, in_class, GetBaseRace(), in_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, force);
+	}
+
+	bool PermaRaceClass(
+		Client* error_listener,
+		uint16 in_class, uint16 in_race, uint16 in_deity, int player_choice_city,
+		uint16 bonusSTR = 0xFF, uint16 bonusSTA = 0xFF, uint16 bonusAGI = 0xFF, uint16 bonusDEX = 0xFF, uint16 bonusWIS = 0xFF, uint16 bonusINT = 0xFF, uint16 bonusCHA = 0xFF,
+		bool force = false
 	);
 
 	inline uint8 GetLevel2() const { return m_pp.level2; }
@@ -634,8 +759,8 @@ public:
 	bool	HasMoney(uint64 copper);
 	void	ClearMoney();
 	void	RemoveAllSkills();
-	void    ResetRacialSkills();
-	void    ResetRacialSkill(EQ::skills::SkillType skill);
+	void    ResetAllSkillsByLevel(uint8 level_cap = 0xFF); // Removes or caps skills to the passed in level (default = MaxLevel)
+	void    ResetSkillByLevel(EQ::skills::SkillType skill, uint8 level_cap = 0xFF); // Removes or caps skills to the passed in level (default = MaxLevel)
 	uint64	GetCarriedMoney();
 	uint64	GetAllMoney();
 
@@ -659,7 +784,7 @@ public:
 	virtual uint16 GetSkill(EQ::skills::SkillType skill_id);
 	uint32	GetRawSkill(EQ::skills::SkillType skill_id) const { if (skill_id <= EQ::skills::HIGHEST_SKILL) { return(m_pp.skills[skill_id]); } return 0; }
 	bool	HasSkill(EQ::skills::SkillType skill_id);
-	bool	CanHaveSkill(EQ::skills::SkillType skill_id);
+	bool	CanHaveSkill(EQ::skills::SkillType skill_id, uint8 at_level = 0xFF);
 	void	SetSkill(EQ::skills::SkillType skill_num, uint16 value, bool silent = false);
 	void	AddSkill(EQ::skills::SkillType skillid, uint16 value);
 	void	CheckSpecializeIncrease(uint16 spell_id);
@@ -792,7 +917,13 @@ public:
 	int32	GetItemIDAt(int16 slot_id);
 	bool	FindOnCursor(uint32 item_id);
 	void	ClearPlayerInfoAndGrantStartingItems(bool goto_death = true);
-	void	ResetPlayerForNewGamePlus();
+
+	// Reset player back to spawn for NewGame+ type restarts
+	// - Faction is reset
+	// - Spells are unmemmed
+	// - Level-down to 'new_level'
+	// - For more drastic changes (like class change), the 'new_level2' and 'reset_skill_points' can be used to futher reset a character to their base skills and points.
+	void	ResetPlayerForNewGamePlus(uint8 new_level, uint8 new_level2, bool reset_skill_points);
 	bool	PutItemInInventory(int16 slot_id, const EQ::ItemInstance& inst, bool client_update = false);
 	bool	PushItemOnCursor(const EQ::ItemInstance& inst, bool client_update = false);
 	bool	PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop = false);

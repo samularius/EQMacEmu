@@ -180,6 +180,40 @@ bool SharedDatabase::GetCharCreateFullInfo(uint32 class_id, uint32 race_id, uint
 	return false;
 }
 
+bool SharedDatabase::GetCharacterCombinationUnlock(uint32 character_id, uint32 class_id, uint32 race_id, uint32 deity_id, int player_choice_city, BindStruct& out_bind) {
+
+	std::string query = StringFormat(
+		"SELECT home_zone, home_x, home_y, home_z, home_heading"
+		" FROM `character_combination_unlocks`"
+		" WHERE `charid` = %u AND `class` = %u AND `race` = %u AND `deity` = %u AND `home_choice` = %i",
+		character_id, class_id, race_id, deity_id, player_choice_city
+	);
+
+	auto results = QueryDatabase(query);
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		out_bind.zoneId = atoi(row[0]);
+		out_bind.x = atof(row[1]);
+		out_bind.y = atof(row[2]);
+		out_bind.z = atof(row[3]);
+		out_bind.heading = atof(row[4]);
+		return true;
+	}
+
+	return false;
+}
+
+void SharedDatabase::SaveCharacterCombinationUnlock(uint32 character_id, uint32 in_class, uint32 in_race, uint32 in_deity, int player_choice_city, const BindStruct& start_zone) {
+
+	std::string query = StringFormat(
+		"REPLACE INTO `character_combination_unlocks`"
+		" (charid, class, race, deity, home_choice, home_zone, home_x, home_y, home_z, home_heading)"
+		" VALUES(%u, %u, %u, %u, %i, %u, %f, %f, %f, %f)",
+		character_id, in_class, in_race, in_deity, player_choice_city, start_zone.zoneId, start_zone.x, start_zone.y, start_zone.z, start_zone.heading
+	);
+
+	auto results = QueryDatabase(query);
+}
+
 bool SharedDatabase::GetCharCreateStats(uint32 class_id, uint32 race_id, RaceClassAllocation& out)
 {
 	std::string query = StringFormat(

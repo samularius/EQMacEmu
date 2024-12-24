@@ -57,6 +57,8 @@ public:
 
 	bool    GetCharCreateStats(uint32 class_id, uint32 race_id, RaceClassAllocation& out);
 	bool    GetCharCreateFullInfo(uint32 class_id, uint32 race_id, uint32 diety_id, uint32 player_choice_city, uint32& expansions_req, RaceClassAllocation& out_allocation, BindStruct& out_bind);
+	bool    GetCharacterCombinationUnlock(uint32 character_id, uint32 class_id, uint32 race_id, uint32 deity_id, int player_choice_city, BindStruct& out_bind);
+	void    SaveCharacterCombinationUnlock(uint32 character_id, uint32 in_class, uint32 race_id, uint32 deity_id, int player_choice_city, const BindStruct& start_zone);
 
 	/*
 	* Character InventoryProfile

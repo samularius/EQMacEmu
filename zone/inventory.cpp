@@ -602,10 +602,30 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	}
 }
 
-void Client::ResetPlayerForNewGamePlus()
+void Client::ResetPlayerForNewGamePlus(uint8 in_level, uint8 in_level2, bool reset_skill_points)
 {
 	// Revert player's bind location to default starting
 	SetBindPoint(m_pp.binds[4].zoneId, glm::vec3(m_pp.binds[4].x, m_pp.binds[4].y, m_pp.binds[4].z));
+
+	// Reset level
+	uint8 old_level = GetLevel();
+	uint8 new_level = std::max(in_level, (uint8)1);
+	if (new_level < old_level) {
+		SetLevel(new_level, true);
+	}
+
+	// Do additional skill cleanup if level2 was lowered
+	uint8 old_level2 = GetLevel2();
+	uint8 new_level2 = std::max(in_level2, GetLevel());
+	if (new_level2 < old_level2) {
+		m_pp.level2 = new_level2;
+		ResetAllSkillsByLevel(new_level2);
+	}
+
+	// Optionally reset skill points
+	if (reset_skill_points) {
+		m_pp.points = 5 * (uint16)GetLevel2();
+	}
 
 	// Remove memmed spells
 	UnmemSpellAll(false);
@@ -620,13 +640,7 @@ void Client::ResetPlayerForNewGamePlus()
 	// Prevent Old Corpse Rez
 	database.MarkAllCharacterCorpsesNotRezzable(CharacterID());
 
-	uint32 cur_level = GetLevel();
-	// Reset level
-	if (cur_level > 10) {
-		SetLevel(10, true);
-	}
-
-	if (cur_level >= RuleI(Quarm, RebirthTitleLevel))
+	if (old_level >= RuleI(Quarm, RebirthTitleLevel))
 	{
 		if (m_epp.e_times_rebirthed == 0)
 		{
@@ -640,28 +654,52 @@ void Client::ResetPlayerForNewGamePlus()
 	ForceGoToDeath();
 }
 
-void Client::ResetRacialSkills()
+void Client::ResetAllSkillsByLevel(uint8 at_level)
 {
-	if (GetBaseRace() != GNOME && m_pp.skills[EQ::skills::SkillTinkering] > 0) {
-		m_pp.skills[EQ::skills::SkillTinkering] = 0;
-		database.DeleteCharacterSkill(CharacterID(), EQ::skills::SkillTinkering);
+	if (at_level > RuleI(Character, MaxLevel)) {
+		at_level = RuleI(Character, MaxLevel);
 	}
-	ResetRacialSkill(EQ::skills::SkillForage);
-	ResetRacialSkill(EQ::skills::SkillHide);
-	ResetRacialSkill(EQ::skills::SkillSneak);
-	ResetRacialSkill(EQ::skills::SkillSafeFall);
+
+	for (int i = 0; i <= EQ::skills::HIGHEST_SKILL; ++i) {
+		ResetSkillByLevel(static_cast<EQ::skills::SkillType>(i), at_level);
+	}
+
+	SetRacialLanguages();
+	SetRaceStartingSkills();
+	SetClassLanguages();
 }
 
-void Client::ResetRacialSkill(EQ::skills::SkillType skill)
-{
-	if (!CanHaveSkill(skill)) {
+void Client::ResetSkillByLevel(EQ::skills::SkillType skill, uint8 at_level) {
+
+	if (at_level > RuleI(Character, MaxLevel)) {
+		at_level = RuleI(Character, MaxLevel);
+	}
+
+	if (at_level == 0) {
 		if (m_pp.skills[skill] > 0) {
 			m_pp.skills[skill] = 0;
 			database.DeleteCharacterSkill(CharacterID(), skill);
 		}
 		return;
 	}
-	int maxSkill = MaxSkill(skill);
+
+	if (skill == EQ::skills::SkillTinkering) {
+		if (GetBaseRace() != Race::Gnome && m_pp.skills[skill] > 0) {
+			m_pp.skills[EQ::skills::SkillTinkering] = 0;
+			database.DeleteCharacterSkill(CharacterID(), EQ::skills::SkillTinkering);
+		}
+		return;
+	}
+
+	if (!CanHaveSkill(skill, at_level)) {
+		if (m_pp.skills[skill] > 0) {
+			m_pp.skills[skill] = 0;
+			database.DeleteCharacterSkill(CharacterID(), skill);
+		}
+		return;
+	}
+
+	int maxSkill = MaxSkill(skill, GetBaseClass(), at_level);
 	if (m_pp.skills[skill] > maxSkill) {
 		m_pp.skills[skill] = maxSkill;
 		database.SaveCharacterSkill(CharacterID(), skill, maxSkill);

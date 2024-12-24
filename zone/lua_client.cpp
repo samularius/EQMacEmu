@@ -110,6 +110,18 @@ void Lua_Client::SetBaseGender(int v) {
 	self->SetBaseGender(v);
 }
 
+bool Lua_Client::HasCharacterCreateCombination(uint16 in_class, uint16 in_race, uint16 in_deity, int in_player_choice_city) {
+	Lua_Safe_Call_Bool();
+	return self->HasCharacterCreateCombination(in_class, in_race, in_deity, in_player_choice_city);
+}
+
+void Lua_Client::AddCharacterCreateCombinationUnlock(
+	uint16 in_class, uint16 in_race, uint16 in_deity, int player_home_choice,
+	uint16 home_zone_id, float bind_x, float bind_y, float bind_z, float bind_heading) {
+	Lua_Safe_Call_Void();
+	self->AddCharacterCreateCombinationUnlock(in_class, in_race, in_deity, player_home_choice, home_zone_id, bind_x, bind_y, bind_z, bind_heading);
+}
+
 bool Lua_Client::PermaStats(
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown) {
 	Lua_Safe_Call_Bool();
@@ -117,10 +129,31 @@ bool Lua_Client::PermaStats(
 }
 
 bool Lua_Client::PermaRace(
-	uint32 new_race, uint32 new_deity, uint32 player_choice_city, 
+	uint16 new_race, uint16 new_deity, int player_choice_city, 
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
 	Lua_Safe_Call_Bool();
-	return self->PermaRace(self, new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA);
+	return self->PermaRace(self, new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, false);
+}
+
+bool Lua_Client::ForcePermaRace(
+	uint16 new_race, uint16 new_deity, int player_choice_city,
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
+	Lua_Safe_Call_Bool();
+	return self->PermaRace(self, new_race, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, true);
+}
+
+bool Lua_Client::PermaClass(
+	uint16 new_class, uint16 new_deity, int player_choice_city,
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
+	Lua_Safe_Call_Bool();
+	return self->PermaClass(self, new_class, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, false);
+}
+
+bool Lua_Client::ForcePermaClass(
+	uint16 new_class, uint16 new_deity, int player_choice_city,
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA) {
+	Lua_Safe_Call_Bool();
+	return self->PermaClass(self, new_class, new_deity, player_choice_city, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, true);
 }
 
 int Lua_Client::GetBaseFace() {
@@ -975,10 +1008,10 @@ void Lua_Client::ClearPlayerInfoAndGrantStartingItems()
 	self->ClearPlayerInfoAndGrantStartingItems();
 }
 
-void Lua_Client::ResetPlayerForNewGamePlus()
+void Lua_Client::ResetPlayerForNewGamePlus(uint8 new_level, uint8 new_level2, bool reset_skill_points)
 {
 	Lua_Safe_Call_Void();
-	self->ResetPlayerForNewGamePlus();
+	self->ResetPlayerForNewGamePlus(new_level, new_level2, reset_skill_points);
 }
 
 int Lua_Client::GetModCharacterFactionLevel(int faction) {
@@ -1381,8 +1414,13 @@ luabind::scope lua_register_client() {
 		.def("SetBaseClass", (void(Lua_Client::*)(int))&Lua_Client::SetBaseClass)
 		.def("SetBaseRace", (void(Lua_Client::*)(int))&Lua_Client::SetBaseRace)
 		.def("SetBaseGender", (void(Lua_Client::*)(int))&Lua_Client::SetBaseGender)
+		.def("HasCharacterCreateCombination", (bool(Lua_Client::*)(uint16,uint16,uint16,int))&Lua_Client::HasCharacterCreateCombination)
+		.def("AddCharacterCreateCombinationUnlock", (void(Lua_Client::*)(uint16,uint16,uint16,int,uint16,float,float,float,float))&Lua_Client::AddCharacterCreateCombinationUnlock)
 		.def("PermaStats", (bool(Lua_Client::*)(uint16,uint16,uint16,uint16,uint16,uint16,uint16,bool))&Lua_Client::PermaStats)
-		.def("PermaRace", (bool(Lua_Client::*)(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint16))&Lua_Client::PermaRace)
+		.def("PermaRace", (bool(Lua_Client::*)(uint16,uint16,int,uint16,uint16,uint16,uint16,uint16,uint16,uint16))&Lua_Client::PermaRace)
+		.def("ForcePermaRace", (bool(Lua_Client::*)(uint16, uint16, int, uint16, uint16, uint16, uint16, uint16, uint16, uint16))&Lua_Client::ForcePermaRace)
+		.def("PermaClass", (bool(Lua_Client::*)(uint16, uint16, int, uint16, uint16, uint16, uint16, uint16, uint16, uint16)) & Lua_Client::PermaClass)
+		.def("ForcePermaClass", (bool(Lua_Client::*)(uint16, uint16, int, uint16, uint16, uint16, uint16, uint16, uint16, uint16)) & Lua_Client::ForcePermaClass)
 		.def("GetBaseFace", (int(Lua_Client::*)(void))&Lua_Client::GetBaseFace)
 		.def("GetLanguageSkill", (int(Lua_Client::*)(int))&Lua_Client::GetLanguageSkill)
 		.def("GetLastName", (const char *(Lua_Client::*)(void))&Lua_Client::GetLastName)
@@ -1589,7 +1627,7 @@ luabind::scope lua_register_client() {
 		.def("SetSoloOnly", (void(Lua_Client::*)(int))&Lua_Client::SetSoloOnly)
 		.def("IsSoloOnly", (int(Lua_Client::*)(void))&Lua_Client::IsSoloOnly)
 		.def("ClearPlayerInfoAndGrantStartingItems", (void(Lua_Client::*)(void))&Lua_Client::ClearPlayerInfoAndGrantStartingItems)
-		.def("ResetPlayerForNewGamePlus", (void(Lua_Client::*)(void))& Lua_Client::ResetPlayerForNewGamePlus)
+		.def("ResetPlayerForNewGamePlus", (void(Lua_Client::*)(uint8,uint8,bool))&Lua_Client::ResetPlayerForNewGamePlus)
 		.def("ScribeSpells", (uint16(Lua_Client::*)(uint8, uint8))& Lua_Client::ScribeSpells)
 		.def("IsMarried", (bool(Lua_Client::*)())&Lua_Client::IsMarried)
 		.def("SetMarried", (void(Lua_Client::*)(const char*))&Lua_Client::SetMarried)
