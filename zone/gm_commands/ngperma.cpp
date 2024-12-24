@@ -135,12 +135,12 @@ bool ng_parse_attributes(std::string& in_input, std::unordered_map<std::string, 
 			if (iss >> token) {
 				// Check if the attribute exists in the map
 				if (attributes.find(token) != attributes.end()) {
-					if (value > 0 || value < 35) {
+					if (value >= 0 && value <= 35) {
 						out[token] = value;
 						is_empty = false;
 					}
 					else {
-						return false; // invalid
+						return false; // Obviously invalid, the rest will be checked later
 					}
 				}
 			}
@@ -195,11 +195,11 @@ bool ng_perma_impl(Client* c, Client* t, int in_class, int in_race, bool in_forc
 	bool force = in_force || input.find("force") != std::string::npos;
 	if (t->PermaRaceClass(c, in_class, in_race, in_deity, in_city, in_stats["str"], in_stats["sta"], in_stats["agi"], in_stats["dex"], in_stats["wis"], in_stats["int"], in_stats["cha"], force)) {
 		if (old_race != in_race)
-			Log(Logs::General, Logs::Normal, "Race change request from %s for %s, requested race:%u", c->GetName(), t->GetName(), in_race);
+			Log(Logs::General, Logs::Normal, "Race change request from %s for %s, requested race:%i", c->GetName(), t->GetName(), in_race);
 		if (old_class != in_class)
-			Log(Logs::General, Logs::Normal, "Class change request from %s for %s, requested class:%u", c->GetName(), t->GetName(), in_class);
+			Log(Logs::General, Logs::Normal, "Class change request from %s for %s, requested class:%i", c->GetName(), t->GetName(), in_class);
 		if (old_deity != in_deity)
-			Log(Logs::General, Logs::Normal, "Deity change request from %s for %s, requested deity:%u", c->GetName(), t->GetName(), in_deity);
+			Log(Logs::General, Logs::Normal, "Deity change request from %s for %s, requested deity:%i", c->GetName(), t->GetName(), in_deity);
 
 		t->Save();
 
