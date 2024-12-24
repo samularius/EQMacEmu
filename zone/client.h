@@ -109,41 +109,42 @@ struct BaseStatsStruct {
 
 // Base Stats for each Race for PermaStats
 static const std::unordered_map<uint16, BaseStatsStruct> race_base_stats = {
-	//            str sta agi dex wis  int cha
-	{ HUMAN,     { 75, 75, 75, 75, 75,  75, 75}},
-	{ BARBARIAN, {103, 95, 82, 70, 70,  60, 55}},
-	{ ERUDITE,   { 60, 70, 70, 70, 83, 107, 70}},
-	{ WOOD_ELF,  { 65, 65, 95, 80, 80,  75, 75}},
-	{ HIGH_ELF,  { 55, 65, 85, 70, 95,  92, 80}},
-	{ DARK_ELF,  { 60, 65, 90, 75, 83,  99, 60}},
-	{ HALF_ELF,  { 70, 70, 90, 85, 60,  75, 75}},
-	{ DWARF,     { 90, 90, 70, 90, 83,  60, 45}},
-	{ TROLL,     {108,109, 83, 75, 60,  52, 40}},
-	{ OGRE,      {130,122, 70, 70, 67,  60, 37}},
-	{ HALFLING,  { 70, 75, 95, 90, 80,  67, 50}},
-	{ GNOME,     { 60, 70, 85, 85, 67,  98, 60}},
-	{ IKSAR,     { 70, 70, 90, 85, 80,  75, 55}},
-	{ VAHSHIR,   { 90, 75, 90, 70, 70,  65, 65}}
+	//                  str sta agi dex wis  int cha
+	{ Race::Human,     { 75, 75, 75, 75, 75,  75, 75}},
+	{ Race::Barbarian, {103, 95, 82, 70, 70,  60, 55}},
+	{ Race::Erudite,   { 60, 70, 70, 70, 83, 107, 70}},
+	{ Race::WoodElf,   { 65, 65, 95, 80, 80,  75, 75}},
+	{ Race::HighElf,   { 55, 65, 85, 70, 95,  92, 80}},
+	{ Race::DarkElf,   { 60, 65, 90, 75, 83,  99, 60}},
+	{ Race::HalfElf,   { 70, 70, 90, 85, 60,  75, 75}},
+	{ Race::Dwarf,     { 90, 90, 70, 90, 83,  60, 45}},
+	{ Race::Troll,     {108,109, 83, 75, 60,  52, 40}},
+	{ Race::Ogre,      {130,122, 70, 70, 67,  60, 37}},
+	{ Race::Halfling,  { 70, 75, 95, 90, 80,  67, 50}},
+	{ Race::Gnome,     { 60, 70, 85, 85, 67,  98, 60}},
+	{ Race::Iksar,     { 70, 70, 90, 85, 80,  75, 55}},
+	{ Race::VahShir,   { 90, 75, 90, 70, 70,  65, 65}}
 };
 
 // Base stat allocation by class
 static const std::unordered_map<uint16, BaseStatsStruct> class_bonus_stats = {
-	//             str sta agi dex wis int cha unspent
-	{0,           {  0,  0,  0,  0,  0,  0,  0, 50}},
-	{WARRIOR,     { 10, 10,  5,  0,  0,  0,  0, 25}},
-	{CLERIC,      {  5,  5,  0,  0, 10,  0,  0, 30}},
-	{PALADIN,     { 10,  5,  0,  0,  5,  0, 10, 20}},
-	{RANGER,      {  5, 10, 10,  0,  5,  0,  0, 20}},
-	{SHADOWKNIGHT,{ 10,  5,  0,  0,  0, 10,  5, 20}},
-	{DRUID,       {  0, 10,  0,  0, 10,  0,  0, 30}},
-	{MONK,        {  5,  5, 10, 10,  0,  0,  0, 20}},
-	{BARD,        {  5,  0,  0, 10,  0,  0, 10, 25}},
-	{ROGUE,       {  0,  0, 10, 10,  0,  0,  0, 30}},
-	{SHAMAN,      {  0,  5,  0,  0, 10,  0,  5, 30}},
-	{NECROMANCER, {  0,  0,  0, 10,  0, 10,  0, 30}},
-	{WIZARD,      {  0, 10,  0,  0,  0, 10,  0, 30}},
-	{MAGICIAN,    {  0, 10,  0,  0,  0, 10,  0, 30}},
-	{ENCHANTER,   {  0,  0,  0,  0,  0, 10, 10, 30}}
+	//                    str sta agi dex wis int cha unspent
+	{0,                  {  0,  0,  0,  0,  0,  0,  0, 50}},
+	{Class::Warrior,     { 10, 10,  5,  0,  0,  0,  0, 25}},
+	{Class::Cleric,      {  5,  5,  0,  0, 10,  0,  0, 30}},
+	{Class::Paladin,     { 10,  5,  0,  0,  5,  0, 10, 20}},
+	{Class::Ranger,      {  5, 10, 10,  0,  5,  0,  0, 20}},
+	{Class::ShadowKnight,{ 10,  5,  0,  0,  0, 10,  5, 20}},
+	{Class::Druid,       {  0, 10,  0,  0, 10,  0,  0, 30}},
+	{Class::Monk,        {  5,  5, 10, 10,  0,  0,  0, 20}},
+	{Class::Bard,        {  5,  0,  0, 10,  0,  0, 10, 25}},
+	{Class::Rogue,       {  0,  0, 10, 10,  0,  0,  0, 30}},
+	{Class::Shaman,      {  0,  5,  0,  0, 10,  0,  5, 30}},
+	{Class::Necromancer, {  0,  0,  0, 10,  0, 10,  0, 30}},
+	{Class::Wizard,      {  0, 10,  0,  0,  0, 10,  0, 30}},
+	{Class::Magician,    {  0, 10,  0,  0,  0, 10,  0, 30}},
+	{Class::Enchanter,   {  0,  0,  0,  0,  0, 10, 10, 30}},
+	{Class::Beastlord,   {  0, 10,  5,  0, 10,  0,  5, 20}}
 };
 
 // Default startzone we can assign for someone when we don't know their default startzone

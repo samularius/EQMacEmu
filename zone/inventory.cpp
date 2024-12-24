@@ -684,7 +684,7 @@ void Client::ResetSkillByLevel(EQ::skills::SkillType skill, uint8 at_level) {
 	}
 
 	if (skill == EQ::skills::SkillTinkering) {
-		if (GetBaseRace() != GNOME && m_pp.skills[skill] > 0) {
+		if (GetBaseRace() != Race::Gnome && m_pp.skills[skill] > 0) {
 			m_pp.skills[EQ::skills::SkillTinkering] = 0;
 			database.DeleteCharacterSkill(CharacterID(), EQ::skills::SkillTinkering);
 		}
