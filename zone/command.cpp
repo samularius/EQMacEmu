@@ -354,6 +354,7 @@ int command_init(void)
 		command_add("xpinfo", "Show XP info about your current target.", AccountStatus::GMStaff, command_xpinfo) ||
 
 		command_add("zone", "[Zone ID|Zone Short Name] [X] [Y] [Z] - Teleport to specified Zone by ID or Short Name (coordinates are optional).", AccountStatus::QuestTroupe, command_zone) ||
+		command_add("zoneguild", "[Zone ID|Zone Short Name] [GuildID] [X] [Y] [Z] - Teleport to specified Zone by ID or Short Name (coordinates are optional).", AccountStatus::QuestTroupe, command_zoneguild) ||
 		command_add("zonebootup", "(shortname) (ZoneServerID) - Make a zone server boot a specific zone. If no arguments are given, it will find and boot any crashed zones.", AccountStatus::GMImpossible, command_zonebootup) ||
 		command_add("zoneshutdown", "[shortname] - Shut down a zone server.", AccountStatus::GMImpossible, command_zoneshutdown) ||
 		command_add("zonespawn", "Not implemented.", AccountStatus::Max, command_zonespawn) ||
