@@ -17,6 +17,7 @@
 */
 #include "../common/global_define.h"
 #include <iostream>
+#include <algorithm>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -1002,6 +1003,15 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 {
 	char message[4096];
 	strn0cpy(message, orig_message, sizeof(message));
+
+	std::string chatMessage = message;
+
+	if (Strings::SanitizeChatString(chatMessage))
+	{
+		memset(message, 0, sizeof(message));
+		strn0cpy(message, chatMessage.c_str(), sizeof(message));
+		message[sizeof(message) - 1] = '\0';
+	}
 
 	Log(Logs::Detail, Logs::ZoneServer, "Client::ChannelMessageReceived() Channel:%i message:'%s'", chan_num, message);
 

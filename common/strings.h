@@ -91,7 +91,8 @@ public:
 	static std::string IncrementRoman(const std::string& roman);
 	static std::string IntToRoman(int num);
 	static int RomanToInt(const std::string& roman);
-
+	
+	static bool SanitizeChatString(std::string& in_string);
 
 	template <typename T>
 	static std::string ImplodePair(const std::string &glue, const std::pair<char, char> &encapsulation, const std::vector<T> &src)

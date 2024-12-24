@@ -1177,6 +1177,21 @@ int Strings::RomanToInt(const std::string& roman) {
 	return result;
 }
 
+bool Strings::SanitizeChatString(std::string& in_string)
+{
+	std::string result = in_string;
+
+	if (result.find((char)0x12) != std::string::npos && (result.find('<') != std::string::npos || result.find('>') != std::string::npos))
+	{
+		std::replace(result.begin(), result.end(), (char)(0x12), ' ');
+		std::replace(result.begin(), result.end(), '<', ' ');
+		std::replace(result.begin(), result.end(), '>', ' ');\
+		return true;
+	}
+
+	return false;
+}
+
 // Helper function to convert integer to Roman numeral
 std::string Strings::IntToRoman(int num) {
 	std::vector<std::pair<int, std::string>> valuePairs = {

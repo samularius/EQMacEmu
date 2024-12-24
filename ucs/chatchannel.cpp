@@ -419,9 +419,13 @@ void ChatChannel::SendMessageToChannel(const std::string& Message, Client* Sende
 		return;
 	}
 	ChatMessagesSent++;
+
+	std::string MessageToSend = Message;
+
+	Strings::SanitizeChatString(MessageToSend);
 	
-	if(Message.length() && Sender->GetName().length() && GetName().length())
-		database.LogUCSPlayerSpeech(Sender->GetName().c_str(), GetName().c_str(), Message.c_str(), Sender->GetAccountStatus(), 0, 200, Sender->GetCharID(), 0);
+	if(MessageToSend.length() && Sender->GetName().length() && GetName().length())
+		database.LogUCSPlayerSpeech(Sender->GetName().c_str(), GetName().c_str(), MessageToSend.c_str(), Sender->GetAccountStatus(), 0, 200, Sender->GetCharID(), 0);
 	
 	LinkedListIterator<Client*> iterator(m_clients_in_channel);
 
@@ -435,7 +439,7 @@ void ChatChannel::SendMessageToChannel(const std::string& Message, Client* Sende
 			LogDebug("Sending message to [{0}] from [{1}]",
 				channel_client->GetName().c_str(), Sender->GetName().c_str());
 
-			channel_client->SendChannelMessage(m_name, Message, Sender);
+			channel_client->SendChannelMessage(m_name, MessageToSend, Sender);
 		}
 
 		iterator.Advance();
