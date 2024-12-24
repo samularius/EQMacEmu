@@ -291,6 +291,9 @@ void ShowInventory(Client* c, const Seperator* sep)
 			}
 		}
 	}
+	if(c && t)
+		c->Message(Chat::White, fmt::format("Carried Money: {} pp {} gp {} sp {} cp", t->GetPP().platinum, t->GetPP().gold, t->GetPP().silver, t->GetPP().copper).c_str());
+
 
 	if (!found_items) {
 		c->Message(Chat::White, "No items found.");
