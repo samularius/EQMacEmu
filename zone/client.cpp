@@ -510,17 +510,175 @@ void Client::ReportConnectingState() {
 	};
 }
 
-void Client::SetBaseRace(uint32 i, bool update_racial_skills) {
+void Client::SetBaseRace(uint32 i, bool fix_skills) {
 
-	uint16 old_base_race = m_pp.race;
-	m_pp.race = i;
-
-	if (update_racial_skills && old_base_race != m_pp.race) {
-		// Cleanup racial skills that may have changed due to race swap
-		SetRacialLanguages();
-		ResetRacialSkills();
-		SetRaceStartingSkills();
+	uint16 new_race = i;
+	uint16 old_race = m_pp.race;
+	if (new_race == old_race) {
+		return;
 	}
+
+	m_pp.race = new_race;
+
+	if (fix_skills) {
+		ResetAllSkillsByLevel(GetLevel2());
+	}
+}
+
+void Client::SetBaseClass(uint32 i, bool fix_skills, bool unscribe_spells) {
+
+	uint16 new_class = i;
+	uint16 old_class = m_pp.class_;
+	if (new_class == old_class) {
+		return;
+	}
+
+	m_pp.class_ = new_class;
+	class_ = new_class;
+
+	if (fix_skills) {
+		ResetAllSkillsByLevel(GetLevel2());
+	}
+	if (unscribe_spells) {
+		UnscribeSpellAll(true);
+		UnmemSpellAll(true);
+	}
+}
+
+// Helper function that calculates and validates starting stat allocation. If valid, sets the 'out' paramter to the new stats.
+bool Client::CalculateBaseStats(Client* error_listener, uint16 in_class, uint16 in_race, uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, BaseStatsStruct& out)
+{
+	// Ensure no bonus is over 25.
+	// But, allow NULL class to spend 35 points in a stat (since they don't have class base stats).
+	uint16 bonus_max = in_class > 0 ? 25 : 35;
+	if (bonusSTR > bonus_max || bonusSTA > bonus_max || bonusAGI > bonus_max || bonusDEX > bonus_max || bonusWIS > bonus_max || bonusINT > bonus_max || bonusCHA > bonus_max) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You cannot allocate more than %u points into a single attribute.", bonus_max);
+		return false;
+	}
+
+	// Lookup the base stats for this race
+	auto race_stat_itr = race_base_stats.find(in_race);
+	if (race_stat_itr == race_base_stats.end()) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "Unknown race.");
+		return false;
+	}
+	// Lookup the base stats bonus for this class
+	auto class_stat_itr = class_bonus_stats.find(in_class);
+	if (class_stat_itr == class_bonus_stats.end()) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "Unknown class.");
+		return false;
+	}
+
+	// Prepare Base Stats
+	BaseStatsStruct baseStats = race_stat_itr->second;
+	baseStats.Add(class_stat_itr->second);
+
+	// Check the correct number of unspent points are being spent
+	uint16 total_points_spent = bonusSTR + bonusSTA + bonusAGI + bonusDEX + bonusWIS + bonusINT + bonusCHA;
+	if (total_points_spent != baseStats.unspent) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", baseStats.unspent);
+		return false;
+	}
+
+	// Calculate final stats
+	BaseStatsStruct stat_allocation = { bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, 0 };
+	baseStats.Add(stat_allocation);
+
+	// Ensure no value is over 150
+	if (baseStats.STR > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STRENGTH.");
+		return false;
+	}
+	if (baseStats.DEX > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in DEXTERITY.");
+		return false;
+	}
+	if (baseStats.AGI > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in AGILITY.");
+		return false;
+	}
+	if (baseStats.STA > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STAMINA.");
+		return false;
+	}
+	if (baseStats.INT > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in INTELLIGENCE.");
+		return false;
+	}
+	if (baseStats.WIS > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in WISDOM.");
+		return false;
+	}
+	if (baseStats.CHA > 150) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in CHARISMA.");
+		return false;
+	}
+
+	out = baseStats;
+	return true;
+}
+
+bool Client::GetCharacterCreateCombination(
+	Client* error_listener,
+	uint16 in_class, uint16 in_race, uint16 in_deity, int in_player_choice_city,
+	BindStruct& out_start_zone_bind) {
+
+	// Determine the expansion flags
+	uint32 expansion_bits = 0;
+	uint32 tmp_expansion = (uint32)content_service.GetCurrentExpansion();
+	while (tmp_expansion != 0) {
+		expansion_bits = (expansion_bits << 1) | 1;
+		tmp_expansion >>= 1;
+	}
+
+	bool is_expansion_gated = false;
+
+	// Determine parameters for this race/deity/city combination
+	uint32 expansions_req;
+	RaceClassAllocation allocation;	
+
+	// Check if it's a default unlocked combination
+	if (database.GetCharCreateFullInfo(in_class, in_race, in_deity, in_player_choice_city, expansions_req, allocation, out_start_zone_bind)) {
+		if ((expansions_req & expansion_bits) == expansions_req) {
+			return true; // Valid combination
+		}
+		is_expansion_gated = true;
+	}
+
+	// Check if it's a player unlocked combination
+	if (database.GetCharacterCombinationUnlock(CharacterID(), in_class, in_race, in_deity, in_player_choice_city, out_start_zone_bind)) {
+		return true;
+	}
+
+	if (is_expansion_gated) {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "This race/class/deity combination is not unlocked in the current expansion.");
+	}
+	else {
+		if (error_listener)
+			error_listener->Message(Chat::Red, "This race/deity/city combination is invalid.");
+	}
+	
+	return false;
+}
+
+void Client::AddCharacterCreateCombinationUnlock(
+	uint16 in_class, uint16 in_race, uint16 in_deity, int player_home_choice,
+	uint16 home_zone_id, float bind_x, float bind_y, float bind_z, float bind_heading)
+{
+	const BindStruct start_zone = { home_zone_id, bind_x, bind_y, bind_z, bind_heading };
+	database.SaveCharacterCombinationUnlock(CharacterID(), in_class, in_race, in_deity, player_home_choice, start_zone);
 }
 
 bool Client::PermaStats(
@@ -528,214 +686,135 @@ bool Client::PermaStats(
 	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
 	bool check_cooldown)
 {
-	if (error_listener == nullptr) {
-		error_listener = this;
-	}
 
 	if (check_cooldown && !p_timers.Expired(&database, pTimerPlayerStatsChange, false)) {
-		error_listener->Message(Chat::Red, "You must wait 7 days before reallocating your stats agian.");
+		if (error_listener)
+			error_listener->Message(Chat::Red, "You must wait 7 days before reallocating your stats agian.");
 		return false;
 	}
 
-	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
-		error_listener->Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
+	BaseStatsStruct base_stats;
+	if (!CalculateBaseStats(error_listener, GetBaseClass(), GetBaseRace(), bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, base_stats)) {
 		return false;
 	}
 
-	RaceClassAllocation allocation;
-	if (!database.GetCharCreateStats(GetBaseClass(), GetBaseRace(), allocation)) {
-		error_listener->Message(Chat::Red, "This race/class combination is not available. Base stats cannot be determined.");
-		return false;
-	}
-
-	uint16 total_points_spent = bonusSTR + bonusSTA + bonusAGI + bonusDEX + bonusWIS + bonusINT + bonusCHA;
-	uint16 total_points_budget = allocation.DefaultPointAllocation[0]
-		+ allocation.DefaultPointAllocation[1]
-		+ allocation.DefaultPointAllocation[2]
-		+ allocation.DefaultPointAllocation[3]
-		+ allocation.DefaultPointAllocation[4]
-		+ allocation.DefaultPointAllocation[5]
-		+ allocation.DefaultPointAllocation[6];
-
-	if (total_points_spent != total_points_budget) {
-		error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
-		return false;
-	}
-
-	if (allocation.BaseStats[0] + bonusSTR > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STRENGTH.");
-		return false;
-	}
-
-	if (allocation.BaseStats[1] + bonusDEX > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in DEXTERITY.");
-		return false;
-	}
-
-	if (allocation.BaseStats[2] + bonusAGI > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in AGILITY.");
-		return false;
-	}
-
-	if (allocation.BaseStats[3] + bonusSTA > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STAMINA.");
-		return false;
-	}
-
-	if (allocation.BaseStats[4] + bonusINT > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in INTELLIGENCE.");
-		return false;
-	}
-
-	if (allocation.BaseStats[5] + bonusWIS > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in WISDOM.");
-		return false;
-	}
-
-	if (allocation.BaseStats[6] + bonusCHA > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in CHARISMA.");
-		return false;
-	}
-
-	// New base stats
-	m_pp.STR = allocation.BaseStats[0] + bonusSTR;
-	m_pp.DEX = allocation.BaseStats[1] + bonusDEX;
-	m_pp.AGI = allocation.BaseStats[2] + bonusAGI;
-	m_pp.STA = allocation.BaseStats[3] + bonusSTA;
-	m_pp.INT = allocation.BaseStats[4] + bonusINT;
-	m_pp.WIS = allocation.BaseStats[5] + bonusWIS;
-	m_pp.CHA = allocation.BaseStats[6] + bonusCHA;
-
+	m_pp.STR = base_stats.STR;
+	m_pp.DEX = base_stats.DEX;
+	m_pp.AGI = base_stats.AGI;
+	m_pp.STA = base_stats.STA;
+	m_pp.INT = base_stats.INT;
+	m_pp.WIS = base_stats.WIS;
+	m_pp.CHA = base_stats.CHA;
 	p_timers.Start(pTimerPlayerStatsChange, 604800);
-
-	// Success
 	return true;
 }
 
-bool Client::PermaRace(
+bool Client::PermaRaceClass(
 	Client* error_listener,
-	uint32 new_race, uint32 new_deity, uint32 player_choice_city,
-	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA)
+	uint16 in_class, uint16 in_race, uint16 in_deity, int player_choice_city,
+	uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA,
+	bool force)
 {
-	if (error_listener == nullptr) {
-		error_listener = this;
-	}
 
-	uint32 old_base_race = GetBaseRace();
-	bool should_illusion_packet = (old_base_race == GetRace());
+	bool stats_valid = false;
+	bool start_zone_valid = false;
+	uint16 old_class = GetBaseClass();
+	uint16 old_race = GetBaseRace();
+	bool should_illusion_packet = (old_race == GetRace()) && in_race != old_race;
 
-	// If stats are unspecified, use their current stat allocation and carry it over
-	if (bonusSTR == 0xFF && bonusSTA == 0xFF && bonusAGI == 0xFF && bonusDEX == 0xFF && bonusWIS == 0xFF && bonusINT == 0xFF && bonusCHA == 0xFF) {
-		RaceClassAllocation old_allocation;
-		if (!database.GetCharCreateStats(GetClass(), old_base_race, old_allocation)) {
-			error_listener->Message(Chat::Red, "[ERROR] Could not determine base class parameters.");
+	// If stats are unspecified, calculate their current stat allocation and carry it over if we can
+	if (bonusSTR >= 0xFF && bonusSTA >= 0xFF && bonusAGI >= 0xFF && bonusDEX >= 0xFF && bonusWIS >= 0xFF && bonusINT >= 0xFF && bonusCHA >= 0xFF) {
+		// Lookup the base stats for this race and class
+		auto race_stat_itr = race_base_stats.find(old_race);
+		if (race_stat_itr == race_base_stats.end()) {
+			if (error_listener)
+				error_listener->Message(Chat::Red, "Unknown race.");
 			return false;
 		}
-		bonusSTR = m_pp.STR - old_allocation.BaseStats[0];
-		bonusDEX = m_pp.DEX - old_allocation.BaseStats[1];
-		bonusAGI = m_pp.AGI - old_allocation.BaseStats[2];
-		bonusSTA = m_pp.STA - old_allocation.BaseStats[3];
-		bonusINT = m_pp.INT - old_allocation.BaseStats[4];
-		bonusWIS = m_pp.WIS - old_allocation.BaseStats[5];
-		bonusCHA = m_pp.CHA - old_allocation.BaseStats[6];
+		auto class_stat_itr = class_bonus_stats.find(old_class);
+		if (class_stat_itr == class_bonus_stats.end()) {
+			if (error_listener)
+				error_listener->Message(Chat::Red, "Unknown class.");
+			return false;
+		}
+		// Figure out their allocation by substracting their stats from the base stats.
+		BaseStatsStruct old_base_stats = race_stat_itr->second;
+		old_base_stats.Add(class_stat_itr->second);
+		bonusSTR = m_pp.STR - old_base_stats.STR;
+		bonusSTA = m_pp.STA - old_base_stats.STA;
+		bonusAGI = m_pp.AGI - old_base_stats.AGI;
+		bonusDEX = m_pp.DEX - old_base_stats.DEX;
+		bonusWIS = m_pp.WIS - old_base_stats.WIS;
+		bonusINT = m_pp.INT - old_base_stats.INT;
+		bonusCHA = m_pp.CHA - old_base_stats.CHA;
 	}
 
-	if (bonusSTR > 25 || bonusSTA > 25 || bonusAGI > 25 || bonusDEX > 25 || bonusWIS > 25 || bonusINT > 25 || bonusCHA > 25) {
-		error_listener->Message(Chat::Red, "You cannot allocate more than 25 points into a single attribute.");
-		return false;
+	// Calculate new base stats
+	BaseStatsStruct new_base_stats;
+	if (CalculateBaseStats(error_listener, in_class, in_race, bonusSTR, bonusSTA, bonusAGI, bonusDEX, bonusWIS, bonusINT, bonusCHA, new_base_stats))	{
+		stats_valid = true;
+	}
+	else {
+		if (!force) {
+			return false;
+		}
+		// We usually only encounter this for #permarace command, which tries to inherit the previous stat allocation to the new race.
+		// This would only get broken/skipped when the character was previously race changed under the old system.
+		if (error_listener)
+			error_listener->Message(Chat::Yellow, "[Warning] Character base stats were not updated. Fix this with #permastats <stats>");
 	}
 
-	uint32 expansions_req;
-	RaceClassAllocation allocation;
-	BindStruct start_zone_bind;
-	if (!database.GetCharCreateFullInfo(GetBaseClass(), new_race, new_deity, player_choice_city, expansions_req, allocation, start_zone_bind)) {
-		error_listener->Message(Chat::Red, "This race/deity/city combination is not available.");
-		return false;
+	BindStruct start_zone;
+	if (GetCharacterCreateCombination(error_listener, in_class, in_race, in_deity, player_choice_city, start_zone)) {
+		start_zone_valid = true;
 	}
-
-	// Check if expansions are unlocked for this combination
-	uint32 expansion_bits = 0;
-	uint32 expansion = (uint32)content_service.GetCurrentExpansion();
-	while (expansion != 0) {
-		expansion_bits = (expansion_bits << 1) | 1;
-		expansion >>= 1;
-	}
-	if ((expansions_req & expansion_bits) != expansions_req) {
-		error_listener->Message(Chat::Red, "This race is not available in the current expansion.");
-		return false;
-	}
-
-	uint16 total_points_spent = bonusSTR + bonusSTA + bonusAGI + bonusDEX + bonusWIS + bonusINT + bonusCHA;
-	uint16 total_points_budget = allocation.DefaultPointAllocation[0]
-		+ allocation.DefaultPointAllocation[1]
-		+ allocation.DefaultPointAllocation[2]
-		+ allocation.DefaultPointAllocation[3]
-		+ allocation.DefaultPointAllocation[4]
-		+ allocation.DefaultPointAllocation[5]
-		+ allocation.DefaultPointAllocation[6];
-
-	if (total_points_spent != total_points_budget) {
-		error_listener->Message(Chat::Red, "You must allocate exactly %u attribute points.", total_points_budget);
-		return false;
-	}
-
-	if (allocation.BaseStats[0] + bonusSTR > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STRENGTH.");
-		return false;
-	}
-
-	if (allocation.BaseStats[1] + bonusDEX > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in DEXTERITY.");
-		return false;
-	}
-
-	if (allocation.BaseStats[2] + bonusAGI > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in AGILITY.");
-		return false;
-	}
-
-	if (allocation.BaseStats[3] + bonusSTA > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in STAMINA.");
-		return false;
-	}
-
-	if (allocation.BaseStats[4] + bonusINT > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in INTELLIGENCE.");
-		return false;
-	}
-
-	if (allocation.BaseStats[5] + bonusWIS > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in WISDOM.");
-		return false;
-	}
-
-	if (allocation.BaseStats[6] + bonusCHA > 150) {
-		error_listener->Message(Chat::Red, "You must NOT EXCEED 150 attribute points in CHARISMA.");
-		return false;
+	else {
+		if (!force) {
+			return false;
+		}
+		// Failed to find a valid race/deity/city combination.
+		// If we're forcing it, use a default home city based on race
+		auto default_bind_itr = default_race_bind.find(in_race);
+		if (default_bind_itr != default_race_bind.end()) {
+			if (error_listener)
+				error_listener->Message(Chat::Yellow, "[Warning] Using a default starting city based on race.");
+			start_zone = default_bind_itr->second;
+			start_zone_valid = true;
+		}
+		else {
+			if (error_listener)
+				error_listener->Message(Chat::Yellow, "[Warning] Not updating player home city because an unknown race was used.");
+		}
 	}
 
 	// New base stats
-	m_pp.STR = allocation.BaseStats[0] + bonusSTR;
-	m_pp.DEX = allocation.BaseStats[1] + bonusDEX;
-	m_pp.AGI = allocation.BaseStats[2] + bonusAGI;
-	m_pp.STA = allocation.BaseStats[3] + bonusSTA;
-	m_pp.INT = allocation.BaseStats[4] + bonusINT;
-	m_pp.WIS = allocation.BaseStats[5] + bonusWIS;
-	m_pp.CHA = allocation.BaseStats[6] + bonusCHA;
+	if (stats_valid) {
+		m_pp.STR = new_base_stats.STR;
+		m_pp.DEX = new_base_stats.DEX;
+		m_pp.AGI = new_base_stats.AGI;
+		m_pp.STA = new_base_stats.STA;
+		m_pp.INT = new_base_stats.INT;
+		m_pp.WIS = new_base_stats.WIS;
+		m_pp.CHA = new_base_stats.CHA;
+	}
 
-	// Set their new race (and racial skills)
-	SetBaseRace(new_race, true);
+	// Set their new race
+	SetBaseRace(in_race, true);
+	// Set their new class
+	SetBaseClass(in_class, true, true);
 	// Set new deity
-	SetDeity(new_deity);
+	SetDeity(in_deity);
 	// Set net home city
-	m_pp.binds[4].zoneId = start_zone_bind.zoneId;
-	m_pp.binds[4].x = start_zone_bind.x;
-	m_pp.binds[4].y = start_zone_bind.y;
-	m_pp.binds[4].z = start_zone_bind.z;
-	m_pp.binds[4].heading = start_zone_bind.heading;
+	if (start_zone_valid) {
+		m_pp.binds[4].zoneId = start_zone.zoneId;
+		m_pp.binds[4].x = start_zone.x;
+		m_pp.binds[4].y = start_zone.y;
+		m_pp.binds[4].z = start_zone.z;
+		m_pp.binds[4].heading = start_zone.heading;
+	}
 
 	if (should_illusion_packet) {
-		SendIllusionPacket(new_race);
+		SendIllusionPacket(in_race);
 	}
 
 	return true;
@@ -2430,9 +2509,13 @@ bool Client::HasSkill(EQ::skills::SkillType skill_id) {
 		return((GetSkill(skill_id) > 0) && CanHaveSkill(skill_id));
 }
 
-bool Client::CanHaveSkill(EQ::skills::SkillType skill_id) 
+bool Client::CanHaveSkill(EQ::skills::SkillType skill_id, uint8 at_level)
 {
-	bool value = skill_caps.GetSkillCap(GetClass(), skill_id, RuleI(Character, MaxLevel)).cap > 0;
+	if (at_level > RuleI(Character, MaxLevel)) {
+		at_level = RuleI(Character, MaxLevel);
+	}
+
+	bool value = skill_caps.GetSkillCap(GetClass(), skill_id, at_level).cap > 0;
 
 	// Racial skills.
 	if (!value)

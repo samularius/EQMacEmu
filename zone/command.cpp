@@ -258,6 +258,10 @@ int command_init(void)
 		command_add("mysqltest", "Akkadius MySQL Bench Test.", AccountStatus::GMImpossible, command_mysqltest) ||
 		command_add("mystats", "Show details about you or your pet.", AccountStatus::Guide, command_mystats) ||
 
+		command_add("ngpermaclass", "<class> [deity] [city] [stats...] [force] - Change your or your target's class (disconnects client). Optionally change deity, home city, and stats.", AccountStatus::GMMgmt, command_ngperma_class) ||
+		command_add("ngpermarace", "<race> [deity] [city] [stats...] [force] - Change your or your target's race (zone to take effect). Optionally change deity, home city, and stats.", AccountStatus::GMMgmt, command_ngperma_race) ||
+		command_add("ngpermaraceclass", "<race> <class> [deity] [city] [stats...] [force] - Change your or your target's race/class (disconnects client). Optionally change deity, city, and stats.", AccountStatus::GMMgmt, command_ngperma_race_class) ||
+		command_add("ngpermastats", "<stats...> - Change your or your target's starting stat point allocation (zone to take effect).", AccountStatus::GMMgmt, command_ngperma_stats) ||
 		command_add("npccast", "[targetname/entityid] [spellid] - Causes NPC target to cast spellid on targetname/entityid.", AccountStatus::QuestMaster, command_npccast) ||
 		command_add("npcedit", "[column] [value] - Mega NPC editing command.", AccountStatus::GMImpossible, command_npcedit) ||
 		command_add("npcemote", "[message] - Make your NPC target emote a message.", AccountStatus::QuestMaster, command_npcemote) ||
@@ -275,8 +279,6 @@ int command_init(void)
 		command_add("optest", "solar's private test command.", AccountStatus::GMCoder, command_optest) ||
 
 		command_add("path", "view and edit pathing.", AccountStatus::GMImpossible, command_path) ||
-		command_add("ngpermarace", "[race] [deity] [home city] - Change your or your target's race, deity, and home city (zone to take effect).", AccountStatus::GMMgmt, command_ngpermarace) ||
-		command_add("ngpermastats", "[stats list] - Change your or your target's starting stat point allocation (zone to take effect).", AccountStatus::GMMgmt, command_ngpermastats) ||
 		command_add("petition", "Handles everything petition related. Use with no args or with 'help' for how to use.", AccountStatus::ApprenticeGuide, command_petition) ||
 		command_add("pf", "Display additional mob coordinate and wandering data.", AccountStatus::GMStaff, command_pf) ||
 		command_add("playsound", "[number] - Plays a sound in the client.  Valid range 0-3999", AccountStatus::ApprenticeGuide, command_playsound) ||
@@ -968,6 +970,7 @@ void command_clearsaylink(Client *c, const Seperator *sep) {
 #include "gm_commands/mysql.cpp"
 #include "gm_commands/mysqltest.cpp"
 #include "gm_commands/mystats.cpp"
+#include "gm_commands/ngperma.cpp"
 #include "gm_commands/npccast.cpp"
 #include "gm_commands/npcedit.cpp"
 #include "gm_commands/npcemote.cpp"
@@ -982,8 +985,6 @@ void command_clearsaylink(Client *c, const Seperator *sep) {
 #include "gm_commands/numauths.cpp"
 #include "gm_commands/optest.cpp"
 #include "gm_commands/path.cpp"
-#include "gm_commands/ngpermarace.cpp"
-#include "gm_commands/ngpermastats.cpp"
 #include "gm_commands/petition.cpp"
 #include "gm_commands/pf.cpp"
 #include "gm_commands/playsound.cpp"

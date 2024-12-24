@@ -48,9 +48,23 @@ public:
 	void SetBaseClass(int v);
 	void SetBaseRace(int v);
 	void SetBaseGender(int v);
+	bool HasCharacterCreateCombination(uint16 in_class, uint16 in_race, uint16 in_deity, int in_player_choice_city);
+	void AddCharacterCreateCombinationUnlock(uint16 in_class, uint16 in_race, uint16 in_deity, int player_home_choice, uint16 home_zone_id, float bind_x, float bind_y, float bind_z, float bind_heading);
 	bool PermaStats(uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA, bool check_cooldown);
 	bool PermaRace(
-		uint32 new_race, uint32 new_deity, uint32 player_choice_city,
+		uint16 new_race, uint16 new_deity, int player_choice_city,
+		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA
+	);
+	bool ForcePermaRace(
+		uint16 new_race, uint16 new_deity, int player_choice_city,
+		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA
+	);
+	bool PermaClass(
+		uint16 new_class, uint16 new_deity, int player_choice_city,
+		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA
+	);
+	bool ForcePermaClass(
+		uint16 new_class, uint16 new_deity, int player_choice_city,
 		uint16 bonusSTR, uint16 bonusSTA, uint16 bonusAGI, uint16 bonusDEX, uint16 bonusWIS, uint16 bonusINT, uint16 bonusCHA
 	);
 	int GetBaseFace();
@@ -205,7 +219,7 @@ public:
 	int IsSoloOnly();
 
 	void ClearPlayerInfoAndGrantStartingItems();
-	void ResetPlayerForNewGamePlus();
+	void ResetPlayerForNewGamePlus(uint8 new_level, uint8 new_level2, bool reset_skill_points);
 	int GetModCharacterFactionLevel(int faction);
 	int GetStartZone();
 	void KeyRingAdd(uint32 item);
