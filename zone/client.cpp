@@ -658,7 +658,7 @@ bool Client::GetCharacterCreateCombination(
 	}
 
 	// Check if it's a player unlocked combination
-	if (database.GetCharacterCombinationUnlock(CharacterID(), in_class, in_race, in_deity, in_player_choice_city, out_start_zone_bind)) {
+	if (database.GetCharacterCombinationUnlock(AccountID(), in_class, in_race, in_deity, in_player_choice_city, out_start_zone_bind)) {
 		return true;
 	}
 
@@ -679,7 +679,7 @@ void Client::AddCharacterCreateCombinationUnlock(
 	uint16 home_zone_id, float bind_x, float bind_y, float bind_z, float bind_heading)
 {
 	const BindStruct start_zone = { home_zone_id, bind_x, bind_y, bind_z, bind_heading };
-	database.SaveCharacterCombinationUnlock(CharacterID(), in_class, in_race, in_deity, player_home_choice, start_zone);
+	database.SaveCharacterCombinationUnlock(AccountID(), in_class, in_race, in_deity, player_home_choice, start_zone);
 }
 
 bool Client::PermaStats(
