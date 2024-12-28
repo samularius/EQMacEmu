@@ -2189,29 +2189,36 @@ bool Mob::BardHateSummon(Mob* summoned) {
 	SetTarget(summoned);
 	if (target)
 	{
+			Mob* summoner = this;
+			Mob* summon_target = target;
+			if (RuleB(Quarm, BardInstagibReverseSummon)) {
+				summoner = target;
+				summon_target = this;
+			}
+
 			entity_list.MessageClose(this, true, 500, Chat::Say, "%s says,'You will not evade me, %s!' ", GetCleanName(), target->GetCleanName());
-			glm::vec3 dest(m_Position.x, m_Position.y, m_Position.z);
-			// this will ensure that the player is summoned very slightly in front of the NPC
-			if (GetHeading() < 43.0f || GetHeading() > 212.0f)
+			glm::vec3 dest(summoner->m_Position.x, summoner->m_Position.y, summoner->m_Position.z);
+			// this will ensure that the summon target is summoned very slightly in front of the summoner
+			if (summoner->GetHeading() < 43.0f || summoner->GetHeading() > 212.0f)
 				dest.y += 1.0f;
-			else if (GetHeading() > 85.0f && GetHeading() < 171.0f)
+			else if (summoner->GetHeading() > 85.0f && summoner->GetHeading() < 171.0f)
 				dest.y -= 1.0f;
-			if (GetHeading() > 21.0f && GetHeading() < 107.0f)
+			if (summoner->GetHeading() > 21.0f && summoner->GetHeading() < 107.0f)
 				dest.x += 1.0f;
-			else if (GetHeading() > 149.0f && GetHeading() < 234.0f)
+			else if (summoner->GetHeading() > 149.0f && summoner->GetHeading() < 234.0f)
 				dest.x -= 1.0f;
 
 			float newz = zone->zonemap->FindBestZ(dest, nullptr);
 			if (newz != BEST_Z_INVALID)
-				newz = target->SetBestZ(newz);
+				newz = summon_target->SetBestZ(newz);
 			bool in_liquid = zone->HasWaterMap() && zone->watermap->InLiquid(glm::vec3(m_Position.x, m_Position.y, newz)) || zone->IsWaterZone(newz);
 			if (newz != BEST_Z_INVALID && !in_liquid)
 				dest.z = newz;
-			if (target->IsClient()) {
-				target->CastToClient()->MovePC(zone->GetZoneID(), dest.x, dest.y, dest.z, target->GetHeading(), 0, SummonPC);
+			if (summon_target->IsClient()) {
+				summon_target->CastToClient()->MovePC(zone->GetZoneID(), dest.x, dest.y, dest.z, summon_target->GetHeading(), 0, SummonPC);
 			}
 			else {
-				target->GMMove(dest.x, dest.y, dest.z, target->GetHeading());
+				summon_target->GMMove(dest.x, dest.y, dest.z, summon_target->GetHeading());
 			}
 
 			return true;
