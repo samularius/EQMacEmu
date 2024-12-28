@@ -280,6 +280,11 @@ bool WorldBoot::DatabaseLoadRoutines(int argc, char** argv)
 		database.AdjustSpawnTimes();
 	}
 
+	if (RuleB(World, ClearTempMerchantlist)) {
+		LogInfo("Clearing temporary merchant lists...");
+		database.ClearMerchantTemp();
+	}
+
 	LogInfo("Loading EQ time of day");
 	TimeOfDay_Struct eqTime{};
 	time_t           realtime;

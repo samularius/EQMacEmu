@@ -219,6 +219,13 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 #endif
+	
+	WorldBoot::RegisterLoginservers();
+	WorldBoot::LoadDatabaseConnections();
+	if (!WorldBoot::DatabaseLoadRoutines(argc, argv)) {
+		return 1;
+	}
+
 	memset(&next_quake, 0, sizeof(ServerEarthquakeImminent_Struct));
 	NextQuakeTimer.Disable();
 	DisableQuakeTimer.Disable();
@@ -245,12 +252,6 @@ int main(int argc, char** argv) {
 			NextQuakeTimer.Enable();
 			NextQuakeTimer.Start((next_quake.start_timestamp - Timer::GetTimeSeconds()) * 1000);
 		}
-	}
-	
-	WorldBoot::RegisterLoginservers();
-	WorldBoot::LoadDatabaseConnections();
-	if (!WorldBoot::DatabaseLoadRoutines(argc, argv)) {
-		return 1;
 	}
 
 	Timer EQTimeTimer(600000);
