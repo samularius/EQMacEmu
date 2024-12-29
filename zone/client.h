@@ -488,6 +488,7 @@ public:
 	inline const float GetBindHeading(uint32 index = 0) const { return m_pp.binds[index].heading; }
 	inline uint32 GetBindZoneID(uint32 index = 0) const { return m_pp.binds[index].zoneId; }
 	inline uint32 GetZoneChangeCount() const { return m_pp.zone_change_count; }
+	inline uint32 GetTimesRebirthed() { return m_epp.e_times_rebirthed; }
 	
 	inline uint8 IsHardcore() const { return m_epp.hardcore; }
 	inline uint8 IsSoloOnly() const { return m_epp.solo_only; }
@@ -520,7 +521,8 @@ public:
 	void SendPickPocketResponse(Mob *from, uint32 amt, int type, int16 slotid = 0, EQ::ItemInstance* inst = nullptr, bool skipskill = false);
 	bool GetPickPocketSlot(EQ::ItemInstance* inst, int16& slotid);
 
-	inline const char* GetLastName() const { return lastname; }
+	inline const char* GetLastName() const { return lastname; } // Gets their current full last name (includes modifications by Title NPC).
+	inline const char* GetProfileLastName() const { return m_pp.last_name; } // Gets just their raw /surname value (ignores their modified surname by the Title NPC).
 
 	inline const char* GetTemporaryLastName() const { return m_epp.temp_last_name; }
 	bool HasTemporaryLastName();
@@ -693,6 +695,7 @@ public:
 	bool CheckLoreConflict(const EQ::ItemData* item);
 	void ChangeLastName(const char* in_lastname);
 	void SetTemporaryLastName(char* in_lastname);
+	void SetTemporaryCustomizedLastName(char* in_lastname);
 	void SacrificeConfirm(Mob* caster);
 	void Sacrifice(Mob* caster);
 	void GoToDeath();
