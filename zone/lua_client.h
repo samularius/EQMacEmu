@@ -70,6 +70,7 @@ public:
 	int GetBaseFace();
 	int GetLanguageSkill(int skill_id);
 	const char *GetLastName();
+	const char* GetProfileLastName();
 	int GetBaseSTR();
 	int GetBaseSTA();
 	int GetBaseCHA();
@@ -101,6 +102,7 @@ public:
 	float GetBindHeading(int index);
 	uint32 GetBindZoneID();
 	uint32 GetBindZoneID(int index);
+	uint32 GetTimesRebirthed();
 	void MovePC(int zone, float x, float y, float z, float heading);
 	void ChangeLastName(const char *in);
 	int GetFactionLevel(uint32 char_id, uint32 race, uint32 class_, uint32 deity, uint32 faction, Lua_NPC npc);
@@ -280,6 +282,7 @@ public:
 	bool IsMarried();
 	void SetMarried(const char*);
 	void SetTemporaryLastName(char*);
+	void SetTemporaryCustomizedLastName(char* lastname);
 	bool HasTemporaryLastName();
 
 	uint8 GetSkillTrainLevel(int skill_id);

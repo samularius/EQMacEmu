@@ -1978,6 +1978,7 @@ void Client::Stand() {
 
 void Client::ChangeLastName(const char* in_lastname) {
 	memset(m_pp.last_name, 0, sizeof(m_pp.last_name));
+	memset(m_epp.temp_last_name, 0, sizeof(m_epp.temp_last_name));
 	strn0cpy(m_pp.last_name, in_lastname, sizeof(m_pp.last_name));
 	auto outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
 	GMLastName_Struct* gmn = (GMLastName_Struct*)outapp->pBuffer;
@@ -2034,6 +2035,43 @@ void Client::SetTemporaryLastName(char* in_lastname) {
 	strn0cpy(m_epp.temp_last_name, in_lastname, sizeof(m_epp.temp_last_name));
 	memset(lastname, 0, sizeof(lastname));
 	strcpy(lastname, m_epp.temp_last_name);
+	auto outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
+	GMLastName_Struct* gmn = (GMLastName_Struct*)outapp->pBuffer;
+	strcpy(gmn->name, name);
+	strcpy(gmn->gmname, name);
+	strcpy(gmn->lastname, in_lastname);
+	gmn->unknown[0] = 1;
+	gmn->unknown[1] = 1;
+	gmn->unknown[2] = 1;
+	gmn->unknown[3] = 1;
+	entity_list.QueueClients(this, outapp, false);
+	// Send name update packet here... once know what it is
+	safe_delete(outapp);
+}
+
+void Client::SetTemporaryCustomizedLastName(char* in_lastname) {
+
+	if (!in_lastname) {
+		return;
+	}
+
+	// This code path is through the Title NPC. Data is already valid.
+	if (strlen(in_lastname) >= sizeof(lastname)) {
+		Message_StringID(Chat::Yellow, SURNAME_TOO_LONG);
+		return;
+	}
+
+	memset(m_epp.temp_last_name, 0, sizeof(m_epp.temp_last_name));
+	strn0cpy(m_epp.temp_last_name, in_lastname, sizeof(m_epp.temp_last_name));
+	memset(lastname, 0, sizeof(lastname));
+
+	// OCD: Strip the leading '_' if there is one for the rest of this logic.
+	// Keep it for the m_epp so we know it's set, but strip it out for all the runtime values.
+	if (in_lastname[0] == '_') {
+		in_lastname = &in_lastname[1];
+	}
+
+	strcpy(lastname, in_lastname);
 	auto outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
 	GMLastName_Struct* gmn = (GMLastName_Struct*)outapp->pBuffer;
 	strcpy(gmn->name, name);

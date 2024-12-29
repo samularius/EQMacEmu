@@ -171,6 +171,11 @@ const char *Lua_Client::GetLastName() {
 	return self->GetLastName();
 }
 
+const char* Lua_Client::GetProfileLastName() {
+	Lua_Safe_Call_String();
+	return self->GetProfileLastName();
+}
+
 void Lua_Client::SetMarried(const char* temporary_name) {
 	Lua_Safe_Call_Void();
 	self->SetMarried(temporary_name);
@@ -184,6 +189,11 @@ bool Lua_Client::IsMarried() {
 void Lua_Client::SetTemporaryLastName(char* temporary_name) {
 	Lua_Safe_Call_Void();
 	self->SetTemporaryLastName(temporary_name);
+}
+
+void Lua_Client::SetTemporaryCustomizedLastName(char* temporary_name) {
+	Lua_Safe_Call_Void();
+	self->SetTemporaryCustomizedLastName(temporary_name);
 }
 
 bool Lua_Client::HasTemporaryLastName() {
@@ -375,6 +385,11 @@ uint32 Lua_Client::GetBindZoneID() {
 uint32 Lua_Client::GetBindZoneID(int index) {
 	Lua_Safe_Call_Int();
 	return self->GetBindZoneID(index);
+}
+
+uint32 Lua_Client::GetTimesRebirthed() {
+	Lua_Safe_Call_Int();
+	return self->GetTimesRebirthed();
 }
 
 void Lua_Client::MovePC(int zone_id, float x, float y, float z, float heading) {
@@ -1424,6 +1439,7 @@ luabind::scope lua_register_client() {
 		.def("GetBaseFace", (int(Lua_Client::*)(void))&Lua_Client::GetBaseFace)
 		.def("GetLanguageSkill", (int(Lua_Client::*)(int))&Lua_Client::GetLanguageSkill)
 		.def("GetLastName", (const char *(Lua_Client::*)(void))&Lua_Client::GetLastName)
+		.def("GetProfileLastName", (const char*(Lua_Client::*)(void))&Lua_Client::GetProfileLastName)
 		.def("GetBaseSTR", (int(Lua_Client::*)(void))&Lua_Client::GetBaseSTR)
 		.def("GetBaseSTA", (int(Lua_Client::*)(void))&Lua_Client::GetBaseSTA)
 		.def("GetBaseCHA", (int(Lua_Client::*)(void))&Lua_Client::GetBaseCHA)
@@ -1455,6 +1471,7 @@ luabind::scope lua_register_client() {
 		.def("GetBindHeading", (float(Lua_Client::*)(int))&Lua_Client::GetBindHeading)
 		.def("GetBindZoneID", (uint32(Lua_Client::*)(void))&Lua_Client::GetBindZoneID)
 		.def("GetBindZoneID", (uint32(Lua_Client::*)(int))&Lua_Client::GetBindZoneID)
+		.def("GetTimesRebirthed", (uint32(Lua_Client::*)(void))&Lua_Client::GetTimesRebirthed)
 		.def("MovePC", (void(Lua_Client::*)(int,float,float,float,float))&Lua_Client::MovePC)
 		.def("ChangeLastName", (void(Lua_Client::*)(const char *in))&Lua_Client::ChangeLastName)
 		.def("GetFactionLevel", (int(Lua_Client::*)(uint32,uint32,uint32,uint32,uint32,Lua_NPC))&Lua_Client::GetFactionLevel)
@@ -1632,6 +1649,7 @@ luabind::scope lua_register_client() {
 		.def("IsMarried", (bool(Lua_Client::*)())&Lua_Client::IsMarried)
 		.def("SetMarried", (void(Lua_Client::*)(const char*))&Lua_Client::SetMarried)
 		.def("SetTemporaryLastName", (void(Lua_Client::*)(const char*))&Lua_Client::SetTemporaryLastName)
+		.def("SetTemporaryCustomizedLastName", (void(Lua_Client::*)(const char*))&Lua_Client::SetTemporaryCustomizedLastName)
 		.def("HasTemporaryLastName", (bool(Lua_Client::*)(void))&Lua_Client::HasTemporaryLastName)
 		.def("PermaGender", (void(Lua_Client::*)(uint32))&Lua_Client::PermaGender)
 		.def("ScribeSpells", (uint16(Lua_Client::*)(uint8, uint8))& Lua_Client::ScribeSpells)
