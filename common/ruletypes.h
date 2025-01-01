@@ -320,6 +320,8 @@ RULE_INT(Quarm, AllianceChannelLevelRequirement, 10, "")
 RULE_INT(Quarm, RebirthTitleLevel, 60, "The minimum level before we add a title for rebirth.")
 RULE_BOOL(Quarm, DruidEpicAppliesEnsnare, true, "")
 RULE_BOOL(Quarm, PreNerfSneakHide, true, "This should be false during Luclin.")
+RULE_BOOL(Quarm, ProjectSpeedieBroadcastUnknownZone, true, "")
+RULE_INT(Quarm, BeastlordMaxLevel, 30, "")
 RULE_CATEGORY_END()
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing

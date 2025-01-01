@@ -133,6 +133,10 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 			//then we assume this is invalid.
 			if(!zone_point || zone_point->target_zone_id != target_zone_id) {
 				Log(Logs::General, Logs::Error, "Zoning %s: Invalid unsolicited zone request to zone id '%d'.", GetName(), target_zone_id);
+				if (RuleB(Quarm, ProjectSpeedieBroadcastUnknownZone))
+				{
+					worldserver.SendEmoteMessage(0, 0, 100, Chat::Default, "%s (%s) - entity tried zoning from %s to %i, no zone point in table. Flagging as warning", GetCleanName(), AccountName(), zone->GetShortName(), target_zone_id);
+				}
 				if (zc->zoneID == GetBindZoneID()) {
 					// possible gate to bind hack
 					CheatDetected(MQGate, GetX(), GetY(), GetZ());
@@ -270,6 +274,10 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 		}
 
 		//for now, there are no other cases...
+		if (RuleB(Quarm, ProjectSpeedieBroadcastUnknownZone))
+		{
+			worldserver.SendEmoteMessage(0, 0, 100, Chat::Default, "%s (%s) - entity tried zoning from %s to %s, unknown failure. Flagging as warning", GetCleanName(), AccountName(), zone->GetShortName(), target_zone_name);
+		}
 
 		//could not find a valid reason for them to be zoning, stop it.
 		CheatDetected(MQZoneUnknownDest, 0.0, 0.0, 0.0);
