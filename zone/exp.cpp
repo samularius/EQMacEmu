@@ -699,9 +699,9 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp, bool is_spl
 		max_level = client_max_level + 1;
 	}
 
-	if (GetClass() == Class::Beastlord && max_level > RuleI(Quarm, BeastlordMaxLevel))
+	if (GetClass() == Class::Beastlord)
 	{
-		max_level = RuleI(Quarm, BeastlordMaxLevel);
+		max_level = RuleI(Quarm, BeastlordMaxLevel) + 1;
 	}
 
 	if(check_level > max_level) {
