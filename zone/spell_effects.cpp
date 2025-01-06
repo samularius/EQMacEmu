@@ -1162,7 +1162,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 
 						EQ::ItemInstance *SubItem = database.CreateItem(spell.base[i], charges);
 						if (SubItem != nullptr) {
-							SubItem->SetSelfFoundCharacter(CastToClient()->CharacterID(), CastToClient()->GetName());
+							if (CastToClient()->IsSoloOnly() || CastToClient()->IsSelfFound()) {
+								SubItem->SetSelfFoundCharacter(CastToClient()->CharacterID(), CastToClient()->GetName());
+							}
 							SummonedItem->PutItem(slot, *SubItem);
 							safe_delete(SubItem);
 						}
