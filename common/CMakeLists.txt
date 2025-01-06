@@ -410,6 +410,7 @@ SET(common_headers
 	profanity_manager.h
 	profiler.h
 	ptimer.h
+	quarm_item_data.h
 	queue.h
 	races.h
 	random.h

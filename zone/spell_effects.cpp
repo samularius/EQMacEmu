@@ -1087,10 +1087,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					// Destroy duplicate items on charmed pets and nodrop items.
 					if (item->NoDrop != 0 && (!IsCharmedPet() || (IsCharmedPet() && CastToNPC()->CountQuestItem(item->ID) == 0)))
 					{
+						QuarmItemData quarm_item_data = QuarmItemData();
+						if (caster && caster->IsClient() && (caster->CastToClient()->IsSelfFound() || caster->CastToClient()->IsSoloOnly())) {
+							quarm_item_data.SetSelfFoundCharacter(item, caster->CastToClient()->CharacterID(), caster->CastToClient()->GetName());
+						}
+
 						// For pets, all items are added to inventory, even if the
 						// item is summoned into a bag so that the pet can equip
 						// the item, if possible.
-						CastToNPC()->AddPetLoot(item->ID, quantity);
+						CastToNPC()->AddPetLoot(item->ID, quantity, false, quarm_item_data);
 					}
 				} else if (caster) {
 					caster->Message_StringID(Chat::SpellFailure, SPELL_NO_EFFECT);

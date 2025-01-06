@@ -577,7 +577,7 @@ bool Object::HandleClick(Client* sender, const ClickObject_Struct* click_object)
 			if(database.ItemQuantityType(item_id) != EQ::item::Quantity_Charges && charges < 1)
 				charges = 1;
 
-			if (sender->SummonItem(item_id, charges, 0, true))
+			if (sender->SummonItem(item_id, charges, 0, true, m_inst->GetQuarmItemData()))
 			{
 				EQ::ItemInstance* curitem = sender->GetInv().GetItem(EQ::invslot::slotCursor);
 				if (curitem && curitem->IsType(EQ::item::ItemClassBag))

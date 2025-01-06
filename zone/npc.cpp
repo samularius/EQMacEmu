@@ -1450,6 +1450,10 @@ void NPC::PickPocket(Client* thief)
 						{
 							if(slotid >= 0)
 							{
+								if (thief->IsSoloOnly() || thief->IsSelfFound())
+								{
+									inst->SetSelfFoundCharacter(thief->CharacterID(), thief->GetName());
+								}
 								thief->SendPickPocketResponse(this, 0, PickPocketItem, slotid, inst);
 								LootItem* sitem = GetItem(EQ::invslot::slotGeneral1, steal_items[random]);
 								RemoveItem(sitem);
