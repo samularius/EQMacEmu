@@ -3875,7 +3875,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 		return 100;
 	}
 
-	if (GetSpecialAbility(SpecialAbility::CastingFromRangeImmunity)) {
+	if (!tick_save && GetSpecialAbility(SpecialAbility::CastingFromRangeImmunity)) {
 		if (!caster->CombatRange(this)) {
 			return(0);
 		}
