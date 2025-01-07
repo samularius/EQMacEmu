@@ -344,6 +344,12 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			zoneguildid = player_raid->GetLeaderGuildID();
 		}
 
+		if (sender->GuildID() == 1 && zoneguildid != GUILD_NONE && zoneguildid != sender->GuildID())
+		{
+			sender->Message(Chat::Red, "You are unable to enter a guild instance that isn't your own because you are part of Guild < >.");
+			return;
+		}
+
 		if ((floor_port || strncmp(destination_zone_name,zone_name,strlen(zone_name)) == 0) && !keyneeded)
 		{
 			if(!keepoffkeyring)
