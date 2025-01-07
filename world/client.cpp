@@ -233,7 +233,8 @@ bool Client::HandleSendLoginInfoPacket(const EQApplicationPacket *app) {
 
 		expansion = 0;
 		mule = false;
-		database.GetAccountRestriction(cle->AccountID(), expansion, mule);
+		uint32 force_guild_id = 0;
+		database.GetAccountRestriction(cle->AccountID(), expansion, mule, force_guild_id);
 
 		if(cle->Online() < CLE_Status::Online)
 			cle->SetOnline();

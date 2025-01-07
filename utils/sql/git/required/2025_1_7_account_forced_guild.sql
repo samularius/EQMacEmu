@@ -1,0 +1,1 @@
+ALTER TABLE `account` ADD COLUMN `force_guild_id` int(11) NOT NULL DEFAULT 0;

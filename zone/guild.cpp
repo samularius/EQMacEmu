@@ -131,19 +131,33 @@ void Client::SendPlayerGuild() {
 
 void Client::RefreshGuildInfo()
 {
-	uint32 OldGuildID = guild_id;
 
-	guildrank = GUILD_RANK_NONE;
-	guild_id = GUILD_NONE;
+	uint16 expansion = 0;
+	bool mule = false;
+	uint32 force_guild_id = 0;
+	database.GetAccountRestriction(AccountID(), expansion, mule, force_guild_id);
+	
+	if (force_guild_id == 0)
+	{
+		uint32 OldGuildID = guild_id;
 
-	CharGuildInfo info;
-	if(!guild_mgr.GetCharInfo(CharacterID(), info)) {
-		Log(Logs::Detail, Logs::Guilds, "Unable to obtain guild char info for %s (%d)", GetName(), CharacterID());
-		return;
+		guildrank = GUILD_RANK_NONE;
+		guild_id = GUILD_NONE;
+
+		CharGuildInfo info;
+		if (!guild_mgr.GetCharInfo(CharacterID(), info)) {
+			Log(Logs::Detail, Logs::Guilds, "Unable to obtain guild char info for %s (%d)", GetName(), CharacterID());
+			return;
+		}
+
+		guildrank = info.rank;
+		guild_id = info.guild_id;
 	}
-
-	guildrank = info.rank;
-	guild_id = info.guild_id;
+	else
+	{
+		guildrank = GUILD_MEMBER;
+		guild_id = force_guild_id;
+	}
 
 	SendGuildSpawnAppearance();
 }

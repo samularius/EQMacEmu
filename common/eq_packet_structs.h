@@ -794,6 +794,7 @@ struct PlayerProfile_Struct
 				uint32				timeentitledonaccount;
 				bool				mule;
 				bool				showhelm;
+				uint32	force_guild_id;
 };
 
 

@@ -73,7 +73,8 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	
 	bool mule = false;
 	uint16 expansion = 0;
-	database.GetAccountRestriction(id, expansion, mule);
+	uint32 force_guild_id = 0;
+	database.GetAccountRestriction(id, expansion, mule, force_guild_id);
 
 	auto outpack = new ServerPacket;
 	outpack->opcode = ServerOP_UsertoWorldResp;

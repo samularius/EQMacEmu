@@ -2119,9 +2119,9 @@ void Database::ClearGroupLeader(uint32 gid) {
 		std::cout << "Unable to clear group leader: " << results.ErrorMessage() << std::endl;
 }
 
-bool Database::GetAccountRestriction(uint32 acctid, uint16& expansion, bool& mule)
+bool Database::GetAccountRestriction(uint32 acctid, uint16& expansion, bool& mule, uint32& force_guild_id)
 {
-	std::string query = StringFormat("SELECT expansion, mule FROM account WHERE id=%i",acctid);
+	std::string query = StringFormat("SELECT expansion, mule, force_guild_id FROM account WHERE id=%i",acctid);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success())
@@ -2134,6 +2134,7 @@ bool Database::GetAccountRestriction(uint32 acctid, uint16& expansion, bool& mul
 
 	expansion = atoi(row[0]);
 	mule = atoi(row[1]);
+	force_guild_id = atoi(row[2]);
 
 	return true;
 }

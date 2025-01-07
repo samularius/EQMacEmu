@@ -1647,7 +1647,20 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 
 	uint16 expansion = 0;
 	bool mule = false;
-	database.GetAccountRestriction(AccountID(), expansion, mule);
+	uint32 force_guild;
+	database.GetAccountRestriction(AccountID(), expansion, mule, force_guild);
+	m_pp.force_guild_id = force_guild;
+	if (m_pp.force_guild_id != 0)
+	{
+		if (force_guild != guild_id)
+		{
+			guild_mgr.SetGuild(CharacterID(), force_guild, GUILD_MEMBER);
+		}
+		guild_id = m_pp.force_guild_id;
+		guildrank = GUILD_MEMBER;
+		m_pp.guild_id = m_pp.force_guild_id;
+		m_pp.guildrank = GUILD_MEMBER;
+	}
 	m_pp.expansions = expansion;
 	m_pp.mule = mule;
 

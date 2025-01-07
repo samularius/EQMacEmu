@@ -537,6 +537,9 @@ bool Raid::IsGuildOfficerInRaidOfGuild(uint32 guild_id)
 		return false;
 	}
 
+	if (guild_id == 1)
+		return true;
+
 	for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 	{
 		if (members[x].IsGuildOfficer && members[x].guildid == guild_id)
