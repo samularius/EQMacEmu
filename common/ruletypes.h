@@ -323,6 +323,11 @@ RULE_BOOL(Quarm, PreNerfSneakHide, true, "This should be false during Luclin.")
 RULE_BOOL(Quarm, ProjectSpeedieBroadcastUnknownZone, true, "")
 RULE_INT(Quarm, BeastlordMaxLevel, 30, "")
 RULE_CATEGORY_END()
+
+RULE_CATEGORY(SelfFound)
+RULE_BOOL(SelfFound, PetLootSupport, true, "Allow solo/self-found players to loot their own SF items back from pet/npc corpses. This allows SF players to recover their items they gave to charmed pets.")
+RULE_CATEGORY_END()
+
 RULE_CATEGORY( Map )
 //enable these to help prevent mob hopping when they are pathing
 RULE_BOOL ( Map, FixPathingZWhenLoading, true, "increases zone boot times a bit to reduce hopping.")

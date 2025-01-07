@@ -689,7 +689,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 						DeleteItemInInventory(i);
 						if (npc->CanTalk())
 							npc->Say_StringID(zone->random.Int(TRADE_BAD_FACTION1, TRADE_BAD_FACTION4));
-						SummonItem(inst->GetID(), inst->GetCharges(), EQ::legacy::SLOT_QUEST, true);
+						SummonItem(inst->GetID(), inst->GetCharges(), EQ::legacy::SLOT_QUEST, true, inst->GetQuarmItemData());
 						Log(Logs::General, Logs::Trading, "Quest NPC %s is returning %s because the faction check has failed.", npc->GetName(), item->Name);
 
 					}
@@ -700,7 +700,8 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 						{
 							auto loot_drop_entry = LootdropEntriesRepository::NewNpcEntity();
 							loot_drop_entry.item_charges = static_cast<int8>(inst->GetCharges());
-							npc->AddLootDrop(item, loot_drop_entry, true, true);
+							bool pet = true; // setting pet(traded) flag to prevent self-found from looting this like a normal drop
+							npc->AddLootDrop(item, loot_drop_entry, true, true, false, pet, false, inst->GetQuarmItemData());
 							Log(Logs::General, Logs::Trading, "Adding loot item %s to Quest NPC %s due to bad faction.", item->Name, npc->GetName());
 						}
 					}
@@ -734,7 +735,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 										else if (bagitem->NoDrop != 0 &&
 											(!npc->IsCharmedPet() || (npc->IsCharmedPet() && npc->CountQuestItem(bagitem->ID) == 0)))
 										{
-											npc->AddPetLoot(bagitem->ID, baginst->GetCharges());
+											npc->AddPetLoot(bagitem->ID, baginst->GetCharges(), false, baginst->GetQuarmItemData());
 											Log(Logs::General, Logs::Trading, "Adding loot item %s (bag) to non-Quest pet %s", bagitem->Name, npc->GetName());
 										}
 									}
@@ -749,7 +750,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 									{
 										if (bagitem->NoDrop != 0 && npc->CountQuestItem(bagitem->ID) == 0)
 										{
-											npc->AddQuestLoot(bagitem->ID, baginst->GetCharges());
+											npc->AddQuestLoot(bagitem->ID, baginst->GetCharges(), baginst->GetQuarmItemData());
 											Log(Logs::General, Logs::Trading, "Adding loot item %s (bag) to non-Quest NPC %s", bagitem->Name, npc->GetName());
 										}
 									}
@@ -768,7 +769,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 					else if(item->NoDrop != 0 && 
 						(!npc->IsCharmedPet() || (npc->IsCharmedPet() && npc->CountQuestItem(item->ID) == 0)))
 					{
-						npc->AddPetLoot(item->ID, inst->GetCharges());
+						npc->AddPetLoot(item->ID, inst->GetCharges(), false, inst->GetQuarmItemData());
 						Log(Logs::General, Logs::Trading, "Adding loot item %s to non-Quest pet %s", item->Name, npc->GetName());
 					}
 				}
@@ -776,7 +777,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 				else if (RuleB(NPC, ReturnNonQuestItems)) 
 				{
 					DeleteItemInInventory(i);
-					SummonItem(inst->GetID(), inst->GetCharges(), EQ::legacy::SLOT_QUEST, true);
+					SummonItem(inst->GetID(), inst->GetCharges(), EQ::legacy::SLOT_QUEST, true, inst->GetQuarmItemData());
 					if(npc->CanTalk())
 						npc->Say_StringID(NO_NEED_FOR_ITEM, GetName());
 					Log(Logs::General, Logs::Trading, "Non-Quest NPC %s is returning %s because it does not require it.", npc->GetName(), item->Name);
@@ -789,7 +790,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 					{
 						if (GetGM() || (item->NoDrop != 0 && npc->CountQuestItem(item->ID) == 0))
 						{
-							npc->AddQuestLoot(item->ID, inst->GetCharges());
+							npc->AddQuestLoot(item->ID, inst->GetCharges(), inst->GetQuarmItemData());
 							Log(Logs::General, Logs::Trading, "Adding loot item %s to non-Quest NPC %s", item->Name, npc->GetName());
 						}
 					}

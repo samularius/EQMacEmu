@@ -52,7 +52,7 @@ static inline int32 GetNextItemInstSerialNumber() {
 //
 // class EQ::ItemInstance
 //
-EQ::ItemInstance::ItemInstance(const EQ::ItemData* item, int8 charges) {
+EQ::ItemInstance::ItemInstance(const EQ::ItemData* item, int8 charges, const QuarmItemData& quarm_item_data) {
 	if(item) {
 		m_item = new EQ::ItemData(*item);
 	}
@@ -64,9 +64,10 @@ EQ::ItemInstance::ItemInstance(const EQ::ItemData* item, int8 charges) {
 	}
 
 	m_SerialNumber = GetNextItemInstSerialNumber();
+	m_quarm_item_data = quarm_item_data;
 }
 
-EQ::ItemInstance::ItemInstance(SharedDatabase *db, int16 item_id, int8 charges) {
+EQ::ItemInstance::ItemInstance(SharedDatabase *db, int16 item_id, int8 charges, const QuarmItemData& quarm_item_data) {
 
 	m_item = db->GetItem(item_id);
 	if(m_item) {
@@ -83,6 +84,7 @@ EQ::ItemInstance::ItemInstance(SharedDatabase *db, int16 item_id, int8 charges) 
 	}
 
 	m_SerialNumber = GetNextItemInstSerialNumber();
+	m_quarm_item_data = quarm_item_data;
 }
 
 EQ::ItemInstance::ItemInstance(ItemInstTypes use_type) {
@@ -129,6 +131,7 @@ EQ::ItemInstance::ItemInstance(const ItemInstance& copy)
 	m_custom_data	= copy.m_custom_data;
 	m_timers		= copy.m_timers;
 	m_cursorqueue	= copy.m_cursorqueue;
+	m_quarm_item_data = copy.m_quarm_item_data;
 }
 
 // Clean up container contents
@@ -470,6 +473,40 @@ void EQ::ItemInstance::DeleteCustomData(std::string identifier) {
 	if (iter != m_custom_data.end()) {
 		m_custom_data.erase(iter);
 	}
+}
+
+void EQ::ItemInstance::SetContentsSelfFoundCharacter(uint32 self_found_character_id, const char* name) {
+	if (self_found_character_id && m_item && IsClassBag())
+	{
+		for (auto it = m_contents.begin(); it != m_contents.end(); ++it) {
+			ItemInstance* inst = it->second;
+			if (inst)
+				inst->SetSelfFoundCharacter(self_found_character_id, name);
+		}
+	}
+}
+
+bool EQ::ItemInstance::IsMatchingSelfFoundCharacterID(uint32 self_found_character_id, bool check_all_bag_contents) const
+{
+	if (!self_found_character_id)
+		return false;
+
+	// We don't track self-found stackables
+	if (IsStackable())
+		return false;
+
+	// Check that all bag contents are also self found
+	if (check_all_bag_contents && IsClassBag())
+	{
+		for (auto it = m_contents.begin(); it != m_contents.end(); ++it) {
+			ItemInstance* inst = it->second;
+			if (inst && !inst->IsMatchingSelfFoundCharacterID(self_found_character_id, false)) {
+				return false;
+			}
+		}
+	}
+
+	return GetSelfFoundCharacterID() == self_found_character_id;
 }
 
 // Clone a type of EQ::ItemInstance object

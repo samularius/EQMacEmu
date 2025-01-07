@@ -1058,10 +1058,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 							quantity = 1;
 
 						if (SummonedItem) {
-							c->SummonItem(SummonedItem->GetID(), SummonedItem->GetCharges());
+							c->SummonItem(SummonedItem->GetID(), SummonedItem->GetCharges(), 0, false, SummonedItem->GetQuarmItemData());
 							safe_delete(SummonedItem);
 						}
 						SummonedItem = database.CreateItem(spell.base[i], quantity);
+						if (SummonedItem && (c->IsSelfFound() || c->IsSoloOnly())) {
+							SummonedItem->SetSelfFoundCharacter(c->CharacterID(), c->GetName());
+						}
 					}
 				} else if (IsPet()) {
 					int max = spell.max[i];
@@ -1087,10 +1090,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					// Destroy duplicate items on charmed pets and nodrop items.
 					if (item->NoDrop != 0 && (!IsCharmedPet() || (IsCharmedPet() && CastToNPC()->CountQuestItem(item->ID) == 0)))
 					{
+						QuarmItemData quarm_item_data = QuarmItemData();
+						if (caster && caster->IsClient() && (caster->CastToClient()->IsSelfFound() || caster->CastToClient()->IsSoloOnly())) {
+							quarm_item_data.SetSelfFoundCharacter(item, caster->CastToClient()->CharacterID(), caster->CastToClient()->GetName());
+						}
+
 						// For pets, all items are added to inventory, even if the
 						// item is summoned into a bag so that the pet can equip
 						// the item, if possible.
-						CastToNPC()->AddPetLoot(item->ID, quantity);
+						CastToNPC()->AddPetLoot(item->ID, quantity, false, quarm_item_data);
 					}
 				} else if (caster) {
 					caster->Message_StringID(Chat::SpellFailure, SPELL_NO_EFFECT);
@@ -1123,7 +1131,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					// Destroy duplicate items on charmed pets and nodrop items.
 					if (item->NoDrop != 0 && (!IsCharmedPet() || (IsCharmedPet() && CastToNPC()->CountQuestItem(item->ID) == 0)))
 					{
-						CastToNPC()->AddPetLoot(item->ID, charges);
+						QuarmItemData quarm_item_data = QuarmItemData();
+						if (caster && caster->IsClient() && (caster->CastToClient()->IsSelfFound() || caster->CastToClient()->IsSoloOnly())) {
+							quarm_item_data.SetSelfFoundCharacter(item, caster->CastToClient()->CharacterID(), caster->CastToClient()->GetName());
+						}
+						CastToNPC()->AddPetLoot(item->ID, charges, false, quarm_item_data);
 					}
 				} else
 				if (!SummonedItem || !SummonedItem->IsClassBag()) {
@@ -1150,6 +1162,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 
 						EQ::ItemInstance *SubItem = database.CreateItem(spell.base[i], charges);
 						if (SubItem != nullptr) {
+							if (CastToClient()->IsSoloOnly() || CastToClient()->IsSelfFound()) {
+								SubItem->SetSelfFoundCharacter(CastToClient()->CharacterID(), CastToClient()->GetName());
+							}
 							SummonedItem->PutItem(slot, *SubItem);
 							safe_delete(SubItem);
 						}

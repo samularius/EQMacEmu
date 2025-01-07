@@ -1001,14 +1001,14 @@ std::string SharedDatabase::GetBook(const char *txtfile)
 }
 
 // Create appropriate ItemInst class
-EQ::ItemInstance* SharedDatabase::CreateItem(uint32 item_id, int8 charges)
+EQ::ItemInstance* SharedDatabase::CreateItem(uint32 item_id, int8 charges, const QuarmItemData& quarm_item_data)
 {
 	const EQ::ItemData* item = nullptr;
 	EQ::ItemInstance* inst = nullptr;
 
 	item = GetItem(item_id);
 	if (item) {
-		inst = CreateBaseItem(item, charges);
+		inst = CreateBaseItem(item, charges, quarm_item_data);
 
 		if (inst == nullptr) {
 			LogError("Error: valid item data returned a null reference for EQ::ItemInstance creation in SharedDatabase::CreateItem()");
@@ -1022,11 +1022,11 @@ EQ::ItemInstance* SharedDatabase::CreateItem(uint32 item_id, int8 charges)
 
 
 // Create appropriate ItemInst class
-EQ::ItemInstance* SharedDatabase::CreateItem(const EQ::ItemData* item, int8 charges)
+EQ::ItemInstance* SharedDatabase::CreateItem(const EQ::ItemData* item, int8 charges, const QuarmItemData& quarm_item_data)
 {
 	EQ::ItemInstance* inst = nullptr;
 	if (item) {
-		inst = CreateBaseItem(item, charges);
+		inst = CreateBaseItem(item, charges, quarm_item_data);
 
 		if (inst == nullptr) {
 			LogError("Error: valid item data returned a null reference for EQ::ItemInstance creation in SharedDatabase::CreateItem()");
@@ -1038,7 +1038,7 @@ EQ::ItemInstance* SharedDatabase::CreateItem(const EQ::ItemData* item, int8 char
 	return inst;
 }
 
-EQ::ItemInstance* SharedDatabase::CreateBaseItem(const EQ::ItemData* item, int8 charges)
+EQ::ItemInstance* SharedDatabase::CreateBaseItem(const EQ::ItemData* item, int8 charges, const QuarmItemData& quarm_item_data)
 {
 	EQ::ItemInstance* inst = nullptr;
 	if (item) {
@@ -1047,7 +1047,7 @@ EQ::ItemInstance* SharedDatabase::CreateBaseItem(const EQ::ItemData* item, int8 
 		if (charges == 0 && item->MaxCharges == -1)
 			charges = 1;
 
-		inst = new EQ::ItemInstance(item, charges);
+		inst = new EQ::ItemInstance(item, charges, quarm_item_data);
 
 		if (inst == nullptr) {
 			LogError("Error: valid item data returned a null reference for EQ::ItemInstance creation in SharedDatabase::CreateBaseItem()");

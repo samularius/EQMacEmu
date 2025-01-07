@@ -176,8 +176,8 @@ public:
 	virtual void FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho);
 
 	//loot
-	void AddItem(const EQ::ItemData *item, int8 charges, bool equip_item = true, bool quest = false,  bool pet = false, bool force_equip = false, uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0);
-	void AddItem(uint32 itemid, int8 charges, bool equipitem = true, bool quest = false);
+	void AddItem(const EQ::ItemData *item, int8 charges, bool equip_item = true, bool quest = false,  bool pet = false, bool force_equip = false, uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
+	void AddItem(uint32 itemid, int8 charges, bool equipitem = true, bool quest = false, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
 	void AddLootTable();
 	void AddLootTable(uint32 loottable_id, bool is_global = false);
 	void AddLootDropTable(uint32 lootdrop_id, uint8 drop_limit, uint8 min_drop);
@@ -204,8 +204,8 @@ public:
 	void	CleanQuestLootItems();
 	uint8	CountQuestItem(uint16 itemid);
 	uint8	CountQuestItems();
-	bool	AddQuestLoot(int16 itemid, int8 charges = 1);
-	bool	AddPetLoot(int16 itemid, int8 charges = 1, bool fromquest = false);
+	bool	AddQuestLoot(int16 itemid, int8 charges = 1, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
+	bool	AddPetLoot(int16 itemid, int8 charges = 1, bool fromquest = false, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
 	void	DeleteQuestLoot(int16 itemid1, int16 itemid2 = 0, int16 itemid3 = 0, int16 itemid4 = 0);
 	void	DeleteInvalidQuestLoot();
 
@@ -227,7 +227,8 @@ public:
 		bool wearchange = false, 
 		bool quest = false, 
 		bool pet = false, 
-		bool force_equip = false
+		bool force_equip = false,
+		const QuarmItemData& quarm_item_data = EmptyQuarmItemData
 	);
 
 	void	DeleteEquipment(int16 slotid);

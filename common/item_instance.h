@@ -30,6 +30,7 @@ class ItemParse;			// Parses item packets
 #include "../common/timer.h"
 #include "../common/deity.h"
 #include "../common/memory_buffer.h"
+#include "../common/quarm_item_data.h"
 
 #include <list>
 #include <map>
@@ -68,9 +69,9 @@ namespace EQ
 		/////////////////////////
 
 		// Constructors/Destructor
-		ItemInstance(const EQ::ItemData* item = nullptr, int8 charges = 0);
+		ItemInstance(const EQ::ItemData* item = nullptr, int8 charges = 0, const QuarmItemData& custom_data = EmptyQuarmItemData);
 
-		ItemInstance(SharedDatabase* db, int16 item_id, int8 charges = 0);
+		ItemInstance(SharedDatabase* db, int16 item_id, int8 charges = 0, const QuarmItemData& custom_data = EmptyQuarmItemData);
 
 		ItemInstance(ItemInstTypes use_type);
 
@@ -150,6 +151,15 @@ namespace EQ
 		void SetCustomData(std::string identifier, bool value);
 		void DeleteCustomData(std::string identifier);
 
+		// Quarm-specific data that we store per-ItemInstance
+		const QuarmItemData& GetQuarmItemData() const { return m_quarm_item_data; }
+		QuarmItemData& GetQuarmItemData() { return m_quarm_item_data; }
+
+		uint32 GetSelfFoundCharacterID() const { return m_quarm_item_data.GetSelfFoundCharacterID(); }
+		void SetSelfFoundCharacter(uint32 self_found_character_id, const char* name) { m_quarm_item_data.SetSelfFoundCharacter(m_item, self_found_character_id, name); }
+		void SetContentsSelfFoundCharacter(uint32 id, const char* name);
+		bool IsMatchingSelfFoundCharacterID(uint32 self_found_character_id, bool check_all_bag_contents) const;
+
 		// Allows treatment of this object as though it were a pointer to m_item
 		operator bool() const { return (m_item != nullptr); }
 
@@ -204,6 +214,7 @@ namespace EQ
 		std::map<uint8, ItemInstance*>			m_contents; // Zero-based index: min=0, max=9
 		std::map<std::string, std::string>	m_custom_data;
 		std::map<std::string, ::Timer>		m_timers;
+		QuarmItemData                       m_quarm_item_data; // Quarm-specific data that we store per-ItemInstance
 	};
 }
 
