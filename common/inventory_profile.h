@@ -170,6 +170,8 @@ namespace EQ
 		void SetCustomItemData(uint32 character_id, int16 slot_id, std::string identifier, float value);
 		void SetCustomItemData(uint32 character_id, int16 slot_id, std::string identifier, bool value);
 		std::string GetCustomItemData(int16 slot_id, std::string identifier);
+
+		void MarkItemsSelfFound(uint32 self_found_character_id, const char* character_name);
 	protected:
 		///////////////////////////////
 		// Protected Methods

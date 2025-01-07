@@ -1225,6 +1225,14 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 		RemoveNoRent(false);
 	}
 
+	if (m_epp.solo_only || m_epp.self_found) {
+		// Any items in their possesion that are missing self-found tag should get a self-found tag on them.
+		// This is for players that haven't logged in since this self-found tagging system was implemented
+		if (loaditems) {
+			m_inv.MarkItemsSelfFound(cid, m_pp.name);
+		}
+	}
+
 	if (m_pp.platinum_cursor > 0 || m_pp.silver_cursor > 0 || m_pp.gold_cursor > 0 || m_pp.copper_cursor > 0) {
 		bool changed = false;
 		uint64 new_coin = 0;

@@ -75,9 +75,9 @@ public:
 	/*
 	* Item Methods
 	*/
-	EQ::ItemInstance* CreateItem(uint32 item_id, int8 charges=0);
-	EQ::ItemInstance* CreateItem(const EQ::ItemData* item, int8 charges=0);
-	EQ::ItemInstance* CreateBaseItem(const EQ::ItemData* item, int8 charges=0);
+	EQ::ItemInstance* CreateItem(uint32 item_id, int8 charges=0, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
+	EQ::ItemInstance* CreateItem(const EQ::ItemData* item, int8 charges=0, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
+	EQ::ItemInstance* CreateBaseItem(const EQ::ItemData* item, int8 charges=0, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
 
 		// Web Token Verification
 		bool VerifyToken(std::string token, int& status);

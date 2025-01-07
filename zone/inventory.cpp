@@ -155,7 +155,7 @@ bool Client::CheckLoreConflict(const EQ::ItemData* item) {
 
 }
 
-bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool force_charges) {
+bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool force_charges, const QuarmItemData& quarm_item_data) {
 	this->EVENT_ITEM_ScriptStopReturn();
 
 	// TODO: update calling methods and script apis to handle a failure return
@@ -230,7 +230,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 	}	
 	// in any other situation just use quantity as passed
 
-	EQ::ItemInstance* inst = database.CreateItem(item, quantity);
+	EQ::ItemInstance* inst = database.CreateItem(item, quantity, quarm_item_data);
 
 	if(inst == nullptr) {
 		Message(Chat::Red, "An unknown server error has occurred and your item was not created.");
@@ -239,6 +239,10 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 			GetName(), account_name, item->ID);
 
 		return false;
+	}
+
+	if (IsSoloOnly() || IsSelfFound()) {
+		inst->SetSelfFoundCharacter(CharacterID(), GetName());
 	}
 
 	// check to see if item is usable in requested slot
@@ -865,6 +869,11 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 		return false;
 	}
 
+	if (inst && (IsSoloOnly() || IsSelfFound())) {
+		inst->SetSelfFoundCharacter(CharacterID(), GetName());
+		inst->SetContentsSelfFoundCharacter(CharacterID(), GetName());
+	}
+
 	if (zone && zone->GetGuildID() != GUILD_NONE)
 		drop = false;
 
@@ -999,7 +1008,10 @@ void Client::PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, Loo
 			if (sub_item_item_data == nullptr)
 				continue;
 
-			const EQ::ItemInstance *bagitem = database.CreateItem(bag_item_data[i]->item_id, bag_item_data[i]->charges);
+			EQ::ItemInstance *bagitem = database.CreateItem(bag_item_data[i]->item_id, bag_item_data[i]->charges, bag_item_data[i]->quarm_item_data);
+			if (bagitem && (IsSoloOnly() || IsSelfFound())) {
+				bagitem->SetSelfFoundCharacter(CharacterID(), name);
+			}
 			interior_slot = EQ::InventoryProfile::CalcSlotId(slot_id, i);
 			Log(Logs::Detail, Logs::Inventory, "Putting bag loot item %s (%d) into slot %d (bag slot %d)", inst.GetItem()->Name, inst.GetItem()->ID, interior_slot, i);
 			PutLootInInventory(interior_slot, *bagitem);

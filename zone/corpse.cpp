@@ -457,7 +457,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 			// see if we have any non-soulboud items left in cursor queue
 			while ( (item = client->GetInv().PopItem(EQ::invslot::slotCursor)) ) {
 				if (item && !item->GetItem()->Soulbound) // soulbound were moved earlier
-					AddItem(item->GetItem()->ID, item->GetCharges(), i++);
+					AddItem(item->GetItem()->ID, item->GetCharges(), i++, item->GetQuarmItemData());
 			}
 			if (i > (EQ::invslot::CURSOR_QUEUE_BEGIN + 1)) {
 				// now wipe out the cursor items in the db
@@ -508,7 +508,7 @@ std::list<uint32> Corpse::MoveItemToCorpse(Client *client, EQ::ItemInstance *ite
 	EQ::ItemInstance *interior_item;
 	std::list<uint32> returnlist;
 
-	AddItem(item->GetItem()->ID, item->GetCharges(), equipslot);
+	AddItem(item->GetItem()->ID, item->GetCharges(), equipslot, item->GetQuarmItemData());
 	returnlist.push_back(equipslot);
 
 	// Qualified bag slot iterations. processing bag slots that don't exist is probably not a good idea.
@@ -526,7 +526,7 @@ std::list<uint32> Corpse::MoveItemToCorpse(Client *client, EQ::ItemInstance *ite
 
 			if (interior_item && !interior_item->GetItem()->Soulbound) 
 			{
-				AddItem(interior_item->GetItem()->ID, interior_item->GetCharges(), interior_slot);
+				AddItem(interior_item->GetItem()->ID, interior_item->GetCharges(), interior_slot, interior_item->GetQuarmItemData());
 				returnlist.push_back(EQ::InventoryProfile::CalcSlotId(equipslot, bagindex));
 				client->DeleteItemInInventory(interior_slot);
 			}
@@ -802,7 +802,7 @@ uint32 Corpse::CountItems() {
 	return itemlist.size();
 }
 
-void Corpse::AddItem(uint32 itemnum, int8 charges, int16 slot) {
+void Corpse::AddItem(uint32 itemnum, int8 charges, int16 slot, const QuarmItemData& quarm_item_data) {
 	if (!database.GetItem(itemnum))
 		return;
 
@@ -818,6 +818,7 @@ void Corpse::AddItem(uint32 itemnum, int8 charges, int16 slot) {
 	item->equip_slot = slot;
 	item->min_looter_level = 0;
 	item->item_loot_lockout_timer = 0;
+	item->quarm_item_data = quarm_item_data;
 	itemlist.push_back(item);
 
 	UpdateEquipmentLight();
@@ -1593,7 +1594,7 @@ void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* a
 						item = database.GetItem(item_data->item_id);
 						if(client && item && (item_data->quest == 0 || (item_data->quest == 1 && item->NoDrop != 0))) 
 						{
-							EQ::ItemInstance* inst = database.CreateItem(item, item_data->charges);
+							EQ::ItemInstance* inst = database.CreateItem(item, item_data->charges, item_data->quarm_item_data);
 							if(inst) {
 								// SlotGeneral1 is the corpse inventory start offset for Ti(EMu) - CORPSE_END = SlotGeneral1 + SlotCursor
 								client->SendItemPacket(i, inst, ItemPacketLoot);
@@ -1742,7 +1743,7 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 
 	if (item != 0) {
 		if (item_data){
-			inst = database.CreateItem(item, item_data ? item_data->charges : 0);
+			inst = database.CreateItem(item, item_data ? item_data->charges : 0, item_data->quarm_item_data);
 		}
 		else {
 			inst = database.CreateItem(item);
@@ -1783,12 +1784,34 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 			{
 				if (client->IsSoloOnly() || client->IsSelfFound())
 				{
-					client->Message(Chat::Red, "This item is from a charmed pet, which is not allowed during a solo or self found run.");
-					SendEndLootErrorPacket(client);
-					ResetLooter();
-					if (contains_legacy_item) { RemoveLegacyItemLooter(GetCleanName()); }
-					delete inst;
-					return;
+					bool can_loot = false;
+
+					if (RuleB(SelfFound, PetLootSupport))
+					{
+						// Check that we are looting our own self found items only
+						can_loot = item_data->GetSelfFoundCharacterID() == client->CharacterID();
+
+						if (can_loot && item && item->IsClassBag()) {
+							// Bag is not yet initialized with its ItemInstance objects
+							// Instead we have to iterate on 'bag_item_data', which has the custom_data
+							for (LootItem* bag_loot_item : bag_item_data) {
+								if (bag_loot_item && bag_loot_item->GetSelfFoundCharacterID() != client->CharacterID()) {
+									can_loot = false;
+									break;
+								}
+							}
+						}
+					}
+
+					if (!can_loot)
+					{
+						client->Message(Chat::Red, "This item belongs to another player, looting it is not allowed during a solo or self found run.");
+						SendEndLootErrorPacket(client);
+						ResetLooter();
+						if (contains_legacy_item) { RemoveLegacyItemLooter(GetCleanName()); }
+						delete inst;
+						return;
+					}
 				}
 			}
 
@@ -1829,6 +1852,11 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 				client->Message(ChatChannel_Group, "You have looted a legacy item. You can no longer loot this legacy item from any NPC that is legacy item flagged until its timer expires in %s ", Strings::SecondsToTime(item_data->item_loot_lockout_timer).c_str());
 			}
 			client->AddLootedLegacyItem(item_data->item_id, expiration_timestamp);
+		}
+
+		if (client->IsSoloOnly() || client->IsSelfFound()) {
+			// Mark the looter as the self-found owner.
+			inst->SetSelfFoundCharacter(client->CharacterID(), client->GetName());
 		}
 
 		char buf[88];

@@ -431,8 +431,9 @@ void ZoneDatabase::LoadWorldContainer(uint32 parentid, EQ::ItemInstance* contain
         uint8 index = (uint8)atoi(row[0]);
         uint32 item_id = (uint32)atoi(row[1]);
         int8 charges = (int8)atoi(row[2]);
+        QuarmItemData quarm_item_data = EmptyQuarmItemData; // NYI: object_contents persistence for QuarmItemData
 
-        EQ::ItemInstance* inst = database.CreateItem(item_id, charges);
+        EQ::ItemInstance* inst = database.CreateItem(item_id, charges, quarm_item_data);
         if (inst) {
             // Put item inside world container
             container->PutItem(index, *inst);
@@ -465,6 +466,7 @@ void ZoneDatabase::SaveWorldContainer(uint32 zone_id, uint32 parent_id, const EQ
 		}
 
         uint32 item_id = inst->GetItem()->ID;
+        // NYI: object_contents persistence for QuarmItemData
 
         std::string query = StringFormat("REPLACE INTO object_contents "
                                         "(zoneid, parentid, bagidx, itemid, charges, droptime) "
@@ -3508,6 +3510,7 @@ bool ZoneDatabase::LoadCharacterCorpseData(uint32 corpse_id, CharacterCorpseEntr
 		corpse->items[i].charges = atoi(row[r++]); 		// charges,
 		corpse->items[i].min_looter_level = 0;
 		corpse->items[i].item_loot_lockout_timer = 0;
+		corpse->items[i].quarm_item_data = EmptyQuarmItemData; // NYI: Corpse Persistence for QuarmItemData
 		r = 0;
 		i++;
 	}
