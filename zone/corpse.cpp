@@ -223,7 +223,7 @@ Corpse::Corpse(NPC* in_npc, LootItems* in_itemlist, uint32 in_npctypeid, uint32 
 	else
 		loot_lockout_timer = 0;
 
-	if (zone->GetGuildID() == GUILD_NONE)
+	if (zone->GetGuildID() == GUILD_NONE || zone->GetGuildID() == 1)
 		loot_lockout_timer = 0;
 
 	if (in_itemlist) {
@@ -2410,7 +2410,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 	if (loot_lockout_timer == 0)
 		return;
 
-	if (zone->GetGuildID() == GUILD_NONE)
+	if (zone->GetGuildID() == GUILD_NONE || zone->GetGuildID() == 1)
 		return;
 
 	auto cur_time = time(nullptr);

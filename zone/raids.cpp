@@ -91,7 +91,7 @@ void Raid::AddMember(Client *c, uint32 group, bool rleader, bool groupleader, bo
                                     "isgroupleader = %d, israidleader = %d, islooter = %d, guild_id=%lu, is_officer=%d ",
                                     (unsigned long)GetID(), (unsigned long)c->CharacterID(),
                                     (unsigned long)group, c->GetClass(), c->GetLevel(),
-                                    c->GetName(), groupleader, rleader, looter, (unsigned long)c->GuildID(), c->GuildRank());
+                                    c->GetName(), groupleader, rleader, looter, c->GetPVP() == 1 ? 1 : (unsigned long)c->GuildID(), c->GuildRank());
     auto results = database.QueryDatabase(query);
 
 	if(!results.Success()) {

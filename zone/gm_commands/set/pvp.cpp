@@ -4,7 +4,7 @@ void SetPVP(Client *c, const Seperator *sep)
 {
 	const auto arguments = sep->argnum;
 	if (arguments < 2) {
-		c->Message(Chat::White, "Usage: #set pvp [on|off]");
+		c->Message(Chat::White, "Usage: #set pvp [value]");
 		return;
 	}
 
@@ -13,7 +13,7 @@ void SetPVP(Client *c, const Seperator *sep)
 		t = c->GetTarget()->CastToClient();
 	}
 
-	const bool pvp_state = Strings::ToBool(sep->arg[2]);
+	const int pvp_state = Strings::ToInt(sep->arg[2]);
 
 	t->SetPVP(pvp_state);
 

@@ -1204,6 +1204,11 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 
 		bool enable_bard_limit = RuleB(Quarm, EnableBardDamagingAOECap);
 
+		if (zone && zone->GetGuildID() == 1)
+		{
+			enable_bard_limit = false;
+		}
+
 		if (IsTargetableAESpell(spell_id) && detrimental && !IsHarmonySpell(spell_id) && (!IsMemBlurSpell(spell_id) || IsMezSpell(spell_id))) 
 		{
 			if (targets_hit < MAX_TARGETS_ALLOWED || curmob->IsClient() && !curmob->CastToClient()->GetHideMe())
@@ -1235,6 +1240,15 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 		}
 		else 
 		{
+			if (zone && zone->GetGuildID() == 1)
+			{
+				if (caster && caster->IsClient())
+				{
+					limit_all_aoes = true;
+					MAX_TARGETS_ALLOWED = RuleI(Quarm, MaxPVPPBAOETargets);
+				}
+			}
+
 			if (curmob->IsClient() && curmob->CastToClient()->GetHideMe())
 			{
 				LogSpellsDetail("PB AE Spell: Skipping GM {} with spell {}", curmob->GetCleanName(), spell_id);

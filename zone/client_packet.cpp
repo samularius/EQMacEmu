@@ -936,11 +936,15 @@ void Client::Handle_Connect_OP_SendExpZonein(const EQApplicationPacket *app)
 	SetSpawned();
 
 	if (GetPVP() == 2 && zone && (zone->last_quake_struct.quake_type != QuakeType::QuakePVP && !zone->IsPVPZone()))
-		SetPVP(0);
-
+	{
+		if (GetPVP() != 1)
+			SetPVP(0);
+	}
 	if (GetPVP() == 0 && zone && zone->last_quake_struct.quake_type == QuakeType::QuakePVP || zone && zone->IsPVPZone())
-		SetPVP(2);
-
+	{
+		if(GetPVP() != 1)
+			SetPVP(2);
+	}
 	if (GetPVP())	//force a PVP update until we fix the spawn struct
 		SendAppearancePacket(AppearanceType::PVP, GetPVP() > 0 ? 1 : 0, true, false);
 

@@ -689,13 +689,20 @@ void NPC::AddItem(uint32 itemid, int8 charges, bool equipitem, bool quest, const
 
 void NPC::AddLootTable() {
 	AddLootTable(m_loottable_id);
+	if (zone && zone->GetGuildID() == 1)
+		AddLootTable(m_loottable_id);
 }
 
 void NPC::CheckGlobalLootTables()
 {
 	const auto &l = zone->GetGlobalLootTables(this);
 	for (const auto &e : l) {
+
 		AddLootTable(e, true);
+		if (zone && zone->GetGuildID() == 1)
+		{
+			AddLootTable(e, true);
+		}
 	}
 }
 

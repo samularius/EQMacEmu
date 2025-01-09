@@ -322,7 +322,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			if (!sender)
 				return;
 
-			if (sender->GetPVP() == 0)
+			if (sender->GetPVP() == 0 && sender->GuildID() != 1)
 			{
 				Raid* player_raid = sender->GetRaid();
 

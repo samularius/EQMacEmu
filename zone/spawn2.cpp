@@ -136,7 +136,7 @@ uint32 Spawn2::resetTimer()
 		}
 	}
 
-	if (zone->GetGuildID() != GUILD_NONE)
+	if (zone->GetGuildID() != GUILD_NONE && zone->GetGuildID() != 1)
 	{
 		if (RuleB(Quarm, InstanceAlwaysHasMinimumSpawnTime))
 		{

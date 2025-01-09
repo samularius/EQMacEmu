@@ -1405,7 +1405,21 @@ void Mob::AI_Process() {
 			AIloiter_timer->Pause();
 
         auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
-		if(GetSpecialAbility(SpecialAbility::Tether)) {
+		if (zone && zone->GetGuildID() == 1) {
+			float leash_range = RuleR(Quarm, PVPMobLeashUnits);
+			leash_range = leash_range > 0.0f ? leash_range * leash_range : pAggroRange * pAggroRange;
+
+			if (DistanceSquaredNoZ(m_Position, npcSpawnPoint) > leash_range) {
+				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
+				SetHP(GetMaxHP());
+				BuffFadeAll();
+				WipeHateList(true);
+				AIloiter_timer->Trigger();
+				return;
+			}
+
+		}
+		else if(GetSpecialAbility(SpecialAbility::Tether)) {
 			float tether_range = static_cast<float>(GetSpecialAbilityParam(SpecialAbility::Tether, 0));
 			tether_range = tether_range > 0.0f ? tether_range * tether_range : pAggroRange * pAggroRange;
 

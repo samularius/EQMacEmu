@@ -135,7 +135,6 @@ bool Zone::Bootup(uint32 iZoneID, bool is_static, uint32 iGuildID) {
 			zone->lootvar = 0;
 		}
 	}
-	pvpzone = iGuildID == 1;
 
 	is_zone_loaded = true;
 
@@ -1063,6 +1062,11 @@ bool Zone::Init(bool is_static) {
 	if (!LoadZoneCFG(GetShortName())) { // try loading the zone name...
 		LoadZoneCFG(GetFileName());
 	}// if that fails, try the file name, then load defaults
+	if (guildid == 1)
+	{
+		pvpzone = true;
+		can_castoutdoor = false;
+	}
 
 	if (RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
 	{

@@ -3445,9 +3445,16 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	}
 	rezzable = db_rezzable;
 	IsRezzed(db_is_rezzed);
-	rez_experience = db_exp;
-	gm_rez_experience = db_gmexp;
-
+	if (zone && zone->GetZoneID() == 1)
+	{
+		rez_experience = 0;
+		gm_rez_experience = 0;
+	}
+	else
+	{
+		rez_experience = db_exp;
+		gm_rez_experience = db_gmexp;
+	}
 	// Rez timer has expired, only GMs can rez at this point. (uses rezzable)
 	if(!IsRezzable()) {
 		if(Caster && Caster->IsClient() && !Caster->CastToClient()->GetGM()) {

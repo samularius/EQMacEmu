@@ -738,6 +738,7 @@ public:
 	void	SendPlayerGuild();
 	void	RefreshGuildInfo();
 	std::string GetGuildName();
+	std::string GetGuildNameForPVPMessage();
 
 	uint8 GetClientMaxLevel() const { return client_max_level; }
 	void SetClientMaxLevel(uint8 max_level) { client_max_level = max_level; }

@@ -83,6 +83,16 @@ std::string Client::GetGuildName() {
 	return guild_string;
 }
 
+
+std::string Client::GetGuildNameForPVPMessage() {
+	std::string guild_string = "";
+	if (GuildID() != GUILD_NONE) {
+		guild_mgr.GetGuildNameByID(GuildID(), guild_string);
+	}
+	return guild_string;
+}
+
+
 void Client::SendGuildList() {
 	auto outapp = new EQApplicationPacket(OP_GuildsList);
 

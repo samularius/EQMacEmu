@@ -1467,12 +1467,15 @@ void Client::GetExpLoss(Mob* killerMob, uint16 spell, int &exploss, uint8 killed
 
 	exploss = static_cast<int>(static_cast<float>(exploss) * RuleR(Character, EXPLossMultiplier));
 
+	if (zone && zone->GetGuildID() == 1 && exploss && (killedby == Killed_PVP || killedby == Killed_Self ||killedby == Killed_DUEL))
+		exploss = static_cast<int>((float)exploss * RuleR(Quarm, PVPExpLossMultiplier));
+
 	// Death exp loss started at level 6 until March 19 2002, then it was 11
 	if( (level < RuleI(Character, DeathExpLossLevel)) || (level > RuleI(Character, DeathExpLossMaxLevel)) || IsBecomeNPC() )
 	{
 		exploss = 0;
 	}
-	else if( killerMob && spell != 940 ) //ManaConvert
+	else if( killerMob && spell != 940 && zone && zone->GetGuildID() != 1) //ManaConvert
 	{
 
 		if( killerMob->IsClient() )
@@ -1488,7 +1491,7 @@ void Client::GetExpLoss(Mob* killerMob, uint16 spell, int &exploss, uint8 killed
 	if (spell == 940) // ManaConvert causes EXP loss. Sorry.
 		return;
 
-	if (killedby == Killed_DUEL || killedby == Killed_PVP || killedby == Killed_Self)
+	if (killedby == Killed_DUEL || killedby == Killed_PVP || killedby == Killed_Self && zone && zone->GetGuildID() != 1)
 	{
 		exploss = 0;
 	}
@@ -1500,7 +1503,10 @@ void Client::GetExpLoss(Mob* killerMob, uint16 spell, int &exploss, uint8 killed
 		{
 			if(buffs[buffIt].spellid == spell && buffs[buffIt].client)
 			{
-				exploss = 0;	// no exp loss for pvp dot
+				if (zone && zone->GetGuildID() != 1)
+				{
+					exploss = 0;	// no exp loss for pvp dot
+				}
 				break;
 			}
 		}

@@ -1365,6 +1365,12 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 		{
 			parse->EventNPC(EVENT_SLAY, killerMob->CastToNPC(), this, "", 0);
 
+			if (killerMob && zone->GetZoneID() == 1)
+			{
+				std::string pvpKilledGuildName = GetGuildName();
+				entity_list.Message(0, 15, "[PVP] %s of <%s> has died to %s in combat!", GetCleanName(), pvpKilledGuildName.empty() ? " " : pvpKilledGuildName.c_str(), killerMob->GetCleanName());
+			}
+
 			killedby = Killed_NPC;
 
 			uint32 emoteid = killerMob->GetEmoteID();
@@ -1372,7 +1378,23 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 				killerMob->CastToNPC()->DoNPCEmote(EQ::constants::EmoteEventTypes::KilledPC,emoteid,this);
 		}
 
-		if (killerMob->IsClient() && (dueling || killerMob->CastToClient()->IsDueling())) 
+		else if (killerMob->IsClient() && zone->GetZoneID() == 1)
+		{
+			if (killerMob != this)
+			{
+				killedby = Killed_PVP;
+				std::string pvpKilledGuildName = GetGuildName();
+				std::string pvpKillerGuildName = killerMob->CastToClient()->GetGuildName();
+				entity_list.Message(0, 15, "[PVP] %s of <%s> has been killed in combat by %s of <%s>!", GetCleanName(), pvpKilledGuildName.empty() ? " " : pvpKilledGuildName.c_str(), killerMob->GetCleanName(), pvpKillerGuildName.empty() ? " " : pvpKillerGuildName.c_str());
+			}
+			else
+			{
+				killedby = Killed_Self;
+				std::string pvpKilledGuildName = GetGuildName();
+				entity_list.Message(0, 15, "[PVP] %s of <%s> has unalived themselves!", GetCleanName(), pvpKilledGuildName.empty() ? " " : pvpKilledGuildName.c_str());
+			}
+		}
+		else if (killerMob->IsClient() && (dueling || killerMob->CastToClient()->IsDueling())) 
 		{
 			SetDueling(false);
 			SetDuelTarget(0);
@@ -1422,9 +1444,14 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 			killedby = Killed_DUEL;
 			Log(Logs::General, Logs::Death, "%s is in a duel and killedby is 0. This is likely an error due to pain and suffering, setting killedby to 3.", GetName());
 		}
-		else if (pvparea || GetPVP())
+		else if(pvparea || zone->GetZoneID() == 1)
 		{
 			killedby = Killed_PVP;
+			if (zone->GetZoneID() == 1)
+			{
+				std::string pvpKilledGuildName = GetGuildName();
+				entity_list.Message(0, 15, "[PVP] %s of <%s> has unalived themselves!", GetCleanName(), pvpKilledGuildName.empty() ? " " : pvpKilledGuildName.c_str());
+			}
 			Log(Logs::General, Logs::Death, "%s is in a PVP situation and killedby is 0. This is likely an error due to pain and suffering, setting killedby to 4.", GetName());
 		}
 		else

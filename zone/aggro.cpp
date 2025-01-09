@@ -1017,7 +1017,8 @@ bool Mob::IsAttackAllowed(Mob *target, bool isSpellAttack, int16 spellid)
 				if	// if both are pvp they can fight
 				(
 					(bool)c1->GetPVP() &&
-					(bool)c2->GetPVP()
+					(bool)c2->GetPVP() && 
+					zone && zone->GetGuildID() == 1
 				)
 					return true;
 				else if	// if they're dueling they can go at it
@@ -1025,7 +1026,7 @@ bool Mob::IsAttackAllowed(Mob *target, bool isSpellAttack, int16 spellid)
 					c1->IsDueling() &&
 					c2->IsDueling() &&
 					c1->GetDuelTarget() == c2->GetID() &&
-					c2->GetDuelTarget() == c1->GetID()
+					c2->GetDuelTarget() == c1->GetID() && zone->GetGuildID() != 1
 				)
 					return true;
 				else if (zone->watermap != nullptr)
@@ -1217,9 +1218,10 @@ bool Mob::IsBeneficialAllowed(Mob *target)
 					return false;
 				}
 
-				if ((bool)c1->GetPVP() == (bool)c2->GetPVP())
+				if ((bool)c1->GetPVP() == (bool)c2->GetPVP() && zone && zone->GetGuildID() == 1)
 					return true;
-
+				else if (zone->GetGuildID() != 1)
+					return true;
 			}
 			else if(_NPC(mob2))				// client to npc
 			{
