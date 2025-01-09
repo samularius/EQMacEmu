@@ -135,6 +135,7 @@ bool Zone::Bootup(uint32 iZoneID, bool is_static, uint32 iGuildID) {
 			zone->lootvar = 0;
 		}
 	}
+	pvpzone = iGuildID == 1;
 
 	is_zone_loaded = true;
 
@@ -2999,6 +3000,9 @@ bool Zone::CanClientEngage(Client* initiator, Mob* target)
 		return(true);
 
 	if (GetGuildID() == GUILD_NONE)
+		return true;
+
+	if (GetGuildID() == 1)
 		return true;
 
 	Raid* raid = initiator->GetRaid();

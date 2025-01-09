@@ -5054,7 +5054,7 @@ void EntityList::TogglePVPForQuake()
 	if (!zone)
 		return;
 
-	if (zone && zone->last_quake_struct.quake_type == QuakeType::QuakePVP)
+	if (zone && zone->last_quake_struct.quake_type == QuakeType::QuakePVP || zone && zone->IsPVPZone())
 	{
 		// update distances to us for clients.
 		auto it = client_list.begin();
@@ -5068,7 +5068,7 @@ void EntityList::TogglePVPForQuake()
 		}
 		return;
 	}
-	else if (zone)
+	else if (zone && !zone->IsPVPZone())
 	{
 		// update distances to us for clients.
 		auto it = client_list.begin();

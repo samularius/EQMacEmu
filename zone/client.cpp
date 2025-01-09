@@ -2776,7 +2776,7 @@ void Client::SetPVP(uint8 toggle) {
 	else
 		Message(Chat::Red, "You no longer follow the ways of discord.");
 
-	SendAppearancePacket(AppearanceType::PVP, GetPVP());
+	SendAppearancePacket(AppearanceType::PVP, GetPVP() > 0 ? 1 : 0);
 	Save();
 }
 

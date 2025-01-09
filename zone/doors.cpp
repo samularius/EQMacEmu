@@ -322,32 +322,44 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			if (!sender)
 				return;
 
-			Raid* player_raid = sender->GetRaid();
-
-			if (!player_raid)
+			if (sender->GetPVP() == 0)
 			{
-				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
-					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
-					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
-					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
-				return;
-			}
+				Raid* player_raid = sender->GetRaid();
 
-			if (!player_raid->CanRaidEngageRaidTarget(player_raid->GetLeaderGuildID()))
-			{
-				sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
-					RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
-					RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
-					RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
-				return;
+				if (!player_raid)
+				{
+					sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
+						RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
+						RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
+						RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
+					return;
+				}
+
+				if (!player_raid->CanRaidEngageRaidTarget(player_raid->GetLeaderGuildID()))
+				{
+					sender->Message(Chat::Red, "You are unable to enter a guild instance because you are not a part of a raid containing at least a guild officer as its leader with %i guild members present, and %i players at or above level %i present total.",
+						RuleI(Quarm, AutomatedRaidRotationRaidGuildMemberCountRequirement),
+						RuleI(Quarm, AutomatedRaidRotationRaidNonMemberCountRequirement),
+						RuleI(Quarm, AutomatedRaidRotationRaidGuildLevelRequirement));
+					return;
+				}
+				zoneguildid = player_raid->GetLeaderGuildID();
 			}
-			zoneguildid = player_raid->GetLeaderGuildID();
+			else
+			{
+				zoneguildid = 1;
+			}
 		}
 
 		if (sender->GuildID() == 1 && zoneguildid != GUILD_NONE && zoneguildid != sender->GuildID())
 		{
 			sender->Message(Chat::Red, "You are unable to enter a guild instance that isn't your own because you are part of Guild < >.");
 			return;
+		}
+
+		if (sender->GetPVP() != 0 && zoneguildid != GUILD_NONE)
+		{
+			zoneguildid = 1;
 		}
 
 		if ((floor_port || strncmp(destination_zone_name,zone_name,strlen(zone_name)) == 0) && !keyneeded)

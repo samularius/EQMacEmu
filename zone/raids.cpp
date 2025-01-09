@@ -552,6 +552,10 @@ bool Raid::IsGuildOfficerInRaidOfGuild(uint32 guild_id)
 
 bool Raid::CanRaidEngageRaidTarget(uint32 guild_id)
 {
+
+	if (guild_id == 1)
+		return true;
+
 	bool has_raid_officer = IsGuildOfficerInRaidOfGuild(guild_id);
 
 	if (!has_raid_officer)

@@ -935,14 +935,14 @@ void Client::Handle_Connect_OP_SendExpZonein(const EQApplicationPacket *app)
 
 	SetSpawned();
 
-	if (GetPVP() == 2 && zone && zone->last_quake_struct.quake_type != QuakeType::QuakePVP)
+	if (GetPVP() == 2 && zone && (zone->last_quake_struct.quake_type != QuakeType::QuakePVP && !zone->IsPVPZone()))
 		SetPVP(0);
 
-	if (GetPVP() == 0 && zone && zone->last_quake_struct.quake_type == QuakeType::QuakePVP)
+	if (GetPVP() == 0 && zone && zone->last_quake_struct.quake_type == QuakeType::QuakePVP || zone && zone->IsPVPZone())
 		SetPVP(2);
 
 	if (GetPVP())	//force a PVP update until we fix the spawn struct
-		SendAppearancePacket(AppearanceType::PVP, GetPVP(), true, false);
+		SendAppearancePacket(AppearanceType::PVP, GetPVP() > 0 ? 1 : 0, true, false);
 
 	//Send AA Exp packet:
 	if (GetLevel() >= 51)
@@ -1708,9 +1708,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	{
 		m_pp.air_remaining = CalculateLungCapacity();
 	}
-	/* Check for PVP Zone status*/
-	if (zone->IsPVPZone())
-		m_pp.pvp = 1;
+
 	/* Time entitled on Account: Move to account */
 	m_pp.timeentitledonaccount = database.GetTotalTimeEntitledOnAccount(AccountID()) / 1440;
 
