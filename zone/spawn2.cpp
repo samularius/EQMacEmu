@@ -147,6 +147,11 @@ uint32 Spawn2::resetTimer()
 				rspawn = RuleI(Quarm, InstanceMinimumSpawnTime);
 		}
 	}
+	else if(zone && zone->GetGuildID() == 1)
+	{
+		if (last_instance_spawn_timer_override != 0)
+			return last_instance_spawn_timer_override;
+	}
 
 	return (rspawn);
 
