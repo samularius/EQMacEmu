@@ -150,7 +150,7 @@ uint32 Spawn2::resetTimer()
 	else if(zone && zone->GetGuildID() == 1)
 	{
 		if (last_instance_spawn_timer_override != 0)
-			return last_instance_spawn_timer_override;
+			return last_instance_spawn_timer_override * zone->random.Real(0.08, 1.20);
 	}
 
 	return (rspawn);
