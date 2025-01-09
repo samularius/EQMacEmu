@@ -169,7 +169,7 @@ float Mob::GetBaseEXP()
 	
 	if (zone && zone->GetGuildID() != GUILD_NONE)
 	{
-		zemmod = RuleR(Quarm, InstanceZEMOverride);
+		zemmod = zone->GetGuildID() == 1 ? RuleR(Quarm, PVPInstanceZEMOverride) : RuleR(Quarm, InstanceZEMOverride);
 	}
 
 	float npc_pct = 1.0f;
