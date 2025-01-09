@@ -1066,6 +1066,7 @@ bool Zone::Init(bool is_static) {
 	{
 		pvpzone = true;
 		can_castoutdoor = false;
+		reducedspawntimers = false;
 	}
 
 	if (RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
