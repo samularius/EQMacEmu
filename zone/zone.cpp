@@ -955,6 +955,10 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	if(graveyard_id() > 0)
 	{
 		LogInfo("Graveyard ID is {}.", graveyard_id());
+
+		if (guildid == 1)
+			m_graveyard_timer = RuleI(Quarm, PVPInstanceGraveyardTime);
+
 		bool GraveYardLoaded = database.GetZoneGraveyard(graveyard_id(), &m_graveyard_zoneid, &m_graveyard.x, &m_graveyard.y, &m_graveyard.z, &m_graveyard.w);
 		if (GraveYardLoaded)
 		{
@@ -1241,7 +1245,8 @@ void Zone::ReloadStaticData() {
 
 	LogInfo("Reloading Zone Data...");
 	database.GetZoneLongName(short_name, &long_name, file_name, &m_safe_point.x, &m_safe_point.y, &m_safe_point.z, &m_graveyard_id, &m_graveyard_timer, &m_max_clients);
-
+	if (guildid == 1 && m_graveyard_id != 0)
+		m_graveyard_timer = RuleI(Quarm, PVPInstanceGraveyardTime);
 	//load the zone config file.
 	if (!LoadZoneCFG(GetShortName())) { // try loading the zone name...
 		LoadZoneCFG(GetFileName());
