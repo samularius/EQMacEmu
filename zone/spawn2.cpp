@@ -149,6 +149,11 @@ uint32 Spawn2::resetTimer()
 	}
 	else if(zone && zone->GetGuildID() == 1)
 	{
+		if (zone->GetZoneID() == Zones::CHARDOK && last_instance_spawn_timer_override == 1592000000)
+		{
+			return 1800000;
+		}
+
 		if (last_instance_spawn_timer_override != 0)
 			return (int)((double)(std::min(last_instance_spawn_timer_override, (uint32)86400000)) * (double)zone->random.Real(0.5, 1.5));
 	}
