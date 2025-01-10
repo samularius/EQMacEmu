@@ -2898,6 +2898,13 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 		return false;
 	}
 
+	if (zone->GetGuildID() == 1 && IsEffectInSpell(spell_id, SE_SummonPC))
+	{
+		Message_StringID(Chat::SpellFailure, SPELL_NO_HOLD);
+		safe_delete(action_packet);
+		return false;
+	}
+
 	if (IsEffectInSpell(spell_id, SE_Levitate)) {
 		if (spelltar->IsClient() && spelltar->CastToClient()->Trader) {
 			Log(Logs::General, Logs::Spells, "Levitate cannot be cast on a trader.");
@@ -3443,6 +3450,43 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 		Caster->Message_StringID(Chat::White, REZZ_ALREADY_PENDING);
 		return;
 	}
+
+	if (zone && zone->GetZoneID() == 1 && db_rezzable && !db_is_rezzed && Caster && Caster->IsClient())
+	{
+		if (Caster->GetRaid())
+		{
+			Raid* raid_group = Caster->GetRaid();
+			if (raid_group && corpse_name[0])
+			{
+				if (!raid_group->IsRaidMember(corpse_name))
+				{
+					Message(13, "[PVP] That person is not a member of your raid. Resurrection failed");
+					return;
+				}
+			}
+		}
+		else if (Caster->GetGroup())
+		{
+			Group* group = Caster->GetGroup();
+			if (group && corpse_name[0])
+			{
+				if (!group->IsGroupMember(corpse_name))
+				{
+					Message(13, "[PVP] That person is not a member of your group. Resurrection failed.");
+					return;
+				}
+			}
+		}
+		else
+		{
+			if (GetCharID() != Caster->CastToClient()->CharacterID())
+			{
+				Message(13, "[PVP] You can only cast resurrection spells on yourself, raid, or group members in PVP zones.");
+				return;
+			}
+		}
+	}
+
 	rezzable = db_rezzable;
 	IsRezzed(db_is_rezzed);
 	if (zone && zone->GetZoneID() == 1)

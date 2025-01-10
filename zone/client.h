@@ -1242,7 +1242,7 @@ public:
 	int16 pc_feettexture;
 	void SetPCTexture(uint8 slot, uint16 texture, uint32 color, bool set_wrist = true);
 	void GetPCEquipMaterial(uint8 slot, int16& texture, uint32& color);
-
+	void OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 GuildZoneID, float x, float y, float z);
 	bool IsUnderWater();
 	bool IsInWater();
 	bool CanBeInZone(uint32 zoneid = 0, uint32 guild_id = 0);
@@ -1287,7 +1287,6 @@ private:
 	eqFilterMode ClientFilters[_FilterCount];
 	int32 HandlePacket(const EQApplicationPacket *app);
 	void OPTGB(const EQApplicationPacket *app);
-	void OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 GuildZoneID, float x, float y, float z);
 	void OPMemorizeSpell(const EQApplicationPacket *app);
 	void OPMoveCoin(const EQApplicationPacket* app);
 	void MoveItemCharges(EQ::ItemInstance &from, int16 to_slot, uint8 type);

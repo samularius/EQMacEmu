@@ -749,11 +749,35 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 					client->SetPendingRezzData(srs->corpse_zone_id, srs->corpse_zone_guild_id, srs->exp, srs->dbid, srs->rez.spellid, srs->rez.corpse_name);
 							Log(Logs::Detail, Logs::Spells, "OP_RezzRequest in zone %s for %s, spellid:%i",
 							zone->GetShortName(), client->GetName(), srs->rez.spellid);
-							auto outapp = new EQApplicationPacket(OP_RezzRequest,
-											      sizeof(Resurrect_Struct));
-					memcpy(outapp->pBuffer, &srs->rez, sizeof(Resurrect_Struct));
-					client->QueuePacket(outapp);
-					safe_delete(outapp);
+
+					if (zone->GetZoneID() == 1)
+					{
+						client->OPRezzAnswer(1, srs->rez.spellid, srs->corpse_zone_guild_id, 0, srs->rez.x, srs->rez.y, srs->rez.z);
+						Mob* mypet = client->GetPet();
+						if (mypet)
+						{
+							if (mypet->IsCharmedPet())
+								client->FadePetCharmBuff();
+							else
+								client->DepopPet();
+						}
+
+						entity_list.ClearAggro(client);
+
+						EQApplicationPacket* outapp = new EQApplicationPacket(OP_RezzComplete,
+							sizeof(Resurrect_Struct));
+						memcpy(outapp->pBuffer, &srs->rez, sizeof(Resurrect_Struct));
+						worldserver.RezzPlayer(outapp, 0, 0, 0, OP_RezzComplete);
+						safe_delete(outapp);
+					}
+					else
+					{
+						auto outapp = new EQApplicationPacket(OP_RezzRequest,
+							sizeof(Resurrect_Struct));
+						memcpy(outapp->pBuffer, &srs->rez, sizeof(Resurrect_Struct));
+						client->QueuePacket(outapp);
+						safe_delete(outapp);
+					}
 					break;
 				}
 			}

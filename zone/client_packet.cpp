@@ -9859,6 +9859,12 @@ void Client::Handle_OP_Translocate(const EQApplicationPacket *app)
 		return;
 	}
 
+	if (zone->GetGuildID() == 1) {
+		Message(Chat::Red, "[PVP] You cannot translocate here.");
+		PendingTranslocate = false;
+		return;
+	}
+
 	if (its->Complete == 1) {
 
 		int SpellID = PendingTranslocateData.spell_id;
