@@ -1406,16 +1406,19 @@ void Mob::AI_Process() {
 
         auto npcSpawnPoint = CastToNPC()->GetSpawnPoint();
 		if (zone && zone->GetGuildID() == 1) {
-			float leash_range = RuleR(Quarm, PVPMobLeashUnits);
-			leash_range = leash_range > 0.0f ? leash_range * leash_range : pAggroRange * pAggroRange;
+			if (!(IsPet() && HasOwner() && GetOwner()->IsClient()))
+			{
+				float leash_range = RuleR(Quarm, PVPMobLeashUnits);
+				leash_range = leash_range > 0.0f ? leash_range * leash_range : pAggroRange * pAggroRange;
 
-			if (DistanceSquaredNoZ(m_Position, npcSpawnPoint) > leash_range) {
-				GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
-				SetHP(GetMaxHP());
-				BuffFadeAll();
-				WipeHateList(true);
-				AIloiter_timer->Trigger();
-				return;
+				if (DistanceSquaredNoZ(m_Position, npcSpawnPoint) > leash_range) {
+					GMMove(npcSpawnPoint.x, npcSpawnPoint.y, npcSpawnPoint.z, npcSpawnPoint.w);
+					SetHP(GetMaxHP());
+					BuffFadeAll();
+					WipeHateList(true);
+					AIloiter_timer->Trigger();
+					return;
+				}
 			}
 
 		}
