@@ -1467,7 +1467,7 @@ void Client::GetExpLoss(Mob* killerMob, uint16 spell, int &exploss, uint8 killed
 
 	exploss = static_cast<int>(static_cast<float>(exploss) * RuleR(Character, EXPLossMultiplier));
 
-	if (zone && zone->GetGuildID() == 1 && exploss && (killedby == Killed_PVP || killedby == Killed_Self ||killedby == Killed_DUEL))
+	if (zone && zone->GetGuildID() == 1 && exploss > 0)
 		exploss = static_cast<int>((float)exploss * RuleR(Quarm, PVPExpLossMultiplier));
 
 	// Death exp loss started at level 6 until March 19 2002, then it was 11
