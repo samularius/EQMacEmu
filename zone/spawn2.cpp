@@ -346,7 +346,7 @@ bool Spawn2::Process() {
 			npc->AI_SetRoambox(spawn_group->roambox[0], spawn_group->roambox[1], spawn_group->roambox[2], spawn_group->roambox[3], spawn_group->delay, spawn_group->min_delay);
 		Log(Logs::General, Logs::Spawns, "Spawn2 %d: Group %d spawned %s (%d) at (%.3f, %.3f, %.3f).", spawn2_id, spawngroup_id_, npc->GetName(), npcid, loc.x, loc.y, loc.z);
 		
-		if(zone->GetGuildID() != 1 || zone->GetGuildID() == 1 && last_instance_spawn_timer_override == 0)
+		if(zone->GetGuildID() != 1 || zone->GetGuildID() == 1 && (last_instance_spawn_timer_override == 0 || zone->GetZoneID() == Zones::CHARDOK && last_instance_spawn_timer_override == 1592000000))
 			LoadGrid(starting_wp);
 	}
 	return true;
