@@ -338,7 +338,7 @@ int command_init(void)
 		command_add("showquake", "Shows current earthquake timer. Requires you to be a guild officer or leader.", AccountStatus::Player, command_showquake) ||
 		command_add("testcommand", "Template for temporary commands as needed. Don't delete.", AccountStatus::GMImpossible, command_testcommand) ||
 		command_add("testspawn", "[memloc] [value] - spawns a NPC for you only, with the specified values set in the spawn struct.", AccountStatus::GMCoder, command_testspawn) ||
-
+		command_add("togglepvp", "Toggles PVP for a client.", AccountStatus::Player, command_togglepvp) ||
 		command_add("undeletechar", "Undelete a character that was previously deleted.", AccountStatus::Max, command_undeletechar) ||
 		command_add("underworld", "[z] - Reports NPCs that are below the given Z or if not given, below the lowest spawn2/grid coord. If red, the NPC is below the underworld coord.", AccountStatus::QuestTroupe, command_underworld) ||
 		command_add("unmemspell", "[spellid] - Unmem specified spell from your target's spell bar.", AccountStatus::GMAreas, command_unmemspell) ||
@@ -1040,6 +1040,7 @@ void command_clearsaylink(Client *c, const Seperator *sep) {
 #include "gm_commands/synctod.cpp"
 #include "gm_commands/testcommand.cpp"
 #include "gm_commands/testspawn.cpp"
+#include "gm_commands/togglepvp.cpp"
 #include "gm_commands/undeletechar.cpp"
 #include "gm_commands/underworld.cpp"
 #include "gm_commands/unmemspell.cpp"
