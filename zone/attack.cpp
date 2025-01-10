@@ -2618,7 +2618,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 	if(other->GetSpecialAbility(SpecialAbility::BeingAggroImmunity))
 		return;
 
-	if (IsNPC() && other->IsClient() && zone && zone->GetGuildID() != GUILD_NONE)
+	if (IsNPC() && other->IsClient() && zone && zone->GetGuildID() != GUILD_NONE && zone->GetGuildID() != 1)
 	{
 		if (CastToNPC()->loot_lockout_timer > 0)
 		{
@@ -2705,7 +2705,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 				if (lootLockoutItr != petowner->CastToClient()->loot_lockouts.end())
 				{
 					memcpy(&record.lockout, &lootLockoutItr->second, sizeof(LootLockout));
-					if (zone && zone->GetGuildID() != GUILD_NONE && lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
+					if (zone && zone->GetGuildID() != GUILD_NONE && zone->GetGuildID() != 1 && lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 					{
 						petowner->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName());
 						petowner->CastToClient()->BootFromGuildInstance();
