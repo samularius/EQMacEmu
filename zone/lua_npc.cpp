@@ -660,7 +660,7 @@ luabind::scope lua_register_npc() {
 		.def("CheckNPCFactionAlly", (int(Lua_NPC::*)(int))&Lua_NPC::CheckNPCFactionAlly)
 		.def("AddItem", (void(Lua_NPC::*)(int, int))&Lua_NPC::AddItem)
 		.def("AddItem", (void(Lua_NPC::*)(int, int, bool))&Lua_NPC::AddItem)
-		.def("AddLootTable", (void(Lua_NPC::*)(void))&Lua_NPC::AddLootTable)
+		.def("AddLootTable", (void(Lua_NPC::*)(bool))&Lua_NPC::AddLootTable)
 		.def("AddLootTable", (void(Lua_NPC::*)(int))&Lua_NPC::AddLootTable)
 		.def("RemoveItem", (void(Lua_NPC::*)(int))&Lua_NPC::RemoveItem)
 		.def("RemoveItem", (void(Lua_NPC::*)(int, int))&Lua_NPC::RemoveItem)
