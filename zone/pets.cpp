@@ -429,7 +429,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	if (npc != nullptr)
 	{
-		npc->AddLootTable();
+		npc->AddLootTable(false);
 		npc->UpdateEquipmentLight();
 
 		// finally, override size if one was provided

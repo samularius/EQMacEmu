@@ -238,7 +238,7 @@ Mob* QuestManager::spawn2(int npc_type, int grid, int unused, const glm::vec4& p
 	if (name)
 		strcpy(tmp->name, tmp_name);
 
-	npc->AddLootTable();
+	npc->AddLootTable(true);
 	if (npc->DropsGlobalLoot()) {
 		npc->CheckGlobalLootTables();
 	}
@@ -261,7 +261,7 @@ Mob* QuestManager::unique_spawn(int npc_type, int grid, int unused, const glm::v
 	if (tmp = database.LoadNPCTypesData(npc_type))
 	{
 		auto npc = new NPC(tmp, nullptr, position, GravityBehavior::Water);
-		npc->AddLootTable();
+		npc->AddLootTable(true);
 		if (npc->DropsGlobalLoot()) {
 			npc->CheckGlobalLootTables();
 		}
@@ -342,7 +342,7 @@ Mob* QuestManager::spawn_from_spawn2(uint32 spawn2_id)
 	auto npc = new NPC(tmp, found_spawn, position, GravityBehavior::Water);
 
 	found_spawn->SetNPCPointer(npc);
-	npc->AddLootTable();
+	npc->AddLootTable(true);
 	if (npc->DropsGlobalLoot()) {
 		npc->CheckGlobalLootTables();
 	}
@@ -1612,7 +1612,7 @@ void QuestManager::respawn(int npcTypeID, int grid) {
 	if ((npcType = database.LoadNPCTypesData(npcTypeID)))
 	{
 		owner = new NPC(npcType, nullptr, owner->GetPosition(), GravityBehavior::Water);
-		owner->CastToNPC()->AddLootTable();
+		owner->CastToNPC()->AddLootTable(true);
 		if (owner->CastToNPC()->DropsGlobalLoot()) {
 			owner->CastToNPC()->CheckGlobalLootTables();
 		}

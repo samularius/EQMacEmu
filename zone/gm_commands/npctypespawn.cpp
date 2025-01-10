@@ -10,7 +10,7 @@ void command_npctypespawn(Client *c, const Seperator *sep){
 				npc->SetNPCFactionID(atoi(sep->arg[2]));
 			}
 
-			npc->AddLootTable();
+			npc->AddLootTable(false);
 			if (npc->DropsGlobalLoot()) {
 				npc->CheckGlobalLootTables();
 			}

@@ -687,9 +687,9 @@ void NPC::AddItem(uint32 itemid, int8 charges, bool equipitem, bool quest, const
 	AddLootDrop(item, l, equipitem, equipitem, quest, false, false, quarm_item_data);
 }
 
-void NPC::AddLootTable() {
+void NPC::AddLootTable(bool is_quest_spawn) {
 	AddLootTable(m_loottable_id);
-	if (zone && zone->GetGuildID() == 1)
+	if (zone && zone->GetGuildID() == 1 && !is_quest_spawn)
 		AddLootTable(m_loottable_id);
 }
 

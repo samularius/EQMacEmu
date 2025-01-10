@@ -475,7 +475,7 @@ NPC *Mob::CreateTemporaryPet(const NPCType *npc_type, uint32 pet_duration_second
 		swarm_pet_npc->SetPosition(zommPos);
 	}
 
-	swarm_pet_npc->AddLootTable();
+	swarm_pet_npc->AddLootTable(false);
 	swarm_pet_npc->UpdateEquipmentLight();
 
 	entity_list.AddNPC(swarm_pet_npc, true, true);

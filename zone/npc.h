@@ -178,7 +178,7 @@ public:
 	//loot
 	void AddItem(const EQ::ItemData *item, int8 charges, bool equip_item = true, bool quest = false,  bool pet = false, bool force_equip = false, uint8 min_looter_level = 0, uint32 item_loot_lockout_timer = 0, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
 	void AddItem(uint32 itemid, int8 charges, bool equipitem = true, bool quest = false, const QuarmItemData& quarm_item_data = EmptyQuarmItemData);
-	void AddLootTable();
+	void AddLootTable(bool is_quest_spawn = false);
 	void AddLootTable(uint32 loottable_id, bool is_global = false);
 	void AddLootDropTable(uint32 lootdrop_id, uint8 drop_limit, uint8 min_drop);
 	void CheckGlobalLootTables();

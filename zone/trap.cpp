@@ -167,7 +167,7 @@ void Trap::Trigger(Mob* trigger)
 					auto randomOffset = glm::vec4(zone->random.Int(-5, 5),zone->random.Int(-5, 5),zone->random.Int(-5, 5), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
 					auto new_npc = new NPC(tmp, nullptr, spawnPosition, GravityBehavior::Water);
-					new_npc->AddLootTable();
+					new_npc->AddLootTable(false);
 					if (new_npc->DropsGlobalLoot()) {
 						new_npc->CheckGlobalLootTables();
 					}
@@ -193,7 +193,7 @@ void Trap::Trigger(Mob* trigger)
 					auto randomOffset = glm::vec4(zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(-2, 2), zone->random.Int(0, 249));
 					auto spawnPosition = randomOffset + glm::vec4(m_Position, 0.0f);
 					auto new_npc = new NPC(tmp, nullptr, spawnPosition, GravityBehavior::Water);
-					new_npc->AddLootTable();
+					new_npc->AddLootTable(false);
 					if (new_npc->DropsGlobalLoot()) {
 						new_npc->CheckGlobalLootTables();
 					}

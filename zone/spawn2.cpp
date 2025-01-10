@@ -330,7 +330,7 @@ bool Spawn2::Process() {
 		NPC* npc = new NPC(tmp, this, loc, GravityBehavior::Water);
 
 		npcthis = npc;
-		npc->AddLootTable();
+		npc->AddLootTable(false);
 		if (npc->DropsGlobalLoot()) {
 			npc->CheckGlobalLootTables();
 		}

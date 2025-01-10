@@ -31,7 +31,7 @@ public:
 	int CheckNPCFactionAlly(int faction);
 	void AddItem(int item_id, int charges);
 	void AddItem(int item_id, int charges, bool equip);
-	void AddLootTable();
+	void AddLootTable(bool is_quest_spawn = false);
 	void AddLootTable(int id);
 	void RemoveItem(int item_id);
 	void RemoveItem(int item_id, int slot);

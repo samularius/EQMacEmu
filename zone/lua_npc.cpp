@@ -27,14 +27,14 @@ void Lua_NPC::AddItem(int item_id, int charges, bool equip) {
 	self->AddItem(item_id, charges, equip);
 }
 
-void Lua_NPC::AddLootTable() {
+void Lua_NPC::AddLootTable(bool is_quest_spawn) {
 	Lua_Safe_Call_Void();
-	self->AddLootTable();
+	self->AddLootTable(true);
 }
 
 void Lua_NPC::AddLootTable(int id) {
 	Lua_Safe_Call_Void();
-	self->AddLootTable(id);
+	self->AddLootTable(id, false);
 }
 
 void Lua_NPC::RemoveItem(int item_id) {
