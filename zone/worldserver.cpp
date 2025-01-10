@@ -750,7 +750,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 							Log(Logs::Detail, Logs::Spells, "OP_RezzRequest in zone %s for %s, spellid:%i",
 							zone->GetShortName(), client->GetName(), srs->rez.spellid);
 
-					if (zone->GetZoneID() == 1)
+					if (zone->GetGuildID() == 1)
 					{
 						client->OPRezzAnswer(1, srs->rez.spellid, srs->corpse_zone_guild_id, 0, srs->rez.x, srs->rez.y, srs->rez.z);
 						Mob* mypet = client->GetPet();

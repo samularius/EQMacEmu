@@ -3451,7 +3451,7 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 		return;
 	}
 
-	if (zone && zone->GetZoneID() == 1 && db_rezzable && !db_is_rezzed && Caster && Caster->IsClient())
+	if (zone && zone->GetGuildID() == 1 && Caster && Caster->IsClient())
 	{
 		if (Caster->GetRaid())
 		{
@@ -3460,7 +3460,7 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 			{
 				if (!raid_group->IsRaidMember(corpse_name))
 				{
-					Message(13, "[PVP] That person is not a member of your raid. Resurrection failed");
+					Caster->Message(13, "[PVP] That person is not a member of your raid. Resurrection failed");
 					return;
 				}
 			}
@@ -3472,7 +3472,7 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 			{
 				if (!group->IsGroupMember(corpse_name))
 				{
-					Message(13, "[PVP] That person is not a member of your group. Resurrection failed.");
+					Caster->Message(13, "[PVP] That person is not a member of your group. Resurrection failed.");
 					return;
 				}
 			}
@@ -3481,7 +3481,7 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 		{
 			if (GetCharID() != Caster->CastToClient()->CharacterID())
 			{
-				Message(13, "[PVP] You can only cast resurrection spells on yourself, raid, or group members in PVP zones.");
+				Caster->Message(13, "[PVP] You can only cast resurrection spells on yourself, raid, or group members in PVP zones.");
 				return;
 			}
 		}
@@ -3489,7 +3489,7 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 
 	rezzable = db_rezzable;
 	IsRezzed(db_is_rezzed);
-	if (zone && zone->GetZoneID() == 1)
+	if (zone && zone->GetGuildID() == 1)
 	{
 		rez_experience = 0;
 		gm_rez_experience = 0;
