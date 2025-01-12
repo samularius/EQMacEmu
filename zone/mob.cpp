@@ -2379,9 +2379,11 @@ uint32 Mob::RandomTimer(int min,int max) {
 // This sends a WearChange while determining the mob's current apperance.
 void Mob::SendWearChange(uint8 material_slot, Client* sendto, bool skip_if_zero, bool update_textures, bool illusioned)
 {
-	if (material_slot == EQ::textures::armorHead && sendto && !sendto->ShowHelm())
-	{
-		return;
+	if (!RuleB(Quarm, UseFixedShowHelmBehavior)) {
+		if (material_slot == EQ::textures::armorHead && sendto && !sendto->ShowHelm())
+		{
+			return;
+		}
 	}
 
 	if (IsClient() && !IsPlayableRace(GetRace()) && material_slot < EQ::textures::weaponPrimary)
@@ -5242,6 +5244,9 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 		int8 helmtexture = spell.max[i];
 		if (IsRacialIllusion(spell_id))
 		{
+			if (RuleB(Quarm, UseFixedShowHelmBehavior) && IsClient() && CastToClient()->ShowHelm()) {
+				helmtexture = 0xFF;
+			}
 			texture = GetTexture();
 		}
 		// Great Bear - Ogre is Grizzly texture 0.

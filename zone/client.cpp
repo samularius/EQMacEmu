@@ -1929,7 +1929,9 @@ void Client::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 		if (i < EQ::textures::weaponPrimary)
 		{
 			int16 texture = 0; uint32 color = 0;
-			GetPCEquipMaterial(i, texture, color);
+			if (i != EQ::textures::armorHead || ShowHelm() || !RuleB(Quarm, UseFixedShowHelmBehavior)) {
+				GetPCEquipMaterial(i, texture, color);
+			}
 			ns->spawn.equipment[i] = texture;
 			ns->spawn.colors.Slot[i].Color = color;
 		}

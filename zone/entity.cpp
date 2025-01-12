@@ -1638,33 +1638,48 @@ void EntityList::QueueWearChange(Mob *sender, const EQApplicationPacket *app, bo
 		{
 			switch (wc->material)
 			{
-			case 665:
-			case 660:
-			case 627:
-			case 620:
-			case 537:
-			case 530:
-			case 565:
-			case 561:
-			case 605:
-			case 600:
-			case 545:
-			case 540:
-			case 595:
-			case 590:
-			case 557:
-			case 550:
-			case 655:
-			case 650:
-			case 645:
-			case 640:
-			case 615:
-			case 610:
-			case 585:
-			case 580:
-			case 635:
-			case 630:
+			case 665: // vah
+			case 660: // vah
+			case 627: // hum
+			case 620: // hum
+			case 537: // bar
+			case 530: // bar
+			case 570: // eru
+			case 575: // eru
+			case 565: // elf
+			case 561: // elf
+			case 605: // hie
+			case 600: // hie
+			case 545: // def
+			case 540: // def
+			case 595: // hef
+			case 590: // hef
+			case 557: // dwf
+			case 550: // dwf
+			case 655: // trl
+			case 650: // trl
+			case 645: // ogr
+			case 640: // ogr
+			case 615: // hlf
+			case 610: // hlf
+			case 585: // gnm
+			case 580: // gnm
+			case 635: // iks
+			case 630: // iks
 				wc->material = 240;
+				break;
+			case 646: // ogr (alt)
+			case 641: // ogr (alt)
+				// Client has built-in support for material 241 on ogres, giving an alternate helm model. It looks the same as barbarian helm with that RZ-style look.
+				if (sender && sender->GetRace() == Race::Ogre)
+					wc->material = 241;
+				else
+					wc->material = 240;
+				break;
+			case 241:
+				if (sender && sender->GetRace() != Race::Ogre)
+					wc->material = 240;
+				break;
 
 				// unfortunately the tint is wrong when a tinted custom helm is worn by a client using old models and there seems to be no good way to work around this.
 				// when the same helm is worn by a luclin model client it just treats it as a normal tinted item so they will appear inconsistent to luclin model using viewers
@@ -1680,7 +1695,13 @@ void EntityList::QueueWearChange(Mob *sender, const EQApplicationPacket *app, bo
 					wc->color.Color = c->GetEquipmentColor(wc->wear_slot_id);
 				}
 				*/
-				break;
+			}
+
+			if (RuleB(Quarm, UseFixedShowHelmBehavior)) {
+				force_helm_update = true;
+				if (sender && sender->IsClient() && !sender->CastToClient()->ShowHelm()) {
+					wc->material = 0;
+				}
 			}
 		}
 	}
@@ -2668,6 +2689,11 @@ void EntityList::SendIllusionedPlayers(Client *client)
 
 void EntityList::SendHelms(Client *client)
 {
+	if (RuleB(Quarm, UseFixedShowHelmBehavior)) {
+		// This is no-op when this rule is enabled, because '/showhelm' only toggles your own WearChange events.
+		// You don't need other clients to send you WearChanges when you change '/showhelm'.
+		return;
+	}
 	Client *helm = nullptr;
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
@@ -2681,6 +2707,11 @@ void EntityList::SendHelms(Client *client)
 
 void EntityList::HideHelms(Client *client)
 {
+	if (RuleB(Quarm, UseFixedShowHelmBehavior)) {
+		// This is no-op when this rule is enabled, because '/showhelm' only toggles your own WearChange events.
+		// You don't need other clients to send you WearChanges when you change '/showhelm'.
+		return;
+	}
 	Client *helm = nullptr;
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
@@ -2694,11 +2725,22 @@ void EntityList::HideHelms(Client *client)
 
 void EntityList::HideMyHelm(Client *client)
 {
+	bool force_helm_update = false;
+	if (RuleB(Quarm, UseFixedShowHelmBehavior)) {
+		if (client->ShowHelm()) {
+			// We have '/showhelm on', so don't hide our helmet from anyone.
+			return;
+		}
+		// We have '/showhelm off', so hide it from everyone in the zone.
+		force_helm_update = true;
+	}
+
 	Client *other = nullptr;
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
 		other = it->second;
-		if (client != other && other && !other->ShowHelm())
+
+		if (client != other && other && (force_helm_update || !other->ShowHelm()))
 			client->WearChange(EQ::textures::armorHead, 0, 0, other);
 
 		++it;
