@@ -155,7 +155,7 @@ uint32 Spawn2::resetTimer()
 		}
 
 		if (last_instance_spawn_timer_override != 0)
-			return (int)((double)(std::min(last_instance_spawn_timer_override, (uint32)86400000)) * (double)zone->random.Real(0.5, 1.5));
+			return (int)((double)(std::min(last_instance_spawn_timer_override, (uint32)((double)8640000 * RuleR(Quarm, PVPDayVariance)))) * (double)zone->random.Real(0.5, 1.5));
 	}
 
 	return (rspawn);
