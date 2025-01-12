@@ -328,6 +328,7 @@ RULE_INT(Quarm, MaxPVPPBAOETargets, 72, "")
 RULE_REAL(Quarm, PVPMobLeashUnits, 300.0, "")
 RULE_INT(Quarm, PVPInstanceMinimumSpawnTime, 72, "")
 RULE_INT(Quarm, PVPInstanceGraveyardTime, 30, "")
+RULE_REAL(Quarm, PVPDayVariance, 7, "")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)

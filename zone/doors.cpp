@@ -362,6 +362,24 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			zoneguildid = 1;
 		}
 
+		if (zoneguildid == 1)
+		{
+			float safe_x, safe_y, safe_z, safe_heading;
+			int16 minstatus = 0;
+			uint8 minlevel = 0, expansion = 0;
+			char flag_needed[128];
+			if (!database.GetSafePoints(destination_zone_name, &safe_x, &safe_y, &safe_z, &safe_heading, &minstatus, &minlevel, flag_needed, &expansion)) {
+				//this should not happen...
+				return;
+			}
+
+			if ((int)content_service.GetCurrentExpansion() != expansion)
+			{
+				sender->Message(Chat::Red, "You are unable to enter a PVP Instance that isn't part of the current instance.");
+				return;
+			}
+		}
+
 		if ((floor_port || strncmp(destination_zone_name,zone_name,strlen(zone_name)) == 0) && !keyneeded)
 		{
 			if(!keepoffkeyring)
