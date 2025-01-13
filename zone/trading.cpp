@@ -741,7 +741,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry)
 									}
 									else if (RuleB(NPC, ReturnNonQuestItems))
 									{
-										SummonItem(baginst->GetID(), baginst->GetCharges(), EQ::legacy::SLOT_QUEST, true);
+										SummonItem(baginst->GetID(), baginst->GetCharges(), EQ::legacy::SLOT_QUEST, true, baginst->GetQuarmItemData());
 										if (npc->CanTalk())
 											npc->Say_StringID(NO_NEED_FOR_ITEM, GetName());
 										Log(Logs::General, Logs::Trading, "Non-Quest NPC %s is returning %s (bag) because it does not require it.", npc->GetName(), bagitem->Name);
