@@ -23,8 +23,7 @@ void command_togglepvp(Client* c, const Seperator* sep)
 	c->Message(
 		Chat::White,
 		fmt::format(
-			"YOu now follows the ways of {}.",
-			c->GetCleanName(),
+			"You now follow the ways of {}.",
 			pvp_state ? "Discord" : "Order"
 		).c_str()
 	);
