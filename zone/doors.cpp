@@ -379,7 +379,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 				return;
 			}
 
-			if (RuleB(Quarm, EnablePVPInstances))
+			if (!RuleB(Quarm, EnablePVPInstances))
 			{
 				sender->Message(Chat::Red, "You are unable to enter a PVP Instance at this time.");
 				return;
