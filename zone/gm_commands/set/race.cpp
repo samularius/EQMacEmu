@@ -22,19 +22,19 @@ void SetRace(Client *c, const Seperator *sep)
 
 	const uint16 race_id = Strings::ToUnsignedInt(sep->arg[2]);
 
-	if (
-		!EQ::ValueWithin(race_id, Race::Doug, Race::Portal)) 
-	{
-		c->Message(
-			Chat::White,
-			fmt::format(
-				"Usage: #race [0-{}] (0 for back to normal)",
-				Race::Portal
-			).c_str()
-		);
+	//if (
+	//	!EQ::ValueWithin(race_id, Race::Doug, Race::Portal)) 
+	//{
+	//	c->Message(
+	//		Chat::White,
+	//		fmt::format(
+	//			"Usage: #race [0-{}] (0 for back to normal)",
+	//			Race::Portal
+	//		).c_str()
+	//	);
 
-		return;
-	}
+	//	return;
+	//}
 
 	t->SendIllusionPacket(race_id);
 
