@@ -378,6 +378,12 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 				sender->Message(Chat::Red, "You are unable to enter a PVP Instance that isn't part of the current expansion.");
 				return;
 			}
+
+			if (RuleB(Quarm, EnablePVPInstances))
+			{
+				sender->Message(Chat::Red, "You are unable to enter a PVP Instance at this time.");
+				return;
+			}
 		}
 
 		if ((floor_port || strncmp(destination_zone_name,zone_name,strlen(zone_name)) == 0) && !keyneeded)
