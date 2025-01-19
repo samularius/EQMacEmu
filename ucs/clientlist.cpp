@@ -716,6 +716,8 @@ void Client::JoinChannels(std::string& channel_name_list) {
 		}
 	}
 
+	bool should_join_lfg = false;
+
 	LogInfo("Client: [{0}] joining channels [{1}]", GetName().c_str(), channel_name_list.c_str());
 
 	auto number_of_channels = ChannelCount();
@@ -735,7 +737,7 @@ void Client::JoinChannels(std::string& channel_name_list) {
 
 		if (comma == std::string::npos) {
 
-			auto* joined_channel = ChannelList->AddClientToChannel(channel_name_list.substr(current_pos), this);
+			auto* joined_channel = ChannelList->AddClientToChannel(channel_name_list.substr(current_pos), this, should_join_lfg);
 
 			if (joined_channel) {
 				AddToChannelList(joined_channel);
@@ -744,7 +746,7 @@ void Client::JoinChannels(std::string& channel_name_list) {
 			break;
 		}
 
-		auto* joined_channel = ChannelList->AddClientToChannel(channel_name_list.substr(current_pos, comma - current_pos), this);
+		auto* joined_channel = ChannelList->AddClientToChannel(channel_name_list.substr(current_pos, comma - current_pos), this, should_join_lfg);
 
 		if (joined_channel) {
 
@@ -754,6 +756,15 @@ void Client::JoinChannels(std::string& channel_name_list) {
 		}
 
 		current_pos = channel_name_list.find_first_not_of(", ", comma);
+	}
+
+	if (should_join_lfg)
+	{
+		ChatChannel* channel = ChannelList->AddClientToChannel("Lfg", this, should_join_lfg);
+		if (channel)
+		{
+			AddToChannelList(channel);
+		}
 	}
 
 	std::string JoinedChannelsList, ChannelMessage;

@@ -72,7 +72,7 @@ class ChatChannelList {
 public:
 	ChatChannel* CreateChannel(const std::string& name, const std::string& owner, const std::string& password, bool permanent, int minimum_status);
 	ChatChannel* FindChannel(std::string name);
-	ChatChannel* AddClientToChannel(std::string channel_name, Client* c);
+	ChatChannel* AddClientToChannel(std::string channel_name, Client* c, bool& should_join_lfg);
 	ChatChannel* RemoveClientFromChannel(const std::string& in_channel_name, Client* c);
 	void RemoveChannel(ChatChannel *Channel);
 	void RemoveAllChannels();

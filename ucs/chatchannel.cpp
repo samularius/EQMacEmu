@@ -495,7 +495,7 @@ bool ChatChannel::IsClientInChannel(Client *c) {
 	return false;
 }
 
-ChatChannel *ChatChannelList::AddClientToChannel(std::string channel_name, Client* c) {
+ChatChannel *ChatChannelList::AddClientToChannel(std::string channel_name, Client* c, bool& should_join_lfg) {
 
 	if (!c) {
 		return nullptr;
@@ -529,13 +529,11 @@ ChatChannel *ChatChannelList::AddClientToChannel(std::string channel_name, Clien
 		return nullptr;
 	}
 
-	bool join_lfg = false;
-
 	if (normalized_name.compare(RuleS(Quarm, AllianceChannelName)) == 0 || normalized_name.compare(RuleS(Quarm, AllianceChannelReplacementName)) == 0)
 	{
 		normalized_name = RuleS(Quarm, AllianceChannelReplacementName);
 		password = "";
-		join_lfg = true;
+		should_join_lfg = true;
 	}
 
 	if((normalized_name.length() > 64) || (password.length() > 64)) {
@@ -569,14 +567,6 @@ ChatChannel *ChatChannelList::AddClientToChannel(std::string channel_name, Clien
 		RequiredChannel->AddClient(c);
 
 		RequiredChannel->RemoveInvitee(c->GetName());
-		if (join_lfg)
-		{
-			ChatChannel* channel = AddClientToChannel("Lfg", c);
-			if (channel)
-			{
-				c->AddToChannelList(channel);
-			}
-		}
 		return RequiredChannel;
 	}
 
@@ -584,14 +574,6 @@ ChatChannel *ChatChannelList::AddClientToChannel(std::string channel_name, Clien
 		c->IsChannelAdmin()) {
 
 		RequiredChannel->AddClient(c);
-		if (join_lfg)
-		{
-			ChatChannel* channel = AddClientToChannel("Lfg", c);
-			if (channel)
-			{
-				c->AddToChannelList(channel);
-			}
-		}
 		return RequiredChannel;
 	}
 
