@@ -445,6 +445,15 @@ void command_guild(Client* c, const Seperator* sep)
 		}
 	}
 	else if (is_set_rank) {
+
+		if (
+			arguments != 3 ||
+			!sep->IsNumber(3)
+			) {
+			c->Message(Chat::White, "#guild setrank [Character ID|Character Name] [Guild ID] (Guild ID 0 is Guildless)");
+			return;
+		}
+
 		auto rank = static_cast<uint8>(std::stoul(sep->arg[3]));
 		if (!sep->IsNumber(3)) {
 			c->Message(Chat::White, "#guild setrank [Character ID|Character Name] [Rank]");
