@@ -185,6 +185,10 @@ bool Spawn2::Process() {
 	if(!Enabled())
 		return true;
 
+	if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint) {
+		return true;
+	}
+
 	//grab our spawn group
 	SpawnGroup* spawn_group = zone->spawn_group_list.GetSpawnGroup(spawngroup_id_);
 
@@ -247,6 +251,11 @@ bool Spawn2::Process() {
 
 		if (tmp->npc_id == 0) {
 			LogError("NPC type did not load for npc_id [{}]", npcid);
+			return true;
+		}
+
+		if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint) {
+			timer.Start(60000);	//don't yield quake mobs when they're disabled.
 			return true;
 		}
 

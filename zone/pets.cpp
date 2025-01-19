@@ -362,6 +362,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->gender = Gender::Female;
 			npc_type->luclinface = 0;
 			break;
+		case Race::WoodElf:
+			npc_type->race = Race::Treant;
+			npc_type->texture = 0;
+			npc_type->gender = Gender::Neuter;
+			npc_type->luclinface = 0;
+			break;
 		default:
 			npc_type->race = WOLF;
 			npc_type->texture = 0;
