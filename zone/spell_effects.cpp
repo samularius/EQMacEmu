@@ -485,6 +485,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 							CastToClient()->zonesummon_ignorerestrictions = 0;
 							SetHeading(heading);
 							CastToClient()->zoning_timer.Start();
+							if (caster && caster->IsClient() && (bool)caster->CastToClient()->GetPVP() != (bool)CastToClient()->GetPVP())
+							{
+								CastToClient()->MovePCGuildID(zoneid, GUILD_NONE, x, y, z, heading);
+							}
 						}
 					}
 				}
