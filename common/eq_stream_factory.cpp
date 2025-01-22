@@ -186,7 +186,7 @@ void EQStreamFactory::ReaderLoop()
 		MReaderRunning.unlock();
 
 		if (s_checkTimeoutRunning) {
-			Sleep(10);
+			Sleep(1);
 			continue;
 		}
 
@@ -197,11 +197,11 @@ void EQStreamFactory::ReaderLoop()
 		sleep_time.tv_usec = 0;
 		if ((num = select(sock + 1, &readset, nullptr, nullptr, &sleep_time)) < 0) {
 			// What do we wanna do?
-			Sleep(10);
+			Sleep(1);
 			continue;
 		}
 		else if (num == 0) {
-			Sleep(10);
+			Sleep(1);
 			continue;
 		}
 
@@ -262,7 +262,7 @@ void EQStreamFactory::ReaderLoop()
 				}
 			}
 
-			Sleep(10);
+			Sleep(1);
 		}
 	}
 }
@@ -424,7 +424,7 @@ void EQStreamFactory::WriterLoopNew() {
 		MWriterRunningNew.unlock();
 
 		if (s_checkTimeoutRunning) {
-			Sleep(10);
+			Sleep(1);
 			continue;
 		}
 
@@ -465,7 +465,7 @@ void EQStreamFactory::WriterLoopNew() {
 			(*cur)->ReleaseFromUse();
 		}
 
-		Sleep(10);
+		Sleep(1);
 
 		if (!stream_count) {
 			WriterWorkNew.Wait();
@@ -487,7 +487,7 @@ void EQStreamFactory::WriterLoopOld() {
 		MWriterRunningOld.unlock();
 
 		if (s_checkTimeoutRunning) {
-			Sleep(10);
+			Sleep(1);
 			continue;
 		}
 
@@ -526,6 +526,6 @@ void EQStreamFactory::WriterLoopOld() {
 			WriterWorkOld.Wait();
 		}
 
-		Sleep(10);
+		Sleep(1);
 	}
 }
