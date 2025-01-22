@@ -1636,6 +1636,7 @@ EQOldStream::EQOldStream(sockaddr_in in, int fd_sock)
 	RateThreshold=RATEBASE/10;
 	DecayRate=DECAYBASE/10;
 	bTimeoutTrigger = false;
+	memset(m_packet_buffer, 0, MAX_PACKET_SIZE);
 }
 
 EQOldStream::EQOldStream()
@@ -1683,6 +1684,7 @@ EQOldStream::EQOldStream()
 	isWriting = false;
 	RateThreshold=RATEBASE/10;
 	DecayRate=DECAYBASE/10;
+	memset(m_packet_buffer, 0, MAX_PACKET_SIZE);
 }
 
 EQOldStream::~EQOldStream()
@@ -1694,6 +1696,7 @@ EQOldStream::~EQOldStream()
 	LogNetcodeDetail("Killing outbound and inbound packet queue");
 	RemoveData();
 	SetState(CLOSED);
+	memset(m_packet_buffer, 0, MAX_PACKET_SIZE);
 }
 
 void EQOldStream::ResendBefore(uint16 dwARQ)
@@ -2534,14 +2537,14 @@ void EQOldStream::SendPacketQueue(bool Block)
 		{
 			if (pack->HDR.a2_Closing && pack->HDR.a6_Closing) //Closing bits. Terminates the connection properly.
 			{
-				size = pack->ReturnPacket(&data, this);
-				sendto(listening_socket, (char*) data, size, 0, (sockaddr*) &to, sizeof(to));
+				size = pack->ReturnPacket(m_packet_buffer, this);
+				sendto(listening_socket, (char*)m_packet_buffer, size, 0, (sockaddr*) &to, sizeof(to));
+				memset(m_packet_buffer, 0, size);
 				//LogNetcodeDetail(_L "Sending Closing Packet [{}]." __L, pack->dwARQ);
 				dataflow += size;
 				pack->LastSent = Timer::GetCurrentTime();
 				pack->Resend = false;
 				pack->resend_count++;
-				safe_delete_array(data);
 				if (pack->resend_count > 10) {
 					safe_delete(pack);
 					packit = SendQueue.erase(packit);
@@ -2563,7 +2566,7 @@ void EQOldStream::SendPacketQueue(bool Block)
 				}
 				if (!pack->Resend)
 					sentpacket++;
-				size = pack->ReturnPacket(&data, this);
+				size = pack->ReturnPacket(m_packet_buffer, this);
 				pack->resend_count++;
 				pack->Resend = false;
 
@@ -2571,9 +2574,9 @@ void EQOldStream::SendPacketQueue(bool Block)
 				//if (pack->resend_count > 25 || rand() % 100 < 20) {
 				//	if (pack->HDR.a1_ARQ)
 				//		LogNetcodeDetail(_L "Sending Packet [{}]." __L, pack->dwARQ);
-				sendto(listening_socket, (char*)data, size, 0, (sockaddr*)&to, sizeof(to));
+				sendto(listening_socket, (char*)m_packet_buffer, size, 0, (sockaddr*)&to, sizeof(to));
 				//}
-				safe_delete_array(data);
+				memset(m_packet_buffer, 0, size);
 				dataflow += size;
 				pack->LastSent = Timer::GetCurrentTime();
 
@@ -2661,7 +2664,6 @@ void EQOldStream::FinalizePacketQueue()
 	to.sin_addr.s_addr = remote_ip;
 
 	uint32 size;
-	uchar* data;
 	// Set state to closing, and send off the finalized packet.
 	if (GetState() != CLOSING)
 		MakeClosePacket();
@@ -2670,9 +2672,9 @@ void EQOldStream::FinalizePacketQueue()
 		p = (*packit);
 		if (p->HDR.a1_ARQ || p->HDR.a3_Fragment) {
 			if (!p->acked) {
-				size = p->ReturnPacket(&data, this);
-				sendto(listening_socket, (char*)data, size, 0, (sockaddr*)&to, sizeof(to));
-				safe_delete_array(data);
+				size = p->ReturnPacket(m_packet_buffer, this);
+				sendto(listening_socket, (char*)m_packet_buffer, size, 0, (sockaddr*)&to, sizeof(to));
+				memset(m_packet_buffer, 0, size);
 			}
 			packit++;
 		}

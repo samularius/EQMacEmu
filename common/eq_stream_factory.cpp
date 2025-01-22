@@ -71,25 +71,23 @@ void EQStreamFactory::StopReader() {
 }
 
 void EQStreamFactory::StopWriterNew() {
-	std::unique_lock<std::mutex> lock(MWriterRunningNew);
+	MWriterRunningNew.lock();
 	WriterRunningNew = false;
-	lock.unlock();
-	WriterWorkNew.notify_one();
+	MWriterRunningNew.unlock();
 }
 
 void EQStreamFactory::StopWriterOld() {
 	std::unique_lock<std::mutex> lock(MWriterRunningOld);
 	WriterRunningOld = false;
 	lock.unlock();
-	WriterWorkOld.notify_one();
 }
 
 void EQStreamFactory::SignalWriterNew() {
-	WriterWorkNew.notify_one();
+	WriterWorkNew.Signal();
 }
 
 void EQStreamFactory::SignalWriterOld() {
-	WriterWorkOld.notify_one();
+	WriterWorkOld.Signal();
 }
 
 bool EQStreamFactory::Open()
@@ -181,15 +179,14 @@ void EQStreamFactory::ReaderLoop()
 	timeval sleep_time;
 	ReaderRunning = true;
 	while (sock != -1) {
-		std::unique_lock<std::mutex> reader_lock(MReaderRunning);
+		MReaderRunning.lock();
 		if (!ReaderRunning) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			break;
 		}
-		reader_lock.unlock();
+		MReaderRunning.unlock();
 
 		if (s_checkTimeoutRunning) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 			continue;
 		}
 
@@ -200,11 +197,11 @@ void EQStreamFactory::ReaderLoop()
 		sleep_time.tv_usec = 0;
 		if ((num = select(sock + 1, &readset, nullptr, nullptr, &sleep_time)) < 0) {
 			// What do we wanna do?
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 			continue;
 		}
 		else if (num == 0) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 			continue;
 		}
 
@@ -265,7 +262,7 @@ void EQStreamFactory::ReaderLoop()
 				}
 			}
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 		}
 	}
 }
@@ -280,7 +277,7 @@ void EQStreamFactory::ProcessLoopNew(const RecvBuffer& recvBuffer, EQStreamItera
 		std::shared_ptr<EQStream> s = std::make_shared<EQStream>(from);
 		s->SetStreamType(StreamType);
 		Streams[recvBuffer.StreamKey()] = s;
-		WriterWorkNew.notify_one();
+		WriterWorkNew.Signal();
 		Push(s);
 		s->AddBytesRecv(length);
 		s->Process(buffer, length);
@@ -316,7 +313,7 @@ void EQStreamFactory::ProcessLoopOld(const RecvBuffer& recvBuffer, EQOldStreamIt
 		std::shared_ptr<EQOldStream> s = std::make_shared<EQOldStream>(from, sock);
 		s->SetStreamType(StreamType);
 		OldStreams[recvBuffer.StreamKey()] = s;
-		WriterWorkOld.notify_one();
+		WriterWorkOld.Signal();
 		PushOld(s);
 		//s->AddBytesRecv(length);
 		s->ParceEQPacket(length, buffer);
@@ -420,15 +417,14 @@ void EQStreamFactory::WriterLoopNew() {
 	WriterRunningNew = true;
 	DecayTimer.Enable();
 	while (sock != -1) {
-		std::unique_lock<std::mutex> writer_lock(MWriterRunningNew);
+		MWriterRunningNew.lock();
 		if (!WriterRunningNew) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			break;
 		}
-		writer_lock.unlock();
+		MWriterRunningNew.unlock();
 
 		if (s_checkTimeoutRunning) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 			continue;
 		}
 
@@ -448,7 +444,6 @@ void EQStreamFactory::WriterLoopNew() {
 				fprintf(stderr,
 					"ERROR: nullptr Stream encountered in EQStreamFactory::WriterLoop for: %i:%i",
 					stream_itr->first.first, stream_itr->first.second);
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
 			}
 
@@ -470,12 +465,11 @@ void EQStreamFactory::WriterLoopNew() {
 			(*cur)->ReleaseFromUse();
 		}
 
-		if (!stream_count) {
-			std::unique_lock<std::mutex> writer_work_lock(MWriterRunningNew);
-			WriterWorkNew.wait(writer_work_lock);
-		}
+		Sleep(10);
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		if (!stream_count) {
+			WriterWorkNew.Wait();
+		}
 	}
 }
 
@@ -486,15 +480,14 @@ void EQStreamFactory::WriterLoopOld() {
 
 	WriterRunningOld = true;
 	while (sock != -1) {
-		std::unique_lock<std::mutex> writer_lock(MWriterRunningOld);
+		MWriterRunningOld.lock();
 		if (!WriterRunningOld) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			break;
 		}
-		writer_lock.unlock();
+		MWriterRunningOld.unlock();
 
 		if (s_checkTimeoutRunning) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			Sleep(10);
 			continue;
 		}
 
@@ -508,7 +501,6 @@ void EQStreamFactory::WriterLoopOld() {
 				fprintf(stderr,
 					"ERROR: nullptr Stream encountered in EQStreamFactory::WriterLoop for: %i:%i",
 					stream_itr->first.first, stream_itr->first.second);
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
 			}
 			stream_itr->second->CheckTimers();
@@ -531,10 +523,9 @@ void EQStreamFactory::WriterLoopOld() {
 		}
 
 		if (!stream_count) {
-			std::unique_lock<std::mutex> writer_work_lock(MWriterRunningOld);
-			WriterWorkOld.wait(writer_work_lock);
+			WriterWorkOld.Wait();
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		Sleep(10);
 	}
 }
