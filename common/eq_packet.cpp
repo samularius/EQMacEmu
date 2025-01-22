@@ -749,9 +749,8 @@ void EQOldPacket::DecodePacket(uint16 length, uchar *pPacket)
 /************ END PROCESSING ************/
 }
 
-uint32 EQOldPacket::ReturnPacket(uchar** data, EQOldStream* netcon) {
-	*data = new uchar[dwExtraSize + 39];
-	uchar* buf = *data;
+uint32 EQOldPacket::ReturnPacket(uchar* data, EQOldStream* netcon) {
+	uchar* buf = data;
 	uint32 o = 4;
 	bool clearFlags = false;
 	this->dwSEQ = netcon->SACK.dwGSQ;

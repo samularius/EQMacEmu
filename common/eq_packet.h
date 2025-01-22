@@ -139,7 +139,7 @@ public:
 
 public:
 	void  DecodePacket(uint16 length, uchar *pPacket);
-	uint32 ReturnPacket(uchar** data, EQOldStream* netcon);
+	uint32 ReturnPacket(uchar* data, EQOldStream* netcon);
 	EQRawApplicationPacket *MakeAppPacket() const;
 	void Clear(void) 
 	{  
