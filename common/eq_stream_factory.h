@@ -66,8 +66,8 @@ class EQStreamFactory : private Timeoutable {
 		std::mutex MWriterRunningNew;
 		std::mutex MWriterRunningOld;
 
-		Condition WriterWorkNew;
-		Condition WriterWorkOld;
+		std::condition_variable WriterWorkNew;
+		std::condition_variable WriterWorkOld;
 
 		EQStreamType StreamType;
 
