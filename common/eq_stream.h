@@ -59,7 +59,6 @@ class EQProtocolPacket;
 #define PM_FINISHING 1 // Comment: manager received closing bits and is going to send final packet
 #define PM_FINISHED  2 // Comment: manager has sent closing bits back to client
 
-#define MAX_PACKET_SIZE 70000
 
 template <typename type>                    // LO_BYTE
 type  LO_BYTE (type a) {return (a&=0xff);}  
@@ -292,14 +291,16 @@ class EQStream : public EQStreamInterface {
 		void SendKeepAlive();
 		void SendAck(uint16 seq);
 		void SendOutOfOrderAck(uint16 seq);
+		void QueuePacket(EQProtocolPacket *p);
+		void SendPacket(EQProtocolPacket *p);
 		void NonSequencedPush(EQProtocolPacket *p);
 		void SequencedPush(EQProtocolPacket *p);
 		void WritePacket(int fd,EQProtocolPacket *p);
 
 
-		inline uint32 GetKey() const { return Key; }
-		inline void SetKey(uint32 k) { Key=k; }
-		inline void SetSession(uint32 s) { Session=s; }
+		uint32 GetKey() { return Key; }
+		void SetKey(uint32 k) { Key=k; }
+		void SetSession(uint32 s) { Session=s; }
 
 		void ProcessPacket(EQProtocolPacket *p);
 
@@ -321,19 +322,19 @@ class EQStream : public EQStreamInterface {
 		EQStream() { init(); remote_ip = 0; remote_port = 0; State = UNESTABLISHED; StreamType = UnknownStream; compressed = true; encoded = false; app_opcode_size = 2; bytes_sent = 0; bytes_recv = 0; create_time = Timer::GetTimeSeconds(); sessionAttempts = 0; streamactive = false; }
 		EQStream(sockaddr_in addr) { init(); remote_ip = addr.sin_addr.s_addr; remote_port = addr.sin_port; State = UNESTABLISHED; StreamType = UnknownStream; compressed = true; encoded = false; app_opcode_size = 2; bytes_sent = 0; bytes_recv = 0; create_time = Timer::GetTimeSeconds(); sessionAttempts = 0; streamactive = false; }
 		virtual ~EQStream() { RemoveData(); SetState(CLOSED); }
-		inline void SetMaxLen(uint32 length) { MaxLen=length; }
+		void SetMaxLen(uint32 length) { MaxLen=length; }
 
 		//interface used by application (EQStreamInterface)
 		virtual void QueuePacket(const EQApplicationPacket *p, bool ack_req=true);
 		virtual void FastQueuePacket(EQApplicationPacket **p, bool ack_req=true);
 		virtual EQApplicationPacket *PopPacket();
 		virtual void Close();
-		virtual inline uint32 GetRemoteIP() const { return remote_ip; }
-		virtual inline uint16 GetRemotePort() const { return remote_port; }
-		virtual inline void ReleaseFromUse() { MInUse.lock(); if (active_users > 0) active_users--; MInUse.unlock(); }
+		virtual uint32 GetRemoteIP() const { return remote_ip; }
+		virtual uint16 GetRemotePort() const { return remote_port; }
+		virtual void ReleaseFromUse() { std::lock_guard<std::mutex> lock(MInUse); if(active_users > 0) active_users--; }
 		virtual void RemoveData() { InboundQueueClear(); OutboundQueueClear(); PacketQueueClear(); /*if (CombinedAppPacket) delete CombinedAppPacket;*/ }
-		virtual inline bool CheckState(EQStreamState state) { return GetState() == state; }
-		virtual inline std::string Describe() const { return("Direct EQStream"); }
+		virtual bool CheckState(EQStreamState state) { return GetState() == state; }
+		virtual std::string Describe() const { return("Direct EQStream"); }
 
 		virtual void SetOpcodeManager(OpcodeManager **opm) { OpMgr = opm; }
 		virtual OpcodeManager *GetOpcodeManager() const
@@ -344,23 +345,23 @@ class EQStream : public EQStreamInterface {
 		void CheckTimeout(uint32 now, uint32 timeout=30000);
 		bool HasOutgoingData();
 		void Process(const unsigned char *data, const uint32 length);
-		inline void SetLastPacketTime(uint32 t) {LastPacket=t;}
-		inline void SetLastSentTime(uint32 t) { LastSent = t; }
+		void SetLastPacketTime(uint32 t) {LastPacket=t;}
+		void SetLastSentTime(uint32 t) { LastSent = t; }
 		void Write(int eq_fd);
 
 		// whether or not the stream has been assigned (we passed our stream match)
-		virtual inline void SetActive(bool val) { streamactive = val; }
+		virtual void SetActive(bool val) { streamactive = val; }
 
-		virtual inline bool IsInUse() { bool flag; MInUse.lock(); flag=(active_users>0); MInUse.unlock(); return flag; }
-		inline void PutInUse() { MInUse.lock(); active_users++; MInUse.unlock(); }
+		virtual bool IsInUse() { bool flag; std::lock_guard<std::mutex> lock(MInUse); flag=(active_users>0); return flag; }
+		inline void PutInUse() { std::lock_guard<std::mutex> lock(MInUse); active_users++; }
 
-		inline EQStreamState GetState() { EQStreamState s; MState.lock(); s=State; MState.unlock(); return s; }
+		inline EQStreamState GetState() { EQStreamState s; std::lock_guard<std::mutex> lock(MState); s=State; return s; }
 
 		static SeqOrder CompareSequence(uint16 expected_seq , uint16 seq);
 
-		inline bool CheckActive() { return GetState()==ESTABLISHED; }
-		inline bool CheckClosed() { return GetState()==CLOSED; }
-		inline void SetOpcodeSize(uint8 s) { app_opcode_size = s; }
+		bool CheckActive() { return GetState()==ESTABLISHED; }
+		bool CheckClosed() { return GetState()==CLOSED; }
+		void SetOpcodeSize(uint8 s) { app_opcode_size = s; }
 		void SetStreamType(EQStreamType t);
 		inline const EQStreamType GetStreamType() const { return StreamType; }
 		static const char *StreamTypeString(EQStreamType t);
@@ -372,26 +373,26 @@ class EQStream : public EQStreamInterface {
 		uint32 bytes_recv;
 		uint32 create_time;
 
-		inline void AddBytesSent(uint32 bytes)
+		void AddBytesSent(uint32 bytes)
 		{
 			bytes_sent += bytes;
 		}
 
-		inline void AddBytesRecv(uint32 bytes)
+		void AddBytesRecv(uint32 bytes)
 		{
 			bytes_recv += bytes;
 		}
 
-		virtual const inline uint32 GetBytesSent() const { return bytes_sent; }
-		virtual const inline uint32 GetBytesRecieved() const { return bytes_recv; }
-		virtual const inline uint32 GetBytesSentPerSecond() const
+		virtual const uint32 GetBytesSent() const { return bytes_sent; }
+		virtual const uint32 GetBytesRecieved() const { return bytes_recv; }
+		virtual const uint32 GetBytesSentPerSecond() const
 		{
 			if((Timer::GetTimeSeconds() - create_time) == 0)
 				return 0;
 			return bytes_sent / (Timer::GetTimeSeconds() - create_time);
 		}
 
-		virtual const inline uint32 GetBytesRecvPerSecond() const
+		virtual const uint32 GetBytesRecvPerSecond() const
 		{
 			if((Timer::GetTimeSeconds() - create_time) == 0)
 				return 0;
@@ -425,22 +426,22 @@ class EQOldStream : public EQStreamInterface {
 		std::mutex MInUse;
 
 	public:
-		inline bool IsTooMuchPending()
+		bool IsTooMuchPending()
 		{
 			return (packetspending > EQOLDSTREAM_OUTBOUD_THRESHOLD) ? true : false;
 		}
 
-		inline int16 PacketsPending()
+		int16 PacketsPending()
 		{
 			return packetspending;
 		}
 
-		inline void SetDebugLevel(int8 set_level)
+		void SetDebugLevel(int8 set_level)
 		{
 			debug_level = set_level;
 		}
 
-		inline void LogPackets(bool logging)
+		void LogPackets(bool logging) 
 		{
 			LOG_PACKETS = logging; 
 		}
@@ -523,7 +524,6 @@ class EQOldStream : public EQStreamInterface {
 		int32	datarate_sec;	// bytes/1000ms
 		int32	datarate_tic;	// bytes/100ms
 		int32	dataflow;
-		uchar m_packet_buffer[MAX_PACKET_SIZE];
 
 	public:
 		//interface used by application (EQStreamInterface)
@@ -532,15 +532,15 @@ class EQOldStream : public EQStreamInterface {
 		virtual EQApplicationPacket *PopPacket();
 		virtual uint32 GetRemoteIP() const { return remote_ip; }
 		virtual uint16 GetRemotePort() const { return remote_port; }
-		virtual void ReleaseFromUse() { MInUse.lock(); if (active_users > 0) active_users--; MInUse.unlock(); }
+		virtual void ReleaseFromUse() { std::lock_guard<std::mutex> lock(MInUse); if(active_users > 0) active_users--; }
 		virtual void RemoveData();
 		virtual bool CheckState(EQStreamState state) { return GetState() == state; }
 		virtual std::string Describe() const { return("Direct EQOldStream"); }
-		virtual bool IsInUse() { bool flag; MInUse.lock(); flag=(active_users>0); MInUse.unlock(); return flag; }
-		inline bool IsWriting() { return isWriting; }
-		inline void SetWriting(bool var) { isWriting = var; }
-		inline void PutInUse() { MInUse.lock(); active_users++; MInUse.unlock(); }
-		inline EQStreamState GetState() { EQStreamState s; MState.lock(); s=pm_state; MState.unlock(); return s; }
+		virtual bool IsInUse() { bool flag; std::lock_guard<std::mutex> lock(MInUse); flag=(active_users>0); return flag; }
+		bool IsWriting() { return isWriting; }
+		void SetWriting(bool var) { isWriting = var; } 
+		inline void PutInUse() { std::lock_guard<std::mutex> lock(MInUse); active_users++; }
+		inline EQStreamState GetState() { EQStreamState s; std::lock_guard<std::mutex> lock(MState); s=pm_state; return s; }
 		void	SendPacketQueue(bool Block = true);
 		void	FinalizePacketQueue();
 		void	ClearPacketQueue();
@@ -552,10 +552,11 @@ class EQOldStream : public EQStreamInterface {
 		virtual bool IsOldStream()			const { return true; }
 		EQStream::MatchState CheckSignature(const EQStream::Signature *sig);
 		bool HasOutgoingData();
-		inline bool CheckClosed() { return GetState()==CLOSED; }
+		bool CheckClosed() { return GetState()==CLOSED; }
+		void Process(const unsigned char *data, const uint32 length);
 		void CheckTimeout(uint32 now, uint32 timeout=10000);
 		void SetState(EQStreamState state);
-		inline void SetLastPacketTime(uint32 t) {LastPacket=t;}
+		void SetLastPacketTime(uint32 t) {LastPacket=t;}
 
 		virtual void SetOpcodeManager(OpcodeManager **opm) { OpMgr = opm; }
 		virtual OpcodeManager *GetOpcodeManager() const
@@ -564,12 +565,12 @@ class EQOldStream : public EQStreamInterface {
 		};
 
 		void _SendDisconnect();
-		inline void SetTimeOut(bool time) { bTimeout = time; }
-		inline bool GetTimeOut() const { return bTimeout; }
-		inline void			SetDataRate(float in_datarate)	{ datarate_sec = (int32) (in_datarate * 1024); datarate_tic = datarate_sec / 10; dataflow = 0; } // conversion from kb/sec to byte/100ms, byte/1000ms
-		inline float			GetDataRate() const { return (float)datarate_sec / 1024; } // conversion back to kb/second
-		inline bool		DataQueueFull() const { return (dataflow > datarate_sec); }
-		inline int32	GetDataFlow() const { return dataflow; }
+		void SetTimeOut(bool time) { bTimeout = time; }
+		bool GetTimeOut() { return bTimeout; }
+		void			SetDataRate(float in_datarate)	{ datarate_sec = (int32) (in_datarate * 1024); datarate_tic = datarate_sec / 10; dataflow = 0; } // conversion from kb/sec to byte/100ms, byte/1000ms
+		float			GetDataRate()					{ return (float)datarate_sec / 1024; } // conversion back to kb/second
+		inline bool		DataQueueFull()					{ return (dataflow > datarate_sec); }
+		inline int32	GetDataFlow()					{ return dataflow; }
 		ACK_INFO    SACK; //Server -> client info.
 		ACK_INFO    CACK; //Client -> server info.
 		uint16       dwLastCACK;
