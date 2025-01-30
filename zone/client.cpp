@@ -1938,6 +1938,7 @@ void Client::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 		else
 		{
 			ns->spawn.equipment[i] = GetEquipmentMaterial(i);
+			ns->spawn.colors.Slot[i].Color = GetEquipmentColor(i);
 		}
 	}
 
