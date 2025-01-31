@@ -1004,7 +1004,7 @@ void Lua_Client::SetSelfFound(int self_found) {
 
 int Lua_Client::IsSelfFound() {
 	Lua_Safe_Call_Int();
-	return self->IsSelfFound();
+	return self->IsSelfFoundAny();
 }
 
 void Lua_Client::SetSoloOnly(int solo_only) {

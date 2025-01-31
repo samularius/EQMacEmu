@@ -3071,7 +3071,7 @@ void Client::Handle_OP_ClickObject(const EQApplicationPacket *app)
 			{
 				msg = "You cannot pick up dropped player items because you're a GM and that would make the players around you a sad panda.";
 			}
-			else if ((IsSelfFound() || IsSoloOnly()))
+			else if (IsSelfFoundAny())
 			{
 				// If the client is self found or solo, don't allow them to pick up the item, unless they are the one that dropped it
 				// Also make sure they dropped it while SSF
@@ -3631,16 +3631,18 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	{
 		Client* tmobClient = tmob->CastToClient();
 
-		bool self_found = tmobClient->IsSelfFound();
+		bool self_found_any = tmobClient->IsSelfFoundAny();
 		bool solo_only = tmobClient->IsSoloOnly();
 		bool hardcore = tmobClient->IsHardcore();
 		bool player_null_class = tmobClient->GetBaseClass() == 0;
-		if (self_found || solo_only || hardcore || player_null_class)
+		if (self_found_any || solo_only || hardcore || player_null_class)
 		{
 			std::string ruleset_string = "This player is running the";
 			if (solo_only)
-				ruleset_string += " solo ";
-			if (self_found)
+				ruleset_string += " solo self found ";
+			else if (tmobClient->IsSelfFoundClassic())
+				ruleset_string += " classic self found ";
+			else if (tmobClient->IsSelfFoundFlex())
 				ruleset_string += " self found ";
 			if (hardcore)
 				ruleset_string += " hardcore ";
@@ -5367,21 +5369,9 @@ void Client::Handle_OP_GroupFollow(const EQApplicationPacket *app)
 
 	if (inviter != nullptr && inviter->IsClient()) 
 	{
-		if (inviter->CastToClient()->IsSoloOnly())
+		if (!CanGroupWith(inviter->CastToClient()))
 		{
-			Message(Chat::Red, "The inviter is solo only. You cannot join.");
-			return;
-		}
-
-		if (IsSelfFound() != inviter->CastToClient()->IsSelfFound())
-		{
-			Message(Chat::Red, "The inviting player's self found flag does not match yours. You cannot join the group.");
-			return;
-		}
-
-		if (GetBaseClass() == 0 && GetBaseClass() != inviter->CastToClient()->GetBaseClass())
-		{
-			Message(Chat::Red, "Player was null and the invite failed. In this case, quite literally, they're class 0.");
+			Message(Chat::Red, "The player's challenge modes does not match. You cannot join the group.");
 			return;
 		}
 
@@ -5394,6 +5384,12 @@ void Client::Handle_OP_GroupFollow(const EQApplicationPacket *app)
 		//inviter has a raid don't do group stuff instead do raid stuff!
 		if (raid)
 		{
+			if (!CanGroupWith(raid->GetRuleSet()))
+			{
+				Message(Chat::Red, "The raid's challenge modes is not compatible with yours. You cannot join the raid.");
+				return;
+			}
+
 			if (raid->RaidCount() >= MAX_RAID_MEMBERS && raid != iraid) {
 				Message_StringID(Chat::White, RAID_IS_FULL);
 				return;
@@ -5451,6 +5447,11 @@ void Client::Handle_OP_GroupFollow(const EQApplicationPacket *app)
 		}
 
 		Group* group = entity_list.GetGroupByClient(inviter->CastToClient());
+		if (group && !CanGroupWith(group->GetRuleSet()))
+		{
+			Message(Chat::Red, "The group's challenge modes does not match with yours. You cannot join the group.");
+			return;
+		}
 
 		if (!group)
 		{
@@ -5560,32 +5561,29 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 		return;
 	}
 
+	Raid* InviterRaid = GetRaid();
+	Group* InviterGroup = GetGroup();
+	ChallengeRules::RuleSet group_ruleset = InviterRaid ? InviterRaid->GetRuleSet() : InviterGroup ? InviterGroup->GetRuleSet() : GetRuleSet();
+
 	if (Invitee) {
 		if (Invitee->IsClient()) {
-			if (Invitee->CastToClient()->IsSelfFound() != IsSelfFound())
+
+			if (!Invitee->CastToClient()->CanGroupWith(group_ruleset))
 			{
-				Message(Chat::Red, "This player has a different self found enabled than you do, and cannot group with you.");
-				return;
-			}
-			if (Invitee->CastToClient()->IsSoloOnly())
-			{
-				Message(Chat::Red, "This player has solo mode enabled, and cannot group with you.");
+				Message(Chat::Red, "This player has a challenge mode that isn't compatible. They cannot join the group.");
 				return;
 			}
 
-			if (GetBaseClass() == 0 && Invitee->CastToClient()->GetBaseClass() != GetBaseClass())
-			{
-				Message(Chat::Red, "Class was null. Like, literally. Consider them for more information.");
-				return;
-			}
 			if (Invitee->CastToClient()->Admin() > 0)
 			{
 				Message(Chat::Red, "You are being invited by a GM. This will never work.");
 				database.SetHackerFlag(Invitee->CastToClient()->AccountName(), Invitee->CastToClient()->GetCleanName(), "GM attempted to join a group or raid.");
 				return;
 			}
+
 			if (!Invitee->IsGrouped() && !Invitee->IsRaidGrouped())
 			{
+
 				if (app->GetOpcode() == OP_GroupInvite2)
 				{
 					//Make a new packet using all the same information but make sure it's a fixed GroupInvite opcode so we
@@ -5602,16 +5600,15 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 					Invitee->CastToClient()->QueuePacket(app);
 				}
 
-				// TODO: Send message to all group members that the invite happened
 				Group* group = GetGroup();
-				if(group != nullptr) 
+				if (group != nullptr)
 				{
 					uint8 language = 0;
 					uint8 lang_skill = 100;
 					std::string message = StringFormat("Invited %s to the group.", Invitee->CastToClient()->GetCleanName());
 					group->GroupMessage(this, language, lang_skill, message.c_str());
 					message = StringFormat("You tell your party, '%s'", message.c_str());
-					Message(Chat::White, message.c_str());
+					Message(Chat::Group, message.c_str());
 				}
 			}
 			else if (Invitee->IsRaidGrouped())
@@ -5656,8 +5653,7 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 		ServerGroupInvite_Struct* sgis = (ServerGroupInvite_Struct*)pack->pBuffer;
 
 		memcpy(pack->pBuffer, gis, sizeof(ServerGroupInvite_Struct));
-		sgis->self_found = IsSelfFound();
-		sgis->is_null = GetBaseClass() == 0;
+		sgis->group_ruleset = group_ruleset;
 		worldserver.SendPacket(pack);
 		safe_delete(pack);
 	}
@@ -7197,10 +7193,12 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 		Client *i = entity_list.GetClientByName(ri->player_name);
 		if (i)
 		{
-
-			if (i->IsSoloOnly())
+			Raid* raid = GetRaid();
+			ChallengeRules::RuleSet raidGroupType = raid ? raid->GetRuleSet() : GetRuleSet();
+			
+			if (!i->CanGroupWith(raidGroupType))
 			{
-				Message(Chat::Red, "This player is solo only and cannot be invited to the raid.");
+				Message(Chat::Red, "This player's challenge mode does not match your raid's. They cannot join the raid.");
 				return;
 			}
 
@@ -7209,20 +7207,6 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 				Message(Chat::Red, "This player is a GM and cannot join your raid.");
 				return;
 			}
-
-			if (IsSelfFound() != i->IsSelfFound())
-			{
-				Message(Chat::Red, "This player's self found flag does not match yours, and cannot be invited to the raid.");
-				return;
-			}
-
-			if (GetBaseClass() == 0 && GetBaseClass() != i->GetBaseClass())
-			{
-				Message(Chat::Red, "Null exception... like, for a class null joining raids. Cannot join a raid. Like, not because the pointer is invalid (it very well is valid) but..");
-				return;
-			}
-
-
 			
 			//This sends an "invite" to the client in question.
 			auto outapp = new EQApplicationPacket(OP_RaidInvite, sizeof(RaidGeneral_Struct));
@@ -7271,21 +7255,9 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 			return;
 		}
 
-		if (leader->IsSoloOnly())
-		{
-			// this will reset the raid for the invited, but will not give them a message their raid was disbanded.
-			auto outapp = new EQApplicationPacket(OP_RaidUpdate, sizeof(RaidGeneral_Struct));
-			RaidGeneral_Struct *rg = (RaidGeneral_Struct*)outapp->pBuffer;
-			rg->action = RaidCommandSendDisband;
-			strcpy(rg->leader_name, ri->player_name);
-			strcpy(rg->player_name, ri->player_name);
-			this->QueuePacket(outapp);
-			safe_delete(outapp);
-			Message(Chat::Red, "The leader is solo only and cannot be invited to the raid? What's going on here, friend?");
-			return;
-		}
+		ChallengeRules::RuleSet groupType = r ? r->GetRuleSet() : leader->GetRuleSet();
 
-		if (IsSelfFound() != leader->IsSelfFound())
+		if (!CanGroupWith(groupType))
 		{
 			// this will reset the raid for the invited, but will not give them a message their raid was disbanded.
 			auto outapp = new EQApplicationPacket(OP_RaidUpdate, sizeof(RaidGeneral_Struct));
@@ -7295,21 +7267,7 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 			strcpy(rg->player_name, ri->player_name);
 			this->QueuePacket(outapp);
 			safe_delete(outapp);
-			Message(Chat::Red, "The leader player's self found flag does not match yours. You cannot be invited to the raid.");
-			return;
-		}
-
-		if (leader->GetBaseClass() == 0 && GetBaseClass() != leader->GetBaseClass())
-		{
-			// this will reset the raid for the invited, but will not give them a message their raid was disbanded.
-			auto outapp = new EQApplicationPacket(OP_RaidUpdate, sizeof(RaidGeneral_Struct));
-			RaidGeneral_Struct *rg = (RaidGeneral_Struct*)outapp->pBuffer;
-			rg->action = RaidCommandSendDisband;
-			strcpy(rg->leader_name, ri->player_name);
-			strcpy(rg->player_name, ri->player_name);
-			this->QueuePacket(outapp);
-			safe_delete(outapp);
-			Message(Chat::Red, "Leader player was null? Just kidding, it's actually the case haha.");
+			Message(Chat::Red, "Your challenge mode does not match the raid's. You cannot be invited to the raid.");
 			return;
 		}
 
@@ -8164,7 +8122,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 			}
 		}
 
-		if (!IsSoloOnly() && !IsSelfFound())
+		if (!IsSelfFoundAny())
 		{
 			if (item_id == 0)
 			{
@@ -9416,7 +9374,7 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 
 		if (ints->Code == BazaarTrader_StartTraderMode && app->size == sizeof(Trader_Struct))
 		{
-			if (IsSoloOnly() || IsSelfFound())
+			if (IsSelfFoundAny())
 			{
 				Message(Chat::Red, "You are solo or self found only, and cannot list or sell items in The Bazaar.");
 				return;
@@ -9562,7 +9520,7 @@ void Client::Handle_OP_TraderBuy(const EQApplicationPacket *app)
 		}
 	}
 
-	if (IsSoloOnly() || IsSelfFound())
+	if (IsSelfFoundAny())
 	{
 		TradeRequestFailed(app);
 		Message(Chat::Red, "You are solo or self found only, and cannot purchase items from The Bazaar.");
@@ -9643,9 +9601,17 @@ void Client::Handle_OP_TradeRequest(const EQApplicationPacket *app)
 			return;
 		}
 
-		if (IsSoloOnly())
+		if (IsSelfFoundAny())
 		{
-			Message(Chat::Red, "You are doing a solo-self-found run. You cannot trade with other players.");
+			Message(Chat::Red, "You are doing a self-found run. You cannot trade with other players.");
+			FinishTrade(this);
+			trade->Reset();
+			return;
+		}
+
+		if (tradee->CastToClient()->IsSelfFoundAny())
+		{
+			Message(Chat::Red, "This player is doing a self found run. You cannot trade with them.");
 			FinishTrade(this);
 			trade->Reset();
 			return;
@@ -9658,26 +9624,9 @@ void Client::Handle_OP_TradeRequest(const EQApplicationPacket *app)
 			return;
 		}
 
-
-		if (tradee->CastToClient()->IsSoloOnly())
-		{
-			Message(Chat::Red, "Your trade partner is doing a solo-self-found run. You cannot trade with them.");
-			FinishTrade(this);
-			trade->Reset();
-			return;
-		}
-
 		if (tradee->CastToClient()->Admin() > 0)
 		{
 			Message(Chat::YouMissOther, "You attempt to trade with a GM, but miss!");
-			return;
-		}
-
-		if (tradee->CastToClient()->IsSelfFound() == true || IsSelfFound() == true)
-		{
-			Message(Chat::Red, "This player is doing a self found run. You cannot trade with them.");
-			FinishTrade(this);
-			trade->Reset();
 			return;
 		}
 

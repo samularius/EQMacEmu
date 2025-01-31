@@ -718,4 +718,100 @@ enum ChatChannelNames : uint16
 	ChatChannel_UNKNOWN_GMSAY = 18
 };
 
+// Quarm Rulesets that affect loot/grouping/exp rules.
+namespace ChallengeRules {
+
+	enum RuleSet : uint8 {
+		SOLO = 0,
+		NULL_CLASS = 1,
+		SELF_FOUND_FLEX = 2,
+		SELF_FOUND_CLASSIC = 3,
+		NORMAL = 4
+	};
+
+	static bool IsFteRequired(ChallengeRules::RuleSet type) {
+		return type == ChallengeRules::RuleSet::SOLO
+			|| type == ChallengeRules::RuleSet::SELF_FOUND_CLASSIC
+			|| type == ChallengeRules::RuleSet::NULL_CLASS;
+	}
+
+	static bool IsSelfFoundAny(ChallengeRules::RuleSet type) {
+		return type != ChallengeRules::RuleSet::NORMAL;
+	}
+
+	static bool InLevelRange(uint8 level, uint8 max_level) {
+		if (max_level < 6u)
+			return true;
+		else if (max_level < 10u && level >(max_level - 5u))
+			return true;
+		else if (level >= (max_level * 10u / 15u))
+			return true;
+		return false;
+	}
+
+	static bool CanGroupWith(ChallengeRules::RuleSet self, ChallengeRules::RuleSet group_type) {
+		switch (self) {
+		case ChallengeRules::RuleSet::NULL_CLASS:
+			return group_type == ChallengeRules::RuleSet::NULL_CLASS;
+		case ChallengeRules::RuleSet::SOLO:
+			return false;
+		case ChallengeRules::RuleSet::SELF_FOUND_CLASSIC:
+			return group_type == ChallengeRules::RuleSet::SELF_FOUND_CLASSIC
+				|| group_type == ChallengeRules::RuleSet::SELF_FOUND_FLEX;
+		case ChallengeRules::RuleSet::SELF_FOUND_FLEX:
+			return group_type == ChallengeRules::RuleSet::NORMAL
+				|| group_type == ChallengeRules::RuleSet::SELF_FOUND_FLEX
+				|| group_type == ChallengeRules::RuleSet::SELF_FOUND_CLASSIC;
+		case ChallengeRules::RuleSet::NORMAL:
+			return group_type == ChallengeRules::RuleSet::NORMAL
+				|| group_type == ChallengeRules::RuleSet::SELF_FOUND_FLEX;
+		}
+		return false;
+	}
+
+	static bool CanGetExpCreditWith(ChallengeRules::RuleSet self, uint8 level, uint8 level2, ChallengeRules::RuleSet group, uint8 max_level, uint8 max_level2) {
+		switch (self) {
+		case ChallengeRules::RuleSet::NULL_CLASS:
+			return group == ChallengeRules::RuleSet::NULL_CLASS
+				&& InLevelRange(level, max_level)
+				&& InLevelRange(level2, max_level2);
+		case ChallengeRules::RuleSet::SOLO:
+			return group == ChallengeRules::RuleSet::SOLO; // Allowed (assuming it's yourself)
+		case ChallengeRules::RuleSet::SELF_FOUND_CLASSIC:
+			return (group == ChallengeRules::RuleSet::SELF_FOUND_CLASSIC || group == ChallengeRules::RuleSet::SELF_FOUND_FLEX)
+				&& InLevelRange(level, max_level)
+				&& InLevelRange(level2, max_level2);
+		case ChallengeRules::RuleSet::SELF_FOUND_FLEX:
+			return InLevelRange(level, max_level);
+		case ChallengeRules::RuleSet::NORMAL:
+			return InLevelRange(level, max_level);
+		}
+		return true;
+	}
+
+	static bool CanGetLootCreditWith(ChallengeRules::RuleSet self, uint8 level, uint8 level2, ChallengeRules::RuleSet group, uint8 max_level, uint8 max_level2) {
+		switch (self) {
+		case ChallengeRules::RuleSet::NULL_CLASS:
+			return group == ChallengeRules::RuleSet::NULL_CLASS
+				&& InLevelRange(level, max_level)
+				&& InLevelRange(level2, max_level2);
+		case ChallengeRules::RuleSet::SOLO:
+			return group == ChallengeRules::RuleSet::SOLO; // Allowed (assuming it's yourself)
+		case ChallengeRules::RuleSet::SELF_FOUND_CLASSIC:
+			return (group == ChallengeRules::RuleSet::SELF_FOUND_CLASSIC || group == ChallengeRules::RuleSet::SELF_FOUND_FLEX)
+				&& InLevelRange(level, max_level)
+				&& InLevelRange(level2, max_level2);
+		case ChallengeRules::RuleSet::SELF_FOUND_FLEX:
+			return InLevelRange(level, max_level);
+		case ChallengeRules::RuleSet::NORMAL:
+			return true;
+		}
+		return true; // should not reach
+	}
+
+	static bool CanHelp(ChallengeRules::RuleSet self_type, uint8 self_level, uint8 self_level2, ChallengeRules::RuleSet target, uint8 target_level, uint8 target_level2) {
+		return CanGetLootCreditWith(target, target_level, target_level2, self_type, self_level, self_level2);
+	}
+}
+
 #endif

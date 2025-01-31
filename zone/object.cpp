@@ -177,7 +177,7 @@ Object::Object(const EQ::ItemInstance *inst, float x, float y, float z, float he
 {
 	if (is_player_drop && client) {
 		m_character_id = client->CharacterID();
-		m_ssf_ruleset = client->IsSoloOnly() || client->IsSelfFound();
+		m_ssf_ruleset = client->IsSelfFoundAny();
 	} else {
 		m_character_id = 0;
 		m_ssf_ruleset = false;
@@ -670,11 +670,7 @@ bool Object::HandleClick(Client* sender, const ClickObject_Struct* click_object)
 
 		if (m_inst && m_inst->IsType(EQ::item::ItemClassBag))
 		{
-			if (sender->IsSoloOnly())
-			{
-				m_inst->Clear();
-			}
-			else if (sender->IsSelfFound())
+			if (sender->IsSelfFoundAny() && user != last_user)
 			{
 				m_inst->Clear();
 			}

@@ -5603,9 +5603,9 @@ void Mob::AddAllClientsToEngagementRecords()
 				record.lockout = LootLockout();
 				record.character_id = client.second->CharacterID();
 				strncpy(record.character_name, client.second->CastToClient()->GetCleanName(), 64);
-				record.isSelfFound = client.second->IsSelfFound();
-				record.isSoloOnly = client.second->IsSoloOnly();
-				strncpy(record.character_name, client.second->GetCleanName(), 64);
+				record.character_level = client.second->CastToClient()->GetLevel();
+				record.character_level2 = client.second->CastToClient()->GetLevel2();
+				record.character_ruleset = client.second->CastToClient()->GetRuleSet();
 
 				auto lootLockoutItr = client.second->loot_lockouts.find(GetNPCTypeID());
 				if (lootLockoutItr != client.second->loot_lockouts.end())

@@ -1764,7 +1764,7 @@ void Client::UpdateWho(uint8 remove) {
 	scl->Trader = this->IsTrader();
 	scl->Revoked = this->GetRevoked();
 
-	scl->selffound = this->IsSelfFound();
+	scl->selffound = this->IsSelfFoundAny();
 	scl->hardcore = this->IsHardcore();
 	scl->solo = this->IsSoloOnly();
 
@@ -2897,26 +2897,16 @@ bool Client::BindWound(uint16 bindmob_id, bool start, bool fail)
 		BindWound_Struct *bind_out = (BindWound_Struct *) outapp->pBuffer;
 		bind_out->to = bindmob->GetID();
 
-		// Handle solo ruleset
-		if (bindmob->IsClient()) {
-			Client* bind_client = bindmob->CastToClient();
-			std::string msg;
-			if (bind_client->IsSoloOnly() && this != bind_client) {
-				msg = "This player is running the Solo Only ruleset. You cannot bind wound.";
-			}
-			else if (IsSelfFound() != bind_client->CastToClient()->IsSelfFound()) {
-				msg = "The player's Self Found flag does not match yours. You cannot bind wound.";
-			}
-			if (!msg.empty()) {
-				this->Message(Chat::Red, msg.c_str());
-				// DO NOT CHANGE - any other packet order will cause client bugs / crashes.
-				bind_out->type = 3;
-				QueuePacket(outapp);
-				bind_out->type = 1;
-				QueuePacket(outapp);
-				safe_delete(outapp);
-				return false;
-			}
+		// Handle challenge rulesets
+		if (bindmob->IsClient() && !CanHelp(bindmob->CastToClient())) {
+			this->Message(Chat::Red, "This player cannot receive assistance from you. You cannot bind wound.");
+			// DO NOT CHANGE - any other packet order will cause client bugs / crashes.
+			bind_out->type = 3;
+			QueuePacket(outapp);
+			bind_out->type = 1;
+			QueuePacket(outapp);
+			safe_delete(outapp);
+			return false;
 		}
 
 		// Start bind
@@ -7162,15 +7152,36 @@ bool Client::IsLootLockedOutOfNPC(uint32 npctype_id)
 	return false;
 };
 
-std::string Client::GetSSFLooterName() {
-	std::string appendedCharName = GetCleanName();
-	if (IsSelfFound())
-		appendedCharName += "-SF";
-
-	if (IsSoloOnly())
-		appendedCharName += "-Solo";
-
-	return appendedCharName;
+// Helper for Challenge Modes compatiblity
+ChallengeRules::RuleSet Client::GetRuleSet() {
+	if (GetBaseClass() == 0)
+		return ChallengeRules::RuleSet::NULL_CLASS;
+	if (m_epp.solo_only)
+		return ChallengeRules::RuleSet::SOLO;
+	if (m_epp.self_found == 1)
+		return ChallengeRules::RuleSet::SELF_FOUND_CLASSIC;
+	if (m_epp.self_found == 2)
+		return ChallengeRules::RuleSet::SELF_FOUND_FLEX;
+	return ChallengeRules::RuleSet::NORMAL;
+}
+// Returns yourself as a GroupInfo object
+ChallengeRules::RuleParams Client::GetRuleSetParams() {
+	ChallengeRules::RuleParams data;
+	data.type = GetRuleSet();
+	data.min_level = GetLevel();
+	data.max_level = GetLevel();
+	data.max_level2 = GetLevel2();
+	data.character_id = CharacterID();
+	return data;
+}
+bool Client::CanGroupWith(ChallengeRules::RuleSet other_type, uint32 character_id) {
+	return (character_id == CharacterID()) ? true : ChallengeRules::CanGroupWith(GetRuleSet(), other_type);
+}
+bool Client::CanGetExpCreditWith(ChallengeRules::RuleSet other, uint8 max_level, uint8 max_level2) {
+	return ChallengeRules::CanGetExpCreditWith(GetRuleSet(), GetLevel(), GetLevel2(), other, max_level, max_level2);
+}
+bool Client::CanGetLootCreditWith(ChallengeRules::RuleSet group, uint8 max_level, uint8 max_level2) {
+	return ChallengeRules::CanGetLootCreditWith(GetRuleSet(), GetLevel(), GetLevel2(), group, max_level, max_level2);
 }
 
 std::vector<int> Client::GetMemmedSpells() {

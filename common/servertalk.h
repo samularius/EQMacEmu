@@ -1243,10 +1243,8 @@ struct ServerGroupInvite_Struct {
 		/*128*/	char unknown[65];		// Comment: 
 		/*193*/
 
-		// Custom:
-		uint8 self_found;
-		// Custom:
-		uint8 is_null;
+		// Custom
+		ChallengeRules::RuleSet group_ruleset; // See GroupType (Normal, SF, Null, Solo, etc)
 };
 
 struct ServerEarthquakeImminent_Struct {

@@ -1039,13 +1039,13 @@ void HateList::Add(Mob *ent, int32 in_hate, int32 in_dam, bool bFrenzy, bool iAd
 				{
 					owner->CastToNPC()->solo_raid_fte = kr->GetID();
 					owner->CastToNPC()->sf_fte_list.clear();
-					const uint32 highest_level_in_raid = kr->GetHighestLevel2();
+					ChallengeRules::RuleParams raid_data = kr->GetRuleSetParams();
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 					{
 						auto member = kr->members[x].member;
-						if (member && member->IsInLevelRange(highest_level_in_raid))
+						if (member && member->CanGetLootCreditWith(raid_data))
 						{
-							owner->CastToNPC()->sf_fte_list.emplace_back(member->GetSSFLooterName());
+							owner->CastToNPC()->sf_fte_list.emplace_back(member->GetCleanName());
 						}
 					}
 				}

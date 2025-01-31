@@ -1911,6 +1911,41 @@ uint16 Raid::GetAvgLevel()
 	return (uint16(levelHolder));
 }
 
+ChallengeRules::RuleParams Raid::GetRuleSetParams() {
+
+	ChallengeRules::RuleParams params;
+	memset(&params, 0, sizeof(ChallengeRules::RuleParams));
+	params.min_level = 65;
+	params.max_level = 1;
+	params.max_level2 = 1;
+
+	for (int i = 0; i < MAX_RAID_MEMBERS; i++)
+	{
+		if (members[i].member != nullptr)
+		{
+			Client* cmember = members[i].member;
+			if (cmember && cmember->GetZoneID() == zone->GetZoneID())
+			{
+				if (cmember->GetLevel() > params.max_level)
+					params.max_level = cmember->GetLevel();
+				if (cmember->GetLevel2() > params.max_level2)
+					params.max_level2 = cmember->GetLevel2();
+				if (cmember->GetLevel() < params.min_level)
+					params.min_level = cmember->GetLevel();
+
+				if (params.type < ChallengeRules::RuleSet::NORMAL)
+				{
+					ChallengeRules::RuleSet member_type = cmember->GetRuleSet();
+					if (member_type > params.type)
+						params.type = member_type;
+				}
+			}
+		}
+	}
+
+	return params;
+}
+
 const char *Raid::GetClientNameByIndex(uint8 index)
 {
 	return members[index].membername;

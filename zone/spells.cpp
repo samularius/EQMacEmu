@@ -182,21 +182,21 @@ void NPC::SpellProcess()
 namespace {
 	bool IsWhitelistedBeneficialSpellForSelfFound(uint16 spell_id, Client *caster, Client *target)
 	{
-		if (caster == nullptr || !caster->IsSelfFound())
+		if (caster == nullptr || target == nullptr || target->IsSoloOnly())
 			return false;
 
-		if (target == nullptr || !target->IsSelfFound() || target->IsSoloOnly())
-			return false;
-
-		if (spell_id == SPELL_WIND_OF_THE_NORTH || spell_id == SPELL_WIND_OF_THE_SOUTH ||
+		// For whitelisted spells - Allow target to benefit if it was only a level-range conflict:
+		if (target->CanGetLootCreditWith(caster->GetRuleSet(), 1, 1)) {
+			if (spell_id == SPELL_WIND_OF_THE_NORTH || spell_id == SPELL_WIND_OF_THE_SOUTH ||
 				spell_id == SPELL_TISHANS_RELOCATION || spell_id == SPELL_MARKARS_RELOCATION)
-			return true;
+				return true;
 
-		if (IsTeleportSpell(spell_id))
-			return true;
+			if (IsTeleportSpell(spell_id))
+				return true;
 
-		if (IsEffectInSpell(spell_id, SE_BindAffinity))
-			return true;
+			if (IsEffectInSpell(spell_id, SE_BindAffinity))
+				return true;
+		}
 
 		return false;
 	}
@@ -680,37 +680,15 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 			// Only fail if it's beneficial - don't want to fail on detrimental for pvp purposes
 			if(IsBeneficialSpell(spell_id))
 			{
-				const char* SOLO_PLAYER_ERROR = "Unable to cast spells on solo players.";
-				const char* SELF_FOUND_ERROR = "Unable to cast spells on self found players.";
-				const char* LEVEL_ERROR = "This self found player is not close enough to your level.";
-
 				bool is_failed_cast = false;
 				const char* fail_message = nullptr;
 
-				if (spell_target->CastToClient()->IsSoloOnly() && spell_target != this)
+				if (!caster->CanHelp(spell_target->CastToClient()) && !IsWhitelistedBeneficialSpellForSelfFound(spell_id, caster, spell_target->CastToClient()))
 				{
-					// if the target is solo, don't allow anyone to buff it
-					// if the caster is solo, it's fine if they try to buff someone
 					is_failed_cast = true;
-					fail_message = SOLO_PLAYER_ERROR;
-				} 
-				if (spell_target->CastToClient()->IsSelfFound() && spell_target != this)
-				{
-					bool can_get_experience = spell_target->CastToClient()->IsInLevelRange(caster->GetLevel2()) && caster->IsInLevelRange(spell_target->CastToClient()->GetLevel2());
-					bool compatible = caster->IsSelfFound() == spell_target->CastToClient()->IsSelfFound();
-					if (!compatible)
-					{
-						// if the spell target is self found, but the caster is not, don't allow the caster to buff
-						is_failed_cast = true;
-						fail_message = SELF_FOUND_ERROR;
-					}
-					else if(compatible && !can_get_experience && !IsWhitelistedBeneficialSpellForSelfFound(spell_id, caster, spell_target->CastToClient()))
-					{
-						// if the spell_target can not get EXP while grouped with the caster, don't allow the caster to buff
-						is_failed_cast = true;
-						fail_message = LEVEL_ERROR;
-					}
+					fail_message = "Unable to cast spells on this player due to challenge modes.";
 				}
+
 				if (is_failed_cast)
 				{
 					Message(Chat::SpellFailure, fail_message);

@@ -988,7 +988,7 @@ void Group::SplitExp(uint32 exp, Mob* killed_mob)
 	gs.max_green_level = 0;
 
 	bool isgreen = false;
-	int conlevel = Mob::GetLevelCon(maxlevel, killed_mob->GetLevel());
+	int conlevel = Mob::GetLevelCon(groupData.max_level, killed_mob->GetLevel());
 	if (conlevel == CON_GREEN)
 	{
 		isgreen = true;
@@ -1114,10 +1114,10 @@ void Group::SplitExp(uint32 exp, Mob* killed_mob)
 	// 6th member is free in the split under mid-Ykesha+ era rules, but not on AK or under classic rules
 	if (!RuleB(AlKabor, Count6thGroupMember) && gs.close_membercount >= 6)
 	{
-		gs.weighted_levels -= minlevel;
+		gs.weighted_levels -= groupData.min_level;
 	}
 
-	GiveGroupSplitExp(killed_mob, maxlevel, gs.weighted_levels, conlevel, groupexp, gs.close_membercount);
+	GiveGroupSplitExp(killed_mob, groupData.max_level, gs.weighted_levels, conlevel, groupexp, gs.close_membercount);
 }
 
 bool Group::ProcessGroupSplit(Mob* killed_mob, struct GroupExpSplit_Struct& gs, bool isgreen)
@@ -1130,7 +1130,7 @@ bool Group::ProcessGroupSplit(Mob* killed_mob, struct GroupExpSplit_Struct& gs, 
 			{
 				Client *cmember = members[x]->CastToClient();
 				if (cmember->CastToClient()->GetZoneID() == zone->GetZoneID() && 
-					cmember->IsInLevelRange(maxlevel) && 
+					cmember->IsInLevelRange(groupData.max_level) && 
 					(cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()))
 				{
 					// get highest level of player who gets exp from this mob
@@ -1229,7 +1229,7 @@ void Group::GiveGroupSplitExp(Mob* killed_mob, uint8 maxlevel, int16 weighted_le
 				{
 					if (cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm())
 					{
-						if (cmember->IsInLevelRange(maxlevel))
+						if (cmember->CanGetExpCreditWith(groupData))
 						{
 							float split_percent = static_cast<float>(cmember->GetLevel() + 5u) / static_cast<float>(weighted_levels + 5*close_count);
 							float splitgroupxp = groupexp * split_percent;
@@ -1274,8 +1274,8 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 	if (killed_mob->GetOwner() && killed_mob->GetOwner()->IsClient() && !killed_mob->IsZomm()) // Ensure owner isn't pc
 		return;
 
-	uint8 membercount = 0;
-	uint16 maxlevel = 0;
+	ChallengeRules::RuleParams raidData = GetRuleSetParams();
+	uint16 membercount = 0;
 	uint16 weighted_levels = 0;
 
 	//Grabs membercount and maxlevel.
@@ -1286,9 +1286,6 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 			Client *cmember = members[i].member;
 			if (cmember && cmember->GetZoneID() == zone->GetZoneID())
 			{
-				if (cmember->GetLevel() > maxlevel)
-					maxlevel = cmember->GetLevel();
-
 				if ((cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()) &&
 					cmember->IsInExpRange(killed_mob))
 				{
@@ -1308,7 +1305,7 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 		if (members[i].member != nullptr)
 		{
 			Client *cmember = members[i].member;
-			if(cmember && !cmember->IsInLevelRange(maxlevel))
+			if(cmember && !cmember->CanGetExpCreditWith(raidData))
 			{
 				if(membercount != 0)
 				{
@@ -1327,7 +1324,7 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 		return;
 
 	float groupexp = static_cast<float>(exp) * RuleR(Character, RaidExpMultiplier);
-	int conlevel = Mob::GetLevelCon(maxlevel, killed_mob->GetLevel());
+	int conlevel = Mob::GetLevelCon(raidData.max_level, killed_mob->GetLevel());
 	Log(Logs::Detail, Logs::Group, "Raid XP: %d Final XP: %0.2f", exp, groupexp);
 
 	//Assigns XP if the qualifications are met.
@@ -1340,14 +1337,14 @@ void Raid::SplitExp(uint32 exp, Mob* killed_mob)
 				(cmember->GetLevelCon(killed_mob->GetLevel()) != CON_GREEN || killed_mob->IsZomm()) && 
 				cmember->IsInExpRange(killed_mob))
 			{
-				if (cmember->IsInLevelRange(maxlevel))
+				if (cmember->CanGetExpCreditWith(raidData))
 				{
 					float split_percent = static_cast<float>(cmember->GetLevel()) / weighted_levels;
 					float splitgroupxp = groupexp * split_percent;
 					if (splitgroupxp < 1)
 						splitgroupxp = 1;
 
-					cmember->AddEXP(static_cast<uint32>(splitgroupxp), conlevel, killed_mob, 0, true, maxlevel);
+					cmember->AddEXP(static_cast<uint32>(splitgroupxp), conlevel, killed_mob, 0, true, raidData.max_level);
 					Log(Logs::Detail, Logs::Group, "%s splits %0.2f with %d players in the raid. Their share is %0.2f", cmember->GetName(), groupexp, membercount, splitgroupxp);
 				}
 				else
