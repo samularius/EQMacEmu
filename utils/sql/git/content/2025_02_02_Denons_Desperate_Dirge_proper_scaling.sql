@@ -1,0 +1,1 @@
+UPDATE spells_new SET effect_base_value1 = -315, formula1 = 144 WHERE id = 742;
