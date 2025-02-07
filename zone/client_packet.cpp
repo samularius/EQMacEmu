@@ -2573,16 +2573,21 @@ void Client::Handle_OP_Buff(const EQApplicationPacket *app)
 		QueuePacket(app);
 	else if(IsValidSpell(spid) && spells[spid].goodEffect != 0 && spells[spid].persist_through_death == 0)
 		BuffFadeBySpellID(spid);
-	else if(IsValidSpell(spid))
+	else if(IsValidSpell(spid) && !IsDead())
 	{
+
 		int buff_count = GetMaxTotalSlots();
 		for (int j = 0; j < buff_count; j++)
 		{
 			if (buffs[j].spellid == spid && buffs[j].ticsremaining > 1)
 			{
+
 				// we need to remove the buff and reapply it in the first empty slot to stay in sync with client
 				Buffs_Struct savedbuff = Buffs_Struct(buffs[j]); // save a copy before removing it
-				BuffFadeBySlot(j, false);				
+
+				// Don't use BuffFadeBySlot() as that clears client statuses.
+				// We are reapplying the buff, so we want to keep their status the same.
+				buffs[j].spellid = SPELL_UNKNOWN;
 
 				// reapply buff server-side
 				int emptyslot = -1;
