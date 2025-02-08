@@ -923,7 +923,7 @@ void Group::VerifyGroup()
 
 		//it should be safe to use GetClientByName, but Group is trying
 		//to be generic, so we'll go for general Mob
-		Mob *them = entity_list.GetMob(membername[i]);
+		Mob *them = entity_list.GetClientByName(membername[i]);
 		if(them == nullptr && members[i] != nullptr) 
 		{	//they aren't here anymore...
 			Log(Logs::General, Logs::Group, "Member of group %lu named '%s' has left the zone.", (unsigned long)GetID(), membername[i]);

@@ -1863,7 +1863,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 
 		// My attempt to get the lighting update to be pushed to the client
 		// However, it doesn't seem to work, so I think there may be client changes required for this
-		if(dst_item_instance->GetItem()->Light > 0)
+		if(dst_item_instance && dst_item_instance->GetItem()->Light > 0)
 		{
 			UpdateEquipmentLight();
 			UpdateActiveLight();

@@ -137,7 +137,7 @@ void Raid::AddGroupToRaid(Client* inviter, Client* invitee, Group* group, uint32
 		return;
 	}
 
-	Mob* gleader = entity_list.GetMob(group->GetLeaderName());
+	Mob* gleader = entity_list.GetClientByName(group->GetLeaderName());
 	std::string ooz_member;
 	if (!gleader || gleader->GetID() == 0 || group->HasOOZMember(ooz_member))
 	{
