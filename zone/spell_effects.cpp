@@ -112,6 +112,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 			effect_value = GetMaxHP();
 		if (spell_id == SPELL_LEECH_TOUCH && caster && caster->GetAA(aaConsumptionoftheSoul))
 			effect_value -= 200 * caster->GetAA(aaConsumptionoftheSoul);
+		if (spell_id == SPELL_DENONS_DESPERATE_DIRGE && caster && caster->IsClient() && caster->CastToClient()->GetActiveDisc() == disc_puretone)
+			effect_value = (effect_value * 12) / 10; // Denon's Desperate Dirge receives a 20% damage bonus during Puretone (February 21, 2001)
 
 #ifdef SPELL_EFFECT_SPAM
 		effect_desc[0] = 0;
@@ -2708,6 +2710,12 @@ snare has both of them negative, yet their range should work the same:
 			result = ubase;
 			if (caster_level > 50)
 				result += updownsign * 20 * (caster_level - 50);
+			break;
+
+		case 144: // Denon's Desperate Dirge scaling changed to 10/level (February 21, 2001)
+			result = ubase;
+			if (caster_level > 43)
+				result += updownsign * 10 * (caster_level - 43);
 			break;
 
 		case 150: //resistant discipline (custom formula)
