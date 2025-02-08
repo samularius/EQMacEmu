@@ -241,7 +241,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 		return false;
 	}
 
-	if (IsSoloOnly() || IsSelfFound()) {
+	if (IsSelfFoundAny()) {
 		inst->SetSelfFoundCharacter(CharacterID(), GetName());
 	}
 
@@ -869,7 +869,7 @@ bool Client::PushItemOnCursorWithoutQueue(EQ::ItemInstance* inst, bool drop)
 		return false;
 	}
 
-	if (inst && (IsSoloOnly() || IsSelfFound())) {
+	if (inst && IsSelfFoundAny()) {
 		inst->SetSelfFoundCharacter(CharacterID(), GetName());
 		inst->SetContentsSelfFoundCharacter(CharacterID(), GetName());
 	}
@@ -1009,7 +1009,7 @@ void Client::PutLootInInventory(int16 slot_id, const EQ::ItemInstance &inst, Loo
 				continue;
 
 			EQ::ItemInstance *bagitem = database.CreateItem(bag_item_data[i]->item_id, bag_item_data[i]->charges, bag_item_data[i]->quarm_item_data);
-			if (bagitem && (IsSoloOnly() || IsSelfFound())) {
+			if (bagitem && IsSelfFoundAny()) {
 				bagitem->SetSelfFoundCharacter(CharacterID(), name);
 			}
 			interior_slot = EQ::InventoryProfile::CalcSlotId(slot_id, i);

@@ -34,6 +34,7 @@
 #define SPELL_ILLUSION_TREE 601
 #define SPELL_CINDAS_CHARISMATIC_CARILLON 708
 #define SPELL_CASSINDRAS_CHORUS_OF_CLARITY 723
+#define SPELL_DENONS_DESPERATE_DIRGE 742
 #define SPELL_RESURRECTION_EFFECTS 756
 #define SPELL_MISTWALKER 759
 #define SPELL_DRAGON_CHARM 841
@@ -734,6 +735,7 @@ bool IsRegeantFocus(uint16 spellid);
 bool IsBoltSpell(uint16 spellid);
 bool RequiresComponents(uint16 spellid);
 int GetSpellEffectIndex(uint16 spell_id, int effect);
+int GetSpellEffectIndex_PatchV1(uint16 spell_id, int effect); // Used in FindAffectSlot_PatchV1() only
 int CanUseSpell(uint16 spellid, int classa, int level);
 int GetMinLevel(uint16 spell_id);
 int GetSpellLevel(uint16 spell_id, int classa);

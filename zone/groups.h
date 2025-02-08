@@ -97,14 +97,17 @@ public:
 	bool	HasOOZMember(std::string& member);
 	std::string GetMemberNamesAsCsv(const std::vector<std::string>& excludes = {});
 
+	// Describes the group composition (normal, self-found, etc). See: GroupType
+	ChallengeRules::RuleParams GetRuleSetParams() { SetLevels(); return groupData; }
+	ChallengeRules::RuleSet GetRuleSet() { return GetRuleSetParams().type; }
+
 	Mob* members[MAX_GROUP_MEMBERS];
 	char	membername[MAX_GROUP_MEMBERS][64];
 	char	leadername[64];
 	char	oldleadername[64]; // Keeps the previous leader name, so when the entity is destroyed we can still transfer leadership.
 	bool	disbandcheck;
 	bool	castspell;
-	uint8	maxlevel;
-	uint8	minlevel;
+	ChallengeRules::RuleParams groupData; // contains the group ruleset, min level, max levels, etc
 
 private:
 	Mob*	leader;

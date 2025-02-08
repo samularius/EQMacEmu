@@ -105,7 +105,7 @@ void handle_npc_event_trade(
 
 	if (init && init->IsClient())
 	{
-		lua_pushinteger(L, init->CastToClient()->IsSelfFound() != 1 && init->CastToClient()->IsSoloOnly() != 1 ? 1 : 0);
+		lua_pushinteger(L, init->CastToClient()->IsSelfFoundAny() != true ? 1 : 0);
 		lua_setfield(L, -2, "enable_multiquest");
 	}
 	// set a reference to the client inside of the trade object as well for plugins to process

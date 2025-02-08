@@ -997,7 +997,7 @@ void Client::BulkSendMerchantInventory(int merchant_id, int npcid)
 			merlist.push_back(ml);
 			++i;
 		}
-		if (!IsSoloOnly() && !IsSelfFound())
+		if (!IsSelfFoundAny())
 		{
 			std::list<TempMerchantList> origtmp_merlist = zone->tmpmerchanttable[npcid];
 			tmp_merlist.clear();

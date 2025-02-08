@@ -78,8 +78,10 @@ Group::Group(Mob* leader)
 	SetOldLeaderName(leader->GetName());
 	Log(Logs::Detail, Logs::Group, "Group:Group() Setting OldLeader to: %s and Leader to: %s", GetOldLeaderName(), leader->GetName());
 	disbandcheck = false;
-	maxlevel = 1;
-	minlevel = 65;
+	memset(&groupData, 0, sizeof(groupData));
+	groupData.max_level = 1;
+	groupData.max_level2 = 1;
+	groupData.min_level = 65;
 	uint32 i;
 	for(i=0;i<MAX_GROUP_MEMBERS;i++)
 	{
@@ -102,40 +104,39 @@ void Group::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinu
 		return;
 	}
 
-	if (share && splitter && splitter->IsSelfFound()) {
-		splitter->Message(Chat::Red, "The /split function is not allowed in a self found group.");
-		return;
-	}
-
-	uint8 member_count = 0;
+	uint8 split_count = 0;
 
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++) {
 		if (members[i] && members[i]->IsClient()) {
-			member_count++;
+			if (share && members[i]->CastToClient()->IsSelfFoundAny()) {
+				continue; // SF players can't receive manual /split
+			}
+			split_count++;
 		}
 	}
 
-	if (!member_count) {
+	if (!split_count) {
 		return;
 	}
 
 	// Calculate split and remainder for each coin type
-	uint32 copper_split = copper / member_count;
-	uint32 copper_remainder = copper % member_count;
-	uint32 silver_split = silver / member_count;
-	uint32 silver_remainder = silver % member_count;
-	uint32 gold_split = gold / member_count;
-	uint32 gold_remainder = gold % member_count;
-	uint32 platinum_split = platinum / member_count;
-	uint32 platinum_remainder = platinum % member_count;
+	uint32 copper_split = copper / split_count;
+	uint32 copper_remainder = copper % split_count;
+	uint32 silver_split = silver / split_count;
+	uint32 silver_remainder = silver % split_count;
+	uint32 gold_split = gold / split_count;
+	uint32 gold_remainder = gold % split_count;
+	uint32 platinum_split = platinum / split_count;
+	uint32 platinum_remainder = platinum % split_count;
 	
-	uint8 random_member = zone->random.Int(0, member_count - 1);
-
-
+	int random_member = zone->random.Int(0, split_count - 1);
 
 	// Loop through the group members to split the coins.
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++) {
 		if (members[i] && members[i]->IsClient()) { // If Group Member is Client
+			if (share && members[i]->CastToClient()->IsSelfFoundAny()) {
+				continue; // SF players can't receive manual /split
+			}
 			Client* member_client = members[i]->CastToClient();
 
 			uint32 receive_copper = copper_split;
@@ -145,12 +146,13 @@ void Group::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinu
 
 			// if /split is used then splitter gets the remainder + split.
 			// if /autosplit is used then random players in the group will get the remainder + split.
-			if(share ? member_client == splitter : member_client == members[random_member]) {
+			if(share ? member_client == splitter : random_member == 0) {
 				receive_copper += copper_remainder;
 				receive_silver += silver_remainder;
 				receive_gold += gold_remainder;
 				receive_platinum += platinum_remainder;
 			}
+			random_member--;
 
 			// the group member other than the character doing the /split only gets this message "(splitter) shares the money with the group"
 			if (share && member_client != splitter) {
@@ -1243,21 +1245,32 @@ const char *Group::GetClientNameByIndex(uint8 index)
 
 void Group::SetLevels()
 {
-	maxlevel = 1;
-	minlevel = 65;
+	memset(&groupData, 0, sizeof(groupData));
+	groupData.min_level = 65;
+	groupData.max_level = 1;
+	groupData.max_level2 = 1;
+	
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++) 
 	{
 		if (members[i] && members[i]->IsClient())
 		{
-			if (members[i]->GetLevel() > maxlevel)
-				maxlevel = members[i]->GetLevel();
+			if (members[i]->GetLevel() > groupData.max_level)
+				groupData.max_level = members[i]->GetLevel();
 
-			if (members[i]->GetLevel() < minlevel)
-				minlevel = members[i]->GetLevel();
+			if (members[i]->GetLevel() < groupData.min_level)
+				groupData.min_level = members[i]->GetLevel();
+
+			if (members[i]->CastToClient()->GetLevel2() > groupData.max_level2)
+				groupData.max_level2 = members[i]->CastToClient()->GetLevel2();
+
+			ChallengeRules::RuleSet member_type = members[i]->CastToClient()->GetRuleSet();
+			if (member_type > groupData.type) {
+				groupData.type = member_type;
+			}
 		}
 	}
 
-	Log(Logs::General, Logs::Group, "Group: Maxlevel is %d minlevel is %d", maxlevel, minlevel);
+	Log(Logs::General, Logs::Group, "Group: Maxlevel is %d minlevel is %d", groupData.max_level, groupData.min_level);
 }
 
 bool Group::HasOOZMember(std::string& member)

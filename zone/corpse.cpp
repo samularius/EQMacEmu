@@ -253,12 +253,11 @@ Corpse::Corpse(NPC* in_npc, LootItems* in_itemlist, uint32 in_npctypeid, uint32 
 	if(RuleB(Quarm, CorpseUnlockIsHalvedDecayTime))
 		corpse_delay_timer.Start(GetDecayTime() / 2);
 
-	initial_allowed_looters.clear();
 	allowed_looters.clear();
+	sf_kill_credit.clear();
 	if (is_client_pet)
 	{
 		allowed_looters.emplace("000");		// corpses without looters are apparently lootable by anybody, so doing this to make it unlootable
-		initial_allowed_looters.emplace("000");
 		corpse_decay_timer.Start(3000);
 	}
 
@@ -339,8 +338,8 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 	}
 	corpse_graveyard_moved_timer.Disable();
 
-	initial_allowed_looters.clear();
 	allowed_looters.clear();
+	sf_kill_credit.clear();
 
 	is_corpse_changed		= true;
 	rez_experience			= in_rezexp;
@@ -1077,113 +1076,8 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 	uint8 looters = 0;
 
 	Client* c = entity_list.GetClientByName(playername.c_str());
-	if (c && c->IsSelfFound() || c && c->IsSoloOnly())
-	{
-		std::string appendedCharName = c->GetSSFLooterName();
-		auto temporarily_allowed_itr = temporarily_allowed_looters.find(appendedCharName);
 
-		if (temporarily_allowed_itr == temporarily_allowed_looters.end() && c->IsLootLockedOutOfNPC(npctype_id) && npctype_id != 0)
-		{
-			return false;
-		}
-
-		if (denied_looters.find(appendedCharName) != denied_looters.end()) {
-			return false;
-		}
-
-		if (!c->HasRaid()) {
-			if (initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end()) {
-				return true;
-			}
-		}
-		else
-		{
-			if (allowed_looters.empty() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
-			{
-				// Clearing allowed_looters is the mechanism by which a corpse is opened
-				// to FFA looting. For SF players, the corpse is only unlocked for those
-				// players who were present at the moment of FTE in an eligible raid,
-				// which is indicated by being in initial_allowed_looters.
-				c->Message(Chat::Cyan, "You were in an eligible raid that was first to engage, so you are allowed to loot.");
-				return true;
-			}
-			else if (allowed_looters.find(appendedCharName) == allowed_looters.end() && initial_allowed_looters.find(appendedCharName) != initial_allowed_looters.end())
-			{
-				Raid* raid = c->GetRaid();
-				if (raid->GetLootType() == 3) // Looter / Raid Leader loot
-				{
-					if (raid->IsRaidLooter(c->GetCleanName()))
-					{
-						for (int x = 0; x < MAX_RAID_MEMBERS; x++)
-						{
-							if (raid->members[x].member)
-							{
-								if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
-								{
-									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid with another eligible member of the raid.");
-									AllowPlayerLoot(appendedCharName);
-									break;
-								}
-							}
-						}
-					}
-				}
-				else if (raid->GetLootType() == 2) // Group Leader / Raid Leader loot
-				{
-					if (raid->IsRaidLeader(c->GetCleanName()) || raid->IsGroupLeader(c->GetCleanName()))
-					{
-						for (int x = 0; x < MAX_RAID_MEMBERS; x++)
-						{
-							if (raid->members[x].member)
-							{
-								if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
-								{
-									c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're a group or raid leader.");
-									AllowPlayerLoot(appendedCharName);
-									break;
-								}
-							}
-						}
-					}
-				}
-				else if (raid->GetLootType() == 1 && raid->IsRaidLeader(c->GetCleanName())) // Raid Leader loot
-				{
-					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
-					{
-						if (raid->members[x].member)
-						{
-							if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
-							{
-								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and you're the new raid leader.");
-								AllowPlayerLoot(appendedCharName);
-								break;
-							}
-						}
-					}
-				}
-				else if (raid->GetLootType() == 4) // Raid Leader loot
-				{
-					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
-					{
-						if (raid->members[x].member)
-						{
-							if (allowed_looters.find(raid->members[x].member->GetSSFLooterName()) != allowed_looters.end())
-							{
-								c->Message(Chat::Cyan, "Adding you to the looter list of this corpse. You are in a raid and the loot is set to free-for-all.");
-								AllowPlayerLoot(appendedCharName);
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if (allowed_looters.find(appendedCharName) != allowed_looters.end()) {
-				return true;
-		}
-	}
-	else if(c)
+	if(c)
 	{
 
 		if (npctype_id != 0 && loot_lockout_timer > 0)
@@ -1200,6 +1094,23 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 		if (denied_looters.find(playername) != denied_looters.end()) {
 			c->Message(Chat::Red, "You are not allowed to loot this NPC as you are locked out of the creature in question.");
 			return false;
+		}
+
+		if (c->IsSelfFoundAny())
+		{
+			if (IsPlayerCorpse())
+			{
+				if (char_id != c->CharacterID())
+				{
+					c->Message(Chat::Red, "You are not allowed to loot player corpses.");
+					return false;
+				}
+			}
+			else if (sf_kill_credit.find(playername) == sf_kill_credit.end())
+			{
+				c->Message(Chat::Red, "You are not allowed to loot this NPC because you did not earn credit for this kill.");
+				return false;
+			}
 		}
 
 		/*
@@ -1314,21 +1225,10 @@ void Corpse::AllowPlayerLoot(Mob *them)
 		return;
 
 	std::string playername = them->CastToClient()->GetCleanName();
-	if (them->CastToClient()->IsSelfFound())
-		playername += "-SF";
-
-	if (them->CastToClient()->IsSoloOnly())
-		playername += "-Solo";
 
 	if (allowed_looters.find(playername) == allowed_looters.end())
 		allowed_looters.emplace(playername);
-
-	if (initial_allowed_looters.find(playername) == initial_allowed_looters.end())
-		initial_allowed_looters.emplace(playername);
-
 }
-
-
 
 void Corpse::DenyPlayerLoot(std::string character_name)
 {
@@ -1336,14 +1236,6 @@ void Corpse::DenyPlayerLoot(std::string character_name)
 		return;
 
 	std::string playername = character_name;
-	std::string playernameSelfFound = character_name;
-	std::string playernameSolo = character_name;
-	std::string playernameSoloSelfFound = character_name;
-	playernameSelfFound += "-SF";
-	playernameSolo += "-Solo";
-
-	playernameSoloSelfFound += "-SF";
-	playernameSoloSelfFound += "-Solo";
 
 	std::unordered_set<std::string>::iterator nameItr = allowed_looters.find(playername);
 	if (nameItr != allowed_looters.end())
@@ -1351,70 +1243,10 @@ void Corpse::DenyPlayerLoot(std::string character_name)
 		allowed_looters.erase(nameItr);
 	}
 
-	nameItr = allowed_looters.find(playernameSelfFound);
-	if (nameItr != allowed_looters.end())
-	{
-		allowed_looters.erase(nameItr);
-	}
-
-	nameItr = allowed_looters.find(playernameSolo);
-	if (nameItr != allowed_looters.end())
-	{
-		allowed_looters.erase(nameItr);
-	}
-
-	nameItr = allowed_looters.find(playernameSoloSelfFound);
-	if (nameItr != allowed_looters.end())
-	{
-		allowed_looters.erase(nameItr);
-	}
-
-	std::unordered_set<std::string>::iterator initialNameItr = initial_allowed_looters.find(playername);
-	if (initialNameItr != initial_allowed_looters.end())
-	{
-		initial_allowed_looters.erase(initialNameItr);
-	}
-
-	initialNameItr = initial_allowed_looters.find(playernameSelfFound);
-	if (initialNameItr != initial_allowed_looters.end())
-	{
-		initial_allowed_looters.erase(initialNameItr);
-	}
-
-	initialNameItr = initial_allowed_looters.find(playernameSolo);
-	if (initialNameItr != initial_allowed_looters.end())
-	{
-		initial_allowed_looters.erase(initialNameItr);
-	}
-
-	initialNameItr = initial_allowed_looters.find(playernameSoloSelfFound);
-	if (initialNameItr != initial_allowed_looters.end())
-	{
-		initial_allowed_looters.erase(initialNameItr);
-	}
-
 	std::unordered_set<std::string>::iterator deniedNameItr = denied_looters.find(playername);
 	if (deniedNameItr == denied_looters.end())
 	{
 		denied_looters.emplace(playername);
-	}
-
-	deniedNameItr = denied_looters.find(playernameSelfFound);
-	if (deniedNameItr == denied_looters.end())
-	{
-		denied_looters.emplace(playernameSelfFound);
-	}
-
-	deniedNameItr = denied_looters.find(playernameSolo);
-	if (deniedNameItr == denied_looters.end())
-	{
-		denied_looters.emplace(playernameSolo);
-	}
-
-	deniedNameItr = denied_looters.find(playernameSoloSelfFound);
-	if (deniedNameItr == denied_looters.end())
-	{
-		denied_looters.emplace(playernameSoloSelfFound);
 	}
 
 }
@@ -1430,6 +1262,18 @@ void Corpse::AllowPlayerLoot(std::string character_name) {
 	// Solo / SF are intentionally excluded from this function as there are exploits related to SSF players being able to loot the body here.
 
 }
+
+void Corpse::AddKillCredit(std::string character_name, bool is_self_found_any) {
+	if (character_name.size() == 0)
+		return;
+	
+	if (is_self_found_any)
+	{
+		if (sf_kill_credit.find(character_name) == sf_kill_credit.end())
+			sf_kill_credit.emplace(character_name);
+	}
+}
+
 void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* app) {
 
 	if (!client)
@@ -1782,7 +1626,7 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 		if (client && inst && item_data) {
 			if (item_data->pet || item_data->quest)
 			{
-				if (client->IsSoloOnly() || client->IsSelfFound())
+				if (client->IsSelfFoundAny())
 				{
 					bool can_loot = false;
 
@@ -1854,7 +1698,7 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 			client->AddLootedLegacyItem(item_data->item_id, expiration_timestamp);
 		}
 
-		if (client->IsSoloOnly() || client->IsSelfFound()) {
+		if (client->IsSelfFoundAny()) {
 			// Mark the looter as the self-found owner.
 			inst->SetSelfFoundCharacter(client->CharacterID(), client->GetName());
 		}
@@ -2486,13 +2330,6 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 						database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
 
 						std::string appendedCharName = kg->membername[i];
-
-						if (playerItr->second.isSelfFound)
-							appendedCharName += "-SF";
-
-						if (playerItr->second.isSoloOnly)
-							appendedCharName += "-Solo";
-
 						temporarily_allowed_looters.emplace(appendedCharName);
 						records.erase(playerItr);
 					}
@@ -2592,15 +2429,7 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 							}
 
 							std::string appendedCharName = kr->members[i].membername;
-
-							if (playerItr->second.isSelfFound)
-								appendedCharName += "-SF";
-
-							if (playerItr->second.isSoloOnly)
-								appendedCharName += "-Solo";
-
 							temporarily_allowed_looters.emplace(appendedCharName);
-
 
 							//if they're not in zone, this will be loaded once they are.
 							database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
@@ -2683,14 +2512,6 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 					database.SaveCharacterLootLockout(playerItr->second.character_id, lootLockout.expirydate, in_npc->GetNPCTypeID(), in_npc->GetCleanName());
 
 					std::string appendedCharName = give_exp_client->GetCleanName();
-
-					if (playerItr->second.isSelfFound)
-						appendedCharName += "-SF";
-
-					if (playerItr->second.isSoloOnly)
-						appendedCharName += "-Solo";
-
-
 					temporarily_allowed_looters.emplace(appendedCharName);
 					records.erase(playerItr);
 				}
@@ -2759,13 +2580,6 @@ void Corpse::ProcessLootLockouts(Client* give_exp_client, NPC* in_npc)
 			}
 			
 			std::string appendedCharName = record.second.character_name;
-
-			if (record.second.isSelfFound)
-				appendedCharName += "-SF";
-
-			if (record.second.isSoloOnly)
-				appendedCharName += "-Solo";
-
 			temporarily_allowed_looters.emplace(appendedCharName);
 		}
 		else
@@ -2839,14 +2653,6 @@ void Corpse::AddPlayerLockout(Client* c)
 		database.SaveCharacterLootLockout(c->CharacterID(), lootLockout.expirydate, npctype_id, GetCleanNPCName().c_str());
 
 		std::string appendedCharName = c->GetCleanName();
-
-		if (c->IsSelfFound())
-			appendedCharName += "-SF";
-
-		if (c->IsSoloOnly())
-			appendedCharName += "-Solo";
-
-
 		temporarily_allowed_looters.emplace(appendedCharName);
 	}
 }

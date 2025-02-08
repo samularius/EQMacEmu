@@ -1188,19 +1188,9 @@ bool Mob::IsBeneficialAllowed(Mob *target)
 				c1 = mob1->CastToClient();
 				c2 = mob2->CastToClient();
 
-				if (c2->IsSoloOnly())
+				if (!c1->CanHelp(c2)) // challenge mode check
 				{
-					// if the target is solo, don't allow anyone to buff it
-					// if the caster is solo, it's fine if they try to buff someone
 					return false;
-				}
-
-				if (c2->IsSelfFound() == true)
-				{
-					bool can_get_experience = c1->IsInLevelRange(c2->GetLevel2()) && c2->IsInLevelRange(c1->GetLevel2());
-					bool compatible = c1->IsSelfFound() == c2->IsSelfFound();
-					if (!compatible || compatible && !can_get_experience)
-						return false;
 				}
 
 				if (c1->IsDueling() || c2->IsDueling())

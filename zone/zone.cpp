@@ -1069,7 +1069,6 @@ bool Zone::Init(bool is_static) {
 	if (guildid == 1)
 	{
 		pvpzone = true;
-		can_castoutdoor = false;
 		reducedspawntimers = false;
 	}
 
