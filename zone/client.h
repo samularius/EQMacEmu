@@ -492,7 +492,8 @@ public:
 	
 	inline uint8 IsHardcore() const { return m_epp.hardcore; }
 	inline uint8 IsSoloOnly() const { return m_epp.solo_only; }
-	inline bool IsSelfFoundAny() { return m_epp.solo_only || m_epp.self_found > 0; }; // Solo, Self Found Classic, or Self Found Flex
+	inline uint8 GetSelfFound() const { if (m_epp.solo_only) return 1; return m_epp.self_found; } // Legacy flag for Lua
+	inline bool IsSelfFoundAny() { return GetSelfFound() > 0; }; // Solo, Self Found Classic, or Self Found Flex
 	inline bool IsSelfFoundClassic() { return m_epp.self_found == 1; }
 	inline bool IsSelfFoundFlex() { return m_epp.self_found == 2; }
 	inline uint8 HasBetaBuffGearFlag() const { return m_epp.betabuff_gear_flag; }

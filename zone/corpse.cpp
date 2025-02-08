@@ -254,7 +254,7 @@ Corpse::Corpse(NPC* in_npc, LootItems* in_itemlist, uint32 in_npctypeid, uint32 
 		corpse_delay_timer.Start(GetDecayTime() / 2);
 
 	allowed_looters.clear();
-	kill_credit.clear();
+	sf_kill_credit.clear();
 	if (is_client_pet)
 	{
 		allowed_looters.emplace("000");		// corpses without looters are apparently lootable by anybody, so doing this to make it unlootable
@@ -339,7 +339,7 @@ Corpse::Corpse(Client* client, int32 in_rezexp, uint8 in_killedby) : Mob (
 	corpse_graveyard_moved_timer.Disable();
 
 	allowed_looters.clear();
-	kill_credit.clear();
+	sf_kill_credit.clear();
 
 	is_corpse_changed		= true;
 	rez_experience			= in_rezexp;
@@ -1106,9 +1106,9 @@ bool Corpse::CanPlayerLoot(std::string playername) {
 					return false;
 				}
 			}
-			else if (kill_credit.find(playername) == kill_credit.end())
+			else if (sf_kill_credit.find(playername) == sf_kill_credit.end())
 			{
-				c->Message(Chat::Red, "You are not allowed to loot this NPC because you do not have the self-found loot credit.");
+				c->Message(Chat::Red, "You are not allowed to loot this NPC because you did not earn credit for this kill.");
 				return false;
 			}
 		}
@@ -1263,11 +1263,15 @@ void Corpse::AllowPlayerLoot(std::string character_name) {
 
 }
 
-void Corpse::AddKillCredit(std::string character_name) {
+void Corpse::AddKillCredit(std::string character_name, bool is_self_found_any) {
 	if (character_name.size() == 0)
 		return;
-	if (kill_credit.find(character_name) == kill_credit.end())
-		kill_credit.emplace(character_name);
+	
+	if (is_self_found_any)
+	{
+		if (sf_kill_credit.find(character_name) == sf_kill_credit.end())
+			sf_kill_credit.emplace(character_name);
+	}
 }
 
 void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* app) {

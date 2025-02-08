@@ -122,7 +122,7 @@ class Corpse : public Mob {
 	void	AllowPlayerLoot(Mob *them);
 	void	DenyPlayerLoot(std::string character_name);
 	void	AllowPlayerLoot(std::string character_name);
-	void    AddKillCredit(std::string character_name);
+	void    AddKillCredit(std::string character_name, bool is_self_found_any);
 	void	AddLooter(Mob *who);
 	uint32	CountItems();
 	bool	CanPlayerLoot(std::string playername);
@@ -190,7 +190,7 @@ private:
 	std::unordered_set<std::string>	allowed_looters; // People allowed to loot the corpse, character name
 	std::unordered_set<std::string>	denied_looters; // People not allowed to loot the corpse, character name
 	std::unordered_set<std::string>	temporarily_allowed_looters; // People that are eligible to loot a corpse that has a loot-lockout
-	std::unordered_set<std::string> kill_credit; // Names of players who got the initial kill credit (for self-found mostly)
+	std::unordered_set<std::string> sf_kill_credit; // Names of self-found players who got the initial kill credit
 	Timer		corpse_decay_timer; /* The amount of time in millseconds in which a corpse will take to decay (Depop/Poof) */
 	Timer		corpse_rez_timer; /* The amount of time in millseconds in which a corpse can be rezzed */
 	Timer		corpse_delay_timer;

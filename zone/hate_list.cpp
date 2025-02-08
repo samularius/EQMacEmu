@@ -1043,7 +1043,7 @@ void HateList::Add(Mob *ent, int32 in_hate, int32 in_dam, bool bFrenzy, bool iAd
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
 					{
 						auto member = kr->members[x].member;
-						if (member && member->CanGetLootCreditWith(raid_data))
+						if (member && member->CanGetLootCreditWith(raid_data) && member->IsSelfFoundAny())
 						{
 							owner->CastToNPC()->sf_fte_list.emplace_back(member->GetCleanName());
 						}

@@ -1230,6 +1230,11 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	}
 
 	if (m_epp.solo_only || m_epp.self_found) {
+
+		// Ensure 'solo' players also have the 'self-found' tag
+		if (m_epp.solo_only == 1)
+			m_epp.self_found = 1;
+
 		// Any items in their possesion that are missing self-found tag should get a self-found tag on them.
 		// This is for players that haven't logged in since this self-found tagging system was implemented
 		if (loaditems) {

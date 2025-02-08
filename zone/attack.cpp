@@ -2276,7 +2276,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 			if (raid == nullptr && group == nullptr) {
 				corpse->AllowPlayerLoot(killer);
 				if (sf_solo_credit || !killer->CastToClient()->IsFteRequired()) {
-					corpse->AddKillCredit(killer->GetCleanName());
+					corpse->AddKillCredit(killer->GetCleanName(), killer->CastToClient()->IsSelfFoundAny());
 				}
 			}
 			if (raid == nullptr && group)
@@ -2289,7 +2289,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 							corpse->AllowPlayerLoot(group->members[i]);
 							bool kill_credit = group->members[i]->CastToClient()->CanGetLootCreditWith(ruleset, sf_group_credit);
 							if (kill_credit) {
-								corpse->AddKillCredit(group->members[i]->CastToClient()->GetCleanName());
+								corpse->AddKillCredit(group->members[i]->CastToClient()->GetCleanName(), group->members[i]->CastToClient()->IsSelfFoundAny());
 							}
 						}
 						else
@@ -2299,7 +2299,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 								corpse->AllowPlayerLoot(group->membername[i]);
 								bool kill_credit = record->second.CanGetLootCreditWith(ruleset, sf_group_credit);
 								if (kill_credit) {
-									corpse->AddKillCredit(group->membername[i]);
+									corpse->AddKillCredit(group->membername[i], record->second.IsSelfFoundAny());
 								}
 							}
 						}
@@ -2315,7 +2315,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 					r->VerifyRaid();
 					
 					for (auto& sf_fte_name : this->sf_fte_list) {
-						corpse->AddKillCredit(sf_fte_name);
+						corpse->AddKillCredit(sf_fte_name, true);
 					}
 
 					for (int x = 0; x < MAX_RAID_MEMBERS; x++)
@@ -2348,7 +2348,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 						{
 							bool kill_credit = r->members[x].member->CanGetLootCreditWith(ruleset, sf_raid_credit);
 							if (kill_credit) {
-								corpse->AddKillCredit(r->members[x].member->GetCleanName());
+								corpse->AddKillCredit(r->members[x].member->GetCleanName(), r->members[x].member->IsSelfFoundAny());
 							}
 						}
 						else if (r->members[x].membername[0])
@@ -2357,7 +2357,7 @@ void NPC::CreateCorpse(Mob* killer, int32 dmg_total, bool &corpse_bool)
 							if (record != m_EngagedClientNames.end()) {
 								bool kill_credit = record->second.CanGetLootCreditWith(ruleset, sf_raid_credit);
 								if (kill_credit) {
-									corpse->AddKillCredit(r->members[x].membername);
+									corpse->AddKillCredit(r->members[x].membername, record->second.IsSelfFoundAny());
 								}
 							}
 						}
