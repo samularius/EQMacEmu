@@ -1066,7 +1066,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 							safe_delete(SummonedItem);
 						}
 						SummonedItem = database.CreateItem(spell.base[i], quantity);
-						if (SummonedItem && (c->IsSelfFound() || c->IsSoloOnly())) {
+						if (SummonedItem && c->IsSelfFoundAny()) {
 							SummonedItem->SetSelfFoundCharacter(c->CharacterID(), c->GetName());
 						}
 					}
@@ -1095,7 +1095,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (item->NoDrop != 0 && (!IsCharmedPet() || (IsCharmedPet() && CastToNPC()->CountQuestItem(item->ID) == 0)))
 					{
 						QuarmItemData quarm_item_data = QuarmItemData();
-						if (caster && caster->IsClient() && (caster->CastToClient()->IsSelfFound() || caster->CastToClient()->IsSoloOnly())) {
+						if (caster && caster->IsClient() && caster->CastToClient()->IsSelfFoundAny()) {
 							quarm_item_data.SetSelfFoundCharacter(item, caster->CastToClient()->CharacterID(), caster->CastToClient()->GetName());
 						}
 
@@ -1136,7 +1136,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (item->NoDrop != 0 && (!IsCharmedPet() || (IsCharmedPet() && CastToNPC()->CountQuestItem(item->ID) == 0)))
 					{
 						QuarmItemData quarm_item_data = QuarmItemData();
-						if (caster && caster->IsClient() && (caster->CastToClient()->IsSelfFound() || caster->CastToClient()->IsSoloOnly())) {
+						if (caster && caster->IsClient() && caster->CastToClient()->IsSelfFoundAny()) {
 							quarm_item_data.SetSelfFoundCharacter(item, caster->CastToClient()->CharacterID(), caster->CastToClient()->GetName());
 						}
 						CastToNPC()->AddPetLoot(item->ID, charges, false, quarm_item_data);
@@ -1166,7 +1166,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 
 						EQ::ItemInstance *SubItem = database.CreateItem(spell.base[i], charges);
 						if (SubItem != nullptr) {
-							if (CastToClient()->IsSoloOnly() || CastToClient()->IsSelfFound()) {
+							if (CastToClient()->IsSelfFoundAny()) {
 								SubItem->SetSelfFoundCharacter(CastToClient()->CharacterID(), CastToClient()->GetName());
 							}
 							SummonedItem->PutItem(slot, *SubItem);

@@ -112,6 +112,9 @@ public:
 	uint32	GetGroup(const char *name);
 	uint32	GetGroup(Client *c);
 	uint16	GetAvgLevel();
+	// Describes the group composition (normal, self-found, etc). See: GroupType
+	ChallengeRules::RuleParams GetRuleSetParams();
+	ChallengeRules::RuleSet GetRuleSet() { return GetRuleSetParams().type; }
 
 	uint32	GetLootType() { return LootType; }
 	void	ChangeLootType(uint32 type);

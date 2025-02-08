@@ -906,7 +906,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 			if (Invitee && Invitee->IsClient() && Invitee->CastToClient()->GetBaseClass() == 0)
 				is_null_flag = 1;
 
-			if (Invitee && Invitee->IsClient() && !Invitee->IsRaidGrouped() && gis->is_null == is_null_flag && Invitee->CastToClient()->IsSelfFound() == gis->self_found && !Invitee->CastToClient()->IsSoloOnly())
+			if (Invitee && Invitee->IsClient() && !Invitee->IsRaidGrouped() && Invitee->CastToClient()->CanGroupWith(gis->group_ruleset))
 			{
 				auto outapp = new EQApplicationPacket(OP_GroupInvite, sizeof(GroupInvite_Struct));
 				memcpy(outapp->pBuffer, gis, sizeof(GroupInvite_Struct));

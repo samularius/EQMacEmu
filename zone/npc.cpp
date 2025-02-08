@@ -1450,7 +1450,7 @@ void NPC::PickPocket(Client* thief)
 						{
 							if(slotid >= 0)
 							{
-								if (thief->IsSoloOnly() || thief->IsSelfFound())
+								if (thief->IsSelfFoundAny())
 								{
 									inst->SetSelfFoundCharacter(thief->CharacterID(), thief->GetName());
 								}

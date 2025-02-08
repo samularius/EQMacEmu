@@ -2808,13 +2808,30 @@ struct LootItemLockout
 	}
 };
 
+namespace ChallengeRules {
+
+	struct RuleParams {
+		ChallengeRules::RuleSet type;
+		uint8 min_level;
+		uint8 max_level;
+		uint8 max_level2;
+		uint32 character_id; // If not a group, the ID of the player
+
+		bool IsFteRequired() {
+			return ChallengeRules::IsFteRequired(type);
+		}
+	};
+
+}
+
 struct PlayerEngagementRecord
 {
 	bool isFlagged = false;
 	uint32 character_id = 0;
 	char character_name[64] = { 0 };
-	bool isSelfFound = false;
-	bool isSoloOnly = false;
+	uint8 character_level = 0;
+	uint8 character_level2 = 0;
+	ChallengeRules::RuleSet character_ruleset = ChallengeRules::RuleSet::NORMAL;
 	LootLockout lockout = LootLockout();
 
 	bool HasLockout(time_t curTime)
@@ -2826,6 +2843,22 @@ struct PlayerEngagementRecord
 			return false;
 
 		return true;
+	}
+
+	bool IsSelfFoundAny() {
+		return ChallengeRules::IsSelfFoundAny(character_ruleset);
+	}
+
+	bool IsFteRequired() {
+		return ChallengeRules::IsFteRequired(character_ruleset);
+	}
+
+	bool CanGetLootCreditWith(ChallengeRules::RuleParams& group) {
+		return ChallengeRules::CanGetLootCreditWith(character_ruleset, character_level, character_level2, group.type, group.max_level, group.max_level2);
+	}
+
+	bool CanGetLootCreditWith(ChallengeRules::RuleParams& group, bool sf_credit_check) {
+		return CanGetLootCreditWith(group) && (sf_credit_check || !IsFteRequired());
 	}
 };
 

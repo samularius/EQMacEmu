@@ -492,9 +492,25 @@ public:
 	
 	inline uint8 IsHardcore() const { return m_epp.hardcore; }
 	inline uint8 IsSoloOnly() const { return m_epp.solo_only; }
-	inline uint8 IsSelfFound() const { return m_epp.self_found; }
+	inline uint8 GetSelfFound() const { if (m_epp.solo_only) return 1; return m_epp.self_found; } // Legacy flag for Lua
+	inline bool IsSelfFoundAny() { return GetSelfFound() > 0; }; // Solo, Self Found Classic, or Self Found Flex
+	inline bool IsSelfFoundClassic() { return m_epp.self_found == 1; }
+	inline bool IsSelfFoundFlex() { return m_epp.self_found == 2; }
 	inline uint8 HasBetaBuffGearFlag() const { return m_epp.betabuff_gear_flag; }
-	std::string GetSSFLooterName();
+
+	// Functions for checking player compatibility for solo/null/self-found modes
+	ChallengeRules::RuleSet GetRuleSet();
+	ChallengeRules::RuleParams GetRuleSetParams();
+	bool IsFteRequired() { return ChallengeRules::IsFteRequired(GetRuleSet()); }
+	bool CanGroupWith(ChallengeRules::RuleSet group_type, uint32 character_id = 0);
+	bool CanGroupWith(Client* other) { return CanGroupWith(other->GetRuleSet(), other->CharacterID()); }
+	bool CanGetExpCreditWith(ChallengeRules::RuleSet other, uint8 max_level, uint8 max_level2);
+	bool CanGetLootCreditWith(ChallengeRules::RuleSet other, uint8 max_level, uint8 max_level2);
+	bool CanGetLootCreditWith(ChallengeRules::RuleParams& data) { return CanGetLootCreditWith(data.type, data.max_level, data.max_level2); }
+	bool CanGetExpCreditWith(ChallengeRules::RuleParams& data) { return CanGetExpCreditWith(data.type, data.max_level, data.max_level2); }
+	bool CanGetLootCreditWith(ChallengeRules::RuleParams& data, bool sf_fte) { return CanGetLootCreditWith(data) && (sf_fte || !IsFteRequired()); }
+	bool CanGetExpCreditWith(ChallengeRules::RuleParams& data, bool sf_fte) { return CanGetExpCreditWith(data) && (sf_fte || !IsFteRequired()); }
+	bool CanHelp(Client* target) { return target == this || target->CanGetLootCreditWith(GetRuleSet(), GetLevel(), GetLevel2()); }
 
 	inline void SetHardcore(uint8 in_hardcore) { m_epp.hardcore = in_hardcore; }
 	inline void SetSoloOnly(uint8 in_solo_only) { m_epp.solo_only = in_solo_only; }

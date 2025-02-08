@@ -122,14 +122,13 @@ class Corpse : public Mob {
 	void	AllowPlayerLoot(Mob *them);
 	void	DenyPlayerLoot(std::string character_name);
 	void	AllowPlayerLoot(std::string character_name);
+	void    AddKillCredit(std::string character_name, bool is_self_found_any);
 	void	AddLooter(Mob *who);
 	uint32	CountItems();
 	bool	CanPlayerLoot(std::string playername);
 	bool    ContainsLegacyItem();
 	void	ProcessLootLockouts(Client* give_exp_client, NPC* in_npc);
 	void	AddPlayerLockout(Client* c);
-	void	SetInitialAllowedLooters(const std::vector<std::string>& in) { initial_allowed_looters = std::unordered_set<std::string>(in.begin(), in.end()); }
-
 
 	inline void	Lock()				{ is_locked = true; }
 	inline void	UnLock()			{ is_locked = false; }
@@ -189,9 +188,9 @@ private:
 	bool		rez; /*Sets if a corpse has been rezzed or not to determine if XP should be given*/
 	bool		become_npc;
 	std::unordered_set<std::string>	allowed_looters; // People allowed to loot the corpse, character name
-	std::unordered_set<std::string>	initial_allowed_looters; // People initially allowed to loot the corpse, character name
 	std::unordered_set<std::string>	denied_looters; // People not allowed to loot the corpse, character name
-	std::unordered_set<std::string>	temporarily_allowed_looters; // People allowed to loot the corpse, character name
+	std::unordered_set<std::string>	temporarily_allowed_looters; // People that are eligible to loot a corpse that has a loot-lockout
+	std::unordered_set<std::string> sf_kill_credit; // Names of self-found players who got the initial kill credit
 	Timer		corpse_decay_timer; /* The amount of time in millseconds in which a corpse will take to decay (Depop/Poof) */
 	Timer		corpse_rez_timer; /* The amount of time in millseconds in which a corpse can be rezzed */
 	Timer		corpse_delay_timer;
