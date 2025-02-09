@@ -200,11 +200,6 @@ void EQStreamFactory::ReaderLoop()
 		sleep_time.tv_usec = 0;
 		if ((num = select(sock + 1, &readset, nullptr, nullptr, &sleep_time)) < 0) {
 			// What do we wanna do?
-			Sleep(1);
-			continue;
-		}
-		else if (num == 0) {
-			Sleep(1);
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			continue;
 		}
