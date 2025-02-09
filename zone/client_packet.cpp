@@ -2942,7 +2942,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 				const EQ::ItemData* item = inst->GetItem();
 				if (item->Click.Effect != (uint32)castspell->spell_id)
 				{
-					database.SetMQDetectionFlag(account_name, name, "OP_CastSpell with item, tried to cast a different spell.", zone->GetShortName());
+					//database.SetMQDetectionFlag(account_name, name, "OP_CastSpell with item, tried to cast a different spell.", zone->GetShortName());
 					InterruptSpell(castspell->spell_id);	//CHEATER!!
 					return;
 				}
