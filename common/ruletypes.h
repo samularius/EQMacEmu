@@ -334,6 +334,7 @@ RULE_INT(Quarm, PVPInstanceGraveyardTime, 30, "")
 RULE_REAL(Quarm, PVPDayVariance, 7, "")
 RULE_BOOL(Quarm, EnablePVPInstances, false, "Enables or disables PVP instance book entry via guild 1.")
 RULE_BOOL(Quarm, UseFixedShowHelmBehavior, true, "Fixes ShowHelm to be a personal toggle that works like other MMOs. Also adds full compatibility with Zeal's ShowHelm feature and Velious Helms support.")
+RULE_INT(Quarm, WarnDllVersionBelow, 1, "Sends a Client-out-of-date warning message to clients below this dll version.")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)
