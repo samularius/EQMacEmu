@@ -386,6 +386,12 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			}
 		}
 
+		if (RuleB(Quarm, EnforceLatestDllToEnterSpecialInstances) && zone->GetZoneID() >= RuleI(Quarm, SpecialExpansionZoneIDBegin) && zone->GetZoneID() < RuleI(Quarm, SpecialExpansionZoneIDEnd) && m_dll_version < RuleI(Quarm, WarnDllVersionBelow))
+		{
+			sender->Message(Chat::Red, "You must be running the latest version of the Quarm Server client library to enter this zone. Anomalies may occur if you do not possess the latest version.");
+			return;
+		}
+
 		if ((floor_port || strncmp(destination_zone_name,zone_name,strlen(zone_name)) == 0) && !keyneeded)
 		{
 			if(!keepoffkeyring)
