@@ -1408,6 +1408,7 @@ public:
 	bool GetBuffStackingPatch() const { return m_buff_stacking_patch; }
 	void SetBuffStackingPatch(bool enabled) { m_buff_stacking_patch = enabled; }
 	void SetSongWindowSlots(uint8 song_window_buff_slots) { m_song_window_slots = song_window_buff_slots; }
+	inline void GetClientLibraryVersion() { return m_dll_version; }
 private:
 	bool dev_tools_enabled;
 
