@@ -545,6 +545,8 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	database.RemoveAllFactions(this);
 	factionvalues.clear();
 
+	database.ResetStartingFaction(this, m_pp.race, m_pp.class_, m_pp.deity, 0);
+
 	//Remove starting skills.
 	ResetStartingSkills();
 
@@ -640,6 +642,9 @@ void Client::ResetPlayerForNewGamePlus(uint8 in_level, uint8 in_level2, bool res
 	// Remove all factions.
 	database.RemoveAllFactions(this);
 	factionvalues.clear();
+
+	// Add starting factions.
+	database.ResetStartingFaction(this, m_pp.race, m_pp.class_, m_pp.deity, 0);
 
 	// Prevent Old Corpse Rez
 	database.MarkAllCharacterCorpsesNotRezzable(CharacterID());

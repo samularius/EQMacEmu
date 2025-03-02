@@ -257,6 +257,7 @@ public:
 	void SavePetInfo(Client *c);
 	void RemoveTempFactions(Client *c);
 	void RemoveAllFactions(Client *client);
+	bool ResetStartingFaction(Client* c, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone);
 	bool ResetStartingItems(Client* c, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone, char* si_name, int admin_level, int& return_zone_id);
 
 	/* Character Data Loaders  */

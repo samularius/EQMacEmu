@@ -3994,6 +3994,30 @@ bool ZoneDatabase::SaveCursor(Client* client, std::list<EQ::ItemInstance*>::cons
 }
 
 
+bool ZoneDatabase::ResetStartingFaction(Client* c, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone)
+{
+	std::string starting_zone_query = StringFormat("SELECT faction_id, faction_amount FROM start_faction_hits "
+		"WHERE (player_race = %i) AND (player_class = %i) AND "
+		"(player_deity = %i) AND (player_choice = %i)",
+		si_race, si_class, si_deity, si_current_zone);
+	auto starting_zone_query_results = QueryDatabase(starting_zone_query);
+	if (!starting_zone_query_results.Success())
+		return false;
+
+	if (starting_zone_query_results.RowCount() == 0)
+		return false;
+
+
+	for (auto row = starting_zone_query_results.begin(); row != starting_zone_query_results.end(); ++row) {
+		auto starting_faction_id = atoi(row[0]);
+		auto starting_faction_amount = atoi(row[1]);
+		SetCharacterFactionLevel(c->CharacterID(), starting_faction_id, starting_faction_amount, 0, c->GetFactionList());
+	}
+
+
+	return true;
+}
+
 bool ZoneDatabase::ResetStartingItems(Client* c, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone, char* si_name, int admin_level, int& return_zone_id)
 {
 	std::string starting_zone_query = StringFormat("SELECT zone_id FROM start_zones "

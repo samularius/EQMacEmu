@@ -1407,6 +1407,9 @@ public:
 	inline void SetMuleInitiated(bool initiated) { mule_initiated = initiated; }
 	bool GetBuffStackingPatch() const { return m_buff_stacking_patch; }
 	void SetBuffStackingPatch(bool enabled) { m_buff_stacking_patch = enabled; }
+	
+	faction_map& GetFactionList() { return factionvalues; }
+	
 	void SetSongWindowSlots(uint8 song_window_buff_slots) { m_song_window_slots = song_window_buff_slots; }
 	inline uint16 GetClientLibraryVersion() { return m_dll_version; }
 private:
