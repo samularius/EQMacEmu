@@ -3166,6 +3166,15 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 				return false;
 			}
 		}
+
+		if (current->IsClient())
+		{
+			if (current->CastToClient()->GetClientLibraryVersion() < RuleI(Quarm, WarnDllVersionBelow))
+			{
+				other->CastToClient()->BootFromGuildInstance();
+				return false;
+			}
+		}
 	}
 
 	if (CanDoCombat())
