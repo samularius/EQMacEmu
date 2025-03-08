@@ -3167,7 +3167,7 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 			}
 		}
 
-		if (current->IsClient())
+		if (zone->GetGuildID() == 1 && current->IsClient() || current->IsClient() && current->GetZoneID() == Zones::VEKSAR)
 		{
 			if (current->CastToClient()->GetClientLibraryVersion() < RuleI(Quarm, WarnDllVersionBelow))
 			{
