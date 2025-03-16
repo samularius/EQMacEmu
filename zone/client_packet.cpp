@@ -5677,8 +5677,7 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 
 			if (Invitee->CastToClient()->Admin() > 0)
 			{
-				Message(Chat::Red, "You are being invited by a GM. This will never work.");
-				database.SetHackerFlag(Invitee->CastToClient()->AccountName(), Invitee->CastToClient()->GetCleanName(), "GM attempted to join a group or raid.");
+				Message(Chat::Red, "You are inviting a GM. This will never work.");
 				return;
 			}
 
