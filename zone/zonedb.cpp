@@ -3928,7 +3928,7 @@ bool ZoneDatabase::SaveSoulboundItems(Client* client, std::list<EQ::ItemInstance
 		else if(inst)
 		{
 			int16 use_slot = (i == EQ::invslot::CURSOR_QUEUE_BEGIN) ? EQ::invslot::slotCursor : i;
-			if (SaveInventory(client->CharacterID(), inst, use_slot)) 
+			if (SaveInventory(client->AccountID(), client->CharacterID(), inst, use_slot)) 
 			{
 				++i;
 			}
@@ -3954,6 +3954,7 @@ bool ZoneDatabase::UpdateSkillDifficulty(uint16 skillid, float difficulty)
 
 bool ZoneDatabase::SaveCursor(Client* client, std::list<EQ::ItemInstance*>::const_iterator &start, std::list<EQ::ItemInstance*>::const_iterator &end)
 {
+	uint32 account_id = client->AccountID();
 	uint32 char_id = client->CharacterID();
 
 	// Delete cursor items
@@ -3979,7 +3980,7 @@ bool ZoneDatabase::SaveCursor(Client* client, std::list<EQ::ItemInstance*>::cons
 		else
 			Log(Logs::Detail, Logs::Inventory, "SaveCursor: No inst found. This is either an error, or we've reached the end of the list.");
 
-		if (!SaveInventory(char_id, inst, use_slot)) 
+		if (!SaveInventory(account_id, char_id, inst, use_slot)) 
 		{
 			return false;
 		}
