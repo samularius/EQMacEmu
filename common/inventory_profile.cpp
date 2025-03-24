@@ -89,6 +89,11 @@ EQ::InventoryProfile::~InventoryProfile() {
 		safe_delete(iter->second);
 	}
 	m_trade.clear();
+
+	for (auto iter = m_shared_bank.begin(); iter != m_shared_bank.end(); ++iter) {
+		safe_delete(iter->second);
+	}
+	m_shared_bank.clear();
 }
 
 bool EQ::InventoryProfile::SetInventoryVersion(versions::MobVersion inventory_version) {
@@ -148,6 +153,10 @@ EQ::ItemInstance* EQ::InventoryProfile::GetItem(int16 slot_id) const
 		// Equippable slots (on body)
 		result = _GetItem(m_worn, slot_id);
 	}
+	else if (slot_id >= invslot::SHARED_BANK_BEGIN && slot_id <= invslot::SHARED_BANK_END) {
+		// Shared Bank slots
+		result = _GetItem(m_shared_bank, slot_id);
+	}
 
 	// Inner bag slots
 	else if (slot_id >= invbag::TRADE_BAGS_BEGIN && slot_id <= invbag::TRADE_BAGS_END) {
@@ -174,6 +183,13 @@ EQ::ItemInstance* EQ::InventoryProfile::GetItem(int16 slot_id) const
 	else if (slot_id >= invbag::GENERAL_BAGS_BEGIN && slot_id <= invbag::GENERAL_BAGS_END) {
 		// Personal inventory bag slots
 		ItemInstance* inst = _GetItem(m_inv, InventoryProfile::CalcSlotId(slot_id));
+		if (inst && inst->IsClassBag()) {
+			result = inst->GetItem(InventoryProfile::CalcBagIdx(slot_id));
+		}
+	}
+	else if (slot_id >= invbag::SHARED_BANK_BAGS_BEGIN && slot_id <= invbag::SHARED_BANK_BAGS_END) {
+		// Bank bag slots
+		ItemInstance* inst = _GetItem(m_shared_bank, InventoryProfile::CalcSlotId(slot_id));
 		if (inst && inst->IsClassBag()) {
 			result = inst->GetItem(InventoryProfile::CalcBagIdx(slot_id));
 		}
@@ -326,6 +342,10 @@ EQ::ItemInstance* EQ::InventoryProfile::PopItem(int16 slot_id)
 		p = m_trade[slot_id];
 		m_trade.erase(slot_id);
 	}
+	else if (slot_id >= invslot::SHARED_BANK_BEGIN && slot_id <= invslot::SHARED_BANK_END) {
+		p = m_shared_bank[slot_id];
+		m_shared_bank.erase(slot_id);
+	}
 	else {
 		// Is slot inside bag?
 		ItemInstance* baginst = GetItem(InventoryProfile::CalcSlotId(slot_id));
@@ -473,6 +493,12 @@ int16 EQ::InventoryProfile::HasItem(int16 item_id, uint8 quantity, uint8 where)
 	if (where & invWhereCursor) {
 		// Check cursor queue
 		slot_id = _HasItem(m_cursor, item_id, quantity);
+		if (slot_id != INVALID_INDEX)
+			return slot_id;
+	}
+
+	if (where == invWhereSharedBank) { // this '==' is on purpose, we don't want to modify any existing logic
+		slot_id = _HasItem(m_shared_bank, item_id, quantity);
 		if (slot_id != INVALID_INDEX)
 			return slot_id;
 	}
@@ -754,6 +780,9 @@ int16 EQ::InventoryProfile::CalcSlotId(int16 slot_id) {
 	else if (slot_id >= invbag::TRADE_BAGS_BEGIN && slot_id <= invbag::TRADE_BAGS_END)
 		parent_slot_id = invslot::TRADE_BEGIN + (slot_id - invbag::TRADE_BAGS_BEGIN) / invbag::SLOT_COUNT;
 
+	else if (slot_id >= invbag::SHARED_BANK_BAGS_BEGIN && slot_id <= invbag::SHARED_BANK_BAGS_END)
+		parent_slot_id = invslot::SHARED_BANK_BEGIN + (slot_id - invbag::SHARED_BANK_BAGS_BEGIN) / invbag::SLOT_COUNT;
+
 	return parent_slot_id;
 }
 
@@ -775,6 +804,9 @@ int16 EQ::InventoryProfile::CalcSlotId(int16 bagslot_id, uint8 bagidx) {
 
 	else if (bagslot_id >= invslot::TRADE_BEGIN && bagslot_id <= invslot::TRADE_END)
 		slot_id = invbag::TRADE_BAGS_BEGIN + (bagslot_id - invslot::TRADE_BEGIN) * invbag::SLOT_COUNT + bagidx;
+
+	else if (bagslot_id >= invslot::SHARED_BANK_BEGIN && bagslot_id <= invslot::SHARED_BANK_END)
+		slot_id = invbag::SHARED_BANK_BAGS_BEGIN + (bagslot_id - invslot::SHARED_BANK_BEGIN) * invbag::SLOT_COUNT + bagidx;
 
 	return slot_id;
 }
@@ -803,6 +835,9 @@ uint8 EQ::InventoryProfile::CalcBagIdx(int16 slot_id) {
 	// odd..but, ok... (probably a range-slot conversion for ItemInstance* Object::item
 	else if (slot_id >= invslot::WORLD_BEGIN && slot_id <= invslot::WORLD_END)
 		index = (slot_id - invslot::WORLD_BEGIN); // % invbag::SLOT_COUNT; - not needed since range is 10 slots
+
+	else if (slot_id >= invbag::SHARED_BANK_BAGS_BEGIN && slot_id <= invbag::SHARED_BANK_BAGS_END)
+		index = (slot_id - invbag::SHARED_BANK_BAGS_BEGIN) % invbag::SLOT_COUNT;
 
 	return index;
 }
@@ -896,6 +931,7 @@ bool EQ::InventoryProfile::SupportsContainers(int16 slot_id)
 	if ((slot_id == invslot::slotCursor) ||
 		(slot_id >= invslot::GENERAL_BEGIN && slot_id <= invslot::GENERAL_END) ||
 		(slot_id >= invslot::BANK_BEGIN && slot_id <= invslot::BANK_END) ||
+		(slot_id >= invslot::SHARED_BANK_BEGIN && slot_id <= invslot::SHARED_BANK_END) ||
 		(slot_id >= invslot::TRADE_BEGIN && slot_id <= invslot::TRADE_END))
 		return true;
 	return false;
@@ -921,6 +957,11 @@ int EQ::InventoryProfile::GetSlotByItemInst(ItemInstance* inst) {
 	}
 
 	i = GetSlotByItemInstCollection(m_trade, inst);
+	if (i != INVALID_INDEX) {
+		return i;
+	}
+
+	i = GetSlotByItemInstCollection(m_shared_bank, inst);
 	if (i != INVALID_INDEX) {
 		return i;
 	}
@@ -978,6 +1019,7 @@ void EQ::InventoryProfile::dumpEntireInventory() {
 	dumpWornItems();
 	dumpInventory();
 	dumpBankItems();
+	dumpSharedBankItems();
 
 	std::cout << std::endl;
 }
@@ -996,6 +1038,12 @@ void EQ::InventoryProfile::dumpBankItems() {
 
 	std::cout << "Bank items:" << std::endl;
 	dumpItemCollection(m_bank);
+}
+
+void EQ::InventoryProfile::dumpSharedBankItems()
+{
+	std::cout << "Shared Bank items:" << std::endl;
+	dumpItemCollection(m_shared_bank);
 }
 
 int EQ::InventoryProfile::GetSlotByItemInstCollection(const std::map<int16, ItemInstance*>& collection, ItemInstance* inst) {
@@ -1095,6 +1143,10 @@ int16 EQ::InventoryProfile::_PutItem(int16 slot_id, ItemInstance* inst)
 	}
 	else if (slot_id >= invslot::TRADE_BEGIN && slot_id <= invslot::TRADE_END) {
 		m_trade[slot_id] = inst;
+		result = slot_id;
+	}
+	else if (slot_id >= invslot::SHARED_BANK_BEGIN && slot_id <= invslot::SHARED_BANK_END) {
+		m_shared_bank[slot_id] = inst;
 		result = slot_id;
 	}
 	else {
