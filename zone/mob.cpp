@@ -5279,7 +5279,14 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			case 1562:
 			case 1563:
 			{
-				texture = 1;
+				if (GetBaseRace() == IKSAR && spell_base == WOLF)
+				{
+					gender = Gender::Female;
+				}
+				else
+				{
+					texture = 1;
+				}
 				break;
 			}
 
@@ -5292,7 +5299,14 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			// Great Wolf
 			case 427:
 			{
-				texture = 2;
+				if (GetBaseRace() == IKSAR && spell_base == WOLF)
+				{
+					gender = Gender::Female;
+				}
+				else
+				{
+					texture = 2;
+				}
 				break;
 			}
 
@@ -5305,8 +5319,15 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 			// Greater Wolf
 			case 426:
 			{
-				texture = 3;
-				break;
+				if (GetBaseRace() == IKSAR && spell_base == WOLF)
+				{
+					gender = Gender::Female;
+				}
+				else
+				{
+					texture = 3;
+				}
+				break;	
 			}
 
 			// Scaled Wolf is a female wolf.
@@ -5323,12 +5344,12 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 				break;
 			}
 
-            case 581:
+      case 581:
 			case 643:
-            case 644:
+      case 644:
 			case 1376:
-            case 1611:
-            {
+      case 1611:
+      {
 				if (GetBaseRace() == IKSAR && spell_base == SKELETON)
 				{
 					spell_base = IKSAR_SKELETON;
@@ -5339,8 +5360,21 @@ void Mob::ApplyIllusion(const SPDat_Spell_Struct &spell, int i, Mob* caster)
 					spell_model_size = 4.0f;
 
 				break;
-            }
+      }
+          
+      // Remaining Wolf Illusions
+			case 425:
+			case 428:
+			case 3579:
+			{
+				if (GetBaseRace() == IKSAR && spell_base == WOLF)
+				{
+					gender = Gender::Female;
+				}
+				break;
 			}
+
+      }
 		}
 
 		SendIllusionPacket
