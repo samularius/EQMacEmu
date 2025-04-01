@@ -185,7 +185,7 @@ bool Spawn2::Process() {
 	if(!Enabled())
 		return true;
 
-	if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint) {
+	if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint && zone->GetGuildID() == GUILD_NONE) {
 		return true;
 	}
 
@@ -254,7 +254,7 @@ bool Spawn2::Process() {
 			return true;
 		}
 
-		if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint) {
+		if (!RuleB(Quarm, EnableQuakes) && raid_target_spawnpoint && zone->GetGuildID() == GUILD_NONE) {
 			timer.Start(60000);	//don't yield quake mobs when they're disabled.
 			return true;
 		}
