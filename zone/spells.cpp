@@ -4204,7 +4204,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	{	// these floors are doubled here because of the 0-200 roll
 		if (IsNPC())
 		{
-			if (leveldiff > -11 && target_level > 14 && resist_chance < 20) {	// ten levels under the caster or higher unless it's a newbie mob
+			if (leveldiff > -11 && target_level > 14 && resist_chance < 10) {	// ten levels under the caster or higher unless it's a newbie mob
 				resist_chance = 10;
 			}
 			else if (leveldiff < -20 || target_level < 15) {		// deep greens and newbie mobs
