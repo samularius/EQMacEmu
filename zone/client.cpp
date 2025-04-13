@@ -251,6 +251,9 @@ Client::Client(EQStreamInterface* ieqs) : Mob(
 	//for good measure:
 	memset(&m_pp, 0, sizeof(m_pp));
 	memset(&m_epp, 0, sizeof(m_epp));
+	memset(&m_petinfo, 0, sizeof(PetInfo)); // not used for TAKP but leaving in case someone wants to fix it up for custom servers
+	/* Moved here so it's after where we load the pet data. */
+	memset(&m_suspendedminion, 0, sizeof(PetInfo));
 	PendingTranslocate = false;
 	PendingSacrifice = false;
 	sacrifice_caster_id = 0;
