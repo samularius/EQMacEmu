@@ -446,7 +446,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					if (mypet) {
 						if (mypet->IsCharmedPet())
 							FadePetCharmBuff();
-						SetPet(0);
 					}
 				}
 
