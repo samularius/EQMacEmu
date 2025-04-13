@@ -500,7 +500,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p) {
 			break;
 		//bounce the packet to the correct zone server, if its up
 		ServerSpawnCondition_Struct* ssc = (ServerSpawnCondition_Struct*)pack->pBuffer;
-		zoneserver_list.SendPacket(ssc->zoneID, 0, pack);
+		zoneserver_list.SendPacket(ssc->zoneID, ssc->zoneGuildID, pack);
 		break;
 	}
 	case ServerOP_SpawnEvent: {
@@ -508,7 +508,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p) {
 			break;
 		//bounce the packet to the correct zone server, if its up
 		ServerSpawnEvent_Struct* sse = (ServerSpawnEvent_Struct*)pack->pBuffer;
-		zoneserver_list.SendPacket(sse->zoneID, 0, pack);
+		zoneserver_list.SendPacket(sse->zoneID, GUILD_NONE , pack);
 		break;
 	}
 
