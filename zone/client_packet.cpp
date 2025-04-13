@@ -2011,13 +2011,13 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	FastQueuePacket(&outapp);
 
 	memset(&m_petinfo, 0, sizeof(PetInfo)); // not used for TAKP but leaving in case someone wants to fix it up for custom servers
+	/* Moved here so it's after where we load the pet data. */
+	memset(&m_suspendedminion, 0, sizeof(PetInfo));
+
 	if (RuleB(Quarm, PetZoneWithOwner)) {
 		/* Load Pet */
 		database.LoadPetInfo(this);
 	}
-
-	/* Moved here so it's after where we load the pet data. */
-	memset(&m_suspendedminion, 0, sizeof(PetInfo));
 
 	/* Server Zone Entry Packet */
 	outapp = new EQApplicationPacket(OP_ZoneEntry, sizeof(ServerZoneEntry_Struct));

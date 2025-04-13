@@ -2288,7 +2288,7 @@ void ZoneDatabase::LoadBuffs(Client *client) {
 
 void ZoneDatabase::SavePetInfo(Client *client)
 {
-	PetInfo *petinfo = nullptr;
+	PetInfo* petinfo = nullptr;
 
 	// Pet Info
 	std::vector<CharacterPetInfoRepository::CharacterPetInfo> pet_infos = {};
@@ -2305,18 +2305,18 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// Loop through pet types
 	for (int pet = 0; pet < 2; pet++) {
 		petinfo = client->GetPetInfo(pet);
-		if (!petinfo) {
+
+		if(!petinfo)
 			continue;
-		}
 
 		// build pet info into struct
 		pet_info.char_id = client->CharacterID();
-		pet_info.pet = pet;
+		pet_info.pet = (int32_t)pet;
 		pet_info.petname = petinfo->Name;
-		pet_info.petpower = petinfo->petpower;
-		pet_info.spell_id = petinfo->SpellID;
-		pet_info.hp = petinfo->HP;
-		pet_info.mana = petinfo->Mana;
+		pet_info.petpower = (int32_t)petinfo->petpower;
+		pet_info.spell_id = (int32_t)petinfo->SpellID;
+		pet_info.hp = (int32_t)petinfo->HP;
+		pet_info.mana = (int32_t)petinfo->Mana;
 		pet_info.size = petinfo->size;
 
 		// add pet info to vector
@@ -2324,10 +2324,10 @@ void ZoneDatabase::SavePetInfo(Client *client)
 
 		// build pet buffs into struct
 		int pet_buff_count = 0;
-		int max_slots = RuleI(Spells, MaxTotalSlotsPET);
+		int max_slots = BUFF_COUNT;
 
 		// count pet buffs
-		for (int index = 0; index < max_slots; index++) {
+		for (int index = 0; index < BUFF_COUNT; index++) {
 			if (!IsValidSpell(petinfo->Buffs[index].spellid)) {
 				continue;
 			}
@@ -2337,7 +2337,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 		pet_buffs.reserve(pet_buff_count);
 
 		// loop through pet buffs
-		for (int index = 0; index < max_slots; index++) {
+		for (int index = 0; index < BUFF_COUNT; index++) {
 			if (!IsValidSpell(petinfo->Buffs[index].spellid)) {
 				continue;
 			}
@@ -2454,8 +2454,8 @@ void ZoneDatabase::LoadPetInfo(Client *client) {
 		strncpy(pi->Name,row[1],64);
 		pi->petpower = atoi(row[2]);
 		pi->SpellID = atoi(row[3]);
-		pi->HP = atoul(row[4]);
-		pi->Mana = atoul(row[5]);
+		pi->HP = atoll(row[4]);
+		pi->Mana = atoll(row[5]);
 		pi->size = atof(row[6]);
 	}
 
@@ -2476,11 +2476,11 @@ void ZoneDatabase::LoadPetInfo(Client *client) {
         else
             continue;
 
-        uint32 slot_id = atoul(row[1]);
+        uint32 slot_id = atoi(row[1]);
         if(slot_id >= RuleI(Spells, MaxTotalSlotsPET))
 				continue;
 
-        uint32 spell_id = atoul(row[2]);
+        uint32 spell_id = atoi(row[2]);
         if(!IsValidSpell(spell_id))
             continue;
 
@@ -2520,7 +2520,7 @@ void ZoneDatabase::LoadPetInfo(Client *client) {
 		if (slot < EQ::invslot::EQUIPMENT_BEGIN || slot > EQ::invslot::EQUIPMENT_END)
             continue;
 
-        pi->Items[slot] = atoul(row[2]);
+        pi->Items[slot] = atoi(row[2]);
     }
 
 }
