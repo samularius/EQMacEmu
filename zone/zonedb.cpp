@@ -2353,7 +2353,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet info into database
 	if (!current_pet_infos.empty()) {
 		// Delete existing pet info
-		CharacterPetInfoRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetInfoRepository::DeleteWhere(database, fmt::format("char_id = {} and pet = 0", client->CharacterID()));
 
 		// Insert new pet info
 		CharacterPetInfoRepository::InsertMany(database, current_pet_infos);
@@ -2362,7 +2362,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet buffs into database
 	if (!current_pet_buffs.empty()) {
 		// Delete existing pet buffs
-		CharacterPetBuffsRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetBuffsRepository::DeleteWhere(database, fmt::format("char_id = {} AND pet = 0", client->CharacterID()));
 
 		// Insert new pet buffs
 		CharacterPetBuffsRepository::InsertMany(database, current_pet_buffs);
@@ -2371,7 +2371,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet inventory into database
 	if (!current_inventory.empty()) {
 		// Delete existing pet inventory
-		CharacterPetInventoryRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetInventoryRepository::DeleteWhere(database, fmt::format("char_id = {} AND pet = 0", client->CharacterID()));
 
 		// Insert new pet inventory
 		CharacterPetInventoryRepository::InsertMany(database, current_inventory);
@@ -2404,17 +2404,17 @@ void ZoneDatabase::SavePetInfo(Client *client)
 
 	// loop through pet buffs
 	for (int index = 0; index < BUFF_COUNT; index++) {
-		if (!IsValidSpell(petinfo.Buffs[index].spellid)) {
+		if (!IsValidSpell(suspendedpetinfo.Buffs[index].spellid)) {
 			continue;
 		}
 
 		suspended_pet_buff.char_id = client->CharacterID();
 		suspended_pet_buff.pet = 1;
 		suspended_pet_buff.slot = index;
-		suspended_pet_buff.spell_id = petinfo.Buffs[index].spellid;
-		suspended_pet_buff.caster_level = petinfo.Buffs[index].level;
-		suspended_pet_buff.ticsremaining = petinfo.Buffs[index].duration;
-		suspended_pet_buff.counters = petinfo.Buffs[index].counters;
+		suspended_pet_buff.spell_id = suspendedpetinfo.Buffs[index].spellid;
+		suspended_pet_buff.caster_level = suspendedpetinfo.Buffs[index].level;
+		suspended_pet_buff.ticsremaining = suspendedpetinfo.Buffs[index].duration;
+		suspended_pet_buff.counters = suspendedpetinfo.Buffs[index].counters;
 
 		// add pet buffs to vector
 		suspended_pet_buffs.push_back(suspended_pet_buff);
@@ -2428,7 +2428,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 		suspended_item.char_id = client->CharacterID();
 		suspended_item.pet = 1;
 		suspended_item.slot = 0;
-		suspended_item.item_id = petinfo.Items[i];
+		suspended_item.item_id = suspendedpetinfo.Items[i];
 
 		// add pet inventory to vector
 		suspended_inventory.push_back(suspended_item);
@@ -2437,7 +2437,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet info into database
 	if (!suspended_pet_infos.empty()) {
 		// Delete existing pet info
-		CharacterPetInfoRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetInfoRepository::DeleteWhere(database, fmt::format("char_id = {} AND pet = 1", client->CharacterID()));
 
 		// Insert new pet info
 		CharacterPetInfoRepository::InsertMany(database, suspended_pet_infos);
@@ -2446,7 +2446,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet buffs into database
 	if (!suspended_pet_buffs.empty()) {
 		// Delete existing pet buffs
-		CharacterPetBuffsRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetBuffsRepository::DeleteWhere(database, fmt::format("char_id = {} AND pet = 1", client->CharacterID()));
 
 		// Insert new pet buffs
 		CharacterPetBuffsRepository::InsertMany(database, suspended_pet_buffs);
@@ -2455,7 +2455,7 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	// insert pet inventory into database
 	if (!suspended_inventory.empty()) {
 		// Delete existing pet inventory
-		CharacterPetInventoryRepository::DeleteWhere(database, fmt::format("char_id = {}", client->CharacterID()));
+		CharacterPetInventoryRepository::DeleteWhere(database, fmt::format("char_id = {} pet = 1", client->CharacterID()));
 
 		// Insert new pet inventory
 		CharacterPetInventoryRepository::InsertMany(database, suspended_inventory);
