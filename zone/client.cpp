@@ -917,7 +917,7 @@ bool Client::Save(uint8 iCommitNow) {
 			m_petinfo.size = pet->GetSize();
 		}
 	} else {
-		memset(&m_petinfo, 0, sizeof(struct PetInfo));
+		memset(&m_petinfo, 0, sizeof(PetInfo));
 	}
 	database.SavePetInfo(this);
 	
