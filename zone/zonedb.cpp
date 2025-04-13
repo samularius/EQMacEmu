@@ -2337,7 +2337,11 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	}
 
 	// loop through pet inventory
-	for (int index = 0; index < EQ::invslot::EQUIPMENT_END; index++) {
+	for (int index = 0; index <= EQ::invslot::EQUIPMENT_END; index++) {
+
+		if (index < EQ::invslot::EQUIPMENT_BEGIN || index > EQ::invslot::EQUIPMENT_END)
+			continue;
+
 		if (!petinfo.Items[index]) {
 			continue;
 		}
@@ -2421,7 +2425,11 @@ void ZoneDatabase::SavePetInfo(Client *client)
 	}
 
 	// loop through pet inventory
-	for (int i = 0; i < EQ::invslot::EQUIPMENT_END; i++) {
+	for (int i = 0; i <= EQ::invslot::EQUIPMENT_END; i++) {
+
+		if (i < EQ::invslot::EQUIPMENT_BEGIN || i > EQ::invslot::EQUIPMENT_END)
+			continue;
+
 		if (!suspendedpetinfo.Items[i]) {
 			continue;
 		}
