@@ -1456,9 +1456,6 @@ void SpawnConditionManager::ReloadEvent(uint32 event_id) {
 
 void SpawnConditionManager::ToggleEvent(uint32 event_id, bool enabled, bool strict, bool reset_base) {
 
-	if (zone && zone->GetGuildID() != GUILD_NONE)
-		return;
-
 	Log(Logs::Detail, Logs::Spawns, "Request to %s spawn event %d %sresetting trigger time", enabled?"enable":"disable", event_id, reset_base?"":"without ");
 
 	//first look for the event in our local event list

@@ -301,9 +301,6 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 				break;
 			}
 
-			if (zone && zone->GetGuildID() != GUILD_NONE)
-				return;
-
 			ServerSpawnEvent_Struct* sse = (ServerSpawnEvent_Struct*) pack->pBuffer;
 
 			zone->spawn_conditions.ReloadEvent(sse->event_id);
