@@ -371,6 +371,8 @@ public:
 	virtual bool Save() { return Save(0); }
 	bool Save(uint8 iCommitNow); // 0 = delayed, 1=async now, 2=sync now
 
+	void SavePetInfo();
+
 	/* New PP Save Functions */
 	bool SaveCurrency(){ return database.SaveCharacterCurrency(this->CharacterID(), &m_pp); }
 	bool SaveAA();

@@ -904,12 +904,23 @@ bool Client::Save(uint8 iCommitNow) {
 	/* Total Time Played */
 	TotalSecondsPlayed += (time(nullptr) - m_pp.lastlogin);
 	m_pp.timePlayedMin = (TotalSecondsPlayed / 60);
-	m_pp.lastlogin = time(nullptr);
+	m_pp.lastlogin = time(nullptr);	
 
-	// we don't reload the pet data for TAKP so don't really need this
-	
+	SavePetInfo();
+
+	p_timers.Store(&database);
+
+	m_pp.hunger_level = EQ::Clamp(m_pp.hunger_level, (int16)0, (int16)32000);
+	m_pp.thirst_level = EQ::Clamp(m_pp.thirst_level, (int16)0, (int16)32000);
+	database.SaveCharacterData(this->CharacterID(), this->AccountID(), &m_pp, &m_epp); /* Save Character Data */
+
+	return true;
+}
+
+void Client::SavePetInfo()
+{
 	if (GetPet() && GetPet()->IsNPC()) {
-		NPC *pet = GetPet()->CastToNPC();
+		NPC* pet = GetPet()->CastToNPC();
 		if (pet)
 		{
 			m_petinfo.SpellID = pet->CastToNPC()->GetPetSpellID();
@@ -919,19 +930,11 @@ bool Client::Save(uint8 iCommitNow) {
 			m_petinfo.petpower = pet->GetPetPower();
 			m_petinfo.size = pet->GetSize();
 		}
-	} else {
+	}
+	else {
 		memset(&m_petinfo, 0, sizeof(PetInfo));
 	}
 	database.SavePetInfo(this);
-	
-
-	p_timers.Store(&database);
-
-	m_pp.hunger_level = EQ::Clamp(m_pp.hunger_level, (int16)0, (int16)32000);
-	m_pp.thirst_level = EQ::Clamp(m_pp.thirst_level, (int16)0, (int16)32000);
-	database.SaveCharacterData(this->CharacterID(), this->AccountID(), &m_pp, &m_epp); /* Save Character Data */
-
-	return true;
 }
 
 void Client::SendSound(uint16 soundID)
