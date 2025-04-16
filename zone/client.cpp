@@ -917,9 +917,9 @@ bool Client::Save(uint8 iCommitNow) {
 	return true;
 }
 
-void Client::SavePetInfo()
+void Client::SavePetInfo(bool bClear)
 {
-	if (GetPet() && GetPet()->IsNPC()) {
+	if (GetPet() && GetPet()->IsNPC() && !bClear) {
 		NPC* pet = GetPet()->CastToNPC();
 		if (pet)
 		{
