@@ -627,28 +627,28 @@ Mob* Mob::GetPet() {
 	return(tmp);
 }
 
-void Mob::SetPet(Mob* newpet, bool bSkipSave) {
+void Mob::SetPet(Mob* newpet) {
 	Mob* oldpet = GetPet();
 	if (oldpet && IsClient()) {
 		oldpet->SetOwnerID(0);
 	}
 	if (newpet == nullptr) {
-		SetPetID(0, bSkipSave);
+		SetPetID(0);
 	} else {
 		SetPetID(newpet->GetID());
 		Mob* oldowner = entity_list.GetMob(newpet->GetOwnerID());
 		if (oldowner && oldowner->IsClient())
-			oldowner->SetPetID(0, bSkipSave);
+			oldowner->SetPetID(0);
 		newpet->SetOwnerID(this->GetID());
 	}
 }
 
-void Mob::DepopPet(bool depopsummoned, bool bSkipSave = false)
+void Mob::DepopPet(bool depopsummoned)
 {
 	if (HasPet())
 	{
 		Mob* mypet = GetPet();
-		SetPet(nullptr, bSkipSave);
+		SetPet(nullptr);
 		if (mypet)
 		{
 			// IsCharmedPet() is not safe to use here, because we may be at a point where the pet's ownerid has
@@ -693,11 +693,11 @@ void Mob::FadePetCharmBuff()
 	}
 }
 
-void Mob::SetPetID(uint16 NewPetID, bool bSkipSave) {
+void Mob::SetPetID(uint16 NewPetID) {
 	if (NewPetID == GetID() && NewPetID != 0)
 		return;
 	petid = NewPetID;
-	if (IsClient() && !bSkipSave)
+	if (IsClient())
 		CastToClient()->SavePetInfo(NewPetID == 0 ? true : false);
 }
 

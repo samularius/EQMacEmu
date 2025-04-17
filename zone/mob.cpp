@@ -415,7 +415,7 @@ Mob::~Mob()
 			GetPet()->BuffFadeByEffect(SE_Charm);
 		}
 		else {
-			SetPet(0, true);
+			SetPet(0);
 		}
 	}
 
