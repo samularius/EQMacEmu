@@ -643,7 +643,7 @@ void Mob::SetPet(Mob* newpet, bool bSkipSave) {
 	}
 }
 
-void Mob::DepopPet(bool depopsummoned, bool bSkipSave = false)
+void Mob::DepopPet(bool depopsummoned, bool bSkipSave)
 {
 	if (HasPet())
 	{
