@@ -1868,11 +1868,6 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 	bool xp = false;
 	bool faction = false;
 
-	if (MerchantType == 1)
-	{
-		ismerchant = false;
-	}
-
 	if(killerMob) 
 	{
 		Log(Logs::General, Logs::Death, "Fatal blow dealt by %s with %d damage, spell %d, skill %d", killerMob->GetName(), damage, spell, attack_skill);
@@ -2088,7 +2083,7 @@ bool NPC::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::SkillTyp
 			LogDeathDetail("Give exp client checks failed. No XP for you.");
 		}
 
-		if (IsNPC() && (ismerchant || MerchantType == 1) && RuleB(Merchant, ClearTempList)) {
+		if (IsNPC() && ismerchant && RuleB(Merchant, ClearTempList)) {
 			database.DeleteMerchantTempList(GetNPCTypeID());
 			zone->tmpmerchanttable[GetNPCTypeID()].clear();
 			zone->tmpmerchanttable_ssf_purchase_limits[GetNPCTypeID()].clear();
