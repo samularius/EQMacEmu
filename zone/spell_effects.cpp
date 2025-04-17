@@ -1528,9 +1528,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 				Log(Logs::General, Logs::Spells, "Reclaimed %d mana from pet %s. ReclaimMod: %d", pet_ActSpellCostMod, GetName(), ImprovedReclaimMod);
 				caster->SetMana(caster->GetMana() + pet_ActSpellCostMod);
 
-				if(caster->IsClient())
+				if (caster->IsClient())
+				{
 					caster->CastToClient()->SetPet(0);
-
+					caster->CastToClient()->SavePetInfo(true);
+				}
 				SetOwnerID(0);	// this will kill the pet
 
 				}
