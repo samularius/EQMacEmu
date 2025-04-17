@@ -701,11 +701,11 @@ public:
 	EQ::LightSourceProfile* GetLightProfile() { return &m_Light; }
 
 	Mob* GetPet();
-	void SetPet(Mob* newpet);
+	void SetPet(Mob* newpet, bool bSkipSave = false);
 	virtual Mob* GetOwner();
 	virtual Mob* GetOwnerOrSelf();
 	Mob* GetUltimateOwner();
-	void SetPetID(uint16 NewPetID);
+	void SetPetID(uint16 NewPetID, bool bSkipSave = false);
 	inline uint16 GetPetID() const { return petid; }
 	inline uint16 GetSummonerID() const { return summonerid; }
 	void SetSummonerID(uint16 entity) { summonerid = entity; }
@@ -731,7 +731,7 @@ public:
 	inline int16 GetTempPetCount() const { return count_TempPet; }
 	inline void SetTempPetCount(int16 i) { count_TempPet = i; }
 	bool HasPetAffinity() { if (aabonuses.GivePetGroupTarget || itembonuses.GivePetGroupTarget || spellbonuses.GivePetGroupTarget) return true; return false; }
-	void DepopPet(bool depopsummoned = false);
+	void DepopPet(bool depopsummoned = false, bool bSkipSave = false);
 	void FadePetCharmBuff();
 	virtual bool IsCharmedPet() { return IsPet() && IsCharmed(); }
 	void SetCorpseID(uint16 in_corpseid) { corpseid = in_corpseid; };

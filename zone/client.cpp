@@ -431,7 +431,7 @@ Client::~Client() {
 	safe_delete(GlobalChatLimiterTimer);
 	safe_delete(qGlobals);
 
-	DepopPet();
+	DepopPet(false, true);
 	numclients--;
 	UpdateWindowTitle(nullptr);
 	if (zone) {

@@ -642,7 +642,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 
 				EndShield();
 
-				caster->SetPet(this);
+				caster->SetPet(this, true);
 				SetOwnerID(caster->GetID());
 				SetPetOrder(SPO_Follow);
 
@@ -3441,7 +3441,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses, bool message, bool updat
 				if(owner)
 				{
 					if (!GetSummonerID())
-						owner->SetPet(0);
+						owner->SetPet(0, true);
 				}
 				if (IsAIControlled())
 				{
