@@ -697,6 +697,8 @@ void Mob::SetPetID(uint16 NewPetID) {
 	if (NewPetID == GetID() && NewPetID != 0)
 		return;
 	petid = NewPetID;
+	if (IsClient())
+		CastToClient()->SavePetInfo(NewPetID == 0 ? true : false);
 }
 
 void NPC::GetPetState(SpellBuff_Struct *pet_buffs, uint32 *items, char *name) {
