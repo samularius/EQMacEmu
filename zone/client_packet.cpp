@@ -7877,7 +7877,9 @@ void Client::Handle_OP_RezzAnswer(const EQApplicationPacket *app)
 			if (mypet->IsCharmedPet())
 				FadePetCharmBuff();
 			else
+			{
 				DepopPet();
+			}
 		}
 
 		entity_list.ClearAggro(this);

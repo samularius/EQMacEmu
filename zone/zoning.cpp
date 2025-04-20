@@ -453,9 +453,6 @@ void Client::DoZoneSuccess(ZoneChange_Struct *zc, uint16 zone_id, uint32 zone_gu
 	//Force a save so its waiting for them when they zone
 	Save(2);
 
-	// depop pet
-	//DepopPet();
-
 	m_lock_save_position = true;
 
 	// vesuvias - zoneing to another zone so we need to the let the world server
@@ -501,6 +498,9 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 	Mob* mypet = GetPet();
 	if (mypet && mypet->IsCharmedPet())
 		FadePetCharmBuff();
+	else
+		DepopPet();
+
 
 	/* Dont clear aggro until the zone is successful */
 	entity_list.RemoveFromHateLists(this);
@@ -522,9 +522,6 @@ void Client::DoZoneMove(uint16 zone_id, uint32 zone_guild_id, float dest_x, floa
 
 	//Force a save so its waiting for them when they zone
 	Save(2);
-
-	// depop pet
-	//DepopPet();
 
 	m_lock_save_position = true;
 }

@@ -489,8 +489,10 @@ void Mob::SetInvisible(uint8 state, bool showInvis, bool skipSelf)
 	// Invis and hide breaks charms
 	if (HasPet() && state != INVIS_OFF)
 	{
-		FadePetCharmBuff();
-		DepopPet();
+		if (GetPet()->IsCharmedPet())
+			FadePetCharmBuff();
+		else
+			DepopPet();
 	}
 }
 

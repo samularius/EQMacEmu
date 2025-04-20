@@ -431,7 +431,6 @@ Client::~Client() {
 	safe_delete(GlobalChatLimiterTimer);
 	safe_delete(qGlobals);
 
-	DepopPet();
 	numclients--;
 	UpdateWindowTitle(nullptr);
 	if (zone) {
@@ -919,7 +918,7 @@ bool Client::Save(uint8 iCommitNow) {
 
 void Client::SavePetInfo(bool bClear)
 {
-	if (GetPet() && GetPet()->IsNPC() && !bClear) {
+	if (GetPet() && GetPet()->IsNPC() && !GetPet()->IsCharmedPet() && GetPet()->GetOwnerID() != 0 && !bClear) {
 		NPC* pet = GetPet()->CastToNPC();
 		if (pet)
 		{
@@ -2888,13 +2887,13 @@ void Client::MemorizeSpell(uint32 slot,uint32 spellid,uint32 scribing){
 void Client::SetFeigned(bool in_feigned) {
 	if (in_feigned)
 	{
-		if(RuleB(Character, FeignKillsPet))
-		{
-			SetPet(0);
-		}
 		// feign breaks charmed pets
 		if (GetPet() && GetPet()->IsCharmedPet()) {
 			FadePetCharmBuff();
+		}
+		else if (RuleB(Character, FeignKillsPet))
+		{
+			DepopPet();
 		}
 		SetHorseId(0);
 		feigned_time = Timer::GetCurrentTime();
