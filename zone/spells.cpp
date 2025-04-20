@@ -4204,23 +4204,23 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	{	// these floors are doubled here because of the 0-200 roll
 		if (IsNPC())
 		{
-			if (leveldiff > -11 && target_level > 14 && resist_chance < 10) {	// ten levels under the caster or higher unless it's a newbie mob
-				resist_chance = 10;
+			if (leveldiff > -11 && target_level > 14 && resist_chance < RuleI(Quarm, SpellResistHighMinimumResistChance)) {	// ten levels under the caster or higher unless it's a newbie mob
+				resist_chance = RuleI(Quarm, SpellResistHighMinimumResistChance);
 			}
 			else if (leveldiff < -20 || target_level < 15) {		// deep greens and newbie mobs
-				if (resist_chance < 4)
-					resist_chance = 4;
+				if (resist_chance < RuleI(Quarm, SpellResistLowMinimumResistChance))
+					resist_chance = RuleI(Quarm, SpellResistLowMinimumResistChance);
 			}
-			else if (resist_chance < 10) {
-				resist_chance = 10;		// everything in between
+			else if (resist_chance < RuleI(Quarm, SpellResistBetweenMinimumResistChance)) {
+				resist_chance = RuleI(Quarm, SpellResistBetweenMinimumResistChance);		// everything in between
 			}
 		}
 		else {
-			if (resist_chance < 4 && resist_modifier == 0) {
-				resist_chance = 4;	// in classic there was a 2% minimum chance to resist non-lure spells and a 1% minimum chance for spells to land on players
+			if (resist_chance < RuleI(Quarm, SpellResistPlayerLowMinimumResistChance) && resist_modifier == 0) {
+				resist_chance = RuleI(Quarm, SpellResistPlayerLowMinimumResistChance);	// in classic there was a 2% minimum chance to resist non-lure spells and a 1% minimum chance for spells to land on players
 			}
-			else if (resist_chance > 198) {
-				resist_chance = 198;
+			else if (resist_chance > RuleI(Quarm, SpellResistPlayerHighMinimumResistChance)) {
+				resist_chance = RuleI(Quarm, SpellResistPlayerHighMinimumResistChance);
 			}
 		}
 	}

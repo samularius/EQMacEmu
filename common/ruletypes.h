@@ -342,6 +342,11 @@ RULE_INT(Quarm, CurrentPVPExpansion, 1, "The currently enabled expansion for PVP
 RULE_INT(Quarm, SharedBankBags, 10, "The number of shared bank slots the client can deposit to. '0' will only allow withdrawing. '-1' competely disables the client.")
 RULE_BOOL(Quarm, CustomFrogloks, true, "Enable Quarm froglok race 330.")
 RULE_BOOL(Quarm, PetZoneWithOwner, true, "Enables pet zoning with its owner.")
+RULE_INT(Quarm, SpellResistHighMinimumResistChance, 10, "Resist floor")
+RULE_INT(Quarm, SpellResistLowMinimumResistChance, 4, "Resist floor")
+RULE_INT(Quarm, SpellResistBetweenMinimumResistChance, 10, "Resist floor")
+RULE_INT(Quarm, SpellResistPlayerHighMinimumResistChance, 198, "Player Resist floor")
+RULE_INT(Quarm, SpellResistPlayerLowMinimumResistChance, 4, "Player Resist floor")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)
