@@ -975,7 +975,7 @@ void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level) {
 
 void Group::SplitExp(uint32 exp, Mob* killed_mob) 
 {
-	if (killed_mob->CastToNPC()->MerchantType != 0 || killed_mob->GetClass() == Class::Banker) // Ensure NPC isn't a merchant
+	if (killed_mob->CastToNPC()->MerchantType > 1 || killed_mob->GetClass() == Class::Banker) // Ensure NPC isn't a merchant
 		return;
 
 	if(killed_mob->GetOwner() && killed_mob->GetOwner()->IsClient() && !killed_mob->IsZomm()) // Ensure owner isn't pc
@@ -1268,7 +1268,7 @@ void Group::GiveGroupSplitExp(Mob* killed_mob, uint8 maxlevel, int16 weighted_le
 
 void Raid::SplitExp(uint32 exp, Mob* killed_mob) 
 {
-	if (killed_mob->CastToNPC()->MerchantType != 0 || killed_mob->GetClass() == Class::Banker) // Ensure NPC isn't a merchant
+	if (killed_mob->CastToNPC()->MerchantType > 1 || killed_mob->GetClass() == Class::Banker) // Ensure NPC isn't a merchant
 		return;
 
 	if (killed_mob->GetOwner() && killed_mob->GetOwner()->IsClient() && !killed_mob->IsZomm()) // Ensure owner isn't pc

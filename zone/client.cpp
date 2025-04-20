@@ -4463,6 +4463,7 @@ void Client::SuspendMinion()
 			Message_StringID(clientMessageTell, SUSPEND_MINION_UNSUSPEND, CurrentPet->GetCleanName());
 
 			memset(&m_suspendedminion, 0, sizeof(struct PetInfo));
+			SavePetInfo();
 		}
 		else
 			return;
@@ -4512,6 +4513,7 @@ void Client::SuspendMinion()
 				CurrentPet->Depop(false);
 
 				SetPetID(0);
+				SavePetInfo(true);
 			}
 		}
 		else
@@ -5068,7 +5070,7 @@ FACTION_VALUE Client::GetFactionLevel(uint32 char_id, uint32 p_race, uint32 p_cl
 	}
 
 	// merchant fix
-	if (tnpc && tnpc->IsNPC() && tnpc->CastToNPC()->MerchantType && (fac == FACTION_THREATENINGLY || fac == FACTION_SCOWLS))
+	if (tnpc && tnpc->IsNPC() && tnpc->CastToNPC()->MerchantType > 1 && (fac == FACTION_THREATENINGLY || fac == FACTION_SCOWLS))
 		fac = FACTION_DUBIOUSLY;
 
 	// We're engaged with the NPC and their base is dubious or higher, return threatenly
@@ -5116,7 +5118,7 @@ int16 Client::GetFactionValue(Mob* tnpc)
 	}
 
 	// merchant fix
-	if (tnpc && tnpc->IsNPC() && tnpc->CastToNPC()->MerchantType && tmpFactionValue <= -501) {
+	if (tnpc && tnpc->IsNPC() && tnpc->CastToNPC()->MerchantType > 1 && tmpFactionValue <= -501) {
 		return -500;
 	}
 
