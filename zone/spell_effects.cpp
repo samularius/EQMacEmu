@@ -611,7 +611,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					}
 				}
 
-				if (!IsCharmedPet())
+				if (IsPet() && !IsCharmedPet())
 					break;
 
 				if(IsDireCharmSpell(spell_id))
@@ -3394,7 +3394,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses, bool message, bool updat
 			case SE_Charm:
 			{
 
-				if (!IsCharmedPet())
+				if (IsPet() && !IsCharmedPet())
 					break;
 
 				dire_charmed = false;
