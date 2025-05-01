@@ -3390,6 +3390,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses, bool message, bool updat
 
 			case SE_Charm:
 			{
+
+				if (!IsCharmedPet())
+					break;
+
 				dire_charmed = false;
 
 				if(IsNPC())
