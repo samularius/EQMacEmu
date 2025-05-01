@@ -611,6 +611,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 					}
 				}
 
+				if (!IsCharmedPet())
+					break;
+
 				if(IsDireCharmSpell(spell_id))
 				{
 					dire_charmed = true;
