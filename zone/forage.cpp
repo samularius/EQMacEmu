@@ -228,7 +228,7 @@ bool Client::CanFish() {
 		float bestz = zone->zonemap->FindBestZ(rod_position, nullptr);
 		float len = m_Position.z - bestz;
 		if (len > line_length || len < 0.0f) {
-			Message_StringID(Chat::Skills, StringID::FISHING_LAND);
+			Message_StringID(Chat::Skills, FISHING_LAND);
 			return false;
 		}
 
