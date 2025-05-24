@@ -240,7 +240,7 @@ bool Client::CanFish() {
 		if (!CheckLosFN(dest.x, dest.y, dest.z, 0.0f)) {
 			LogMaps("Failing to fish because of CheckLosFN");
 			// fishing into a wall to reach water on other side?
-			Message_StringID(Chat::Skills, StringID::FISHING_LAND);	//Trying to catch land sharks perhaps?
+			Message_StringID(Chat::Skills, FISHING_LAND);	//Trying to catch land sharks perhaps?
 			return false;
 		}
 
@@ -264,7 +264,7 @@ bool Client::CanFish() {
 			}
 
 			if (in_lava) {
-				Message_StringID(Chat::Skills, StringID::FISHING_LAVA);	//Trying to catch a fire elemental or something?
+				Message_StringID(Chat::Skills, FISHING_LAVA);	//Trying to catch a fire elemental or something?
 				return false;
 			}
 
@@ -274,7 +274,7 @@ bool Client::CanFish() {
 			}
 		}
 
-		Message_StringID(Chat::Skills, StringID::FISHING_LAND);
+		Message_StringID(Chat::Skills, FISHING_LAND);
 		return false;
 	}
 	return true;
