@@ -627,6 +627,7 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 
 	SetHardcoreDeathTimeStamp(0);
 	//Their state is likely all sorts of messed up. Commit immediately (Save) and then...
+	SavePetInfo(true);
 	Save(1);
 	if (goto_death)
 	{
