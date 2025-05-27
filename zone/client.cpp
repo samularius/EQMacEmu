@@ -918,7 +918,7 @@ bool Client::Save(uint8 iCommitNow) {
 
 void Client::SavePetInfo(bool bClear)
 {
-	if (GetPet() && GetPet()->IsNPC() && !GetPet()->IsCharmedPet() && GetPet()->GetOwnerID() != 0 && !GetPet()->CastToNPC()->GetDepop() && !bClear) {
+	if (GetPet() && GetPet()->IsNPC() && !GetPet()->IsCharmedPet() && GetPet()->GetOwnerID() != 0 && !bClear) {
 		NPC* pet = GetPet()->CastToNPC();
 		if (pet)
 		{
