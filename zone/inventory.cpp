@@ -684,6 +684,8 @@ void Client::ResetPlayerForNewGamePlus(uint8 in_level, uint8 in_level2, bool res
 		m_epp.e_times_rebirthed++;
 	}
 
+	SavePetInfo(true);
+
 	// Commit immediately (Save) and then send home
 	Save(1);
 	ForceGoToDeath();

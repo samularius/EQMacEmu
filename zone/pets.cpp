@@ -656,6 +656,8 @@ void Mob::DepopPet(bool depopsummoned)
 			if (mypet->IsNPC() && mypet->GetPetType() != petCharmed)
 			{
 				mypet->CastToNPC()->Depop();
+				if(IsClient())
+					CastToClient()->SavePetInfo(true);
 			}
 		}
 	}
