@@ -388,6 +388,8 @@ Client::~Client() {
 	if (horse)
 		horse->Depop();
 
+	DepopPetOnZone();
+
 	if(Trader)
 		database.DeleteTraderItem(this->CharacterID());
 

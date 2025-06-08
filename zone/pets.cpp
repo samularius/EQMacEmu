@@ -643,6 +643,27 @@ void Mob::SetPet(Mob* newpet) {
 	}
 }
 
+void Mob::DepopPetOnZone(bool bOnZone)
+{
+	if (GetPet())
+	{
+		Mob* mypet = GetPet();
+		SetPet(nullptr);
+		if (mypet)
+		{
+			// IsCharmedPet() is not safe to use here, because we may be at a point where the pet's ownerid has
+			// already been set to 0 and thus will fail the IsPet() check.
+			if (mypet->IsNPC() && mypet->GetPetType() != petCharmed)
+			{
+				//Similar to the below function, but let's not save pet info - we don't want to clear pet info on zoning.
+				mypet->CastToNPC()->Depop();
+			}
+		}
+	}
+	if(!bOnZone)
+		FadeVoiceGraft();
+}
+
 void Mob::DepopPet(bool depopsummoned)
 {
 	if (GetPet())

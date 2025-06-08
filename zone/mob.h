@@ -702,6 +702,7 @@ public:
 
 	Mob* GetPet();
 	void SetPet(Mob* newpet);
+	void DepopPetOnZone(bool bOnZone = false);
 	virtual Mob* GetOwner();
 	virtual Mob* GetOwnerOrSelf();
 	Mob* GetUltimateOwner();
