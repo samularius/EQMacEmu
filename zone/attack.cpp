@@ -175,7 +175,7 @@ bool Mob::AvoidanceCheck(Mob* attacker, EQ::skills::SkillType skillinuse)
 	if (IsClient() && CastToClient()->IsSitting())
 	{
 		if (IsClient() && attacker->IsNPC())
-			CastToClient()->CheckIncreaseSkill(EQ::skills::SkillDefense, attacker, zone->skill_difficulty[EQ::skills::SkillDefense].difficulty);
+			CastToClient()->CheckIncreaseSkill(EQ::skills::SkillDefense, attacker, zone->skill_difficulty[EQ::skills::SkillDefense].difficulty[GetClass()]);
 		return true;
 	}
 
@@ -218,7 +218,7 @@ bool Mob::AvoidanceCheck(Mob* attacker, EQ::skills::SkillType skillinuse)
 	}
 
 	if (IsClient() && attacker->IsNPC())
-		CastToClient()->CheckIncreaseSkill(EQ::skills::SkillDefense, attacker, zone->skill_difficulty[EQ::skills::SkillDefense].difficulty);
+		CastToClient()->CheckIncreaseSkill(EQ::skills::SkillDefense, attacker, zone->skill_difficulty[EQ::skills::SkillDefense].difficulty[GetClass()]);
 
 	if (zone->random.Real(0.0, 1.0) < hitChance)
 	{
@@ -982,8 +982,8 @@ bool Client::Attack(Mob* other, int hand, int damagePct)
 			}
 		}
 
-		CheckIncreaseSkill(skillinuse, other, zone->skill_difficulty[skillinuse].difficulty);
-		CheckIncreaseSkill(EQ::skills::SkillOffense, other, zone->skill_difficulty[EQ::skills::SkillOffense].difficulty);
+		CheckIncreaseSkill(skillinuse, other, zone->skill_difficulty[skillinuse].difficulty[GetClass()]);
+		CheckIncreaseSkill(EQ::skills::SkillOffense, other, zone->skill_difficulty[EQ::skills::SkillOffense].difficulty[GetClass()]);
 
 		if (damage > 0)
 		{
@@ -1892,15 +1892,15 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQ::skills::SkillTy
 		ismerchant = false;
 	}
 
-	if(killerMob) 
+	if(killer_mob) 
 	{
 		Log(Logs::General, Logs::Death, "Fatal blow dealt by %s with %d damage, spell %d, skill %d", killerMob->GetName(), damage, spell, attack_skill);
 
-		oos = killerMob->GetOwnerOrSelf();
+		owner_or_self = killer_mob->GetOwnerOrSelf();
 
 		std::string export_string = fmt::format(
 			"{} {} {} {}",
-			killerMob ? killerMob->GetID() : 0,
+			killer_mob ? killer_mob->GetID() : 0,
 			damage,
 			spell,
 			attack_skill
@@ -1988,7 +1988,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQ::skills::SkillTy
 	}
 
 	// Do faction hits to any player on the hatelist, so long as a player damaged us.
-	if (GetNPCFactionID() > 0 && player_damaged && oos && !oos->IsNPC())
+	if (GetNPCFactionID() > 0 && player_damaged && owner_or_self && !owner_or_self->IsNPC())
 	{
 		hate_list.DoFactionHits(GetNPCFactionID(), faction);
 	}
@@ -2025,12 +2025,14 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQ::skills::SkillTy
 
 	if(killer)
 		LogDeathDetail("{} Before credit. solo_fte_credit = {}, ds damage: {}, is_majority_ds_damage {}, solo damage {}, is_majority_killer_dmg {}", killer->GetName(), solo_fte_charid, ds_damage, is_majority_ds_damage == true ? 1 : 0, ssf_player_damage, is_majority_killer_dmg == true ? 1 : 0);
+	Client* give_exp_client = nullptr;
+
 
 	if (killer && killer->IsClient())
 	{
 		Log(Logs::Detail, Logs::Death, "In credit.");
 		//give_exp_client is the player who gets XP credit.
-		Client *give_exp_client = killer->CastToClient();
+		give_exp_client = killer->CastToClient();
 		// Make sure the dead NPC should give XP and the player is able to receive it (not a mule)
 		if (IsNPC() && !killer->CastToClient()->IsMule() && !IsPlayerOwned() && (!GetSwarmInfo() || IsZomm()) && !ismerchant && player_damaged)
 		{
@@ -2441,19 +2443,19 @@ void NPC::GiveExp(Client* give_exp_client, bool &xp)
 		xp = true;
 
 	bool always_log = GetLevel() >= RuleI(QueryServ, LevelAlwaysLogKills);
-	if (killer_raid) {
-		if (killer_raid->GetID() == raid_fte) {
+	if (kr) {
+		if (kr->GetID() == raid_fte) {
 			fte_charid = 0;
 		}
 
-		killer_raid->SplitExp(finalxp, this);
+		kr->SplitExp(finalxp, this);
 
 		/* Send the EVENT_KILLED_MERIT event for all raid members */
 		std::list<uint32>charids;
 		for (int i = 0; i < MAX_RAID_MEMBERS; i++) {
-			if (killer_raid->members[i].member != nullptr && killer_raid->members[i].member->IsClient() && IsOnHatelist(killer_raid->members[i].member))
+			if (kr->members[i].member != nullptr && kr->members[i].member->IsClient() && IsOnHatelist(kr->members[i].member))
 			{ // If Group Member is Client
-				Client *c = killer_raid->members[i].member;
+				Client *c = kr->members[i].member;
 
 				charids.push_back(c->CharacterID());
 
@@ -2475,10 +2477,10 @@ void NPC::GiveExp(Client* give_exp_client, bool &xp)
 		}
 		charids.clear();
 	}
-	else if (give_exp_client->IsGrouped() && killer_group != nullptr) {
-		killer_group->SplitExp(finalxp, this);
+	else if (give_exp_client->IsGrouped() && kg != nullptr) {
+		kg->SplitExp(finalxp, this);
 
-		if (killer_group->GetID() == group_fte) {
+		if (kg->GetID() == group_fte) {
 			fte_charid = 0;
 		}
 
@@ -2486,8 +2488,8 @@ void NPC::GiveExp(Client* give_exp_client, bool &xp)
 		* for all group members */
 		std::list<uint32>charids;
 		for (int i = 0; i < MAX_GROUP_MEMBERS; i++) {
-			if (killer_group->members[i] != nullptr && killer_group->members[i]->IsClient() && IsOnHatelist(killer_group->members[i])) { // If Group Member is Client
-				Client *c = killer_group->members[i]->CastToClient();
+			if (kg->members[i] != nullptr && kg->members[i]->IsClient() && IsOnHatelist(kg->members[i])) { // If Group Member is Client
+				Client *c = kg->members[i]->CastToClient();
 
 				charids.push_back(c->CharacterID());
 
@@ -3373,7 +3375,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			{
 				if (attacker && attacker->IsClient() && attacker != this)
 				{
-					attacker->Message_StringID(Chat::SpellWornOff, YOUR_HIT_DOT, GetCleanName(), itoa(damage), spells[spell_id].name);
+					attacker->Message_StringID(Chat::SpellWornOff, StringID::YOUR_HIT_DOT, GetCleanName(), itoa(damage), spells[spell_id].name);
 				}
 			}
 		}

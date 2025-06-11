@@ -1528,7 +1528,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 				int inv_where = ~invWhereUnused & ~invWhereCursor; // Allow Lore Item swap if we're swapping the same item
 				if (CheckLoreConflict(src_inst->GetItem(), inv_where))
 				{
-					Message_StringID(Chat::Red, PICK_LORE);
+					Message_StringID(Chat::Red, StringID::PICK_LORE);
 					return false;
 				}
 				if (src_inst->IsClassBag())
@@ -1538,7 +1538,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 						EQ::ItemInstance* contents_i = src_inst->GetItem(i);
 						if (contents_i && contents_i->GetItem() && CheckLoreConflict(contents_i->GetItem(), inv_where))
 						{
-							Message_StringID(Chat::Red, PICK_LORE);
+							Message_StringID(Chat::Red, StringID::PICK_LORE);
 							return false;
 						}
 					}
@@ -1624,7 +1624,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 				int inv_where = ~invWhereUnused & ~invWhereCursor; // Allow Lore Item swap if we're swapping the same item
 				if (CheckLoreConflict(dst_inst->GetItem(), inv_where))
 				{
-					Message_StringID(Chat::Red, PICK_LORE);
+					Message_StringID(Chat::Red, StringID::PICK_LORE);
 					return false;
 				}
 				if (dst_inst->IsClassBag())
@@ -1634,7 +1634,7 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 						EQ::ItemInstance* contents_i = dst_inst->GetItem(i);
 						if (contents_i && contents_i->GetItem() && CheckLoreConflict(contents_i->GetItem(), inv_where))
 						{
-							Message_StringID(Chat::Red, PICK_LORE);
+							Message_StringID(Chat::Red, StringID::PICK_LORE);
 							return false;
 						}
 					}

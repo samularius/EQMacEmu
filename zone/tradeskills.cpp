@@ -836,7 +836,7 @@ bool Client::CanIncreaseTradeskill(EQ::skills::SkillType tradeskill) {
 	uint32 rawskill = GetRawSkill(tradeskill);
 	uint16 maxskill = MaxSkill(tradeskill);
 
-	if (rawskill >= maxskill) { //Max skill sanity check
+	if (rawskill >= maxskill) //Max skill sanity check
 		return false;
 
 	if (rawskill >= RuleI(Quarm, MaxTradeskillCap)) //Max skill sanity check

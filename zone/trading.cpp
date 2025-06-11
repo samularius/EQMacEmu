@@ -705,7 +705,7 @@ void Client::FinishTrade(Mob *tradingWith, bool finalizer, void *event_entry)
 											npc->AddLootDrop(bagitem, loot_drop_entry, true, true);
 											Log(Logs::General, Logs::Trading, "GM: Adding loot item %s (bag) to non-Quest NPC %s", bagitem->Name, npc->GetName());
 										}
-// Destroy duplicate and nodrop items on charmed pets.
+										// Destroy duplicate and nodrop items on charmed pets.
 										else if (bagitem->NoDrop != 0 &&
 											(!npc->IsCharmedPet() || (npc->IsCharmedPet() && npc->CountQuestItem(bagitem->ID) == 0)))
 										{
@@ -717,7 +717,7 @@ void Client::FinishTrade(Mob *tradingWith, bool finalizer, void *event_entry)
 									{
 										SummonItem(baginst->GetID(), baginst->GetCharges(), EQ::legacy::SLOT_QUEST, true, baginst->GetQuarmItemData());
 										if (npc->CanTalk())
-											npc->Say_StringID(NO_NEED_FOR_ITEM, GetName());
+											npc->Say_StringID(StringID::NO_NEED_FOR_ITEM, GetName());
 										Log(Logs::General, Logs::Trading, "Non-Quest NPC %s is returning %s (bag) because it does not require it.", npc->GetName(), bagitem->Name);
 									}
 									else

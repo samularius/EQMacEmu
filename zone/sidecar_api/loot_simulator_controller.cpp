@@ -38,10 +38,10 @@ void SidecarApi::LootSimulatorController(const httplib::Request &req, httplib::R
 		npc->SetRecordLootStats(true);
 
 		for (int i = 0; i < iterations; i++) {
-			npc->AddLootTable(loottable_id);
+			npc->AddLootTable((uint32)loottable_id, false);
 
 			for (auto &id: zone->GetGlobalLootTables(npc)) {
-				npc->AddLootTable(id);
+				npc->AddLootTable((uint32)id, false);
 			}
 		}
 

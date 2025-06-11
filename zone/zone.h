@@ -95,7 +95,7 @@ struct ZoneEXPModInfo {
 };
 
 struct SkillDifficulty {
-	float	difficulty[16];
+	float	difficulty[63];
 	char	name[32];
 };
 

@@ -2069,7 +2069,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 		}
 
 
-		RemoveDuplicateLore(false);
+		RemoveDuplicateLore();
 		
 		bool deletenorent = database.NoRentExpired(GetName());
 		if(deletenorent)
@@ -2946,8 +2946,8 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 
 			if (castspell->spell_id == SPELL_MANA_CONVERT && !zone->AllowManastoneClick())
 			{
-				Message_StringID(Chat::Red, SPELL_DOES_NOT_WORK_HERE);
-				InterruptSpell(SPELL_RECAST, Chat::SpellFailure, castspell->spell_id);
+				Message_StringID(Chat::Red, StringID::SPELL_DOES_NOT_WORK_HERE);
+				InterruptSpell(StringID::SPELL_RECAST, Chat::SpellFailure, castspell->spell_id);
 				return;
 			}
 
@@ -4002,7 +4002,7 @@ void Client::Handle_OP_CorpseDrop(const EQApplicationPacket *app)
 {
 	if (app->size == 1 || app->size == 0)
 	{
-		Message_StringID(Chat::Default, CORPSEDRAG_STOPALL);
+		Message_StringID(Chat::Default, StringID::CORPSEDRAG_STOPALL);
 		ClearDraggedCorpses();
 		return;
 	}
@@ -4030,14 +4030,14 @@ void Client::Handle_OP_CorpseDrop(const EQApplicationPacket *app)
 				if (!strcasecmp(It->first.c_str(), cds->CorpseName))
 				{
 					It = DraggedCorpses.erase(It);
-					Message_StringID(Chat::DefaultText, CORPSEDRAG_STOP, corpse->GetCleanName());
+					Message_StringID(Chat::DefaultText, StringID::CORPSEDRAG_STOP, corpse->GetCleanName());
 					return;
 				}
 			}
 
 		}
 		else
-			Message_StringID(Chat::DefaultText, CORPSEDRAG_SOMEONE_ELSE, corpse->GetCleanName());
+			Message_StringID(Chat::DefaultText, StringID::CORPSEDRAG_SOMEONE_ELSE, corpse->GetCleanName());
 		return;
 	}
 }

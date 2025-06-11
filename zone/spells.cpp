@@ -295,7 +295,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		{
 			if (spell_target_npc->GetSpecialAbility(SpecialAbility::MagicImmunity) && spell_target_npc->GetSpecialAbility(SpecialAbility::AggroImmunity))
 			{
-				InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, true, false);
+				InterruptSpell(StringID::CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, true, false);
 				return false;
 			}
 		}
@@ -687,7 +687,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 		if(spells[spell_id].targettype == ST_Target && IsEffectInSpell(spell_id, SE_SummonItem) &&
 				spell_target && (!spell_target->IsPet() && !spell_target->IsClient()))
 		{
-			InterruptSpell(CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, false, false);
+			InterruptSpell(StringID::CANNOT_AFFECT_NPC, Chat::SpellFailure, spell_id, false, false);
 			return false;
 		}
 
@@ -710,7 +710,7 @@ bool Mob::DoPreCastingChecks(uint16 spell_id, CastingSlot slot, uint16 spell_tar
 				if (is_failed_cast)
 				{
 					Message(Chat::SpellFailure, fail_message);
-					InterruptSpell(CANNOT_AFFECT_PC, Chat::SpellFailure, spell_id, false, false);
+					InterruptSpell(StringID::CANNOT_AFFECT_PC, Chat::SpellFailure, spell_id, false, false);
 					return false;
 				}
 			}
@@ -1111,7 +1111,7 @@ void Mob::InterruptSpell(uint16 message, uint16 color, uint16 spellid, bool fizz
 			// first figure out what message others should get
 			switch (message)
 			{
-			case SONG_ENDS:
+			case StringID::SONG_ENDS:
 				message_other = 0;
 				color = Chat::Spells;
 				break;
@@ -2900,7 +2900,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 
 	if (zone->GetGuildID() == 1 && IsEffectInSpell(spell_id, SE_SummonPC))
 	{
-		Message_StringID(Chat::SpellFailure, SPELL_NO_HOLD);
+		Message_StringID(Chat::SpellFailure, StringID::SPELL_NO_HOLD);
 		safe_delete(action_packet);
 		return false;
 	}
@@ -3831,7 +3831,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 		if (GetClass() == Class::Merchant || GetClass() == Class::Banker || GetClass() >= Class::WarriorGM && GetClass() <= Class::BeastlordGM)
 		{
 			Log(Logs::Detail, Logs::Spells, "We are immune to Charm spells. (Banker, Merchant, Guildmaster)");
-			caster->Message_StringID(Chat::SpellFailure, CANNOT_CHARM);
+			caster->Message_StringID(Chat::SpellFailure, StringID::CANNOT_CHARM);
 			ResistSpell(caster, spell_id, isProc);
 			return true;
 		}

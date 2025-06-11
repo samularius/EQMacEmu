@@ -1180,14 +1180,13 @@ void Client::SendChannelMessageByNumber(std::string Message) {
 			}
 			int AllowedMessages = RuleI(Chat, MinimumMessagesPerInterval) + GetKarma();
 			AllowedMessages = AllowedMessages > RuleI(Chat, MaximumMessagesPerInterval) ? RuleI(Chat, MaximumMessagesPerInterval) : AllowedMessages;
-			if (RuleI(Chat, MinStatusToBypassAntiSpam) <= Status)
+			if (RuleI(Chat, MinStatusToBypassAntiSpam) <= Status) {
 				AllowedMessages = 10000;
+			}
 
 			AttemptedMessages++;
-			if (AttemptedMessages > AllowedMessages)
-			{
-				if (AttemptedMessages > RuleI(Chat, MaxMessagesBeforeKick))
-				{
+			if (AttemptedMessages > AllowedMessages) {
+				if (AttemptedMessages > RuleI(Chat, MaxMessagesBeforeKick)) {
 					ForceDisconnect = true;
 					if (!IsRevoked())
 					{
@@ -1197,22 +1196,19 @@ void Client::SendChannelMessageByNumber(std::string Message) {
 						auto results2 = database.QueryDatabase(query2);
 						SetRevoked(1);
 					}
-
 				}
-				if (GlobalChatLimiterTimer)
-				{
+
+				if (GlobalChatLimiterTimer) {
 					char TimeLeft[256];
 					sprintf(TimeLeft, "You are currently rate limited, you cannot send more messages for %i seconds.",
 						(GlobalChatLimiterTimer->GetRemainingTime() / 1000));
 					GeneralChannelMessage(TimeLeft);
 				}
-				else
-				{
+				else {
 					GeneralChannelMessage("You are currently rate limited, you cannot send more messages for up to 60 seconds.");
 				}
 			}
-			else
-			{
+			else {
 				RequiredChannel->SendMessageToChannel(Message.substr(MessageStart + 1), this);
 			}
 		}
@@ -1223,10 +1219,11 @@ void Client::SendChannelMessageByNumber(std::string Message) {
 		if (!RequiredChannel->IsModerated() || RequiredChannel->HasVoice(GetFQName()) || RequiredChannel->IsOwner(GetFQName()) ||
 			RequiredChannel->IsModerator(GetFQName())) {
 			RequiredChannel->SendMessageToChannel(Message.substr(MessageStart + 1), this);
-		else
+		}
+		else {
 			GeneralChannelMessage("Channel " + RequiredChannel->GetName() + " is moderated and you have not been granted a voice.");
 	}
-
+	}
 }
 
 void Client::SendChannelMessage(std::string ChannelName, std::string Message, Client* Sender) {

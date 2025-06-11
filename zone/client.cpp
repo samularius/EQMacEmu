@@ -2232,14 +2232,14 @@ void Client::SetTemporaryLastName(char* in_lastname) {
 	}
 
 	if (strlen(in_lastname) >= 20) {
-		Message_StringID(Chat::Yellow, SURNAME_TOO_LONG);
+		Message_StringID(Chat::Yellow, StringID::SURNAME_TOO_LONG);
 		return;
 	}
 
 
 	if (in_lastname[0] != 0 && !database.CheckNameFilter(in_lastname, true))
 	{
-		Message_StringID(Chat::Red, SURNAME_REJECTED);
+		Message_StringID(Chat::Red, StringID::SURNAME_REJECTED);
 		return;
 	}
 
@@ -2252,10 +2252,7 @@ void Client::SetTemporaryLastName(char* in_lastname) {
 	strcpy(gmn->name, name);
 	strcpy(gmn->gmname, name);
 	strcpy(gmn->lastname, in_lastname);
-	gmn->unknown[0] = 1;
-	gmn->unknown[1] = 1;
-	gmn->unknown[2] = 1;
-	gmn->unknown[3] = 1;
+	gmn->response = 1;
 	entity_list.QueueClients(this, outapp, false);
 	// Send name update packet here... once know what it is
 	safe_delete(outapp);
@@ -2269,7 +2266,7 @@ void Client::SetTemporaryCustomizedLastName(char* in_lastname) {
 
 	// This code path is through the Title NPC. Data is already valid.
 	if (strlen(in_lastname) >= sizeof(lastname)) {
-		Message_StringID(Chat::Yellow, SURNAME_TOO_LONG);
+		Message_StringID(Chat::Yellow, StringID::SURNAME_TOO_LONG);
 		return;
 	}
 

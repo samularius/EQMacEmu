@@ -30,7 +30,7 @@ void command_lootsim(Client *c, const Seperator *sep)
 				npc->AddLootTable(loottable_id);
 
 				for (auto &id: zone->GetGlobalLootTables(npc)) {
-					npc->AddLootTable(id);
+					npc->AddLootTable((uint32)id, false);
 				}
 			}
 
