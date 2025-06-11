@@ -233,6 +233,7 @@ public:
 	uint8	GetRaceSkill(uint8 skillid, uint8 in_race);
 	void	ClearMerchantTemp();
 	void	ClearSayLink();
+	bool	SetHackerFlag(const char* accountname, const char* charactername, const char* hacked);
 	void	SetFirstLogon(uint32 CharID, uint8 firstlogon);
 	void	AddReport(std::string who, std::string against, std::string lines);
 	struct TimeOfDay_Struct		LoadTime(time_t &realtime);

@@ -2626,3 +2626,16 @@ const char* Database::GetClientZoneName(const char* zone_name) {
 
 	return zone_name;
 }
+
+bool Database::SetHackerFlag(const char* accountname, const char* charactername, const char* hacked) {
+	std::string new_hacked = std::string(hacked);
+	Strings::FindReplace(new_hacked, "'", "_");
+	std::string query = StringFormat("INSERT INTO `hackers` (account, name, hacked) values('%s','%s','%s')", accountname, charactername, new_hacked.c_str());
+	auto results = QueryDatabase(query);
+
+	if (!results.Success()) {
+		return false;
+	}
+
+	return results.RowsAffected() != 0;
+}
