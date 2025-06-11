@@ -5437,22 +5437,3 @@ bool Client::RestictedManastoneClick(int16 zone_id)
 		zone_id == Zones::FEARPLANE
 	};
 }
-
-void Mob::SetHP(int32 hp)
-{
-	if (hp >= max_hp) {
-		cur_hp = max_hp;
-		return;
-	}
-
-	if (m_combat_record.InCombat()) {
-		m_combat_record.ProcessHPEvent(hp, cur_hp);
-	}
-
-	cur_hp = hp;
-}
-
-const CombatRecord &Mob::GetCombatRecord() const
-{
-	return m_combat_record;
-}

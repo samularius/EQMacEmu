@@ -5661,10 +5661,21 @@ void Mob::SetRandomFeatures()
 
 void Mob::SetHP(int32 hp)
 {
-	if (hp >= max_hp)
-		cur_hp = max_hp; 
-	else 
-		cur_hp = hp;
+	if (hp >= max_hp) {
+		cur_hp = max_hp;
+		return;
+	}
+
+	if (m_combat_record.InCombat()) {
+		m_combat_record.ProcessHPEvent(hp, cur_hp);
+	}
+
+	cur_hp = hp;
+}
+
+const CombatRecord& Mob::GetCombatRecord() const
+{
+	return m_combat_record;
 }
 
 void Mob::AddAllClientsToEngagementRecords()
