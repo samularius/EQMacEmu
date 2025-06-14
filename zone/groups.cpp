@@ -68,15 +68,21 @@ Group::Group(uint32 gid)
 }
 
 //creating a new group
-Group::Group(Mob* leader)
+Group::Group(Mob* newLeader)
 : GroupIDConsumer()
 {
+	memset(members, 0, sizeof(Mob*) * MAX_GROUP_MEMBERS);
+	leader = nullptr;
+	memset(leadername, 0, 64);
+	memset(oldleadername, 0, 64);
 	memset(members, 0, sizeof(members));
-	members[0] = leader;
-	leader->SetGrouped(true);
-	SetLeader(leader);
-	SetOldLeaderName(leader->GetName());
-	Log(Logs::Detail, Logs::Group, "Group:Group() Setting OldLeader to: %s and Leader to: %s", GetOldLeaderName(), leader->GetName());
+	if (newLeader)
+	{
+		members[0] = newLeader;
+		newLeader->SetGrouped(true);
+		SetLeader(newLeader);
+		SetOldLeaderName(newLeader->GetName());
+	}
 	disbandcheck = false;
 	memset(&groupData, 0, sizeof(groupData));
 	groupData.max_level = 1;
@@ -87,10 +93,13 @@ Group::Group(Mob* leader)
 	{
 		memset(membername[i],0,64);
 	}
-	strcpy(membername[0],leader->GetName());
+	if (newLeader)
+	{
+		strcpy(membername[0], newLeader->GetName());
 
-	if(leader->IsClient())
-		strcpy(leader->CastToClient()->GetPP().groupMembers[0],leader->GetName());
+		if (newLeader->IsClient())
+			strcpy(newLeader->CastToClient()->GetPP().groupMembers[0], newLeader->GetName());
+	}
 
 }
 

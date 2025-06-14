@@ -7500,8 +7500,8 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 			else
 			{
 				// need to create a raid
-				Group *lg = leader->GetGroup();
-				Group *g = GetGroup();
+				Group* lg = leader->GetGroup();
+				Group* g = GetGroup();
 
 				if (g)
 				{
@@ -7512,6 +7512,12 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 				if (g && g->GroupCount() < 2)
 				{
 					i->Message(Chat::Red, "Invite failed, group does not have enough members to be invited.");
+					return;
+				}
+
+				if (g == lg)
+				{
+					i->Message(Chat::Red, "Invite failed, you cannot invite yourself to your own raid group.");
 					return;
 				}
 
@@ -7556,7 +7562,8 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 						}
 					}
 
-					lg->DisbandGroup(true);
+					if(lg != g)
+						lg->DisbandGroup(true);
 					r->GroupUpdate(groupFree);
 
 				} 
