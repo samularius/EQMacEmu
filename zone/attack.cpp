@@ -2577,7 +2577,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 				if (lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 				{
 					other->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName() );
-					other->CastToClient()->BootFromGuildInstance();
+					other->CastToClient()->BootFromGuildInstance(true);
 				}
 			}
 		}
@@ -2658,7 +2658,7 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 					if (zone && zone->GetGuildID() != GUILD_NONE && zone->GetGuildID() != 1 && lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 					{
 						petowner->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName());
-						petowner->CastToClient()->BootFromGuildInstance();
+						petowner->CastToClient()->BootFromGuildInstance(true);
 					}
 				}
 				m_EngagedClientNames.emplace(petowner->GetCleanName(), record);

@@ -2460,6 +2460,20 @@ void Database::SetAccountActive(uint32 account_id)
 	return;
 }
 
+bool Database::AdjustPVPSpawnTimes()
+{
+
+	std::string dquery = StringFormat("DELETE FROM respawn_times WHERE guild_id = 1");
+	auto dresults = QueryDatabase(dquery);
+
+	if (!dresults.Success())
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool Database::AdjustSpawnTimes() 
 {
 

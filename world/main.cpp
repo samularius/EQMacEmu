@@ -545,6 +545,7 @@ int main(int argc, char** argv) {
 				zoneserver_list.SendPacket(pack2);
 
 				//Roleplay flavor text, go!
+				database.AdjustPVPSpawnTimes(); //Adjust PVP spawn times on quake start.
 				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, Chat::Red, "Druzzil Ro's voice echoes in your mind, 'Beware, mortal. Creatures of legendary strength return to areas of discord.'");
 				zoneserver_list.SendEmoteMessage(0, 0, AccountStatus::Player, Chat::Yellow, "Druzzil Ro's projection alters time and space. Creatures have respawned in PVP instances.");
 

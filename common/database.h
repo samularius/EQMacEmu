@@ -154,6 +154,7 @@ public:
 	void	ClearAllActive();
 	void	ClearAccountActive(uint32 AccountID);
 	void	SetAccountActive(uint32 AccountID);
+	bool AdjustPVPSpawnTimes();
 	uint32	GetHardcoreStatus(const char* charname);
 
 	/*

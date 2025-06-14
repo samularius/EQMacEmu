@@ -1042,7 +1042,12 @@ void Client::GoToBind(uint8 bindnum) {
 		MovePCGuildID(m_pp.binds[bindnum].zoneId, GUILD_NONE, m_pp.binds[bindnum].x, m_pp.binds[bindnum].y, m_pp.binds[bindnum].z, m_pp.binds[bindnum].heading, 1);
 }
 
-void Client::BootFromGuildInstance() {
+void Client::BootFromGuildInstance(bool bForce) {
+
+	if (!RuleB(Quarm, AllowGuildInstanceBoot) && !bForce) {
+		return;
+	}
+
 	ZoneBanishPoint zbp = zone->GetZoneBanishPoint();
 	if (zbp.target_zone_id == 0) {
 		this->GoToBind();

@@ -347,6 +347,7 @@ RULE_INT(Quarm, SpellResistLowMinimumResistChance, 4, "Resist floor")
 RULE_INT(Quarm, SpellResistBetweenMinimumResistChance, 10, "Resist floor")
 RULE_INT(Quarm, SpellResistPlayerHighMinimumResistChance, 198, "Player Resist floor")
 RULE_INT(Quarm, SpellResistPlayerLowMinimumResistChance, 4, "Player Resist floor")
+RULE_BOOL(Quarm, AllowGuildInstanceBoot, false, "Allow guild instance boot")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)
