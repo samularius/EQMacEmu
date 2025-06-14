@@ -388,8 +388,6 @@ Client::~Client() {
 	if (horse)
 		horse->Depop();
 
-	DepopPetOnZone();
-
 	if(Trader)
 		database.DeleteTraderItem(this->CharacterID());
 
@@ -429,6 +427,8 @@ Client::~Client() {
 	// will need this data right away
 	Save(2); // This fails when database destructor is called first on shutdown
 
+	DepopPetOnZone();
+
 	safe_delete(KarmaUpdateTimer);
 	safe_delete(GlobalChatLimiterTimer);
 	safe_delete(qGlobals);
@@ -457,6 +457,8 @@ Client::~Client() {
 		}
 	}
 	corpse_summon_timers.clear();
+	
+	
 }
 
 void Client::SendLogoutPackets() {
