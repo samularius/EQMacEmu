@@ -357,6 +357,12 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			return;
 		}
 
+		if (zoneguildid > 1 && !guild_mgr.IsGuildRaidEnabled(zoneguildid))
+		{
+			sender->Message(Chat::Red, "You are unable to enter a guild instance as you haven't contacted customer support to enable it. Please contact us via #petition in Discord to gain access.");
+			return;
+		}
+
 		if (sender->GetPVP() != 0 && zoneguildid != GUILD_NONE || zoneguildid != GUILD_NONE && strncmp(destination_zone_name, "charasis", strlen("charasis")) == 0 || zoneguildid != GUILD_NONE && strncmp(destination_zone_name, "mischiefplane", strlen("mischiefplane")) == 0)
 		{
 			zoneguildid = 1;
