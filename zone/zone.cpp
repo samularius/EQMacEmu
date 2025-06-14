@@ -1610,12 +1610,12 @@ bool Zone::Process() {
 	if (EndQuake_Timer->Check())
 	{
 		uint32 cur_time = Timer::GetTimeSeconds();
-		bool should_broadcast_notif = zone->ResetEngageNotificationTargets((RuleI(Quarm, QuakeMaxVariance) * 2) * 1000, true); // if we reset at least one, this is true
+		bool should_broadcast_notif = zone->IsPVPZone();
 		if (should_broadcast_notif)
 		{
-			entity_list.Message(Chat::Default, Chat::Yellow, "The quake has concluded. Rules 9.x and 10.x will once again apply where relevant.");
+			entity_list.Message(Chat::Default, Chat::Yellow, "The earthquake has concluded.");
 		}
-		entity_list.TogglePVPForQuake();
+		//entity_list.TogglePVPForQuake();
 		EndQuake_Timer->Disable();
 		memset(&last_quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
 
@@ -1932,7 +1932,7 @@ bool Zone::ResetEngageNotificationTargets(uint32 in_respawn_timer, bool update_r
 	iterator.Reset();
 	while (iterator.MoreElements()) {
 		Spawn2* pSpawn2 = iterator.GetData();
-		if (pSpawn2 && pSpawn2->IsRaidTargetSpawnpoint())
+		if (pSpawn2)
 		{
 			reset_at_least_one_spawn2 = true;
 			if (update_respawn_in_db)

@@ -2126,12 +2126,12 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 		
 		case ServerOP_QuakeEnded:
 		{
-			if (zone && zone->GetGuildID() == GUILD_NONE)
+			if (zone && zone->GetGuildID() == 1)
 			{
 
 				ServerEarthquakeImminent_Struct* seis = (ServerEarthquakeImminent_Struct*)pack->pBuffer;
 				memcpy(&zone->last_quake_struct, seis, sizeof(ServerEarthquakeImminent_Struct));
-				entity_list.TogglePVPForQuake();
+				//entity_list.TogglePVPForQuake();
 			}
 			else if (zone)
 			{
@@ -2142,7 +2142,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 
 		case ServerOP_QuakeImminent:
 		{
-			if (zone && zone->GetGuildID() == GUILD_NONE)
+			if (zone && zone->GetGuildID() == 1)
 			{
 
 				ServerEarthquakeImminent_Struct* seis = (ServerEarthquakeImminent_Struct*)pack->pBuffer;
@@ -2155,7 +2155,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 					should_broadcast_notif = zone->ResetEngageNotificationTargets((RuleI(Quarm, QuakeRepopDelay)) * 1000); // if we reset at least one, this is true
 					if (should_broadcast_notif)
 					{
-						entity_list.Message(Chat::Default, Chat::Yellow, "Raid targets in this zone will repop! Rule 9.x and Rule 10.x have been suspended temporarily in this zone because of its ruleset, also listed in the /motd.");
+						entity_list.Message(Chat::Default, Chat::Yellow, "Creatures in this zone will repop!");
 						entity_list.EvacAllPlayers();
 					}
 				}
@@ -2163,7 +2163,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 				{
 					zone->last_quake_struct.quake_type = QuakeDisabled;
 				}
-				entity_list.TogglePVPForQuake();
+				//entity_list.TogglePVPForQuake();
 				if (zone->EndQuake_Timer)
 				{
 					zone->EndQuake_Timer->Enable();
