@@ -12,8 +12,8 @@ void command_showquake(Client *c, const Seperator *sep)
 	}
 
 	int64 curTime = Timer::GetTimeSeconds();
-	int64 nextQuakeTime = nextQuakeTime - curTime;
-	if (zone && zone->cached_quake_struct.quake_type == QuakeDisabled || nextQuakeTime < 0)
+	int64 nextQuakeTime = zone ? zone->cached_quake_struct.next_start_timestamp : 0;
+	if (zone && zone->cached_quake_struct.quake_type == QuakeDisabled || zone && nextQuakeTime == 0 || zone && nextQuakeTime - curTime > 0)
 	{
 		//Load the next quake time
 		database.LoadQuakeData(zone->cached_quake_struct);
