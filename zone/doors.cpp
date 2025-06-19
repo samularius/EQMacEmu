@@ -357,7 +357,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			return;
 		}
 
-		if (zoneguildid > 1 && zoneguildid != GUILD_NONE && !guild_mgr.IsGuildRaidEnabled(zoneguildid))
+		if (guild_zone_door && zoneguildid > 1 && zoneguildid != GUILD_NONE && !guild_mgr.IsGuildRaidEnabled(zoneguildid))
 		{
 			sender->Message(Chat::Red, "You are unable to enter a guild instance as you haven't contacted customer support to enable it. Please contact us via #petition in Discord to gain access.");
 			return;
