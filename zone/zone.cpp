@@ -1057,6 +1057,7 @@ Zone::Zone(uint32 in_zoneid, const char* in_short_name, uint32 in_guildid)
 	lootvar = 0;
 
 	memset(&last_quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
+	memset(&cached_quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
 	memset(&zone_banish_point, 0, sizeof(ZoneBanishPoint));
 
 	short_name = strcpy(new char[strlen(in_short_name)+1], in_short_name);
@@ -3171,7 +3172,8 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 			if (!bCanEngage)
 			{
 				current->CastToClient()->BootFromGuildInstance();
-				return false;
+				if(RuleB(Quarm, AllowGuildInstanceBoot))
+					return false;
 			}
 		}
 		if (other->IsClient() && other->CastToClient()->InstanceBootGraceTimerExpired())
@@ -3180,7 +3182,8 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 			if (!bCanEngage)
 			{
 				other->CastToClient()->BootFromGuildInstance();
-				return false;
+				if (RuleB(Quarm, AllowGuildInstanceBoot))
+					return false;
 			}
 		}
 
@@ -3189,7 +3192,8 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 			if (current->CastToClient()->GetClientLibraryVersion() < RuleI(Quarm, WarnDllVersionBelow))
 			{
 				current->CastToClient()->BootFromGuildInstance();
-				return false;
+				if (RuleB(Quarm, AllowGuildInstanceBoot))
+					return false;
 			}
 		}
 
@@ -3199,7 +3203,8 @@ bool Zone::CanDoCombat(Mob* current, Mob* other, bool process)
 			if (other->CastToClient()->GetClientLibraryVersion() < RuleI(Quarm, WarnDllVersionBelow))
 			{
 				other->CastToClient()->BootFromGuildInstance();
-				return false;
+				if (RuleB(Quarm, AllowGuildInstanceBoot))
+					return false;
 			}
 		}
 	}
@@ -3250,7 +3255,7 @@ Timer Zone::GetInitgridsTimer()
 
 bool Zone::AllowManastoneClick()
 {
-	if (GetZoneExpansion() != ClassicEQ) {
+	if (GetZoneExpansion() != ClassicEQ && GetZoneID() != Zones::SOLDUNGB) {
 		return false;
 	}
 	if (arrClassicPlanes.find(GetShortName()) != arrClassicPlanes.end()) {

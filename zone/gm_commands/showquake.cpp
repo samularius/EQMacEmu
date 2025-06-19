@@ -17,21 +17,20 @@ void command_showquake(Client *c, const Seperator *sep)
 		return;
 	}
 
-	if (zone)
+	int64 curTime = Timer::GetTimeSeconds();
+	int64 nextQuakeTime = nextQuakeTime - curTime;
+	if (zone && zone->cached_quake_struct.quake_type == QuakeDisabled || nextQuakeTime < 0)
 	{
-		ServerEarthquakeImminent_Struct quake_struct;
-		memset(&quake_struct, 0, sizeof(ServerEarthquakeImminent_Struct));
-		database.LoadQuakeData(quake_struct);
-		int64 nextQuakeTime = quake_struct.next_start_timestamp;
-		int64 curTime = Timer::GetTimeSeconds();
+		//Load the next quake time
+		database.LoadQuakeData(zone->cached_quake_struct);
+	}
 
-		if (nextQuakeTime - curTime > 0)
-		{
-			std::string time_str = "The next earthquake will begin in ";
-			time_str += Strings::SecondsToTime(nextQuakeTime - curTime);
-			time_str += "";
-			c->Message(Chat::Yellow, time_str.c_str());
-		}
+	if (nextQuakeTime - curTime > 0)
+	{
+		std::string time_str = "The next earthquake will begin in ";
+		time_str += Strings::SecondsToTime(nextQuakeTime - curTime);
+		time_str += "";
+		c->Message(Chat::Yellow, time_str.c_str());
 	}
 }
 

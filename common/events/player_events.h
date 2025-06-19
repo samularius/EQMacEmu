@@ -56,6 +56,7 @@ namespace PlayerEvent {
 		KILLED_NAMED_NPC,
 		KILLED_RAID_NPC,
 		ITEM_CREATION,
+		AUCTION,
 		MAX // dont remove
 	};
 
@@ -112,7 +113,8 @@ namespace PlayerEvent {
 		"Killed NPC",
 		"Killed Named NPC",
 		"Killed Raid NPC",
-		"Item Creation"
+		"Item Creation",
+		"Auction",
 	};
 
 	// Generic struct used by all events
@@ -631,6 +633,19 @@ namespace PlayerEvent {
 			ar(
 				CEREAL_NVP(message),
 				CEREAL_NVP(target)
+			);
+		}
+	};
+
+	struct AuctionEvent {
+		std::string message;
+
+		// cereal
+		template<class Archive>
+		void serialize(Archive& ar)
+		{
+			ar(
+				CEREAL_NVP(message)
 			);
 		}
 	};

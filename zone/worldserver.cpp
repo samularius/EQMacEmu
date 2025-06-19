@@ -2159,7 +2159,7 @@ void WorldServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p)
 					if (should_broadcast_notif)
 					{
 						entity_list.Message(Chat::Default, Chat::Yellow, "Creatures in this zone will repop!");
-						entity_list.EvacAllPlayers();
+						//entity_list.EvacAllPlayers();
 					}
 				}
 				if (should_broadcast_notif == false)

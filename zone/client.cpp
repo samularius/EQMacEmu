@@ -1553,6 +1553,13 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 				return;
 			}
 
+			auto e = PlayerEvent::SayEvent{
+			.message = message,
+			.target = GetTarget() ? GetTarget()->GetCleanName() : ""
+					};
+
+			RecordPlayerEventLog(PlayerEvent::AUCTION, e);
+
 			entity_list.ChannelMessage(sender, chan_num, language, lang_skill, message);
 		}
 		break;

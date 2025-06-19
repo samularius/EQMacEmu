@@ -322,6 +322,7 @@ public:
 	uint8	zone_weather;
 
 	ServerEarthquakeImminent_Struct last_quake_struct;
+	ServerEarthquakeImminent_Struct cached_quake_struct;
 	Timer*	EndQuake_Timer;
 
 	uint8 loglevelvar;

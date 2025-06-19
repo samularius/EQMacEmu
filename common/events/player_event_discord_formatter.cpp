@@ -78,6 +78,28 @@ std::string PlayerEventDiscordFormatter::FormatEventSay(
 	return ss.str();
 }
 
+std::string PlayerEventDiscordFormatter::FormatEventAuction(
+	const PlayerEvent::PlayerEventContainer& c,
+	const PlayerEvent::AuctionEvent& e
+)
+{
+	std::vector<DiscordField> f = {};
+	BuildDiscordField(&f, "Message", e.message);
+
+	std::vector<DiscordEmbed> embeds = {};
+	BuildBaseEmbed(&embeds, f, c);
+
+	auto root = BuildDiscordWebhook(c, embeds);
+
+	std::stringstream ss;
+	{
+		cereal::JSONOutputArchiveSingleLine ar(ss);
+		root.serialize(ar);
+	}
+
+	return ss.str();
+}
+
 std::string PlayerEventDiscordFormatter::FormatGMCommand(
 	const PlayerEvent::PlayerEventContainer &c,
 	const PlayerEvent::GMCommandEvent &e

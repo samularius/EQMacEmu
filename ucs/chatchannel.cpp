@@ -432,6 +432,11 @@ void ChatChannel::SendMessageToChannel(const std::string &Message, Client *Sende
 		Sender->GeneralChannelMessage("Channel " + GetName() + " requires level " + std::to_string(RuleI(Quarm, AllianceChannelLevelRequirement)) + " to participate in chat.");
 		return;
 	}
+	else if (Sender->GetLevel() < RuleI(Quarm, AllianceChannelLevelRequirement) && CapitaliseName(GetName()).compare(RuleS(Quarm, PortsChannelName)) == 0)
+	{
+		Sender->GeneralChannelMessage("Channel " + GetName() + " requires level " + std::to_string(RuleI(Quarm, AllianceChannelLevelRequirement)) + " to participate in chat.");
+		return;
+	}
 
 	ChatMessagesSent++;
 	

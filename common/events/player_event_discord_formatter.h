@@ -85,6 +85,7 @@ class PlayerEventDiscordFormatter {
 public:
 	static std::string GetCurrentTimestamp();
 	static std::string FormatEventSay(const PlayerEvent::PlayerEventContainer &c, const PlayerEvent::SayEvent &e);
+	static std::string FormatEventAuction(const PlayerEvent::PlayerEventContainer& c, const PlayerEvent::AuctionEvent& e);
 	static std::string
 		FormatGMCommand(const PlayerEvent::PlayerEventContainer &c, const PlayerEvent::GMCommandEvent &e);
 	static void BuildDiscordField(
