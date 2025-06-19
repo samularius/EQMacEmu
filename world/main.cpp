@@ -87,34 +87,36 @@
 #include "../common/zone_store.h"
 #include "world_event_scheduler.h"
 #include "../common/path_manager.h"
+#include "../common/events/player_event_logs.h"
 #include "../common/skill_caps.h"
 #include "../common/ip_util.h"
 
-SkillCaps skill_caps;
-ZoneStore zone_store;
-TimeoutManager timeout_manager;
-EQStreamFactory eqsf(WorldStream,9000);
-ClientList client_list;
-ZSList zoneserver_list;
-LoginServerList loginserverlist;
-UCSConnection UCSLink;
+SkillCaps           skill_caps;
+ZoneStore           zone_store;
+TimeoutManager      timeout_manager;
+EQStreamFactory     eqsf(WorldStream,9000);
+ClientList          client_list;
+ZSList              zoneserver_list;
+LoginServerList     loginserverlist;
+UCSConnection       UCSLink;
 QueryServConnection QSLink;
-LauncherList launcher_list; 
+LauncherList        launcher_list; 
 WorldEventScheduler event_scheduler;
-EQ::Random emu_random;
-volatile bool RunLoops = true;
-uint32 numclients = 0;
-uint32 numzones = 0;
-bool holdzones = false;
-const WorldConfig *Config;
-EQEmuLogSys LogSys;
+EQ::Random          emu_random;
+volatile bool       RunLoops = true;
+uint32              numclients = 0;
+uint32              numzones = 0;
+bool                holdzones = false;
+const WorldConfig   *Config;
+EQEmuLogSys         LogSys;
+WebInterfaceList    web_interface;
 ServerEarthquakeImminent_Struct next_quake;
 std::unordered_set<uint32> ipWhitelist;
 std::mutex		ipMutex;
 bool bSkipFactoryAuth = false;
-WebInterfaceList web_interface;
 WorldContentService content_service;
 PathManager         path;
+PlayerEventLogs     player_event_logs;
 
 void CatchSignal(int sig_num);
 
@@ -434,6 +436,9 @@ int main(int argc, char** argv) {
 	std::shared_ptr<EQOldStream> eqos;
 	EQStreamInterface *eqsi;
 
+	Timer player_event_process_timer(1000);
+	player_event_logs.SetDatabase(&database)->Init();
+
 	auto loop_fn = [&](EQ::Timer* t) {
 		Timer::SetCurrentTime();
 
@@ -502,6 +507,10 @@ int main(int argc, char** argv) {
 
 		client_list.Process();
 		
+		if (player_event_process_timer.Check()) {
+			player_event_logs.Process();
+		}
+
 		if(EQTimeTimer.Check()) {
 			TimeOfDay_Struct tod;
 			zoneserver_list.worldclock.GetCurrentEQTimeOfDay(time(0), &tod);
@@ -638,6 +647,6 @@ int main(int argc, char** argv) {
 }
 
 void CatchSignal(int sig_num) {
-	Log(Logs::General, Logs::WorldServer,"Caught signal %d",sig_num);
+	LogInfo("Caught signal [{}]",sig_num);
 	RunLoops = false;
 }

@@ -62,7 +62,7 @@ void UCSDatabase::GetAccountStatus(Client *client) {
     auto results = QueryDatabase(query);
     if (!results.Success()) {
 		LogMySQLError(
-			"Unable to get account status for character [{0}], error [{1}]", 
+			"Unable to get account status for character [{0}] error [{1}]", 
 			client->GetName().c_str(), 
 			results.ErrorMessage().c_str()
 		);
@@ -87,7 +87,7 @@ void UCSDatabase::GetAccountStatus(Client *client) {
 	uint8 revoked = CheckUCSRevoked(client->GetAccountID());
 	client->SetRevoked(revoked);
 
-	LogDebug("Set account status to [{0}], hideme to [{1}] and karma to [{2}] for [{3}]", client->GetAccountStatus(), client->GetHideMe(), client->GetKarma(), client->GetName().c_str());
+	LogDebug("Set account status to [{0}] hideme to [{1}] and karma to [{2}] for [{3}]", client->GetAccountStatus(), client->GetHideMe(), client->GetKarma(), client->GetName().c_str());
 
 }
 
