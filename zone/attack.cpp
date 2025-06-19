@@ -1894,7 +1894,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQ::skills::SkillTy
 
 	if(killer_mob) 
 	{
-		Log(Logs::General, Logs::Death, "Fatal blow dealt by %s with %d damage, spell %d, skill %d", killerMob->GetName(), damage, spell, attack_skill);
+		Log(Logs::General, Logs::Death, "Fatal blow dealt by %s with %d damage, spell %d, skill %d", killer_mob->GetName(), damage, spell, attack_skill);
 
 		owner_or_self = killer_mob->GetOwnerOrSelf();
 
