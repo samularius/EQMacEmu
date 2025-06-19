@@ -439,8 +439,8 @@ void ChatChannel::SendMessageToChannel(const std::string &Message, Client *Sende
 
 	Strings::SanitizeChatString(MessageToSend);
 	
-	if(MessageToSend.length() && Sender->GetFQName().length() && GetFQName().length())
-		database.LogUCSPlayerSpeech(Sender->GetFQName().c_str(), GetFQName().c_str(), MessageToSend.c_str(), Sender->GetAccountStatus(), 0, 200, Sender->GetCharID(), 0);
+	if(MessageToSend.length() && Sender->GetFQName().length() && Sender->GetFQName().length())
+		database.LogUCSPlayerSpeech(Sender->GetFQName().c_str(), Sender->GetFQName().c_str(), MessageToSend.c_str(), Sender->GetAccountStatus(), 0, 200, Sender->GetCharID(), 0);
 	
 	LinkedListIterator<Client*> iterator(m_clients_in_channel);
 
