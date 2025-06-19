@@ -11,12 +11,6 @@ void command_showquake(Client *c, const Seperator *sep)
 		return;
 	}
 
-	if (c->GuildRank() == 0)
-	{
-		c->Message(Chat::White, "You must be an officer rank or higher to use this command.");
-		return;
-	}
-
 	int64 curTime = Timer::GetTimeSeconds();
 	int64 nextQuakeTime = nextQuakeTime - curTime;
 	if (zone && zone->cached_quake_struct.quake_type == QuakeDisabled || nextQuakeTime < 0)
