@@ -764,8 +764,8 @@ int32	EncodeDiscordChatItemLinkMsg(char *Parms, char *Msg, char **Ret) {
 		if (Msg[i] == 0x12) {
 			if (in_link) {
 				// we finished an item link
-				// "](https://www.takproject.net/allaclone/item.php?id="
-				New.append("](https://www.takproject.net/allaclone/item.php?id=");
+				// "](https://www.pqdi.cc/item/"
+				New.append("(https://www.pqdi.cc/item/");
 				New.append(itemid);
 				New.append(")");
 				finished_link = true;
