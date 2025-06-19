@@ -770,7 +770,7 @@ void Client::JoinChannels(std::string &channel_name_list) {
 			AddToChannelList(channel);
 		}
 
-		ChatChannel* channel = ChannelList->AddClientToChannel(RuleS(Quarm, PortsChannelName), this, should_join_lfg);
+		channel = ChannelList->AddClientToChannel(RuleS(Quarm, PortsChannelName), this, should_join_lfg);
 		if (channel)
 		{
 			AddToChannelList(channel);
