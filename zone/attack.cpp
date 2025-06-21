@@ -1377,7 +1377,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQ::skills::Skill
 			if (killerMob && zone->GetGuildID() == 1)
 			{
 				std::string pvpKilledGuildName = GetGuildName();
-				std::string killer_message = "[PVP] ";
+				std::string killer_message = "";
 				killer_message += GetCleanName();
 				killer_message += " of <";
 				killer_message += pvpKilledGuildName.empty() ? " " : pvpKilledGuildName.c_str();
