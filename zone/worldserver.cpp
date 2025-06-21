@@ -2243,6 +2243,7 @@ bool WorldServer::SendChannelMessage(const char* from, uint8 chan_num, uint32 gu
 	else {
 		strn0cpy(scm->from, from, sizeof(scm->from));
 	}
+
 	scm->to[0] = 0;
 	scm->deliverto[0] = '\0';
 	scm->chan_num = chan_num;
