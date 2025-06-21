@@ -80,6 +80,7 @@ extern Zone* zone;
 Mutex MZoneShutdown;
 
 volatile bool is_zone_loaded = false;
+volatile bool is_zone_finished = false;
 Zone* zone = 0;
 const static std::set<std::string> arrClassicPlanes = { "hateplane", "airplane", "fearplane" };
 void UpdateWindowTitle(char* iNewTitle);

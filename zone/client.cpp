@@ -68,6 +68,7 @@ extern QueryServ* QServ;
 extern EntityList entity_list;
 extern Zone* zone;
 extern volatile bool is_zone_loaded;
+extern volatile bool is_zone_finished;
 extern WorldServer worldserver;
 extern uint32 numclients;
 extern PetitionList petition_list;
@@ -907,7 +908,10 @@ bool Client::Save(uint8 iCommitNow) {
 	m_pp.timePlayedMin = (TotalSecondsPlayed / 60);
 	m_pp.lastlogin = time(nullptr);	
 
-	SavePetInfo();
+	if (!is_zone_finished)
+	{
+		SavePetInfo();
+	}
 
 	p_timers.Store(&database);
 
