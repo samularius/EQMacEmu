@@ -2110,7 +2110,7 @@ void EntityList::ChannelMessageFromWorld(const char *from, const char *to,
 			client->Message(Chat::Yellow,"[GM Monitor] %s tells the guild, '%s'", from, message);
 		else if (bIsPvP && client->GetPVP() != 0)
 			client->Message(Chat::Yellow, "[PVP] %s", message);
-		else
+		else if(!bIsPvP)
 			client->ChannelMessageSend(from, to, chan_num, language, lang_skill, message);
 	}
 }
