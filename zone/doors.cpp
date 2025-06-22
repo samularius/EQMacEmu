@@ -404,7 +404,8 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			{
 				sender->KeyRingAdd(playerkey);
 			}
-			sender->MovePCGuildID(zone->GetZoneID(), zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
+			bool is_same_zone = strncmp(destination_zone_name, zone_name, strlen(zone_name)) == 0;
+			sender->MovePCGuildID(zone->GetZoneID(), is_same_zone ? zone->GetGuildID() : zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
 		}
 		else if ((!IsDoorOpen() || open_type == 58 || floor_port) && (keyneeded && ((keyneeded == playerkey) || sender->GetGM())))
 		{
