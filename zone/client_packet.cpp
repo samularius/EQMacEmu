@@ -6923,6 +6923,8 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 1) || mypet->GetPetType() != petAnimation) {
 			mypet->Say_StringID(Chat::PetResponse, StringID::PET_FOLLOWING);
 			mypet->SetPetOrder(SPO_Follow);
+			if (mypet->IsNPC() && mypet->CastToNPC()->IsGuarding())
+				mypet->CastToNPC()->SaveGuardSpot(true);
 			mypet->SendAppearancePacket(AppearanceType::Animation, Animation::Standing);
 		}
 		break;
@@ -6956,6 +6958,8 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			mypet->SetHeld(false);
 			mypet->Say_StringID(Chat::PetResponse, StringID::PET_GUARDME_STRING);
 			mypet->SetPetOrder(SPO_Follow);
+			if (mypet->IsNPC() && mypet->CastToNPC()->IsGuarding())
+				mypet->CastToNPC()->SaveGuardSpot(true);
 			mypet->SendAppearancePacket(AppearanceType::Animation, Animation::Standing);
 		}
 		break;
@@ -6981,7 +6985,17 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
 			mypet->Say_StringID(Chat::PetResponse, StringID::PET_SIT_STRING);
-			mypet->SetPetOrder(SPO_Follow);
+			if (mypet->IsNPC())
+			{
+				if(mypet->CastToNPC()->IsGuarding())
+					mypet->SetPetOrder(SPO_Guard);
+				else
+					mypet->SetPetOrder(SPO_Follow);
+			}
+			else
+			{
+				mypet->SetPetOrder(SPO_Follow);
+			}
 			mypet->SendAppearancePacket(AppearanceType::Animation, Animation::Standing);
 		}
 		break;

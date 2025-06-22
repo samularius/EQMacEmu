@@ -1536,7 +1536,17 @@ void Mob::AI_Process() {
 
 				if (IsPet() && GetPetOrder() == SPO_Sit && GetOwner()->IsClient()) {
 					SendAppearancePacket(AppearanceType::Animation, Animation::Standing);
-					SetPetOrder(SPO_Follow);
+					if (IsNPC())
+					{
+						if (CastToNPC()->IsGuarding())
+							SetPetOrder(SPO_Guard);
+						else
+							SetPetOrder(SPO_Follow);
+					}
+					else
+					{
+						SetPetOrder(SPO_Follow);
+					}
 				}
 
 				//try main hand first
