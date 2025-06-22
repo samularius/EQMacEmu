@@ -3405,6 +3405,18 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob* spelltar, bool reflect, bool use_r
 		CastToClient()->ApplyDurationFocus(spell_id, buffslot, spelltar, isrecourse ? recourse_spell_level : caster_spell_level);
 	}
 
+	if (IsClient() && IsSpecialDurationSpell(spell_id))
+	{
+		int buff_count = GetMaxTotalSlots();
+		for (int i = 0; i < buff_count; ++i)
+		{
+			if (buffs[i].spellid == spell_id)
+			{
+				CastToClient()->SendBuffDurationPacket(buffs[i].spellid, buffs[i].ticsremaining, buffs[i].casterlevel, i, buffs[i].instrumentmod);
+			}
+		}
+	}
+
 	Log(Logs::Detail, Logs::Spells, "Cast of %d by %s on %s complete successfully.", spell_id, GetName(), spelltar->GetName());
 
 	if (IsDetrimentalSpell(spell_id) && !is_tap_recourse)
