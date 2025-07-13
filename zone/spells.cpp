@@ -4122,7 +4122,7 @@ float Mob::CheckResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, Mob
 	}
 
 	// Lull spells DO NOT use regular resists on initial cast, instead they use a value of 15.  Prathun pseudocode and live parses confirm.  Late luclin era change
-	if (content_service.IsThePlanesOfPowerEnabled()) {
+	if (content_service.IsTheShadowsOfLuclinEnabled()) {
 		if (IsHarmonySpell(spell_id)) {
 			target_resist = 15;
 			Log(Logs::Detail, Logs::Spells, "CheckResistSpell(): Spell: %d  Lull spell is overriding MR. target_resist is: %i resist_modifier is: %i", spell_id, target_resist, resist_modifier);
