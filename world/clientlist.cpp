@@ -528,7 +528,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iLogin
 	}
 
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iLoginKey, iWorldAdmin, ip, local, version, 0);
-	if(!wasAccountActive)
+	if(!wasAccountActive && tmp->Admin() == 0)
 		numplayers++;
 
 	clientlist.Append(tmp);
