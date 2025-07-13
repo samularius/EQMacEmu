@@ -125,6 +125,13 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 			utwrs->response = -5;
 	}
 
+	if (client_list.GetClientCount() /* + client_queue.Count()*/ >= RuleI(Quarm, PlayerPopulationCap))
+	{
+		utwrs->response = -6; // Queue player, don't allow entry
+		//We should really tell the WorldServer how much players are remaining in queue to determine this, but we can make that a world <-> login communication
+		//TODO: Implement queue logic
+	}
+
 	ipMutex.lock();
 	ipWhitelist.insert(utwr->ip);
 	ipMutex.unlock();

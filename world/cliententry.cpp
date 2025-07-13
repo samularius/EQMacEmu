@@ -38,11 +38,16 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 : id(in_id)
 {
 	ClearVars(true);
-	incremented_player_count = false;
 	pIP = ip;
 	pLSID = iLSID;
 	if(iLSID > 0)
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin, 0, &pmule);
+
+	if (padmin == 0)
+	{
+		incremented_player_count = true;
+	}
+
 	strn0cpy(loginserver_account_name, iLoginName, sizeof(loginserver_account_name));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
 	pworldadmin = iWorldAdmin;
@@ -59,7 +64,8 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer *iZS, ServerClientList
 : id(in_id)
 {
 	ClearVars(true);
-	incremented_player_count = false;
+	if(scl->Admin == 0)
+		incremented_player_count = true;
 	pIP = 0;
 	pLSID = scl->LSAccountID;
 	strn0cpy(loginserver_account_name, scl->name, sizeof(loginserver_account_name));
@@ -93,12 +99,6 @@ ClientListEntry::~ClientListEntry()
 		client_list.RemoveCLEReferances(this);
 	}
 
-	if (incremented_player_count)
-	{
-		numplayers--;
-		incremented_player_count = false;
-	}
-
 	SetOnline(CLE_Status::Offline);
 	SetAccountID(0);
 	for (auto &elem : tell_queue)
@@ -122,26 +122,7 @@ void ClientListEntry::SetOnline(CLE_Status iOnline)
 		static_cast<int>(iOnline)
 	);
 
-	// this counting method, counts players connected to world.
-	if (iOnline >= CLE_Status::Online && pOnline < CLE_Status::Online) {
-		if (!incremented_player_count) {
-			incremented_player_count = true;
-			numplayers++;
-		}
-	}
-	else if (iOnline < CLE_Status::Online && pOnline >= CLE_Status::Online) {
-		if (incremented_player_count) {
-			incremented_player_count = false;
-			numplayers--;
-		}
-	}
-
-	if (pmule && incremented_player_count && !RuleB(Quarm, IncludeMulesInServerCount))
-	{
-		incremented_player_count = false;
-		numplayers--;
-	}
-		if (iOnline != CLE_Status::Online || pOnline < CLE_Status::Online) {
+	if (iOnline != CLE_Status::Online || pOnline < CLE_Status::Online) {
 		pOnline = iOnline;
 	}
 	if (iOnline < CLE_Status::Zoning) {

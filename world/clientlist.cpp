@@ -63,14 +63,20 @@ void ClientList::Process() {
 	iterator.Reset();
 	while(iterator.MoreElements()) {
 		if (!iterator.GetData()->Process()) {
+
+			bool should_remove_playercount = iterator.GetData()->GetAdmin() == 0;
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
 			LogInfo("Removing client from [{}]:[{}]", inet_ntoa(in), iterator.GetData()->GetPort());
 			uint32 accountid = iterator.GetData()->GetAccountID();
 			iterator.RemoveCurrent();
 
-			if(!ActiveConnection(accountid))
+			if (!ActiveConnection(accountid))
+			{
+				if(should_remove_playercount)
+					numplayers--;
 				database.ClearAccountActive(accountid);
+			}
 		}
 		else
 			iterator.Advance();
@@ -512,7 +518,18 @@ ClientListEntry* ClientList::RemoveCLEByAccountID(uint32 accountID) {
 
 
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
+	
+
+	bool wasAccountActive = CheckAccountActive(iLSID);
+	
+	if (!wasAccountActive && numplayers >= RuleI(Quarm, PlayerPopulationCap))
+	{
+		return;
+	}
+
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iLoginKey, iWorldAdmin, ip, local, version, 0);
+	if(!wasAccountActive)
+		numplayers++;
 
 	clientlist.Append(tmp);
 }
@@ -523,13 +540,21 @@ void ClientList::CLCheckStale() {
 	iterator.Reset();
 	while(iterator.MoreElements()) {
 		if (iterator.GetData()->CheckStale()) {
+
+			bool should_remove_playercount = iterator.GetData()->Admin() == 0;
+
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
 			LogInfo("Removing stale client on account [{}] from [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
 			uint32 accountid = iterator.GetData()->AccountID();
 			iterator.RemoveCurrent();
-			if(!ActiveConnection(accountid))
+			if (!ActiveConnection(accountid))
+			{
+				if(should_remove_playercount)
+					numplayers--;
+
 				database.ClearAccountActive(accountid);
+			}
 		}
 		else
 			iterator.Advance();
