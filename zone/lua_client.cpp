@@ -1031,7 +1031,7 @@ void Lua_Client::ResetPlayerForNewGamePlus(uint8 new_level, uint8 new_level2, bo
 
 bool Lua_Client::ConsumeNGRespec()
 {
-	Lua_Safe_Call_Void();
+	Lua_Safe_Call_Bool();
 	return self->ConsumeNGRespec();
 }
 
