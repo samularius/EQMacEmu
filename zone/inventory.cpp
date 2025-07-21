@@ -682,6 +682,21 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	}
 }
 
+bool Client::ConsumeNGRespec()
+{
+	if (m_epp.e_ng_respecs_remaining > 0) {
+		m_epp.e_ng_respecs_remaining--;
+		Save(1);
+		return true;
+	}
+	return false;
+}
+
+uint32 Client::GetNGRespecsRemaining()
+{
+	return m_epp.e_ng_respecs_remaining;
+}
+
 void Client::ResetPlayerForNewGamePlus(uint8 in_level, uint8 in_level2, bool reset_skill_points)
 {
 	// Revert player's bind location to default starting

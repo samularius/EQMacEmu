@@ -4,6 +4,7 @@ SET(world_sources
 	client.cpp
 	cliententry.cpp
 	clientlist.cpp
+	clientqueueentry.cpp
 	console.cpp
 	eql_config.cpp
 	eqemu_api_world_data_service.cpp

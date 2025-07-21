@@ -1029,6 +1029,18 @@ void Lua_Client::ResetPlayerForNewGamePlus(uint8 new_level, uint8 new_level2, bo
 	self->ResetPlayerForNewGamePlus(new_level, new_level2, reset_skill_points);
 }
 
+bool Lua_Client::ConsumeNGRespec()
+{
+	Lua_Safe_Call_Void();
+	return self->ConsumeNGRespec();
+}
+
+uint32 Lua_Client::GetNGRespecsRemaining()
+{
+	Lua_Safe_Call_Int();
+	return self->GetNGRespecsRemaining();
+}
+
 int Lua_Client::GetModCharacterFactionLevel(int faction) {
 	Lua_Safe_Call_Int();
 	return self->GetModCharacterFactionLevel(faction);

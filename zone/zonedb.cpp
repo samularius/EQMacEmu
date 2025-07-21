@@ -740,7 +740,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_temp_last_name`,		"
 		"`e_married_character_id`,	"
 		"`e_char_export_flag`,		"
-		"`e_times_rebirthed`		"
+		"`e_times_rebirthed`,		"
+		"`e_ng_respecs_remaining`	"
 		"FROM                       "
 		"character_data             "
 		"WHERE `id` = %i         ", character_id);
@@ -811,6 +812,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->married_character_id = atoi(row[r]); r++;						 // "`e_married_character_id"	"
 		m_epp->char_export_flag = atoi(row[r]); r++;									 // "`e_char_export_flag`			"
 		m_epp->e_times_rebirthed = atoi(row[r]); r++;									 // "`e_times_rebirthed`			"
+		m_epp->e_ng_respecs_remaining = atoi(row[r]); r++;									 // "`e_ng_respecs_remaining`			"
 	}
 	return true;
 }
@@ -1189,7 +1191,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_married_character_id,	 "
 		" e_char_export_flag,		 "
 		" mailkey,					 "
-		" e_times_rebirthed			 "
+		" e_times_rebirthed,		 "
+		" e_ng_respecs_remaining     "
 		")							 "
 		"VALUES ("
 		"%u,"  // id																" id,                        "
@@ -1259,7 +1262,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // e_married_character_id
 		"%u,"  // e_char_export_flag
 		"'%s'," // mailkey
-		"%u"  // e_times_rebirthed
+		"%u,"  // e_times_rebirthed
+		"%u"  // e_ng_respecs_remaining
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "
@@ -1328,7 +1332,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->married_character_id,
 		m_epp->char_export_flag,
 		mail_key.c_str(),
-		m_epp->e_times_rebirthed
+		m_epp->e_times_rebirthed,
+		m_epp->e_ng_respecs_remaining
 	);
 	auto results = database.QueryDatabase(query);
 	Log(Logs::General, Logs::Character, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);

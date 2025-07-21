@@ -946,6 +946,10 @@ public:
 	bool	FindOnCursor(uint32 item_id);
 	void	ClearPlayerInfoAndGrantStartingItems(bool goto_death = true);
 
+	bool ConsumeNGRespec();
+
+	uint32 GetNGRespecsRemaining();
+
 	// Reset player back to spawn for NewGame+ type restarts
 	// - Faction is reset
 	// - Spells are unmemmed
