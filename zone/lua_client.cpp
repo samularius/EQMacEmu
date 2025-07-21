@@ -1638,6 +1638,8 @@ luabind::scope lua_register_client() {
 		.def("SendZoneFlagInfo", (void(Lua_Client::*)(Lua_Client))&Lua_Client::SendZoneFlagInfo)
 		.def("SetAATitle", (void(Lua_Client::*)(const char *))&Lua_Client::SetAATitle)
 		.def("GetClientVersion", (int(Lua_Client::*)(void))&Lua_Client::GetClientVersion)
+		.def("ConsumeNGRespec", (bool(Lua_Client::*)(void))&Lua_Client::ConsumeNGRespec)
+		.def("GetNGRespecsRemaining", (int(Lua_Client::*)(void))& Lua_Client::GetNGRespecsRemaining)
 		.def("GetClientVersionBit", (uint32(Lua_Client::*)(void))&Lua_Client::GetClientVersionBit)
 		.def("SetTitleSuffix", (void(Lua_Client::*)(const char *))&Lua_Client::SetTitleSuffix)
 		.def("SetAAPoints", (void(Lua_Client::*)(int))&Lua_Client::SetAAPoints)
