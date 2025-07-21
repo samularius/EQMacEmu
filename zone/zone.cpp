@@ -1843,6 +1843,11 @@ bool Zone::IsReducedSpawnTimersEnabled()
 
 uint16 Zone::GetPullLimit()
 {
+	if (!RuleB(Quarm, EnablePullLimitSystem))
+	{
+		return 32000;
+	}
+
 	if (!RuleB(Quarm, EnableRespawnReductionSystem))
 	{
 		return pull_limit;
