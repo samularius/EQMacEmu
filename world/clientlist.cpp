@@ -521,6 +521,10 @@ ClientListEntry* ClientList::RemoveCLEByAccountID(uint32 accountID) {
 
 
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
+	if (iForumName && iForumName[0] != '\0') {
+		database.SetForumName(iLSID, iForumName);
+	}
+	
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
 	clientlist.Append(tmp);
 }

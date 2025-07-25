@@ -245,6 +245,7 @@ void LoginServer::ProcessLSClientAuth(uint16_t opcode, EQ::Net::Packet& p) {
 	try {
 		auto slsca = p.GetSerialize<ClientAuth>(0);
 
+		slsca.forum_name[30] = '\0'; // Ensure null-termination
 		client_list.CLEAdd(slsca.loginserver_account_id, slsca.account_name, slsca.forum_name, slsca.key, slsca.is_world_admin, slsca.ip_address, slsca.is_client_from_local_network, slsca.version);
 	}
 	catch (std::exception& ex) {
