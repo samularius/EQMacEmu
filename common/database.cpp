@@ -2131,7 +2131,7 @@ bool Database::GetAccountRestriction(uint32 acctid, char (&forum_name)[31], uint
 
 bool Database::SetForumName(uint32 account_id, const char* forum_name) {
 
-	std::string query = StringFormat("UPDATE account SET forum_name = '%s' where account_id=%i", Strings::Escape(forum_name).c_str(), account_id);
+	std::string query = StringFormat("UPDATE account SET forum_name = '%s' where id=%i", Strings::Escape(forum_name).c_str(), account_id);
 	auto results = QueryDatabase(query);
 	if (!results.Success()) {
 		return false;
