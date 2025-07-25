@@ -127,6 +127,27 @@ uint32 Database::CheckLogin(const char* name, const char* password, int16* oStat
 	return id;
 }
 
+int Database::GetNumCharacters(uint32 account_id)
+{
+	/* Get Character Info */
+	std::string cquery = StringFormat(
+		"SELECT                     "
+		"`id`                       "
+		"FROM                       "
+		"character_data             "
+		"WHERE `account_id` = %i AND is_deleted = 0 ", account_id);
+	auto results = QueryDatabase(cquery);
+	
+
+	if (!results.Success())
+	{
+		return 8;
+	}
+
+	return results.RowCount();
+}
+
+
 //Get Banned IP Address List - Only return false if the incoming connection's IP address is not present in the banned_ips table.
 bool Database::CheckBannedIPs(std::string login_ip)
 {

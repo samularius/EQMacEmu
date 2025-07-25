@@ -132,6 +132,7 @@ public:
 	bool	CheckNameFilter(const char* name, bool surname = false);
 	bool	CheckUsedName(std::string name, uint32 charid = 0);
 	bool	NoRentExpired(const char* name);
+	int		GetNumCharacters(uint32 account_id);
 
 	uint32	GetAccountIDByChar(const char* charname, uint32* oCharID = 0);
 	uint32	GetAccountIDByChar(uint32 char_id);

@@ -36,9 +36,18 @@ void command_charactertransfer(Client* c, const Seperator* sep) {
 		char target_account_name[30];
 
 		database.GetAccountFromID(target_account_id, target_account_name, nullptr, nullptr);
+
 		if (target_account_id == 0 || target_account_name[0] == '\0')
 		{
-			c->Message(Chat::White, "Account does not exist.");
+			c->Message(Chat::White, "Target account does not exist.");
+			return;
+		}
+
+		int numChars = database.GetNumCharacters(target_account_id);
+
+		if (numChars >= 8)
+		{
+			c->Message(Chat::White, "Account has too many characters.");
 			return;
 		}
 
