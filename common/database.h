@@ -171,13 +171,15 @@ public:
 	bool	UpdateLiveChar(char* charname,uint32 lsaccount_id);
 	bool	GetLiveChar(uint32 account_id, char* cname);
 	bool	GetLiveCharByLSID(uint32 ls_id, char* cname);
-	bool	GetAccountRestriction(uint32 acctid, uint16& expansion, bool& mule, uint32& force_guild);
+	bool	GetAccountRestriction(uint32 acctid, char(&forum_name)[31], uint16& expansion, bool& mule, uint32& force_guild);
 	void	ClearAllConsented();
 	void	ClearAllConsented(char* oname, uint32 corpse_id, LinkedList<ConsentDenied_Struct*>* purged);
 	bool	SetIPExemption(const char* accountname, uint8 amount);
 	bool	SetMule(const char* charname);
 	bool	SetMule(const char* accountname, uint8 toggle);
 	bool	SetExpansion(const char* accountname, uint8 toggle);
+	bool SetForumName(uint32 account_id, const char* forum_name);
+	std::string	GetForumNameByAccountName(const char* account_name, bool bReplaceSpaces);
 
 	/*
 	* Groups

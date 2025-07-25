@@ -9,7 +9,9 @@
 #include "../common/rulesys.h"  // For RuleB and RuleI macros
 #include "../common/ip_util.h"  // For IpUtil::IsIpInPrivateRfc1918
 #include <fmt/format.h>
+#ifndef _WINDOWS
 #include <arpa/inet.h>
+#endif
 
 extern LoginServer* loginserver; 
 extern WorldDatabase database;  

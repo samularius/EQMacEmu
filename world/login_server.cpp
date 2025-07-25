@@ -90,6 +90,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	uint32                     id = database.GetAccountIDFromLSID(utwr->lsaccountid);
 	int16                      status = database.CheckStatus(id);
 	
+	bool check_forum_name = true;
 	// Handle new accounts that don't have world accounts yet
 	if (id == 0) {
 		LogInfo("No world account found for LS account [{}] - will be created during authentication", utwr->lsaccountid);
@@ -97,12 +98,14 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 		// The actual world account will be created during the authentication process
 		id = utwr->lsaccountid;  // Temporary fallback for new accounts
 		status = 0; // Default status for new accounts
+		check_forum_name = false;
 	}
 	
 	bool mule = false;
 	uint16 expansion = 0;
 	uint32 force_guild_id = 0;
-	database.GetAccountRestriction(id, expansion, mule, force_guild_id);
+	char forum_name[31] = { 0 };
+	database.GetAccountRestriction(id, forum_name, expansion, mule, force_guild_id);
 
 	auto outpack = new ServerPacket;
 	outpack->opcode = ServerOP_UsertoWorldResp;
@@ -112,6 +115,12 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	UsertoWorldResponse* utwrs = (UsertoWorldResponse*)outpack->pBuffer;
 	utwrs->lsaccountid = utwr->lsaccountid;
 	utwrs->ToID = utwr->FromID;
+
+	if (check_forum_name && forum_name[0] == '\0' && utwr->forum_name[0] != '\0')
+	{
+		database.SetForumName(id, utwr->forum_name);
+	}
+
 
 	if (Config->Locked == true)
 	{
@@ -244,7 +253,7 @@ void LoginServer::ProcessLSClientAuth(uint16_t opcode, EQ::Net::Packet& p) {
 	try {
 		auto slsca = p.GetSerialize<ClientAuth>(0);
 
-		client_list.CLEAdd(slsca.loginserver_account_id, slsca.account_name, slsca.key, slsca.is_world_admin, slsca.ip_address, slsca.is_client_from_local_network, slsca.version);
+		client_list.CLEAdd(slsca.loginserver_account_id, slsca.account_name, slsca.forum_name, slsca.key, slsca.is_world_admin, slsca.ip_address, slsca.is_client_from_local_network, slsca.version);
 	}
 	catch (std::exception& ex) {
 		LogError("Error parsing LSClientAuth packet from world.\n{0}", ex.what());
