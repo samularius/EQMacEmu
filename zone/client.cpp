@@ -1964,6 +1964,7 @@ void Client::UpdateWho(uint8 remove) {
 	scl->Admin = this->Admin();
 	scl->AccountID = this->AccountID();
 	strcpy(scl->AccountName, this->AccountName());
+	strcpy(scl->ForumName, this->ForumName());
 	scl->LSAccountID = this->LSAccountID();
 	strn0cpy(scl->lskey, lskey, sizeof(scl->lskey));
 	scl->zone = zone->GetZoneID();

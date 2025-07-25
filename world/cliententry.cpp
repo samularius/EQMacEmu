@@ -33,7 +33,7 @@ extern ZSList zoneserver_list;
 extern ClientList		client_list;
 extern volatile bool RunLoops;
 
-ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version, int8 revoked)
+ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version, int8 revoked)
 : id(in_id)
 {
 	ClearVars(true);
@@ -49,6 +49,7 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 
 	strn0cpy(loginserver_account_name, iLoginName, sizeof(loginserver_account_name));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
+	strn0cpy(pforumname, iForumName, sizeof(pforumname));
 	pworldadmin = iWorldAdmin;
 	plocal=(local==1);
 	pversion = version;
@@ -70,9 +71,9 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer *iZS, ServerClientList
 	strn0cpy(loginserver_account_name, scl->name, sizeof(loginserver_account_name));
 	strn0cpy(plskey, scl->lskey, sizeof(plskey));
 	pworldadmin = 0;
-
 	paccountid = scl->AccountID;
 	strn0cpy(paccountname, scl->AccountName, sizeof(paccountname));
+	strn0cpy(pforumname, scl->ForumName, sizeof(pforumname));
 	padmin = scl->Admin;
 	//THIS IS FOR AN ALTERNATE LOGIN METHOD FOR RAPID TESTING. Hardcoded to the PC client because only PCs should be using this 'hackish' login method. Requires password field set in the database.
 	pversion = 2;

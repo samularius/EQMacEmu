@@ -521,7 +521,7 @@ ClientListEntry* ClientList::RemoveCLEByAccountID(uint32 accountID) {
 
 
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
-	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iLoginKey, iWorldAdmin, ip, local, version, 0);
+	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
 	clientlist.Append(tmp);
 }
 
@@ -635,7 +635,7 @@ ClientListEntry* ClientList::CheckAuth(const char* iName, const char* iPassword)
 		tmprevoked = database.CheckRevoked(accid);
 		uint32 lsid = 0;
 		database.GetAccountIDByName(iName, &tmpadmin, &lsid);
-		auto tmp = new ClientListEntry(GetNextCLEID(), lsid, iName, iPassword, tmpadmin, 0, 0, 2, tmprevoked);
+		auto tmp = new ClientListEntry(GetNextCLEID(), lsid, iName, "None", iPassword, tmpadmin, 0, 0, 2, tmprevoked);
 		clientlist.Append(tmp);
 		return tmp;
 	}

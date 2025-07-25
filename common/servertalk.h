@@ -414,6 +414,7 @@ struct ServerClientList_Struct {
 	char	name[64];
 	uint32	AccountID;
 	char	AccountName[30];
+	char	ForumName[30];
 	uint32	LSAccountID;
 	char	lskey[30];
 	uint16	race;

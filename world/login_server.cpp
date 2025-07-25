@@ -90,7 +90,6 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	uint32                     id = database.GetAccountIDFromLSID(utwr->lsaccountid);
 	int16                      status = database.CheckStatus(id);
 	
-	bool check_forum_name = true;
 	// Handle new accounts that don't have world accounts yet
 	if (id == 0) {
 		LogInfo("No world account found for LS account [{}] - will be created during authentication", utwr->lsaccountid);
@@ -98,7 +97,6 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 		// The actual world account will be created during the authentication process
 		id = utwr->lsaccountid;  // Temporary fallback for new accounts
 		status = 0; // Default status for new accounts
-		check_forum_name = false;
 	}
 	
 	bool mule = false;
@@ -115,12 +113,6 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	UsertoWorldResponse* utwrs = (UsertoWorldResponse*)outpack->pBuffer;
 	utwrs->lsaccountid = utwr->lsaccountid;
 	utwrs->ToID = utwr->FromID;
-
-	if (check_forum_name && forum_name[0] == '\0' && utwr->forum_name[0] != '\0')
-	{
-		database.SetForumName(id, utwr->forum_name);
-	}
-
 
 	if (Config->Locked == true)
 	{
