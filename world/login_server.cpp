@@ -175,7 +175,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	uint32 queue_cap = RuleI(Quarm, PlayerPopulationCap);
 	
 	// Check if queue system is disabled via rules
-	if (!RuleB(Quarm, EnableQueue)) {
+	if (!RuleB(Quarm, EnableQueue) && status == 0) {
 		LogInfo("Queue system disabled via rules.");
 		if (effective_population >= queue_cap){
 			LogInfo("SERVER AT CAPACITY - but queue disabled - rejecting connection (pop: {}/{})", effective_population, queue_cap);
@@ -221,7 +221,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 			if (queue_manager.GetTotalQueueSize() > 0 && !auto_connect && RuleB(Quarm, EnableQueue) && utwrs->response == 1 ) {
 				LogInfo("ANTI-SPAM: Account [{}] approved by queue logic but {} players still waiting - forcing to queue to prevent timing attack", 
 					id, queue_manager.GetTotalQueueSize());
-				utwrs->response = -6; // Force to queue
+				utwrs->response = -7; // Force to queue
 			}
 			LogInfo("Server NOT at capacity - allowing connection (pop: {}/{})", effective_population, queue_cap);
 		}
