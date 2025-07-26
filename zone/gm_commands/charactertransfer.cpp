@@ -12,7 +12,7 @@ void command_charactertransfer(Client* c, const Seperator* sep) {
 	}
 
 	if (sep->arg[1][0] == 0)
-		c->Message(Chat::White, "Usage: #movechar [account_name] [id]");
+		c->Message(Chat::White, "Usage: #movechar [account_name] [underscoretospaces_flag]");
 	else
 	{
 		bool replaceSpaces = false;
