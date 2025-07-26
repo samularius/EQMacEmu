@@ -2199,8 +2199,7 @@ void Corpse::IsOwnerOnline()
 
 	if(!client)
 	{
-		uint32 accountid = database.GetAccountIDByChar(GetCharID());
-		client = entity_list.GetClientByAccID(accountid);
+		client = entity_list.GetClientByAccID(GetCharID());
 
 		if(!client)
 		{
@@ -2212,7 +2211,7 @@ void Corpse::IsOwnerOnline()
 			online->zoneid = zone->GetZoneID();
 			online->zoneguildid = zone->GetGuildID();
 			online->online = 0;
-			online->accountid = accountid;
+			online->accountid = GetCharID();
 			worldserver.SendPacket(pack);
 			safe_delete(pack);
 		}

@@ -1010,7 +1010,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet& p) {
 		}
 
 		auto online = (ServerIsOwnerOnline_Struct*)pack->pBuffer;
-		ClientListEntry* cle = client_list.FindCLEByAccountID(online->accountid);
+		ClientListEntry* cle = client_list.FindCLEByCharacterID(online->accountid);
 		if (cle) {
 			online->online = 1;
 		}
