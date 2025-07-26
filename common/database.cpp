@@ -1657,7 +1657,7 @@ std::string Database::GetForumNameByAccountName(const char* account_name, bool b
 
 	std::string result;
 
-	if (!results.Success()) {
+	if (!results.Success() || results.RowCount() == 0) {
 		return result;
 	}
 
