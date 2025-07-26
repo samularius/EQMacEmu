@@ -1646,12 +1646,7 @@ std::string Database::GetForumNameByAccountName(const char* account_name, bool b
 
 	std::string escaped_name = Strings::Escape(account_to_check);
 
-	char tmp_account_name[31] = { 0 };
-	char tmp_account_buf[31] = { 0 };
-	strn0cpy(tmp_account_name, account_to_check.c_str(), 30);
-	DoEscapeString(tmp_account_buf, tmp_account_name, strlen(tmp_account_name));
-
-	std::string query = StringFormat("SELECT `forum_name` from account WHERE `name` = '%s'", tmp_account_buf);
+	std::string query = StringFormat("SELECT `forum_name` from account WHERE `name` = '%s'", escaped_name.c_str());
 
 	auto results = QueryDatabase(query);
 
