@@ -1646,7 +1646,12 @@ std::string Database::GetForumNameByAccountName(const char* account_name, bool b
 
 	std::string escaped_name = Strings::Escape(account_to_check);
 
-	std::string query = StringFormat("SELECT `forum_name` from account WHERE `name` = '%s'", escaped_name.c_str());
+	char tmp_account_name[31] = { 0 };
+	char tmp_account_buf[31] = { 0 };
+	strn0cpy(tmp_account_name, account_to_check.c_str(), 30);
+	DoEscapeString(tmp_account_buf, tmp_account_name, strlen(tmp_account_name));
+
+	std::string query = StringFormat("SELECT `forum_name` from account WHERE `name` = '%s'", tmp_account_buf);
 
 	auto results = QueryDatabase(query);
 
@@ -2142,7 +2147,7 @@ bool Database::GetAccountRestriction(uint32 acctid, char (&forum_name)[31], uint
 	auto row = results.begin();
 
 	expansion = atoi(row[0]);
-	strncpy(forum_name, row[1], sizeof(forum_name) - 1);
+	strn0cpy(forum_name, row[1], sizeof(forum_name) - 1);
 	forum_name[sizeof(forum_name) - 1] = '\0'; // Ensure null termination
 	mule = atoi(row[2]);
 	force_guild_id = atoi(row[3]);
