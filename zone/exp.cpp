@@ -261,9 +261,14 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 		}
 	}
 
+	if (m_epp.perAA != 0)
+	{
+		buffmod = 1.0f;
+	}
+
 	if (buffmod != 1.0f && spellbonuses.KillXPBonus)
 	{
-		Message(Chat::Yellow, "You receive a %.2f percent bonus! (Buff)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
+		Message(Chat::Yellow, "You receive a %.2f percent bonus! (XP Potion)", (spellbonuses.KillXPBonus - 1.0f) * 100.0f);
 	}
 
 	// This logic replicates the September 4 & 6 2002 patch exp modifications that granted a large
