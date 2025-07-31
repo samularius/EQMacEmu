@@ -22,7 +22,6 @@
 #include "../common/net/servertalk_server_connection.h"
 #include "../common/servertalk.h"
 #include "../common/packet_dump.h"
-#include "../common/queue_packets.h"        // For ServerQueueDirectUpdate_Struct
 #include "../../world/world_queue.h"        // For shared QUEUE_DEBUG_LEVEL
 #include <string>
 #include <memory>
@@ -129,7 +128,6 @@ public:
 	void ProcessQueueAutoConnect(uint16_t opcode, const EQ::Net::Packet& p);
 	void ProcessQueueDirectUpdate(uint16_t opcode, const EQ::Net::Packet& p);
 	void ProcessQueueBatchUpdate(uint16_t opcode, const EQ::Net::Packet& p);
-	bool Queue_SharedHelper(const ServerQueueDirectUpdate_Struct& update, uint32 update_index = 1);
 	void ProcessWorldListUpdate(uint16_t opcode, const EQ::Net::Packet& p);
 
 private:

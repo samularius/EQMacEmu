@@ -120,7 +120,6 @@ void ClientManager::ProcessDisconnect()
 				server.server_manager->RemovePlayerFromAllQueues((*iter)->GetAccountID());
 			}
 			
-			
 			delete (*iter);
 			iter = clients.erase(iter);
 		}
