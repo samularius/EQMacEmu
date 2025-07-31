@@ -729,14 +729,13 @@ struct ServerSyncWorldList_Struct {
 };
 
 struct UsertoWorldRequest {
-	uint32    lsaccountid;
-	uint32    worldid;
+	uint32	lsaccountid;
+	uint32	worldid;
 	uint32  ip;
-	uint32    FromID;
-	uint32    ToID;
-	char    IPAddr[64];
-	char    forum_name[31];
-	char    client_key[31];
+	uint32	FromID;
+	uint32	ToID;
+	char	IPAddr[64];
+	char	forum_name[31];
 };
 
 struct UsertoWorldResponse {

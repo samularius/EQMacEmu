@@ -42,6 +42,11 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 	if(iLSID > 0)
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin, 0, &pmule);
 
+	if (padmin == 0)
+	{
+		incremented_player_count = true;
+	}
+
 	strn0cpy(loginserver_account_name, iLoginName, sizeof(loginserver_account_name));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
 	strn0cpy(pforumname, iForumName, sizeof(pforumname));
@@ -59,7 +64,8 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer *iZS, ServerClientList
 : id(in_id)
 {
 	ClearVars(true);
-
+	if(scl->Admin == 0)
+		incremented_player_count = true;
 	pIP = 0;
 	pLSID = scl->LSAccountID;
 	strn0cpy(loginserver_account_name, scl->name, sizeof(loginserver_account_name));
@@ -116,12 +122,6 @@ void ClientListEntry::SetOnline(CLE_Status iOnline)
 		static_cast<int>(iOnline)
 	);
 
-	if (iOnline >= CLE_Status::Online && pOnline < CLE_Status::Online) {
-		// Population tracking now handled by queue system
-	}
-	else if (iOnline < CLE_Status::Online && pOnline >= CLE_Status::Online) {
-		// Population tracking now handled by queue system  
-	}
 	if (iOnline != CLE_Status::Online || pOnline < CLE_Status::Online) {
 		pOnline = iOnline;
 	}

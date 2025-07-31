@@ -51,7 +51,6 @@ struct ConnectionRequest {
 	bool is_mule;          // Is this a mule account?
 	const char* ip_str;
 	const char* forum_name;
-	const char* client_key;
 	uint32 world_account_id;
 };
 
@@ -88,6 +87,7 @@ public:
 	 * Population management
 	 */
 	uint32 EffectivePopulation(); // World population + test offset
+	uint32 GetWorldPopulation() const; // Just the world server population for logging
 	
 	/**
 	 * Queue state management

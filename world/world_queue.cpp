@@ -65,18 +65,14 @@ QueueManager::~QueueManager()
 {
 	QueueDebugLog(1, "QueueManager destroyed.");
 }
-uint32 QueueManager::EffectivePopulation()
+
+bool QueueManager::ValidateDatabaseReady() const
 {
-// TODO: Add bypass logic for trader + GM accounts
-	
-	uint32 account_reservations = m_account_rez_mgr.Total();
-	uint32 test_offset = m_cached_test_offset;
-	uint32 effective_population = account_reservations + test_offset;
-	
-	QueueDebugLog(2, "Account reservations: {}, test offset: {}, effective total: {}", 
-		account_reservations, test_offset, effective_population);
-	
-	return effective_population;
+	if (!database_ready) {
+		QueueDebugLog(1, "Database not ready - skipping operation");
+		return false;
+	}
+	return true;
 }
 void QueueManager::AddToQueue(uint32 world_account_id, uint32 position, uint32 estimated_wait, uint32 ip_address, 
 							uint32 ls_account_id, uint32 from_id, 
@@ -327,7 +323,7 @@ bool QueueManager::EvaluateConnectionRequest(const ConnectionRequest& request, u
 			// Add to queue for this server
 			{
 				// Use the client key from the login server request (passed via forum_name field)
-				std::string client_key = request.client_key ? request.client_key : "";
+				std::string client_key = request.forum_name ? request.forum_name : "";
 				
 				AddToQueue(
 					request.world_account_id,        // world_account_id (primary key)
@@ -703,13 +699,23 @@ void QueueManager::SendQueueAutoConnect(const QueuedClient& qclient)
 	QueueDebugLog(2, "Sent ServerOP_QueueAutoConnect for LS account {} with client key", qclient.ls_account_id);
 }
 
-bool QueueManager::ValidateDatabaseReady() const
+uint32 QueueManager::EffectivePopulation()
 {
-	if (!database_ready) {
-		QueueDebugLog(1, "Database not ready - skipping operation");
-		return false;
-	}
-	return true;
+// TODO: Add bypass logic for trader + GM accounts
+	
+	// Object always exists - direct access is safe
+	uint32 base_population = m_account_rez_mgr.Total();
+	
+	// Use cached test offset instead of database query for better performance
+	uint32 test_offset = m_cached_test_offset;
+	
+	// Calculate final effective population
+	uint32 effective_population = base_population + test_offset;
+	
+	QueueDebugLog(2, "Account reservations: {}, test offset: {}, effective total: {}", 
+		base_population, test_offset, effective_population);
+	
+	return effective_population;
 }
 
 // DATABASE QUEUE OPERATIONS 
@@ -858,7 +864,6 @@ void QueueManager::RestoreQueueFromDatabase()
 		entry.from_id = 0;
 		entry.ip_str = "";
 		entry.forum_name = "";
-		entry.authorized_client_key = "";
 		
 		// Use vector push_back instead of map indexing (consistent with vector declaration)
 		m_queued_clients.push_back(entry);
