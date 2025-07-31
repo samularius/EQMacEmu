@@ -516,7 +516,7 @@ ClientListEntry* ClientList::RemoveCLEByAccountID(uint32 accountID) {
 	return 0;
 }
 
-void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
+void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
 	
 
 	bool wasAccountActive = CheckAccountActive(iLSID);
@@ -530,7 +530,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iLogin
 		database.SetForumName(iLSID, iForumName);
 	}
 
-	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iLoginKey, iWorldAdmin, ip, local, version, 0);
+	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
 	if(!wasAccountActive && tmp->Admin() == 0)
 		numplayers++;
 
