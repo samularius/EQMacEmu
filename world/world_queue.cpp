@@ -420,7 +420,7 @@ void QueueManager::CheckForExternalChanges() // Handles test offset changes and 
 	static const std::string test_offset_query = "SELECT rule_value FROM rule_values WHERE rule_name = 'Quarm:TestPopulationOffset' LIMIT 1";
 	uint32 current_test_offset = QuerySingleUint32(test_offset_query, 0);
 	
-	//QueueDebugLog(1, "Current test_offset: {}, cached_test_offset: {}", current_test_offset, m_cached_test_offset);
+	QueueDebugLog(1, "Current test_offset: {}, cached_test_offset: {}", current_test_offset, m_cached_test_offset);
 	
 	if (first_run || m_cached_test_offset != current_test_offset) {
 		if (!first_run) {
