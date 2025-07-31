@@ -4,30 +4,31 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/jfk/quick-quarm/source/EQMacEmu/submodules/libuv
-BuildDirectory: /home/jfk/quick-quarm/source/EQMacEmu/submodules/libuv
+SourceDirectory: C:/EQMacEmu/submodules/libuv
+BuildDirectory: C:/EQMacEmu/submodules/libuv
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: Concert-E25
+Site: MSI
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
-BuildName: Linux-c++
+BuildName: Win32-MSBuild
 
 # Subprojects
 LabelsForSubprojects: 
 
 # Submission information
 SubmitURL: http://
+SubmitInactivityTimeout: 
 
 # Dashboard start time
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/jfk/quick-quarm/source/EQMacEmu/submodules/libuv"
-MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
+ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "C:/EQMacEmu/submodules/libuv"
+MakeCommand: "C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
 # version control
@@ -62,8 +63,8 @@ UpdateOptions:
 UpdateType: 
 
 # Compiler info
-Compiler: /usr/bin/c++
-CompilerVersion: 11.4.0
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe
+CompilerVersion: 19.43.34810.0
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 
@@ -80,7 +81,7 @@ MemoryCheckCommandOptions:
 MemoryCheckSuppressionFile: 
 
 # Coverage
-CoverageCommand: /usr/bin/gcov
+CoverageCommand: C:/Strawberry/c/bin/gcov.exe
 CoverageExtraFlags: -l
 
 # Testing options
@@ -94,7 +95,10 @@ TimeOut: 1500
 # so would cause the system load to exceed this value.
 TestLoad: 
 
-UseLaunchers: 
+TLSVerify: 
+TLSVersion: 
+
+UseLaunchers: 0
 CurlOptions: 
 # warning, if you add new options here that have to do with submit,
 # you have to update cmCTestSubmitCommand.cxx
