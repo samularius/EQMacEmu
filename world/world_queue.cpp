@@ -381,7 +381,7 @@ bool QueueManager::EvaluateConnectionRequest(const ConnectionRequest& request, u
 					client_key.empty() ? "NONE" : "present");
 				
 				if (response) {
-					response->response = -7; // Queue response code for login server
+					response->response = -6; // Queue response code for login server
 				}
 				return false; // Don't override -6, player should remain queued
 			}
