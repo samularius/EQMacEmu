@@ -351,7 +351,7 @@ bool QueueManager::EvaluateConnectionRequest(const ConnectionRequest& request, u
 			RemoveFromQueue(request.account_id);
 			QueueDebugLog(1, "QUEUE TOGGLE: Player clicked PLAY while queued - removed account [{}] from server", request.account_id);
 			if (response) {
-				response->response = -8; // Queue toggle response code for login server
+				response->response = -7; // Queue toggle response code for login server
 			}
 			return false;
 			

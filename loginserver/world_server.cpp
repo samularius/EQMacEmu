@@ -164,7 +164,7 @@ void WorldServer::ProcessUsertoWorldResp(uint16_t opcode, const EQ::Net::Packet&
 			c->FatalError("Error IP Limit Exceeded: \n\nYou have exceeded the maximum number of allowed IP addresses for this account.");
 			break;
 		}
-		case -7: { // Queue response - player should be queued
+		case -6: { // Queue response - player should be queued
 			// TODO Dialog box for queue response?
 			LogInfo("QUEUE RESPONSE: Player [{}] should be queued by world server", user_to_world_response->lsaccountid);
 			// World server handles queue addition - login server just acknowledges
@@ -173,7 +173,7 @@ void WorldServer::ProcessUsertoWorldResp(uint16_t opcode, const EQ::Net::Packet&
 			// and see queue updates via server list refreshes
 			return; // Return early - no play response sent = "nothing happens" = stay on server select
 		}
-		case -8: { // Queue toggle - player removed from queue, stay on server select
+		case -7: { // Queue toggle - player removed from queue, stay on server select
 			LogInfo("QUEUE TOGGLE: Player [{}] removed from queue - staying on server select", user_to_world_response->lsaccountid);
 			// Player was removed from queue, no action needed
 			// Return early without sending play response - client stays on server select cleanly
