@@ -74,8 +74,22 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	bool mule = false;
 	uint16 expansion = 0;
 	uint32 force_guild_id = 0;
+	bool check_forum_name = true;
 	char forum_name[31] = { 0 };
 	database.GetAccountRestriction(id, forum_name, expansion, mule, force_guild_id);
+
+	if (id == 0) {
+		LogInfo("No world account found for LS account [{}] - will be created during authentication", utwr->lsaccountid);
+
+		id = utwr->lsaccountid;  // Temporary fallback for new accounts
+		status = 0; // Default status for new accounts
+		check_forum_name = false;
+	}
+
+	if (check_forum_name && forum_name[0] == '\0' && utwr->forum_name[0] != '\0')
+	{
+		database.SetForumName(id, utwr->forum_name);
+	}
 
 	auto outpack = new ServerPacket;
 	outpack->opcode = ServerOP_UsertoWorldResp;
