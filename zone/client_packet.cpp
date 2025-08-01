@@ -381,7 +381,7 @@ void Client::CompleteConnect()
 	hpupdate_timer.Start();
 	position_timer.Start();
 	autosave_timer.Start();
-	if (zone->GetZoneID() == Zones::BAZAAR)
+	if (Admin() == 0 && zone->GetZoneID() == Zones::BAZAAR)
 	{
 		Message(Chat::Red, "[AFK Kick] This zone has anti-AFK enforcement enabled. Please do your transactions and leave. You will be kicked in %s.", Strings::SecondsToTime(RuleI(Quarm, BazaarAutoKickTimerS), ", ").c_str());
 		kick_timer.Start();
