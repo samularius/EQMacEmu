@@ -143,6 +143,7 @@ Client::Client(EQStreamInterface* ieqs) : Mob(
 	global_channel_timer(1000),
 	fishing_timer(8000),
 	autosave_timer(RuleI(Character, AutosaveIntervalS) * 1000),
+	kick_timer(RuleI(Quarm, BazaarAutoKickTimerS) * 1000),
 	m_client_npc_aggro_scan_timer(RuleI(Aggro, ClientAggroCheckIdleInterval)),
 	proximity_timer(ClientProximity_interval),
 	charm_class_attacks_timer(3000),
@@ -231,6 +232,7 @@ Client::Client(EQStreamInterface* ieqs) : Mob(
 	dead_timer.Disable();
 	camp_timer.Disable();
 	autosave_timer.Disable();
+	kick_timer.Disable();
 	door_check_timer.Disable();
 	mend_reset_timer.Disable();
 	zoning_timer.Disable();

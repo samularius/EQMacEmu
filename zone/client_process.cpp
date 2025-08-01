@@ -521,7 +521,14 @@ bool Client::Process() {
 			{
 				ItemTimerCheck();
 			}
+
+			if (kick_timer.Enabled() && kick_timer.Check())
+			{
+				Kick();
+				kick_timer.Disable();
+			}
 		}
+
 
 		if (apperance_timer.Check())
 		{

@@ -1469,6 +1469,7 @@ private:
 	Timer global_channel_timer;
 	Timer fishing_timer;
 	Timer autosave_timer;
+	Timer kick_timer;
 
 	Timer	proximity_timer;
 	Timer	charm_class_attacks_timer;

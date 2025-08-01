@@ -155,6 +155,7 @@ RULE_BOOL ( Zone, EnableNexusPortalsOnExpansion, true, "Nexus enables When Lucli
 RULE_INT(Zone, GlobalLootMultiplier, 1, "Sets Global Loot drop multiplier for database based drops, useful for double, triple loot etc")
 RULE_REAL(Zone, HotZoneBonus, 0.75, "Value which is added to the experience multiplier. This also applies to AA experience.")
 RULE_BOOL (Zone, KillProcessOnDynamicShutdown, true, "When process has booted a zone and has hit its zone shut down timer, it will hard kill the process to free memory back to the OS")
+
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( AlKabor )
@@ -342,6 +343,8 @@ RULE_INT(Quarm, SpellResistPlayerLowMinimumResistChance, 4, "Player Resist floor
 RULE_BOOL(Quarm, AllowGuildInstanceBoot, false, "Allow guild instance boot")
 RULE_BOOL(Quarm, EnablePullLimitSystem, true, "Enable QOL Pull Limit system. Defaults to true.")
 RULE_INT(Quarm, PlayerPopulationCap, 1200, "Max Players allowed in the Server. Will exclude offline Bazaar trader characters.")
+RULE_BOOL(Quarm, EnableBazaar, false, "Master switch for bazaar. Set to true when Offline Traders are in and work.")
+RULE_INT(Quarm, BazaarAutoKickTimerS, 600, "Bazaar auto-kick timer.")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)

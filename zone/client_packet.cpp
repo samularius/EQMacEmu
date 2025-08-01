@@ -381,6 +381,10 @@ void Client::CompleteConnect()
 	hpupdate_timer.Start();
 	position_timer.Start();
 	autosave_timer.Start();
+	if (zone->GetZoneID() == Zones::BAZAAR)
+	{
+		kick_timer.Start();
+	}
 	SetDuelTarget(0);
 	SetDueling(false);
 
@@ -9535,6 +9539,12 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 {
 	if(zone->GetZoneID() != Zones::BAZAAR)
 		return;
+
+	if (!RuleB(Quarm, EnableBazaar))
+	{
+		Message(Chat::Red, "Trader mode is not available on Project Quarm at this time. Please wait until the release of Offline Traders.");
+		return;
+	}
 
 	if (Admin() > 0)
 	{
