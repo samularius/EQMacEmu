@@ -112,7 +112,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	}
 
 	int32 x = Config->MaxClients;
-	if ((int32)numplayers >= x && x != -1 && x != 255 && status < 80)
+	if ((int32)client_list.GetClientCount() >= x && x != -1 && x != 255 && status < 80)
 		utwrs->response = -3;
 
 	if (status == -1)
@@ -352,10 +352,10 @@ void LoginServer::SendStatus() {
 	else if (numzones <= 0)
 		lss->status = -1;
 	else
-		lss->status = numplayers > 0 ? numplayers : 0;
+		lss->status = client_list.GetClientCount() > 0 ? client_list.GetClientCount() : 0;
 
 	lss->num_zones = numzones;
-	lss->num_players = numplayers;
+	lss->num_players = client_list.GetClientCount();
 	SendPacket(pack);
 	delete pack;
 }

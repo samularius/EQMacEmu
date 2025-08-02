@@ -40,7 +40,6 @@
 extern WebInterfaceList web_interface;
 
 extern ZSList			zoneserver_list;
-uint32 numplayers = 0;	//this really wants to be a member variable of ClientList...
 
 ClientList::ClientList()
 : CLStale_timer(RuleI(World, WorldClientLinkdeadMS))
@@ -351,7 +350,7 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 		iterator.Advance();
 		x++;
 	}
-	fmt::format_to(std::back_inserter(out), "{}{} CLEs in memory. {} CLEs listed. numplayers = {}.", newline, x, y, numplayers);
+	fmt::format_to(std::back_inserter(out), "{} {} CLEs in memory. {} CLEs listed. numplayers = {}.", newline, x, y, clientlist.Count());
 	out.push_back(0);
 	connection->SendEmoteMessageRaw(to, 0, AccountStatus::Player, Chat::NPCQuestSay, out.data());
 }
