@@ -376,9 +376,9 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
 	
 	// Account stuff
-	uint32	paccountid;
-	char	paccountname[32];
-	int16	padmin;
+	uint32	paccountid = 0;
+	char	paccountname[32] = { 0 };
+	int16	padmin = 0;
 	bool pmule = false;
 	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
 	
@@ -395,7 +395,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 	}
 
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
-	if(tmp->Admin() == 0)
+	if(padmin == 0)
 		numplayers++;
 
 	clientlist.Append(tmp);
