@@ -74,7 +74,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	bool mule = false;
 	uint16 expansion = 0;
 	uint32 force_guild_id = 0;
-	bool check_forum_name = true;
+	bool does_account_exist = true;
 	char forum_name[31] = { 0 };
 	database.GetAccountRestriction(id, forum_name, expansion, mule, force_guild_id);
 
@@ -83,10 +83,10 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 
 		id = utwr->lsaccountid;  // Temporary fallback for new accounts
 		status = 0; // Default status for new accounts
-		check_forum_name = false;
+		does_account_exist = false;
 	}
 
-	if (check_forum_name && forum_name[0] == '\0' && utwr->forum_name[0] != '\0')
+	if (does_account_exist && forum_name[0] == '\0' && utwr->forum_name[0] != '\0')
 	{
 		database.SetForumName(id, utwr->forum_name);
 	}
@@ -123,21 +123,16 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	if (utwrs->response == 1)
 	{
 		// active account checks
-		if (RuleI(World, AccountSessionLimit) >= 0 && status < (RuleI(World, ExemptAccountLimitStatus)) && (RuleI(World, ExemptAccountLimitStatus) != -1) && client_list.ActiveConnectionIncludingStale(id))
+		if (RuleI(World, AccountSessionLimit) >= 0 && status < (RuleI(World, ExemptAccountLimitStatus)) && (RuleI(World, ExemptAccountLimitStatus) != -1) && does_account_exist && client_list.ActiveConnectionKickStale(id))
 			utwrs->response = -4;
 	}
 	if (utwrs->response == 1)
 	{
 		// ip limit checks
 		if (!mule && RuleI(World, MaxClientsPerIP) >= 0 && !client_list.CheckIPLimit(id, utwr->ip, status))
+		{
 			utwrs->response = -5;
-	}
-
-	if (utwrs->response == 1)
-	{
-		// ip limit checks
-		if (mule && RuleI(World, MaxMulesPerIP) >= 0 && !client_list.CheckMuleLimit(id, utwr->ip, status))
-			utwrs->response = -5;
+		}
 	}
 
 	if (client_list.GetClientCount() /* + client_queue.Count()*/ >= RuleI(Quarm, PlayerPopulationCap) && status == 0)

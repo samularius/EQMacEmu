@@ -61,13 +61,13 @@ public:
 	ClientListEntry* GetCLE(uint32 iID);
 	void	ClearGroup(uint32 group_id);
 	bool	CheckIPLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry* cle = nullptr);
-	bool	CheckMuleLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry * cle = nullptr);
 	bool	CheckAccountActive(uint32 iAccID, ClientListEntry* cle = nullptr);
 	void	CLCheckStale();
 	void	CLEKeepAlive(uint32 numupdates, uint32* wid);
 	void	CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin = 0, uint32 ip = 0, uint8 local=0, uint8 version=0);
 	void	UpdateClientGuild(uint32 char_id, uint32 guild_id);
 	bool ActiveConnectionIncludingStale(uint32 account_id);
+	bool ActiveConnectionKickStale(uint32 account_id);
 	bool	ActiveConnection(uint32 iAccID, uint32 iCharID);
 	bool    IsAccountInGame(uint32 iLSID);
 

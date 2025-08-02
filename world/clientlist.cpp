@@ -90,7 +90,31 @@ bool ClientList::ActiveConnectionIncludingStale(uint32 account_id) {
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
 			LogInfo("Client with account [{}] exists on [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
+
 			return true;
+		}
+		iterator.Advance();
+	}
+	return false;
+}
+
+bool ClientList::ActiveConnectionKickStale(uint32 account_id) {
+	LinkedListIterator<ClientListEntry*> iterator(clientlist);
+	bool found_active = false;
+
+	iterator.Reset();
+	while (iterator.MoreElements()) {
+		if (iterator.GetData()->AccountID() == account_id) {
+
+			CLE_Status eStatus = iterator.GetData()->Online();
+			if (eStatus > CLE_Status::CharSelect)
+			{
+				found_active = true;
+			}
+			else if (eStatus <= CLE_Status::CharSelect) {
+				iterator.RemoveCurrent();
+				continue;
+			}
 		}
 		iterator.Advance();
 	}
@@ -189,48 +213,6 @@ bool ClientList::CheckIPLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientLis
 		else if (IPInstances > (exemptcount * (RuleI(World, MaxClientsPerIP) + RuleI(World, AddMaxClientsPerIP)))) {
 
 			return false;
-		}
-	}
-	return true;
-}
-
-bool ClientList::CheckMuleLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry *cle) {
-
-	ClientListEntry *curCLE = 0;
-	LinkedListIterator<ClientListEntry *> iterator(clientlist);
-	int MuleInstances = 1;
-	iterator.Reset();
-
-	while (iterator.MoreElements()) {
-
-		curCLE = iterator.GetData();
-
-		// If the forum name matches, and the connection admin status is below the exempt status,
-		// or exempt status is less than 0 (no-one is exempt)
-		if ((curCLE != nullptr && curCLE->GetIP() == iIP && curCLE->mule()) &&
-			((admin < (RuleI(World, ExemptMaxClientsStatus))) ||
-			(RuleI(World, ExemptMaxClientsStatus) < 0))) {
-
-			// Increment the occurrences of this forum name
-			if (curCLE->Online() >= CLE_Status::Never && (cle == nullptr || cle != curCLE))
-				MuleInstances++;
-		}
-		iterator.Advance();
-	}
-
-	if (MuleInstances > (RuleI(World, MaxMulesPerIP))) {
-
-		// If MaxClientsSetByStatus is set to True, override other IP Limit Rules
-		if (RuleB(World, MaxClientsSetByStatus)) {
-
-			// The IP Limit is set by the status of the account if status > MaxClientsPerIP
-			if (MuleInstances > admin) {
-				return false;
-			}
-		}
-		else
-		{
-			return false; // limit exceeded
 		}
 	}
 	return true;
@@ -362,7 +344,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 	char	paccountname[32] = { 0 };
 	int16	padmin = 0;
 	bool pmule = false;
-	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
+	bool wasAccountActive = ActiveConnectionKickStale(iLSID);
 	
 	if (wasAccountActive || GetClientCount() >= RuleI(Quarm, PlayerPopulationCap))
 	{
