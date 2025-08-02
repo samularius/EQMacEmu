@@ -46,6 +46,7 @@ ClientList::ClientList()
 : CLStale_timer(RuleI(World, WorldClientLinkdeadMS))
 {
 	NextCLEID = 1;
+	cached_gm_count = 0;
 
 	m_tick = std::make_unique<EQ::Timer>(5000, true, std::bind(&ClientList::OnTick, this, std::placeholders::_1));
 }
@@ -73,30 +74,12 @@ void ClientList::Process() {
 
 			if (!ActiveConnectionIncludingStale(accountid))
 			{
-				if(should_remove_playercount)
-					numplayers--;
 				database.ClearAccountActive(accountid);
 			}
 		}
 		else
 			iterator.Advance();
 	}
-}
-
-bool ClientList::ActiveConnection(uint32 account_id) {
-	LinkedListIterator<ClientListEntry*> iterator(clientlist);
-
-	iterator.Reset();
-	while(iterator.MoreElements()) {
-		if (iterator.GetData()->AccountID() == account_id && iterator.GetData()->Online() > CLE_Status::Offline) {
-			struct in_addr in;
-			in.s_addr = iterator.GetData()->GetIP();
-			LogInfo("Client with account [{}] exists on [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
-			return true;
-		}
-		iterator.Advance();
-	}
-	return false;
 }
 
 bool ClientList::ActiveConnectionIncludingStale(uint32 account_id) {
@@ -261,7 +244,7 @@ bool ClientList::CheckAccountActive(uint32 iAccID, ClientListEntry *cle) {
 	iterator.Reset();
 
 	while(iterator.MoreElements()) {
-		if (iterator.GetData()->AccountID() == iAccID && iterator.GetData()->Online() >= CLE_Status::Zoning && (cle == nullptr || cle != iterator.GetData())) {
+		if (iterator.GetData()->AccountID() == iAccID && iterator.GetData()->Online() >= CLE_Status::Never && (cle == nullptr || cle != iterator.GetData())) {
 			return true;
 		}
 		iterator.Advance();
@@ -382,7 +365,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 	bool pmule = false;
 	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
 	
-	if (wasAccountActive || numplayers >= RuleI(Quarm, PlayerPopulationCap))
+	if (wasAccountActive || GetClientCount() >= RuleI(Quarm, PlayerPopulationCap))
 	{
 		uint32 paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin, 0, &pmule);
 
@@ -395,20 +378,22 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 	}
 
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
-	if(padmin == 0)
-		numplayers++;
-
 	clientlist.Append(tmp);
 }
 
 void ClientList::CLCheckStale() {
 	LinkedListIterator<ClientListEntry*> iterator(clientlist);
 
+	cached_gm_count = 0;
+
 	iterator.Reset();
 	while(iterator.MoreElements()) {
 		if (iterator.GetData()->CheckStale()) {
 
 			bool should_remove_playercount = iterator.GetData()->Admin() == 0;
+
+			if (!should_remove_playercount)
+				cached_gm_count++;
 
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
@@ -417,9 +402,6 @@ void ClientList::CLCheckStale() {
 			iterator.RemoveCurrent();
 			if (!ActiveConnectionIncludingStale(accountid))
 			{
-				if(should_remove_playercount)
-					numplayers--;
-
 				database.ClearAccountActive(accountid);
 			}
 		}
@@ -1368,7 +1350,7 @@ bool ClientList::IsAccountInGame(uint32 iLSID) {
 }
 
 int ClientList::GetClientCount() {
-	return(numplayers);
+	return(cached_gm_count > clientlist.Count() ? cached_gm_count : clientlist.Count() - cached_gm_count);
 }
 
 void ClientList::GetClients(const char *zone_name, std::vector<ClientListEntry *> &res) {
