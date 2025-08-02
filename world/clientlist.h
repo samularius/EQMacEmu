@@ -72,6 +72,7 @@ public:
 	void	CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin = 0, uint32 ip = 0, uint8 local=0, uint8 version=0);
 	void	UpdateClientGuild(uint32 char_id, uint32 guild_id);
 	bool	ActiveConnection(uint32 iAccID);
+	bool ActiveConnectionIncludingStale(uint32 account_id);
 	bool	ActiveConnection(uint32 iAccID, uint32 iCharID);
 	bool    IsAccountInGame(uint32 iLSID);
 

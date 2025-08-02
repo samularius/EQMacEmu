@@ -123,7 +123,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 	if (utwrs->response == 1)
 	{
 		// active account checks
-		if (RuleI(World, AccountSessionLimit) >= 0 && status < (RuleI(World, ExemptAccountLimitStatus)) && (RuleI(World, ExemptAccountLimitStatus) != -1) && client_list.CheckAccountActive(id))
+		if (RuleI(World, AccountSessionLimit) >= 0 && status < (RuleI(World, ExemptAccountLimitStatus)) && (RuleI(World, ExemptAccountLimitStatus) != -1) && client_list.ActiveConnectionIncludingStale(id))
 			utwrs->response = -4;
 	}
 	if (utwrs->response == 1)
@@ -142,7 +142,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet& p)
 
 	if (client_list.GetClientCount() /* + client_queue.Count()*/ >= RuleI(Quarm, PlayerPopulationCap) && status == 0)
 	{
-		utwrs->response = -6; // Queue player, don't allow entry
+		utwrs->response = -3; // Queue player, don't allow entry
 		//We should really tell the WorldServer how much players are remaining in queue to determine this, but we can make that a world <-> login communication
 		//TODO: Implement queue logic
 	}

@@ -71,7 +71,7 @@ void ClientList::Process() {
 			uint32 accountid = iterator.GetData()->GetAccountID();
 			iterator.RemoveCurrent();
 
-			if (!ActiveConnection(accountid))
+			if (!ActiveConnectionIncludingStale(accountid))
 			{
 				if(should_remove_playercount)
 					numplayers--;
@@ -89,6 +89,22 @@ bool ClientList::ActiveConnection(uint32 account_id) {
 	iterator.Reset();
 	while(iterator.MoreElements()) {
 		if (iterator.GetData()->AccountID() == account_id && iterator.GetData()->Online() > CLE_Status::Offline) {
+			struct in_addr in;
+			in.s_addr = iterator.GetData()->GetIP();
+			LogInfo("Client with account [{}] exists on [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
+			return true;
+		}
+		iterator.Advance();
+	}
+	return false;
+}
+
+bool ClientList::ActiveConnectionIncludingStale(uint32 account_id) {
+	LinkedListIterator<ClientListEntry*> iterator(clientlist);
+
+	iterator.Reset();
+	while (iterator.MoreElements()) {
+		if (iterator.GetData()->AccountID() == account_id) {
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
 			LogInfo("Client with account [{}] exists on [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
@@ -141,150 +157,6 @@ ClientListEntry* ClientList::GetCLE(uint32 iID) {
 	return 0;
 }
 
-//Account Limiting Code to limit the number of characters allowed on from a single account at once.
-bool ClientList::EnforceSessionLimit(uint32 iLSAccountID) {
-
-	ClientListEntry* ClientEntry = 0;
-
-	LinkedListIterator<ClientListEntry*> iterator(clientlist, BACKWARD);
-
-	int CharacterCount = 1;
-
-	iterator.Reset();
-
-	while(iterator.MoreElements()) {
-
-		ClientEntry = iterator.GetData();
-
-		if ((ClientEntry->LSAccountID() == iLSAccountID) &&
-			((ClientEntry->Admin() <= (RuleI(World, ExemptAccountLimitStatus))) || (RuleI(World, ExemptAccountLimitStatus) < 0))) 
-		{
-
-			if(strlen(ClientEntry->name()) && !ClientEntry->LD()) 
-			{
-				CharacterCount++;
-			}
-
-			if (CharacterCount > (RuleI(World, AccountSessionLimit)))
-			{
-				LogInfo("LSAccount [{}] has a CharacterCount of: [{}].", iLSAccountID, CharacterCount);
-				return true;
-			}
-		}
-		iterator.Advance();
-	}
-
-	return false;
-}
-
-
-//Check current CLE Entry IPs against incoming connection
-
-void ClientList::GetCLEIP(uint32 iIP) {
-
-	ClientListEntry* countCLEIPs = 0;
-	LinkedListIterator<ClientListEntry*> iterator(clientlist);
-
-	int IPInstances = 0;
-	iterator.Reset();
-
-	while(iterator.MoreElements()) {
-
-		countCLEIPs = iterator.GetData();
-		int exemptcount = database.CheckExemption(iterator.GetData()->AccountID());
-
-		// If the IP matches, and the connection admin status is below the exempt status,
-		// or exempt status is less than 0 (no-one is exempt)
-		if ((countCLEIPs->GetIP() == iIP) &&
-			((countCLEIPs->Admin() < (RuleI(World, ExemptMaxClientsStatus))) ||
-			(RuleI(World, ExemptMaxClientsStatus) < 0))) {
-
-			// Increment the occurrences of this IP address
-			IPInstances++;
-
-			// If the number of connections exceeds the lower limit divided by number of exemptions allowed.
-			// Set exemptions in account/ip_exemption_multiplier, default is 1.
-			// 1 means 1 set of MaxClientsPerIP online allowed.
-			// example MaxClientsPerIP set to 3 and ip_exemption_multiplier 1, only 3 accounts will be allowed.
-			// Whereas MaxClientsPerIP set to 3 and ip_exemption_multiplier 2 = a max of 6 accounts allowed.
-			if (IPInstances / exemptcount > (RuleI(World, MaxClientsPerIP))) {
-
-				// If MaxClientsSetByStatus is set to True, override other IP Limit Rules
-				if (RuleB(World, MaxClientsSetByStatus)) {
-
-					// The IP Limit is set by the status of the account if status > MaxClientsPerIP
-					if (IPInstances > countCLEIPs->Admin()) {
-
-						if(RuleB(World, IPLimitDisconnectAll)) {
-							DisconnectByIP(iIP);
-							return;
-						} else {
-							// Remove the connection
-							countCLEIPs->SetOnline(CLE_Status::Offline);
-							iterator.RemoveCurrent();
-							continue;
-						}
-					}
-				}
-				// Else if the Admin status of the connection is not eligible for the higher limit,
-				// or there is no higher limit (AddMaxClientStatus<0)
-				else if ((countCLEIPs->Admin() < (RuleI(World, AddMaxClientsStatus)) ||
-						(RuleI(World, AddMaxClientsStatus) < 0))) {
-
-					if(RuleB(World, IPLimitDisconnectAll)) {
-						DisconnectByIP(iIP);
-						return;
-					} else {
-						// Remove the connection
-						countCLEIPs->SetOnline(CLE_Status::Offline);
-						iterator.RemoveCurrent();
-						continue;
-					}
-				}
-				// else they are eligible for the higher limit, but if they exceed that
-				else if (IPInstances > RuleI(World, AddMaxClientsPerIP)) {
-
-					if(RuleB(World, IPLimitDisconnectAll)) {
-						DisconnectByIP(iIP);
-						return;
-					} else {
-						// Remove the connection
-						countCLEIPs->SetOnline(CLE_Status::Offline);
-						iterator.RemoveCurrent();
-						continue;
-					}
-				}
-			}
-		}
-		iterator.Advance();
-	}
-}
-
-void ClientList::DisconnectByIP(uint32 iIP) {
-	ClientListEntry* countCLEIPs = 0;
-	LinkedListIterator<ClientListEntry*> iterator(clientlist);
-	iterator.Reset();
-
-	while(iterator.MoreElements()) {
-		countCLEIPs = iterator.GetData();
-		if ((countCLEIPs->GetIP() == iIP)) {
-			if(strlen(countCLEIPs->name())) {
-				auto pack = new ServerPacket(ServerOP_KickPlayer, sizeof(ServerKickPlayer_Struct));
-				ServerKickPlayer_Struct* skp = (ServerKickPlayer_Struct*) pack->pBuffer;
-				strcpy(skp->adminname, "SessionLimit");
-				strcpy(skp->name, countCLEIPs->name());
-				skp->adminrank = 255;
-				zoneserver_list.SendPacket(pack);
-				safe_delete(pack);
-			}
-			countCLEIPs->SetOnline(CLE_Status::Offline);
-			iterator.RemoveCurrent();
-			continue;
-		}
-		iterator.Advance();
-	}
-}
-
 bool ClientList::CheckIPLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientListEntry* cle) {
 
 	ClientListEntry* countCLEIPs = 0;
@@ -307,7 +179,7 @@ bool ClientList::CheckIPLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientLis
 			(RuleI(World, ExemptMaxClientsStatus) < 0))) {
 
 			// Increment the occurrences of this IP address
-			if (countCLEIPs->Online() >= CLE_Status::Zoning && (cle == nullptr || cle != countCLEIPs))
+			if (countCLEIPs->Online() >= CLE_Status::Never && (cle == nullptr || cle != countCLEIPs))
 				IPInstances++;
 		}
 		iterator.Advance();
@@ -358,7 +230,7 @@ bool ClientList::CheckMuleLimit(uint32 iAccID, uint32 iIP, uint16 admin, ClientL
 			(RuleI(World, ExemptMaxClientsStatus) < 0))) {
 
 			// Increment the occurrences of this forum name
-			if (curCLE->Online() >= CLE_Status::Zoning && (cle == nullptr || cle != curCLE))
+			if (curCLE->Online() >= CLE_Status::Never && (cle == nullptr || cle != curCLE))
 				MuleInstances++;
 		}
 		iterator.Advance();
@@ -501,25 +373,10 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 	connection->SendEmoteMessageRaw(to, 0, AccountStatus::Player, Chat::NPCQuestSay, out.data());
 }
 
-ClientListEntry* ClientList::RemoveCLEByAccountID(uint32 accountID) {
-	LinkedListIterator<ClientListEntry*> iterator(clientlist);
-
-	iterator.Reset();
-	while (iterator.MoreElements())
-	{
-		if (iterator.GetData()->AccountID() == accountID) {
-			iterator.RemoveCurrent();
-			continue;
-		}
-		iterator.Advance();
-	}
-	return 0;
-}
-
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
 	
 
-	bool wasAccountActive = CheckAccountActive(iLSID);
+	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
 	
 	if (!wasAccountActive && numplayers >= RuleI(Quarm, PlayerPopulationCap))
 	{
@@ -531,7 +388,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 	}
 
 	auto tmp = new ClientListEntry(GetNextCLEID(), iLSID, iLoginName, iForumName, iLoginKey, iWorldAdmin, ip, local, version, 0);
-	if(!wasAccountActive && tmp->Admin() == 0)
+	if(tmp->Admin() == 0)
 		numplayers++;
 
 	clientlist.Append(tmp);
@@ -551,7 +408,7 @@ void ClientList::CLCheckStale() {
 			LogInfo("Removing stale client on account [{}] from [{}]", iterator.GetData()->AccountID(), inet_ntoa(in));
 			uint32 accountid = iterator.GetData()->AccountID();
 			iterator.RemoveCurrent();
-			if (!ActiveConnection(accountid))
+			if (!ActiveConnectionIncludingStale(accountid))
 			{
 				if(should_remove_playercount)
 					numplayers--;
