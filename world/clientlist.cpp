@@ -243,7 +243,7 @@ bool ClientList::CheckAccountActive(uint32 iAccID, ClientListEntry *cle) {
 	iterator.Reset();
 
 	while(iterator.MoreElements()) {
-		if (iterator.GetData()->AccountID() == iAccID && iterator.GetData()->Online() >= CLE_Status::Never && (cle == nullptr || cle != iterator.GetData())) {
+		if (iterator.GetData()->AccountID() == iAccID && iterator.GetData()->Online() >= CLE_Status::Zoning && (cle == nullptr || cle != iterator.GetData())) {
 			return true;
 		}
 		iterator.Advance();
