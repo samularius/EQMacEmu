@@ -375,12 +375,19 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 
 void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForumName, const char* iLoginKey, int16 iWorldAdmin, uint32 ip, uint8 local, uint8 version) {
 	
-
+	// Account stuff
+	uint32	paccountid;
+	char	paccountname[32];
+	int16	padmin;
+	bool pmule = false;
 	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
 	
 	if (wasAccountActive || numplayers >= RuleI(Quarm, PlayerPopulationCap))
 	{
-		return;
+		uint32 paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin, 0, &pmule);
+
+		if(padmin == 0)
+			return;
 	}
 
 	if (iForumName && iForumName[0] != '\0') {
