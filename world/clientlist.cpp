@@ -378,7 +378,7 @@ void ClientList::CLEAdd(uint32 iLSID, const char* iLoginName, const char* iForum
 
 	bool wasAccountActive = ActiveConnectionIncludingStale(iLSID);
 	
-	if (!wasAccountActive && numplayers >= RuleI(Quarm, PlayerPopulationCap))
+	if (wasAccountActive || numplayers >= RuleI(Quarm, PlayerPopulationCap))
 	{
 		return;
 	}
