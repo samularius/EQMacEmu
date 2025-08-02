@@ -350,7 +350,7 @@ void ClientList::SendCLEList(const int16& admin, const char* to, WorldTCPConnect
 		iterator.Advance();
 		x++;
 	}
-	fmt::format_to(std::back_inserter(out), "{} {} CLEs in memory. {} CLEs listed. numplayers = {}.", newline, x, y, clientlist.Count());
+	fmt::format_to(std::back_inserter(out), "{} {} CLEs in memory. {} CLEs listed. numplayers = {}.", newline, x, y, GetClientCount());
 	out.push_back(0);
 	connection->SendEmoteMessageRaw(to, 0, AccountStatus::Player, Chat::NPCQuestSay, out.data());
 }
@@ -387,12 +387,13 @@ void ClientList::CLCheckStale() {
 
 	iterator.Reset();
 	while(iterator.MoreElements()) {
+
+		bool should_remove_playercount = iterator.GetData()->Admin() == 0;
+
+		if (!should_remove_playercount)
+			cached_gm_count++;
+
 		if (iterator.GetData()->CheckStale()) {
-
-			bool should_remove_playercount = iterator.GetData()->Admin() == 0;
-
-			if (!should_remove_playercount)
-				cached_gm_count++;
 
 			struct in_addr in;
 			in.s_addr = iterator.GetData()->GetIP();
