@@ -7831,7 +7831,8 @@ void Client::Handle_OP_RezzAnswer(const EQApplicationPacket *app)
 	OPRezzAnswer(r->action, r->spellid, r->zone_id, 0, r->x, r->y, r->z);
 
 	if (r->action == ResurrectionActions::Accept) {
-		if (player_event_logs.IsEventEnabled(PlayerEvent::REZ_ACCEPTED)) {
+		if (IsValidSpell(r->spellid) && r->rezzer_name[0] != '\0' && player_event_logs.IsEventEnabled(PlayerEvent::REZ_ACCEPTED)) {
+			r->rezzer_name[63] = '\0'; // Ensure null termination
 			auto e = PlayerEvent::ResurrectAcceptEvent{
 				.resurrecter_name = r->rezzer_name,
 				.spell_name = spells[r->spellid].name,
@@ -8301,15 +8302,15 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	}
 	else if (merchantid == 1 && item_id == 0)
 	{
-		for (auto item : item_reimbursement_list)
+		for (auto item_reimb : item_reimbursement_list)
 		{
-			if (item.slot == mp->itemslot)
+			if (item_reimb.slot == mp->itemslot)
 			{
-				if (mp->itemslot == item.slot) {
-					item_id = item.item;
+				if (mp->itemslot == item_reimb.slot) {
+					item_id = item_reimb.item;
 					tmpmer_used = true;
 					reimbursement_used = true;
-					prevcharges = item.charges;
+					prevcharges = item_reimb.charges;
 					break;
 				}
 			}
@@ -8460,7 +8461,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	bool stacked = TryStacking(inst);
 	bool bag = false;
 	bool cursor = true;
-	if (inst->IsType(EQ::item::ItemClassBag))
+	if (inst && inst->IsType(EQ::item::ItemClassBag))
 	{
 		bag = true;
 		cursor = false;
@@ -8571,7 +8572,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	}
 	// end QS code
 
-	if (player_event_logs.IsEventEnabled(PlayerEvent::MERCHANT_PURCHASE)) {
+	if (item && tmp && player_event_logs.IsEventEnabled(PlayerEvent::MERCHANT_PURCHASE)) {
 		auto e = PlayerEvent::MerchantPurchaseEvent{
 			.npc_id = tmp->GetNPCTypeID(),
 			.merchant_name = tmp->GetCleanName(),
@@ -8757,7 +8758,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	}
 	// end QS code
 
-	if (player_event_logs.IsEventEnabled(PlayerEvent::MERCHANT_SELL)) {
+	if (item && vendor && player_event_logs.IsEventEnabled(PlayerEvent::MERCHANT_SELL)) {
 		auto e = PlayerEvent::MerchantSellEvent{
 			.npc_id = vendor->GetNPCTypeID(),
 			.merchant_name = vendor->GetCleanName(),

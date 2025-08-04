@@ -4113,6 +4113,12 @@ bool Client::IsDiscovered(uint32 item_id)
 }
 
 void Client::DiscoverItem(uint32 item_id) {
+
+	const auto* item = database.GetItem(item_id);
+
+	if (!item)
+		return;
+
 	auto e = DiscoveredItemsRepository::NewEntity();
 
 	e.account_status = Admin();
@@ -4123,21 +4129,17 @@ void Client::DiscoverItem(uint32 item_id) {
 	auto d = DiscoveredItemsRepository::InsertOne(database, e);
 
 	if (player_event_logs.IsEventEnabled(PlayerEvent::DISCOVER_ITEM)) {
-		const auto *item = database.GetItem(item_id);
-
-		auto e = PlayerEvent::DiscoverItemEvent{
-			.item_id = item_id,
-			.item_name = item->Name,
-		};
-		RecordPlayerEventLog(PlayerEvent::DISCOVER_ITEM, e);
-
+			auto e = PlayerEvent::DiscoverItemEvent{
+				.item_id = item_id,
+				.item_name = item->Name,
+			};
+			RecordPlayerEventLog(PlayerEvent::DISCOVER_ITEM, e);
 	}
 
 	if (parse->PlayerHasQuestSub(EVENT_DISCOVER_ITEM)) {
-		auto *item = database.CreateItem(item_id);
-		std::vector<std::any> args = { item };
+			std::vector<std::any> args = { item };
 
-		parse->EventPlayer(EVENT_DISCOVER_ITEM, this, "", item_id, &args);
+			parse->EventPlayer(EVENT_DISCOVER_ITEM, this, "", item_id, &args);
 	}
 }
 
@@ -8452,7 +8454,7 @@ void Client::NPCHandinEventLog(Trade *t, NPC *n)
 			!hi.empty() || handed_in_money
 			);
 
-		if (player_event_logs.IsEventEnabled(PlayerEvent::NPC_HANDIN) && event_has_data_to_record) {
+		if (n && player_event_logs.IsEventEnabled(PlayerEvent::NPC_HANDIN) && event_has_data_to_record) {
 			auto e = PlayerEvent::HandinEvent{
 				.npc_id = n->GetNPCTypeID(),
 				.npc_name = n->GetCleanName(),
@@ -8521,7 +8523,7 @@ void Client::NPCHandinEventLog(Trade *t, NPC *n)
 
 	const bool event_has_data_to_record = !hi.empty() || handed_in_money;
 
-	if (player_event_logs.IsEventEnabled(PlayerEvent::NPC_HANDIN) && event_has_data_to_record) {
+	if (n && player_event_logs.IsEventEnabled(PlayerEvent::NPC_HANDIN) && event_has_data_to_record) {
 		auto e = PlayerEvent::HandinEvent{
 			.npc_id = n->GetNPCTypeID(),
 			.npc_name = n->GetCleanName(),

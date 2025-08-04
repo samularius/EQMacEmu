@@ -1722,7 +1722,7 @@ void Corpse::LootCorpseItem(Client* client, const EQApplicationPacket* app) {
 		args.push_back(this);
 		parse->EventPlayer(EVENT_LOOT, client, export_string, 0, &args);
 
-		if (player_event_logs.IsEventEnabled(PlayerEvent::LOOT_ITEM) && !IsPlayerCorpse()) {
+		if (inst && player_event_logs.IsEventEnabled(PlayerEvent::LOOT_ITEM) && !IsPlayerCorpse()) {
 			auto e = PlayerEvent::LootItemEvent{
 				.item_id = inst->GetItem()->ID,
 				.item_name = inst->GetItem()->Name,

@@ -333,7 +333,7 @@ bool Client::SummonItem(uint32 item_id, int8 quantity, uint16 to_slot, bool forc
 		}
 	}
 
-	if (player_event_logs.IsEventEnabled(PlayerEvent::ITEM_CREATION)) {
+	if (item && player_event_logs.IsEventEnabled(PlayerEvent::ITEM_CREATION)) {
 		auto e = PlayerEvent::ItemCreationEvent{};
 		e.item_id = item->ID;
 		e.item_name = item->Name;
@@ -385,7 +385,7 @@ void Client::DropItem(int16 slot_id)
 
 	// Take control of item in client inventory
 	auto *inst = m_inv.PopItem(slot_id);
-	if(inst) {
+	if(inst && inst->GetItem()) {
 		int i = 0;
 
 		if (player_event_logs.IsEventEnabled(PlayerEvent::DROPPED_ITEM)) {
@@ -1457,16 +1457,18 @@ bool Client::SwapItem(MoveItem_Struct* move_in) {
 			}
 
 			DeleteItemInInventory(move_in->from_slot);
+			if (inst)
+			{
+				if (inst->GetItem() && player_event_logs.IsEventEnabled(PlayerEvent::ITEM_DESTROY)) {
+					auto e = PlayerEvent::DestroyItemEvent{
+						.item_id = inst->GetItem()->ID,
+						.item_name = inst->GetItem()->Name,
+						.charges = inst->GetCharges(),
+						.reason = "Client destroy cursor",
+					};
 
-			if (player_event_logs.IsEventEnabled(PlayerEvent::ITEM_DESTROY)) {
-				auto e = PlayerEvent::DestroyItemEvent{
-					.item_id = inst->GetItem()->ID,
-					.item_name = inst->GetItem()->Name,
-					.charges = inst->GetCharges(),
-					.reason = "Client destroy cursor",
-				};
-
-				RecordPlayerEventLog(PlayerEvent::ITEM_DESTROY, e);
+					RecordPlayerEventLog(PlayerEvent::ITEM_DESTROY, e);
+				}
 			}
 
 			return true; // Item destroyed by client
