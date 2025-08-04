@@ -7820,7 +7820,7 @@ void Client::Handle_OP_RezzAnswer(const EQApplicationPacket *app)
 {
 	VERIFY_PACKET_LENGTH(OP_RezzAnswer, app, Resurrect_Struct);
 
-	const auto *r = (const Resurrect_Struct*)app->pBuffer;
+	auto *r = (Resurrect_Struct*)app->pBuffer;
 
 	LogSpells(
 		"[Client::Handle_OP_RezzAnswer] Received OP_RezzAnswer from client. Pendingrezzexp is [{}] action is [{}]",
