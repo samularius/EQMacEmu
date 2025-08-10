@@ -344,6 +344,7 @@ RULE_BOOL(Quarm, AllowGuildInstanceBoot, false, "Allow guild instance boot")
 RULE_BOOL(Quarm, EnablePullLimitSystem, true, "Enable QOL Pull Limit system. Defaults to true.")
 RULE_INT(Quarm, PlayerPopulationCap, 1200, "Max Players allowed in the Server. Will exclude offline Bazaar trader characters.")
 RULE_BOOL(Quarm, EnableBazaar, false, "Master switch for bazaar. Set to true when Offline Traders are in and work.")
+RULE_BOOL(Quarm, EnableAdminChecks, false, "Master switch for admin check enforcement")
 RULE_INT(Quarm, BazaarAutoKickTimerS, 600, "Bazaar auto-kick timer.")
 RULE_CATEGORY_END()
 

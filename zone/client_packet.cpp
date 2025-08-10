@@ -2321,7 +2321,7 @@ void Client::Handle_OP_AutoAttack(const EQApplicationPacket *app)
 		}
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You cannot autoattack as a GM.");
 		return;
@@ -2888,14 +2888,14 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You cannot cast spells as a GM.");
 		InterruptSpell(castspell->spell_id);
 		return;
 	}
 
-	if (Admin() > 0 && IsValidSpell(castspell->spell_id)) {
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0 && IsValidSpell(castspell->spell_id)) {
 		Mob* SpellTarget = entity_list.GetMob(castspell->target_id);
 		char szArguments[512];
 		sprintf(szArguments, "ID %i (%s), Slot %i, InvSlot %i", castspell->spell_id, spells[castspell->spell_id].name, castspell->slot, castspell->inventoryslot);
@@ -3164,7 +3164,7 @@ void Client::Handle_OP_ClickObject(const EQApplicationPacket *app)
 		
 		if (object->IsPlayerDrop())
 		{
-			if (Admin() > 0)
+			if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 			{
 				msg = "You cannot pick up dropped player items because you're a GM and that would make the players around you a sad panda.";
 			}
@@ -3595,7 +3595,7 @@ void Client::Handle_OP_CombatAbility(const EQApplicationPacket *app)
 	}
 
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You cannot use abilities or thrown items as a GM.");
 		return;
@@ -4061,7 +4061,7 @@ void Client::Handle_OP_CreateObject(const EQApplicationPacket *app)
 		}
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		EQ::ItemInstance *inst = m_inv.GetItem(EQ::invslot::slotCursor);
 		if (inst)
@@ -5459,7 +5459,7 @@ void Client::Handle_OP_GroupFollow(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You are a GM. Do not join raids or groups.");
 		database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to join a group or raid.");
@@ -5655,7 +5655,7 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You are a GM. Do not join raids or groups.");
 		database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to join a group or raid.");
@@ -5681,7 +5681,7 @@ void Client::Handle_OP_GroupInvite2(const EQApplicationPacket *app)
 				return;
 			}
 
-			if (Invitee->CastToClient()->Admin() > 0)
+			if (RuleB(Quarm, EnableAdminChecks) && Invitee->CastToClient()->Admin() > 0)
 			{
 				Message(Chat::Red, "You are inviting a GM. This will never work.");
 				return;
@@ -7301,7 +7301,7 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You are a GM. Do not join raids or groups.");
 		database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to join a group or raid.");
@@ -7327,7 +7327,7 @@ void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
 				return;
 			}
 
-			if (i->Admin() > 0)
+			if (RuleB(Quarm, EnableAdminChecks) && i->Admin() > 0)
 			{
 				Message(Chat::Red, "This player is a GM and cannot join your raid.");
 				return;
@@ -8343,7 +8343,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0 && tmpmer_used)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0 && tmpmer_used)
 	{
 		Message(Chat::Red, "That item isn't normally sold here. You are a GM. You'd be griefing players. The gods weep today.");
 		QueuePacket(returnapp);
@@ -8649,7 +8649,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "Just use commands. You're literally a GM, silly goose.");
 		auto outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(OldMerchant_Purchase_Struct));
@@ -9548,7 +9548,7 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You are a GM. You cannot use the bazaar. Use the dev server for that.");
 		return;
@@ -9611,7 +9611,7 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 				Message(Chat::Red, "You are solo or self found only, and cannot list or sell items in The Bazaar.");
 				return;
 			}
-			if (Admin() > 0)
+			if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 			{
 				Message(Chat::Red, "You are a GM. You cannot list items for sale. Use the dev server for that.");
 				database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to sell an item on the Bazaar.");
@@ -9759,7 +9759,7 @@ void Client::Handle_OP_TraderBuy(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (Admin() > 0)
+	if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 	{
 		Message(Chat::Red, "You are a GM. You cannot list items for sale. Use the dev server for that.");
 		database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to sell an item on the Bazaar.");
@@ -9849,14 +9849,14 @@ void Client::Handle_OP_TradeRequest(const EQApplicationPacket *app)
 			return;
 		}
 
-		if (Admin() > 0)
+		if (RuleB(Quarm, EnableAdminChecks) && Admin() > 0)
 		{
 			Message(Chat::Red, "You are a GM. You cannot trade with other players. Use the dev server for that.");
 			database.SetHackerFlag(account_name, GetCleanName(), "GM attempted to trade with another player instead of using GM commands.");
 			return;
 		}
 
-		if (tradee->CastToClient()->Admin() > 0)
+		if (RuleB(Quarm, EnableAdminChecks) && tradee->CastToClient()->Admin() > 0)
 		{
 			Message(Chat::YouMissOther, "You attempt to trade with a GM, but miss!");
 			return;
