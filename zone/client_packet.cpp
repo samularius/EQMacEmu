@@ -812,6 +812,9 @@ void Client::Handle_Connect_OP_ClientError(const EQApplicationPacket *app)
 
 void Client::Handle_Connect_OP_ClientUpdate(const EQApplicationPacket *app)
 {
+	if (character_id == 0)
+		return;
+
 	conn_state = ClientReadyReceived;
 
 	CompleteConnect();
