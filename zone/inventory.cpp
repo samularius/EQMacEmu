@@ -594,6 +594,15 @@ void Client::ResetStartingSkills()
 
 void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 {
+	if (!loaded_as_solo_or_self_found)
+	{
+		SaveCurrency();
+
+		if (IsSoloOnly() || IsHardcore() || IsSelfFoundAny())
+		{
+			loaded_as_solo_or_self_found = true;
+		}
+	}
 
 	//Clear player's money.
 	ClearMoney();
