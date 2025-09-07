@@ -4509,7 +4509,7 @@ void Client::SuspendMinion()
 			}
 
 			MakePoweredPet(m_suspendedminion.SpellID, spells[m_suspendedminion.SpellID].teleport_zone,
-				m_suspendedminion.petpower, m_suspendedminion.Name, m_suspendedminion.size, m_suspendedminion.focusItemId);
+				m_suspendedminion.petpower, m_suspendedminion.Name, 0.0f, m_suspendedminion.focusItemId);
 
 			CurrentPet = GetPet()->CastToNPC();
 
