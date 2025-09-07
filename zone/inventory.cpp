@@ -621,6 +621,7 @@ void Client::ClearPlayerInfoAndGrantStartingItems(bool goto_death)
 	RefundAA();
 	SetAAPoints(0);
 	m_pp.aapoints_spent = 0;
+	m_epp.perAA = 0u;
 	
 	//Remove all factions.
 	database.RemoveAllFactions(this);
@@ -716,6 +717,9 @@ void Client::ResetPlayerForNewGamePlus(uint8 in_level, uint8 in_level2, bool res
 	uint8 new_level = std::max(in_level, (uint8)1);
 	if (new_level < old_level) {
 		SetLevel(new_level, true);
+	}
+	if (new_level < 51) {
+		m_epp.perAA = 0u;
 	}
 
 	// Do additional skill cleanup if level2 was lowered
