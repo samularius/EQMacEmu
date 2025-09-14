@@ -2605,8 +2605,13 @@ void Mob::AddToHateList(Mob* other, int32 hate, int32 damage, bool bFrenzy, bool
 			{
 				if (lootLockoutItr->second.HasLockout(Timer::GetTimeSeconds()))
 				{
-					other->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName() );
-					other->CastToClient()->BootFromGuildInstance(true);
+					// WORKAROUND: This HP check prevents a bug where you could be booted after a mob is already dead.
+					// This could happen if the mob is hit by a spell or arrow at almost the exact time it dies.
+					if(GetHP() > 0)
+					{
+						other->CastToClient()->Message(Chat::Red, "You were locked out of %s. Sending you out.", GetCleanName() );
+						other->CastToClient()->BootFromGuildInstance(true);
+					}
 				}
 			}
 		}
