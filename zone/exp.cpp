@@ -279,7 +279,7 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, Mob* killed_mob, int16 av
 	int min_lvl_diff = -6;
 	int max_lvl_diff = 6;
 
-	if (zone && (int)zone->GetZoneExpansion() >= (int)Expansion::ExpansionNumber::TheShadowsOfLuclin)
+	if (zone && (int)zone->GetZoneExpansion() >= (int)Expansion::ExpansionNumber::TheShadowsOfLuclin || zone && zone->GetGuildID() == 1 || zone && zone->IsHotzone())
 	{
 		min_lvl_diff = -16;
 		max_lvl_diff = 16;
