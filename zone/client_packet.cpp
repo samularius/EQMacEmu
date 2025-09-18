@@ -510,7 +510,17 @@ void Client::CompleteConnect()
 			}
 			case SE_SummonHorse:
 			{
-				SummonHorse(buffs[j1].spellid);
+				if (zone->GetGuildID() != 1)
+				{
+					SummonHorse(buffs[j1].spellid);
+				}
+				else
+				{
+					// No horses in PVP zones
+					if (IsClient())
+						Message(Chat::Red, "You can't summon a horse in a PVP zone.");
+					BuffFadeByEffect(SE_SummonHorse);
+				}
 				//hasmount = true;	//this was false, is that the correct thing?
 				break;
 			}

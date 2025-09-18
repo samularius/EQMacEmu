@@ -1714,6 +1714,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, int buffslot, int caster_lev
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Summon Mount: %s", spell.teleport_zone);
 #endif
+				if (zone && zone->GetGuildID() == 1)
+				{
+					// No horses in PVP zones
+					if (IsClient())
+						Message(Chat::Red, "You can't summon a horse in a PVP zone.");
+					BuffFadeByEffect(SE_SummonHorse);
+					break;
+				}
+
 				if(IsClient())	// NPCs can't ride
 				{
 					CastToClient()->SummonHorse(spell_id);
