@@ -1017,7 +1017,7 @@ public:
 protected:
 	void CommonDamage(Mob* other, int32 &damage, const uint16 spell_id, const  EQ::skills::SkillType  attack_skill, bool &avoidable, const int8 buffslot, const bool iBuffTic);
 	void AggroPet(Mob* attacker);
-	static uint16 GetProcID(uint16 spell_id, uint8 effect_index);
+	uint16 GetProcID(uint16 spell_id, uint8 effect_index);
 	//float _GetMovementSpeed(int mod, bool iswalking = false) const;
 	int _GetRunSpeed() const;
 	int _GetWalkSpeed() const;
