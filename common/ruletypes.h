@@ -351,6 +351,7 @@ RULE_REAL(Quarm, ArcheryCorneredDamage, 1.0, "% Modifier to Archery damage of co
 RULE_REAL(Quarm, ArcheryWalledDamage, 1.0, "% Modifier to Archery damage of walled targets (0.5 = 50%, 1.0 = 100%")
 RULE_INT(Quarm, WorldClientInactiveTimeoutMS, 3600000, "Timeout in MS that clients can stay connected to world for")
 RULE_BOOL(Quarm, EnableWorldClientInactiveTimeout, false, "Master switch for World - ClientInactiveTimeoutMS")
+RULE_REAL(Quarm, MaxPVPDamagePercent, 0.75, "Max damage percent of target's current HP that can be done in PvP")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(SelfFound)

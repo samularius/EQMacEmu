@@ -1155,6 +1155,12 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQ::skills::Skill
 		}
 	}
 
+	if (other && other->IsClient())
+	{
+		if ((float)damage > (float)GetMaxHP() * (float)RuleR(Quarm, MaxPVPDamagePercent))
+			damage = (int)(float)((float)GetMaxHP() * (float)RuleR(Quarm, MaxPVPDamagePercent));
+	}
+
 	// 3 second flee stun check.  NPCs can stun players who are running away from them.  10% chance on hit
 	if (spell_id == SPELL_UNKNOWN && damage > 0 && other && other->IsNPC() && !other->IsPet() && other->GetLevel() > 4 && EQ::skills::IsMeleeWeaponSkill(attack_skill))
 	{
