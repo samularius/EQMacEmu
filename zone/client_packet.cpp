@@ -2237,7 +2237,6 @@ void Client::Handle_OP_AAAction(const EQApplicationPacket *app)
 
 		if (GetBoatNPCID() > 0)
 		{
-			ResetAATimer(activate, StringID::TOO_DISTRACTED);
 			return;
 		}
 
