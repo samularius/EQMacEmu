@@ -9,39 +9,6 @@
 
 constexpr int MAX_RETRIES = 10;
 
-// AllowedMentions structure
-struct AllowedMentions {
-    std::vector<std::string> parse;
-    std::vector<std::string> users;
-    std::vector<std::string> roles;
-    bool replied_user = false;
-
-    // A serialize function is required by Cereal
-    template <class Archive>
-    void serialize(Archive& archive) {
-        archive(
-            CEREAL_NVP(parse),
-            CEREAL_NVP(users),
-            CEREAL_NVP(roles),
-            CEREAL_NVP(replied_user)
-        );
-    }
-};
-
-// Message structure
-struct DiscordMessage {
-    std::string content;
-    AllowedMentions allowed_mentions;
-
-    template <class Archive>
-    void serialize(Archive& archive) {
-        archive(
-            CEREAL_NVP(content),
-            CEREAL_NVP(allowed_mentions)
-        );
-    }
-};
-
 void Discord::SendWebhookMessage(const std::string& message, const std::string& webhook_url)
 {
     // validate
@@ -64,23 +31,18 @@ void Discord::SendWebhookMessage(const std::string& message, const std::string& 
         cli.set_write_timeout(15, 0); // 15 seconds
 
         // payload
-        DiscordMessage p;
-        AllowedMentions am;
-        am.parse.clear();
-        am.users.clear();
-        am.roles.clear();
-        am.replied_user = false;
-        p.content = message;
-        p.allowed_mentions = am;
-
-        // Create an output stream and a JSON archive
-        std::ostringstream os;
-        cereal::JSONOutputArchive archive(os);
-
-        // Serialize the message object
-        archive(p);
+        Json::Value p;
+		Json::Value obj(Json::objectValue);
+		Json::Value jsonArray(Json::arrayValue);
+		std::vector<std::string> allowed_mentions;
+        p["content"] = message;
+		obj["parse"] = jsonArray;
+		obj["users"] = jsonArray;
+		obj["roles"] = jsonArray;
+		obj["replied_user"] = false;
+		p["allowed_mentions"] = obj;
         std::stringstream payload;
-        payload << os.str();
+        payload << p;
 
         bool retry = true;
         int  retries = 0;
