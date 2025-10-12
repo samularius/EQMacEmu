@@ -1282,7 +1282,17 @@ void Client::OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 G
 	if(PendingRezzXP < 0 || PendingRezzZoneID == 0) {
 		// pendingrezexp is set to -1 if we are not expecting an OP_RezzAnswer
 		Log(Logs::Detail, Logs::Spells, "Unexpected OP_RezzAnswer. Ignoring it.");
-		Message(Chat::Red, "You have already been resurrected.\n");
+		Message(Chat::Red, "You have already been resurrected.");
+		return;
+	}
+
+	if (zone->GetGuildID() == 1 && (zone->GetZoneID() != PendingRezzZoneID || PendingRezzZoneGuildID != 1))
+	{
+		Message(Chat::Red, "You cannot be resurrected from outside of this zone. Cancelling pending rez.");
+		PendingRezzZoneID = 0;
+		PendingRezzZoneGuildID = 0;
+		PendingRezzXP = -1;
+		PendingRezzSpellID = 0;
 		return;
 	}
 
@@ -1319,10 +1329,13 @@ void Client::OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint32 G
 
 		entity_list.RemoveFromTargets(this);
 
+
 		//Was sending the packet back to initiate client zone...
 		//but that could be abusable, so lets go through proper channels
-		if(PendingRezzZoneID != 0 && PendingRezzZoneGuildID != 0)
+		if (PendingRezzZoneID != 0 && PendingRezzZoneGuildID != 0)
+		{
 			MovePCGuildID(PendingRezzZoneID, PendingRezzZoneGuildID, x, y, z, GetHeading() * 2.0f, 0, ZoneSolicited);
+		}
 	}
 	PendingRezzZoneID = 0;
 	PendingRezzZoneGuildID = 0;
