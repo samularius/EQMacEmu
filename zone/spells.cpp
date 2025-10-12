@@ -3766,8 +3766,15 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster, bool isProc)
 		return false;
 
 	if (IsDetrimentalSpell(spell_id) && !zone->CanDoCombat(caster, this)) {
-		caster->Message_StringID(Chat::SpellFailure, StringID::SPELL_WOULDNT_HOLD);
-		return true;
+		if (caster->IsClient() && caster->CastToClient()->GetGM())
+		{
+
+		}
+		else
+		{
+			caster->Message_StringID(Chat::SpellFailure, StringID::SPELL_WOULDNT_HOLD);
+			return true;
+		}
 	}
 
 	if(IsMezSpell(spell_id))
