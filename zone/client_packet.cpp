@@ -1498,6 +1498,14 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	m_Position.y = m_pp.y;
 	m_Position.z = m_pp.z;
 	m_Position.w = m_pp.heading * 0.5f;
+
+	if (zone->GetZoneID() == Zones::NEXUS && m_Position.x >= -3 && m_Position.x <= 3 && m_Position.y >= -3 && m_Position.y <= 3)
+	{
+		m_Position.x = m_pp.x = zone->random.Real(-20.0, 20.0);
+		m_Position.y = m_pp.y = zone->random.Real(-20.0, 20.0);
+		m_Position.z = m_pp.z = -33.0f;
+	}
+
 	race = m_pp.race;
 	base_race = m_pp.race;
 	gender = m_pp.gender;
