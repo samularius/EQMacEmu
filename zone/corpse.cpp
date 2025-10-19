@@ -859,7 +859,7 @@ uint32 Corpse::GetWornItem(int16 equipSlot) const {
 	end = itemlist.end();
 	for (; cur != end; ++cur) {
 		LootItem* item = *cur;
-		if (item->equip_slot == equipSlot) {
+		if (item && item->equip_slot == equipSlot) {
 			return item->item_id;
 		}
 	}
@@ -876,7 +876,7 @@ void Corpse::RemoveItem(uint16 lootslot) {
 	end = itemlist.end();
 	for (; cur != end; ++cur) {
 		LootItem* sitem = *cur;
-		if (sitem->lootslot == lootslot) {
+		if (sitem && sitem->lootslot == lootslot) {
 			RemoveItem(sitem);
 			return;
 		}
