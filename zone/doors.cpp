@@ -431,11 +431,11 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 		}
 		else if ((!IsDoorOpen() || open_type == 58 || floor_port) && (keyneeded && ((keyneeded == playerkey) || sender->GetGM())))
 		{
-			if(!keepoffkeyring)
+			if (!keepoffkeyring)
 			{
 				sender->KeyRingAdd(playerkey);
 			}
-			if(zoneid == zone->GetZoneID())
+			if (zoneid == zone->GetZoneID())
 			{
 				sender->MovePCGuildID(zone->GetZoneID(), zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
 			}
@@ -445,8 +445,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 				sender->MovePCGuildID(zoneid, zoneguildid, temp_x, temp_y, m_destination.z, m_destination.w);
 			}
 		}
-
-		if ((!IsDoorOpen() || open_type == 58) && !keyneeded)
+		else if ((!IsDoorOpen() || open_type == 58) && !keyneeded)
 		{
 			if(zoneid == zone->GetZoneID())
 			{
