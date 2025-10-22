@@ -28,7 +28,7 @@ void command_charactertransfer(Client* c, const Seperator* sep) {
 
             std::string target_forum_name = database.GetForumNameByAccountName(user_target_account_name.c_str(), false);
 
-            if (user_target_account_name.compare(forum_name) != 0)
+            if (target_forum_name.compare(forum_name) != 0)
             {
                 c->Message(Chat::White, "You cannot transfer characters to an account your forum account does not own.");
                 return;
