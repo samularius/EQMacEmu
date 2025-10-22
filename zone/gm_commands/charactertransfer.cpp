@@ -45,6 +45,12 @@ void command_charactertransfer(Client* c, const Seperator* sep) {
                 return;
             }
 
+            if (target_account_id == c->AccountID())
+            {
+                c->Message(Chat::Red, "You cannot transfer a character to the account it is already on.");
+                return;
+            }
+
             int numChars = database.GetNumCharacters(target_account_id);
 
             if (numChars >= 8)
