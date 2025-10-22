@@ -426,8 +426,15 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			{
 				sender->KeyRingAdd(playerkey);
 			}
-			bool is_same_zone = strncmp(destination_zone_name, zone_name, strlen(zone_name)) == 0;
-			sender->MovePCGuildID(zone->GetZoneID(), is_same_zone ? zone->GetGuildID() : zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
+			if (zoneid == zone->GetZoneID())
+			{
+				sender->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), m_destination.x, m_destination.y, m_destination.z, m_destination.w);
+			}
+			else
+			{
+				zone->ApplyRandomLoc(zoneid, temp_x, temp_y);
+				sender->MovePCGuildID(zoneid, zoneguildid, temp_x, temp_y, m_destination.z, m_destination.w);
+			}
 		}
 		else if ((!IsDoorOpen() || open_type == 58 || floor_port) && (keyneeded && ((keyneeded == playerkey) || sender->GetGM())))
 		{
@@ -437,8 +444,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 			}
 			if (zoneid == zone->GetZoneID())
 			{
-				bool is_same_zone = strncmp(destination_zone_name, zone_name, strlen(zone_name)) == 0;
-				sender->MovePCGuildID(zone->GetZoneID(), is_same_zone ? zone->GetGuildID() : zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
+				sender->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), m_destination.x, m_destination.y, m_destination.z, m_destination.w);
 			}
 			else
 			{
@@ -450,8 +456,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger, bool floor_port)
 		{
 			if(zoneid == zone->GetZoneID())
 			{
-				bool is_same_zone = strncmp(destination_zone_name, zone_name, strlen(zone_name)) == 0;
-				sender->MovePCGuildID(zone->GetZoneID(), is_same_zone ? zone->GetGuildID() : zoneguildid, m_destination.x, m_destination.y, m_destination.z, m_destination.w);
+				sender->MovePCGuildID(zone->GetZoneID(), zone->GetGuildID(), m_destination.x, m_destination.y, m_destination.z, m_destination.w);
 			}
 			else
 			{
