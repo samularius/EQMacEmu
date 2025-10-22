@@ -12,55 +12,51 @@ void command_charactertransfer(Client* c, const Seperator* sep) {
 	}
 
 	if (sep->arg[1][0] == 0)
-		c->Message(Chat::White, "Usage: #charactertransfer [account_name] [underscoretospaces_flag]");
-	else
-	{
-		bool replaceSpaces = false;
-		if (sep->argnum > 2 && sep->IsNumber(sep->arg[2]))
-		{
-			int enable = atoi(sep->arg[2]);
-			if (enable == 1)
-				replaceSpaces = true;
-			else
-				replaceSpaces = false;
-		}
+		c->Message(Chat::White, "Usage: #charactertransfer [account_name]");
+    else
+    {
+        if (sep->arg[1][0] == 0)
+            c->Message(Chat::White, "Usage: #charactertransfer [account_name]");
+        else
+        {
+            std::string user_target_account_name = "";
+            for (int i = 0; i < sep->argnum; i++) {
+                user_target_account_name += sep->arg[i];
+                if (i + 1 < sep->argnum)
+                    user_target_account_name += " ";
+            }
 
-		std::string target_forum_name = database.GetForumNameByAccountName(sep->arg[1], replaceSpaces);
+            std::string target_forum_name = database.GetForumNameByAccountName(user_target_account_name.c_str(), false);
 
-		if (target_forum_name.compare(forum_name) != 0)
-		{
-			c->Message(Chat::White, "You cannot transfer characters to an account your forum account does not own.");
-			return;
-		}
+            if (user_target_account_name.compare(forum_name) != 0)
+            {
+                c->Message(Chat::White, "You cannot transfer characters to an account your forum account does not own.");
+                return;
+            }
 
-		std::string account_to_check = sep->arg[1];
+            uint32 target_account_id = database.GetAccountIDByName(user_target_account_name.c_str());
+            char target_account_name[30];
 
-		if (replaceSpaces) {
-			std::replace(account_to_check.begin(), account_to_check.end(), '_', ' ');
-		}
+            database.GetAccountFromID(target_account_id, target_account_name, nullptr, nullptr);
 
-		uint32 target_account_id = database.GetAccountIDByName(account_to_check.c_str());
-		char target_account_name[30];
+            if (target_account_id == 0 || target_account_name[0] == '\0')
+            {
+                c->Message(Chat::White, "Target account does not exist.");
+                return;
+            }
 
-		database.GetAccountFromID(target_account_id, target_account_name, nullptr, nullptr);
+            int numChars = database.GetNumCharacters(target_account_id);
 
-		if (target_account_id == 0 || target_account_name[0] == '\0')
-		{
-			c->Message(Chat::White, "Target account does not exist.");
-			return;
-		}
+            if (numChars >= 8)
+            {
+                c->Message(Chat::White, "Account has too many characters.");
+                return;
+            }
 
-		int numChars = database.GetNumCharacters(target_account_id);
-
-		if (numChars >= 8)
-		{
-			c->Message(Chat::White, "Account has too many characters.");
-			return;
-		}
-
-		c->SetAccountName(target_account_name);
-		c->SetAccountID(target_account_id);
-		c->Save(1);
-		c->Kick();
-	}
+            c->SetAccountName(target_account_name);
+            c->SetAccountID(target_account_id);
+            c->Save(1);
+            c->Kick();
+        }
+    }
 }
