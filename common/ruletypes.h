@@ -130,6 +130,7 @@ RULE_INT(World, ClientTimeoutStaleAmount, 3, "")
 RULE_BOOL(World, EnableDevTools, true, "Enable or Disable the Developer Tools globally (Most of the time you want this enabled)")
 RULE_BOOL(World, UseOldShadowKnightClassExport, true, "Disable to have Shadowknight show as Shadow Knight (live-like)")
 RULE_STRING(World, MOTD, "", "Server MOTD sent on login, change from empty to have this be used instead of variables table 'motd' value")
+RULE_BOOL(World, AllPlayersCanInstantlyCamp, false, "If true, allows non-GM characters to bypass the camp_timer and instantly /camp. Useful for testing.")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY( Zone )
