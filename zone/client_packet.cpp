@@ -2821,7 +2821,7 @@ void Client::Handle_OP_Camp(const EQApplicationPacket *app)
 		return;
 	}
 
-	if (GetGM())
+	if (GetGM() || RuleB(World, AllPlayersCanInstantlyCamp))
 	{
 		OnDisconnect(true);
 		return;
