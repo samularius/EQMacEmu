@@ -1244,6 +1244,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" mailkey,					 "
 		" e_times_rebirthed,		 "
 		" e_ng_respecs_remaining     "
+		" has_stun_immunity"		 "
 		")							 "
 		"VALUES ("
 		"%u,"  // id																" id,                        "
@@ -1315,6 +1316,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s'," // mailkey
 		"%u,"  // e_times_rebirthed
 		"%u"  // e_ng_respecs_remaining
+		"%i" // has_stun_immunity
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "
@@ -1384,7 +1386,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->char_export_flag,
 		mail_key.c_str(),
 		m_epp->e_times_rebirthed,
-		m_epp->e_ng_respecs_remaining
+		m_epp->e_ng_respecs_remaining,
+		pp->has_stun_immunity
 	);
 	auto results = database.QueryDatabase(query);
 	Log(Logs::General, Logs::Character, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
