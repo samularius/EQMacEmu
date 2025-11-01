@@ -157,7 +157,7 @@ void Mob::TryBashKickStun(Mob* defender, uint8 skill)
 
 if (is_character_immune && !BehindMob(defender, GetX(), GetY()))
 {
-   	Log(Logs::Detail, Logs::Combat, "Frontal stun resisted because has_frontal_stun_immunity is set to 1 in character_data databasae table");
+   	Log(Logs::Detail, Logs::Combat, "Frontal stun resisted because 'has_frontal_stun_immunity' is set to 1 in character_data DB table");
     return; // Resist the stun
 }
 
