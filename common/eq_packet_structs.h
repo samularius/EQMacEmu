@@ -795,6 +795,7 @@ struct PlayerProfile_Struct
 				bool				mule;
 				bool				showhelm;
 				uint32	force_guild_id;
+				uint32  has_stun_immunity;
 				struct	SpellBuff_Struct	buffs_ext[BUFF_COUNT];
 };
 
