@@ -741,7 +741,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_married_character_id`,	"
 		"`e_char_export_flag`,		"
 		"`e_times_rebirthed`,		"
-		"`e_ng_respecs_remaining`	"
+		"`e_ng_respecs_remaining`,	"
+		"`has_stun_immunity`		"	
 		"FROM                       "
 		"character_data             "
 		"WHERE `id` = %i         ", character_id);
@@ -813,6 +814,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->char_export_flag = atoi(row[r]); r++;									 // "`e_char_export_flag`			"
 		m_epp->e_times_rebirthed = atoi(row[r]); r++;									 // "`e_times_rebirthed`			"
 		m_epp->e_ng_respecs_remaining = atoi(row[r]); r++;									 // "`e_ng_respecs_remaining`			"
+		pp->has_stun_immunity = atoi(row[r]); r++;								 // custom stun immunity
 	}
 	return true;
 }
