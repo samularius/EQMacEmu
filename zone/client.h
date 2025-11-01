@@ -1301,7 +1301,7 @@ public:
 	void RecordKilledNPCEvent(NPC *n);
 
 	void OnAFKTimerChanged();
-
+	bool HasFrontalStunImmunity() const { return has_stun_immunity; }
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);
@@ -1311,6 +1311,7 @@ protected:
 	void CalcAABonuses(StatBonuses* newbon);
 	void ApplyAABonuses(uint32 aaid, uint32 slots, StatBonuses* newbon);
 	void MakeBuffFadePacket(uint16 spell_id, int slot_id, bool send_message = true);
+	bool has_stun_immunity;
 	bool client_data_loaded;
 
 	int16 GetFocusEffect(focusType type, uint16 spell_id, std::string& item_name, bool dot_tick = false, int spell_level = -1, bool include_items = true, bool include_spells = true, bool include_aa = true);
