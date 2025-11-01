@@ -1315,7 +1315,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // e_char_export_flag
 		"'%s'," // mailkey
 		"%u,"  // e_times_rebirthed
-		"%u"  // e_ng_respecs_remaining
+		"%u,"  // e_ng_respecs_remaining
 		"%i" // has_stun_immunity
 		")",
 		character_id,					  // " id,                        "
