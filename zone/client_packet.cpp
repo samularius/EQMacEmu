@@ -1498,7 +1498,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	m_Position.y = m_pp.y;
 	m_Position.z = m_pp.z;
 	m_Position.w = m_pp.heading * 0.5f;
-
+	
+	
 	if (zone->GetZoneID() == Zones::NEXUS && m_Position.x >= -3 && m_Position.x <= 3 && m_Position.y >= -3 && m_Position.y <= 3)
 	{
 		m_Position.x = m_pp.x = zone->random.Real(-20.0, 20.0);
@@ -1518,7 +1519,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	hairstyle = m_pp.hairstyle;
 	luclinface = m_pp.face;
 	beard = m_pp.beard;
-
+    this->has_stun_immunity = (m_pp.has_stun_immunity == 1);
+	
 	// Max Level for Character:PerCharacterQglobalMaxLevel and Character:PerCharacterBucketMaxLevel
 	uint8 client_max_level = 0;
 	if (RuleB(Character, PerCharacterQglobalMaxLevel)) {
