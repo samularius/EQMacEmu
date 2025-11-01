@@ -147,10 +147,20 @@ void Mob::TryBashKickStun(Mob* defender, uint8 skill)
 			stun_resist = defender->aabonuses.StunResist;						// Stalwart Endurance AA
 		}
 
-		if (defender->GetBaseRace() == OGRE && !BehindMob(defender, GetX(), GetY()))		// should this work if the ogre is illusioned?
-		{
-			Log(Logs::Detail, Logs::Combat, "Frontal stun resisted because, Ogre.");
-		}
+	bool is_character_immune = false;
+	if (defender->IsClient()) {
+    	Client* client_defender = (Client*)defender;
+    	
+    	is_character_immune = client_defender->HasFrontalStunImmunity();
+}
+
+
+if (is_character_immune && !BehindMob(defender, GetX(), GetY()))
+{
+   	Log(Logs::Detail, Logs::Combat, "Frontal stun resisted because your character is immune to frontal stuns.")
+    return true; // Resist the stun
+}
+
 		else
 		{
 			if (stun_resist && zone->random.Roll(stun_resist))
