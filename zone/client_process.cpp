@@ -722,8 +722,8 @@ void Client::OnDisconnect(bool hard_disconnect) {
 	/* Remove ourself from all proximities */
 	ClearAllProximities();
 
-	//Prevent GMs from being kicked all the way when camping.
-	if(GetGM())
+	//Prevent GMs (everyone w/ AllPlayersCanInstantlyCamp rule set) from being kicked all the way when camping
+	if(GetGM() || RuleB(World, AllPlayersCanInstantlyCamp))
 	{
 		auto outapp = new EQApplicationPacket(OP_LogoutReply, 2);
 		FastQueuePacket(&outapp);
